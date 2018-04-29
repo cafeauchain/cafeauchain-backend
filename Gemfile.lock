@@ -40,6 +40,9 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
+    annotate (2.7.3)
+      activerecord (>= 3.2, < 6.0)
+      rake (>= 10.4, < 13.0)
     arel (8.0.0)
     autoprefixer-rails (8.3.0)
       execjs
@@ -94,6 +97,7 @@ GEM
     ffi (1.9.23)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    high_voltage (3.0.0)
     hub (1.12.4)
     i18n (1.0.1)
       concurrent-ruby (~> 1.0)
@@ -241,6 +245,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  annotate
   better_errors
   bootstrap (~> 4.0.0)
   byebug
@@ -250,6 +255,7 @@ DEPENDENCIES
   devise
   factory_bot_rails
   faker
+  high_voltage
   hub
   jbuilder (~> 2.5)
   launchy

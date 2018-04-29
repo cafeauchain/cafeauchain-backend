@@ -9,13 +9,12 @@ gem 'rails', '~> 5.1.4'
 gem 'puma', '~> 3.7'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.2'
-gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'bootstrap', '~> 4.0.0'
 gem 'pg', '~> 0.18'
 gem 'devise'
+gem 'high_voltage'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
@@ -26,6 +25,7 @@ group :development do
   gem 'hub', :require=>nil
   gem 'rails_layout'
   gem 'spring-commands-rspec'
+  gem 'annotate'
 end
 
 group :development, :test do
