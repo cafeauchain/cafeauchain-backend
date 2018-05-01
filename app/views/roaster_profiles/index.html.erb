@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Roaster Profiles</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Location</th>
+      <th>Slug</th>
+      <th>Url</th>
+      <th>Twitter</th>
+      <th>Facebook</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% unless @roaster_profiles.nil? %>
+      <% @roaster_profiles.each do |roaster_profile| %>
+        <tr>
+          <td><%= roaster_profile.name %></td>
+          <td><%= roaster_profile.location %></td>
+          <td><%= roaster_profile.slug %></td>
+          <td><%= roaster_profile.url %></td>
+          <td><%= roaster_profile.twitter %></td>
+          <td><%= roaster_profile.facebook %></td>
+          <td><%= link_to 'Show', roaster_profile %></td>
+          <td><%= link_to 'Edit', edit_roaster_profile_path(roaster_profile) %></td>
+          <td><%= link_to 'Destroy', roaster_profile, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Roaster Profile', new_roaster_profile_path %>

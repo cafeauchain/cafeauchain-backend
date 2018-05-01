@@ -3,6 +3,7 @@
 # Table name: users
 #
 #  id                     :bigint(8)        not null, primary key
+#  admin                  :boolean
 #  current_sign_in_at     :datetime
 #  current_sign_in_ip     :inet
 #  email                  :string           default(""), not null
@@ -14,13 +15,20 @@
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
 #  sign_in_count          :integer          default(0), not null
+#  slug                   :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  roaster_profile_id     :bigint(8)
 #
 # Indexes
 #
 #  index_users_on_email                 (email) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
+#  index_users_on_roaster_profile_id    (roaster_profile_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (roaster_profile_id => roaster_profiles.id)
 #
 
 require 'rails_helper'

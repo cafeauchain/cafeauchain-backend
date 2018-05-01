@@ -1,0 +1,47 @@
+<%= form_with(model: roaster_profile, local: true) do |form| %>
+  <% if roaster_profile.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(roaster_profile.errors.count, "error") %> prohibited this roaster_profile from being saved:</h2>
+
+      <ul>
+      <% roaster_profile.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :roaster_profile_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :location %>
+    <%= form.text_field :location, id: :roaster_profile_location %>
+  </div>
+
+  <div class="field">
+    <%= form.label :slug %>
+    <%= form.text_field :slug, id: :roaster_profile_slug %>
+  </div>
+
+  <div class="field">
+    <%= form.label :url %>
+    <%= form.text_field :url, id: :roaster_profile_url %>
+  </div>
+
+  <div class="field">
+    <%= form.label :twitter %>
+    <%= form.text_field :twitter, id: :roaster_profile_twitter %>
+  </div>
+
+  <div class="field">
+    <%= form.label :facebook %>
+    <%= form.text_field :facebook, id: :roaster_profile_facebook %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

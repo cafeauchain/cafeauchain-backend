@@ -4,7 +4,7 @@
   </div>
 
   <!--logo start-->
-  <a href="index.html" class="logo">Nice <span class="lite">Admin</span></a>
+  <%= link_to "Cafe au Chain | <span class='lite'>Proof of Perk</span>".html_safe, root_path, class: 'logo' %>
   <!--logo end-->
 
   <!-- <div class="nav search-row" id="top_menu">
@@ -228,22 +228,12 @@
         <ul class="dropdown-menu extended logout">
           <div class="log-arrow-up"></div>
           <li class="eborder-top">
-            <a href="#"><i class="icon_profile"></i> My Profile</a>
-          </li>
-          <li>
-            <a href="#"><i class="icon_mail_alt"></i> My Inbox</a>
-          </li>
-          <li>
-            <a href="#"><i class="icon_clock_alt"></i> Timeline</a>
-          </li>
-          <li>
-            <a href="#"><i class="icon_chat_alt"></i> Chats</a>
+            <%= link_to edit_user_registration_path do %>
+              <i class="icon_profile"></i> My Account
+            <% end %>
           </li>
           <li>
             <%= link_to "<i class='icon_key_alt'></i> Log Out".html_safe, destroy_user_session_path, method: :delete %>
-          </li>
-          <li>
-            <a href="documentation.html"><i class="icon_key_alt"></i> Documentation</a>
           </li>
         </ul>
       </li>
