@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @roaster_profile.name %>
+</p>
+
+<p>
+  <strong>Location:</strong>
+  <%= @roaster_profile.location %>
+</p>
+
+<p>
+  <strong>Slug:</strong>
+  <%= @roaster_profile.slug %>
+</p>
+
+<p>
+  <strong>Url:</strong>
+  <%= @roaster_profile.url %>
+</p>
+
+<p>
+  <strong>Twitter:</strong>
+  <%= @roaster_profile.twitter %>
+</p>
+
+<p>
+  <strong>Facebook:</strong>
+  <%= @roaster_profile.facebook %>
+</p>
+
+<%= link_to 'Edit', edit_roaster_profile_path(@roaster_profile) %> |
+<%= link_to 'Back', roaster_profiles_path %>

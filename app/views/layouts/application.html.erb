@@ -12,8 +12,14 @@
     <section id="container">
       <% unless devise_controller? %>
         <%= render 'layouts/navigation' %>
+        <section id="main-content">
+          <section class="wrapper">
       <% end %>
       <%= yield %>
+      <% unless devise_controller? %>
+        </section>
+      </section>
+      <% end %>
     </section>
   </body>
 </html>
