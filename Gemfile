@@ -9,12 +9,14 @@ gem 'rails', '~> 5.1.4'
 gem 'puma', '~> 3.7'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
+gem 'coffee-rails'
 gem 'jbuilder', '~> 2.5'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'bootstrap', '~> 4.0.0'
 gem 'pg', '~> 0.18'
 gem 'devise'
 gem 'high_voltage'
+gem 'font-awesome-rails'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
