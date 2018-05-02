@@ -1,9 +1,10 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @roaster_profile.name %>
-</p>
+<div class="row">
+  <div class="col-lg-12">
+    <h3 class="page-header"><%= @roaster_profile.name %></h3>
+  </div>
+</div>
 
 <p>
   <strong>Location:</strong>
@@ -11,23 +12,18 @@
 </p>
 
 <p>
-  <strong>Slug:</strong>
-  <%= @roaster_profile.slug %>
-</p>
-
-<p>
-  <strong>Url:</strong>
-  <%= @roaster_profile.url %>
+  <strong>Website:</strong>
+  <%= link_to "Website", "http://#{@roaster_profile.url}" %>
 </p>
 
 <p>
   <strong>Twitter:</strong>
-  <%= @roaster_profile.twitter %>
+  <%= link_to "Twitter", "https://twitter.com/#{@roaster_profile.twitter}" %>
 </p>
 
 <p>
   <strong>Facebook:</strong>
-  <%= @roaster_profile.facebook %>
+  <%= link_to "Facebook", "https://facebook.com/#{@roaster_profile.facebook}" %>
 </p>
 
 <%= link_to 'Edit', edit_roaster_profile_path(@roaster_profile) %> |

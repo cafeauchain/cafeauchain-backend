@@ -1,47 +1,55 @@
-<%= form_with(model: roaster_profile, local: true) do |form| %>
-  <% if roaster_profile.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(roaster_profile.errors.count, "error") %> prohibited this roaster_profile from being saved:</h2>
+<section class="panel">
+  <header class="panel-heading">
+    Roaster Profile
+  </header>
+  <%= form_with(model: roaster_profile, local: true, class: 'form-horizontal') do |form| %>
+    <% if roaster_profile.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(roaster_profile.errors.count, "error") %> prohibited this roaster_profile from being saved:</h2>
 
-      <ul>
-      <% roaster_profile.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+        <ul>
+        <% roaster_profile.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="panel-body">
+
+    <div class="form-group">
+      <%= form.label :name, class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :name, id: :roaster_profile_name, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :location, class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :location, id: :roaster_profile_location, class: 'form-control' %>
+        <span class="help-block">City and state will do for now.</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :url, "Website URL", class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :url, id: :roaster_profile_url, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :twitter, class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :twitter, id: :roaster_profile_twitter, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :facebook, class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :facebook, id: :roaster_profile_facebook, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="actions">
+      <%= form.submit "Submit", class: "btn btn-primary" %>
     </div>
   <% end %>
-
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name, id: :roaster_profile_name %>
-  </div>
-
-  <div class="field">
-    <%= form.label :location %>
-    <%= form.text_field :location, id: :roaster_profile_location %>
-  </div>
-
-  <div class="field">
-    <%= form.label :slug %>
-    <%= form.text_field :slug, id: :roaster_profile_slug %>
-  </div>
-
-  <div class="field">
-    <%= form.label :url %>
-    <%= form.text_field :url, id: :roaster_profile_url %>
-  </div>
-
-  <div class="field">
-    <%= form.label :twitter %>
-    <%= form.text_field :twitter, id: :roaster_profile_twitter %>
-  </div>
-
-  <div class="field">
-    <%= form.label :facebook %>
-    <%= form.text_field :facebook, id: :roaster_profile_facebook %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
-<% end %>
+</section>
