@@ -1,6 +1,13 @@
-<h1>Editing Roaster Profile</h1>
+<div class="row">
+  <div class="col-lg-12">
+    <h3 class="page-header">Editing Roaster Profile</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <%= render 'form', roaster_profile: @roaster_profile %>
 
-<%= render 'form', roaster_profile: @roaster_profile %>
-
-<%= link_to 'Show', @roaster_profile %> |
-<%= link_to 'Back', roaster_profiles_path %>
+    <%= link_to 'Show', @roaster_profile %> |
+    <%= link_to 'Back', roaster_profiles_path %>
+  </div>
+</div>
