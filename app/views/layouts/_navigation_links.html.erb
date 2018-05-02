@@ -12,9 +12,11 @@
         <% end %>
       </li>
       <li>
-        <%= link_to roaster_profile_path(current_user.roaster_profile) do %>
-          <i class="icon_genius"></i>
-          <span>My Roaster Profile</span>
+        <% if current_user.roaster_profile %>
+          <%= link_to roaster_profile_path(current_user.roaster_profile) do %>
+            <i class="icon_genius"></i>
+            <span>My Roaster Profile</span>
+          <% end %>
         <% end %>
       </li>
       <!-- <li class="sub-menu">
