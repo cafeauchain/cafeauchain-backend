@@ -18,6 +18,8 @@ gem 'devise'
 gem 'high_voltage'
 gem 'font-awesome-rails'
 gem 'friendly_id', '~> 5.1.0'
+gem 'multichain', github: 'cafeauchain/multichain-client'
+gem 'faraday'
 
 group :development do
   gem 'web-console', '>= 3.3.0'

@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/cafeauchain/multichain-client.git
+  revision: 8955ac20ea0fc9bf0f6a3171c6e59bf854112ff3
+  specs:
+    multichain (0.1.4)
+      httparty (~> 0.13)
+      thor (~> 0.19)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -44,7 +52,7 @@ GEM
       activerecord (>= 3.2, < 6.0)
       rake (>= 10.4, < 13.0)
     arel (8.0.0)
-    autoprefixer-rails (8.3.0)
+    autoprefixer-rails (8.4.1)
       execjs
     bcrypt (3.1.11)
     better_errors (2.4.0)
@@ -78,10 +86,10 @@ GEM
     concurrent-ruby (1.0.5)
     crass (1.0.4)
     database_cleaner (1.7.0)
-    devise (4.3.0)
+    devise (4.4.3)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
-      railties (>= 4.1.0, < 5.2)
+      railties (>= 4.1.0, < 6.0)
       responders
       warden (~> 1.2.3)
     diff-lcs (1.3)
@@ -94,14 +102,18 @@ GEM
       railties (>= 3.0.0)
     faker (1.8.7)
       i18n (>= 0.7)
+    faraday (0.15.0)
+      multipart-post (>= 1.2, < 3)
     ffi (1.9.23)
-    font-awesome-rails (4.7.0.2)
-      railties (>= 3.2, < 5.2)
+    font-awesome-rails (4.7.0.4)
+      railties (>= 3.2, < 6.0)
     friendly_id (5.1.0)
       activerecord (>= 4.0.0)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
-    high_voltage (3.0.0)
+    high_voltage (3.1.0)
+    httparty (0.16.2)
+      multi_xml (>= 0.5.2)
     hub (1.12.4)
     i18n (1.0.1)
       concurrent-ruby (~> 1.0)
@@ -125,7 +137,9 @@ GEM
     mini_portile2 (2.3.0)
     minitest (5.11.3)
     multi_json (1.13.1)
-    nio4r (2.3.0)
+    multi_xml (0.6.0)
+    multipart-post (2.0.0)
+    nio4r (2.3.1)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
     orm_adapter (0.5.0)
@@ -231,7 +245,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     warden (1.2.7)
       rack (>= 1.0)
-    web-console (3.6.1)
+    web-console (3.6.2)
       actionview (>= 5.0)
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
@@ -256,6 +270,7 @@ DEPENDENCIES
   devise
   factory_bot_rails
   faker
+  faraday
   font-awesome-rails
   friendly_id (~> 5.1.0)
   high_voltage
@@ -263,6 +278,7 @@ DEPENDENCIES
   jbuilder (~> 2.5)
   launchy
   listen (>= 3.0.5, < 3.2)
+  multichain!
   pg (~> 0.18)
   pry-rails
   pry-rescue
