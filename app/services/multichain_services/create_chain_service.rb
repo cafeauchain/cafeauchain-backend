@@ -10,7 +10,7 @@ module MultichainServices
     end
 
     def call
-      response = @connection.get("/createchain?chainname=#{@farm_slug}&networkport=#{@network_port}&rpcport=#{@rpc_port)")
+      response = @connection.get("/createchain?chainname=#{@farm_slug}&networkport=#{@network_port}&rpcport=#{@rpc_port}")
     end
     
     private
