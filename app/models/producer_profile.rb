@@ -31,4 +31,10 @@ class ProducerProfile < ApplicationRecord
       return "Ports already set"
     end
   end
+
+  def create_chain
+    MultichainServices::CreateChainService.new(self.slug, self.network_port, self.rpc_port).call
+    address = MultichainServices::GetNodeAddressService.new(self.slug, self.rpc_port).call
+    self.update(wallet_address: address)
+  end
 end
