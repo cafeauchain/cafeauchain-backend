@@ -1,0 +1,32 @@
+<section class="panel">
+  <header class="panel-heading">
+    Producer Profiles
+  </header>
+  <table class="table table-striped table-hover table-advance table-responsive">
+    <thead>
+      <tr>
+        <th><i class="icon_profile"></i> Name</th>
+        <th><i class="icon_pin_alt"></i> Location</th>
+        <th><i class="icon_documents_alt"></i> Chain Name</th>
+        <th><i class="fa fa-wallet"></i> Wallet Address</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% unless @producers.nil? %>
+        <% @producers.each do |producer_profile| %>
+          <tr>
+            <td><%= link_to producer_profile.name, producer_profile %></td>
+            <td><%= producer_profile.location %></td>
+            <td><%= producer_profile.slug %></td>
+            <td><%= producer_profile.wallet_address %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</section>
+
+<br>
+
+<%= link_to 'New Roaster Profile', new_roaster_profile_path if current_user.admin %>

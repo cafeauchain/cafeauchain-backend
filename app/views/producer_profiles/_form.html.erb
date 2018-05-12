@@ -1,0 +1,49 @@
+<section class="panel">
+  <header class="panel-heading">
+    Roaster Profile
+  </header>
+  <%= form_with(model: producer_profile, local: true, class: 'form-horizontal') do |form| %>
+    <% if producer_profile.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(producer_profile.errors.count, "error") %> prohibited this Producer from being saved:</h2>
+
+        <ul>
+        <% producer_profile.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="panel-body">
+
+    <div class="form-group">
+      <%= form.label :name, class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :name, id: :producer_profile_name, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :location, class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :location, id: :producer_profile_location, class: 'form-control' %>
+        <span class="help-block">City and state will do for now.</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :latitude, "Producer latitude", class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :latitude, id: :producer_profile_latitude, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :longitude, "Producer longitude", class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :longitude, id: :producer_profile_longitude, class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="actions">
+      <%= form.submit "Submit", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</section>

@@ -4,7 +4,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-ruby '2.4.2'
+ruby '2.4.3'
 gem 'rails', '~> 5.1.4'
 gem 'puma', '~> 3.7'
 gem 'sass-rails', '~> 5.0'
@@ -18,6 +18,8 @@ gem 'devise'
 gem 'high_voltage'
 gem 'font-awesome-rails'
 gem 'friendly_id', '~> 5.1.0'
+gem 'multichain', github: 'cafeauchain/multichain-client'
+gem 'faraday'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
