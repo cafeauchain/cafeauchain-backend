@@ -39,7 +39,8 @@ require 'high_voltage'
 
 Rails.application.routes.draw do
 
-  resources :roaster_profiles
+  resources :crops
+  resources :roaster_profiles, path: "roasters"
   resources :producer_profiles, path: "producers"
   devise_for :users, controllers: { registrations: "registrations" }
 
