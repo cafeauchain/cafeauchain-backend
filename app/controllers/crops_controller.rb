@@ -16,6 +16,7 @@ class CropsController < ApplicationController
                                    varietal: params[:crop][:varietal], bag_size: params[:crop][:bag_size],
                                    bags: params[:crop][:bags])
     if @crop.save
+      service = MultichainServices::IssueAssetsService(@producer.rpc_port, @producer.wallet_address, @crop.bag_size, @crop.bags)
       redirect_to producer_profile_path(@producer), success: "Crop created"
     else
       render :new, notice: "Something went wrong."
