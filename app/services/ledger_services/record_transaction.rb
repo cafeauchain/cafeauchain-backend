@@ -9,7 +9,7 @@ module LedgerServices
     end
 
     def call
-      
+      @crop.transactions.create(quantity: @quantity, transaction_type: @trans_type, tx_id: @tx_id)
     end
 
   end
