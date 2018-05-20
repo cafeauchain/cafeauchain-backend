@@ -4,6 +4,7 @@
 #
 #  id         :bigint(8)        not null, primary key
 #  quantity   :string
+#  trans_type :integer          default("assetissue")
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  crop_id    :bigint(8)
@@ -20,4 +21,6 @@
 
 class Transaction < ApplicationRecord
   belongs_to :crop
+
+  enum trans_type: [:assetissue, :assettx] 
 end

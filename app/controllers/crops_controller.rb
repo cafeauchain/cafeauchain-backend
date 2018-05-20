@@ -22,4 +22,8 @@ class CropsController < ApplicationController
       render :new, notice: "Something went wrong."
     end
   end
+
+  def index
+
+  end
 end
