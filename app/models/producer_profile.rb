@@ -19,7 +19,7 @@ class ProducerProfile < ApplicationRecord
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
   has_many :crops
-
+  has_many :wallets
   def generate_port_numbers
     if self.rpc_port.nil?
       rpc_port = ProducerProfile.first.rpc_port.to_i  + self.id
