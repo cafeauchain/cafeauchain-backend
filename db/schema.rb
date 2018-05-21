@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180517175129) do
+ActiveRecord::Schema.define(version: 20180521024856) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,7 +70,9 @@ ActiveRecord::Schema.define(version: 20180517175129) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "trans_type", default: 0
+    t.bigint "roaster_profile_id"
     t.index ["crop_id"], name: "index_transactions_on_crop_id"
+    t.index ["roaster_profile_id"], name: "index_transactions_on_roaster_profile_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -107,6 +109,7 @@ ActiveRecord::Schema.define(version: 20180517175129) do
 
   add_foreign_key "crops", "producer_profiles"
   add_foreign_key "transactions", "crops"
+  add_foreign_key "transactions", "roaster_profiles"
   add_foreign_key "users", "roaster_profiles"
   add_foreign_key "wallets", "producer_profiles"
   add_foreign_key "wallets", "roaster_profiles"
