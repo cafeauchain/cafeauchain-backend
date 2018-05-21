@@ -26,5 +26,5 @@ class Transaction < ApplicationRecord
   belongs_to :crop
   belongs_to :roaster_profile
 
-  enum trans_type: [:assetissue, :assettx] 
+  enum trans_type: [:assetissue, :assettx, :walletcreation] 
 end

@@ -12,8 +12,11 @@ module MultichainServices
       response = m.getnewaddress
       if response["error"].nil?
         wallet = response["result"]
-        m.grant([wallet, "receive"])
-        Wallet.create(roaster_profile: @roaster, producer_profile: @producer, roaster_wallet: wallet)
+        grant = m.grant([wallet, "receive"])
+        if grant["error"].nil?
+          wallet = Wallet.create(roaster_profile: @roaster, producer_profile: @producer, roaster_wallet: wallet)
+          tx = @roaster.transactions.create(tx_id: response["id"], trans_type: :walletcreation)
+        end
       else
         return response["error"]
       end
