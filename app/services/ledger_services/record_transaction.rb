@@ -10,7 +10,10 @@ module LedgerServices
     end
 
     def call
-      @crop.transactions.create(quantity: @quantity, transaction_type: @trans_type, tx_id: @tx_id, roaster_id: roaster_id)
+      @tx = @crop.transactions.create(quantity: @quantity, trans_type: @trans_type, tx_id: @tx_id, roaster_profile_id: @roaster_id)
+      if @tx.save
+        return "Success!"
+      end
     end
 
   end

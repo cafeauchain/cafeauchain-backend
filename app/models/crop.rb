@@ -23,4 +23,5 @@
 
 class Crop < ApplicationRecord
   belongs_to :producer_profile
+  has_many :transactions
 end
