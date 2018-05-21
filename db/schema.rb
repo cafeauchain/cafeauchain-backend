@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180509220030) do
+ActiveRecord::Schema.define(version: 20180521024856) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "crops", force: :cascade do |t|
+    t.bigint "producer_profile_id"
+    t.string "crop_year"
+    t.string "zone"
+    t.string "varietal"
+    t.integer "bags"
+    t.string "bag_size"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["producer_profile_id"], name: "index_crops_on_producer_profile_id"
+  end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string "slug", null: false
@@ -51,6 +63,18 @@ ActiveRecord::Schema.define(version: 20180509220030) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "transactions", force: :cascade do |t|
+    t.bigint "crop_id"
+    t.string "tx_id"
+    t.string "quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "trans_type", default: 0
+    t.bigint "roaster_profile_id"
+    t.index ["crop_id"], name: "index_transactions_on_crop_id"
+    t.index ["roaster_profile_id"], name: "index_transactions_on_roaster_profile_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -73,5 +97,20 @@ ActiveRecord::Schema.define(version: 20180509220030) do
     t.index ["roaster_profile_id"], name: "index_users_on_roaster_profile_id"
   end
 
+  create_table "wallets", force: :cascade do |t|
+    t.bigint "producer_profile_id"
+    t.bigint "roaster_profile_id"
+    t.string "roaster_wallet"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["producer_profile_id"], name: "index_wallets_on_producer_profile_id"
+    t.index ["roaster_profile_id"], name: "index_wallets_on_roaster_profile_id"
+  end
+
+  add_foreign_key "crops", "producer_profiles"
+  add_foreign_key "transactions", "crops"
+  add_foreign_key "transactions", "roaster_profiles"
   add_foreign_key "users", "roaster_profiles"
+  add_foreign_key "wallets", "producer_profiles"
+  add_foreign_key "wallets", "roaster_profiles"
 end

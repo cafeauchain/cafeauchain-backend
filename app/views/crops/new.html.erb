@@ -1,0 +1,98 @@
+<%= form_with(model: @crop, local: true, class: 'form-horizontal') do |form| %>
+  <section class="panel">
+    <header class="panel-heading">
+      Producer
+    </header>
+    <% if @crop.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@crop.errors.count, "error") %> prohibited this Producer from being saved:</h2>
+
+        <ul>
+        <% @crop.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="form-group">
+      <label class="control-label col-lg-2" for="inputSuccess">Choose a producer:</label>
+      <div class="col-lg-10">
+        <%= form.select :crop_producer, @farms, { include_blank: 'Please choose' }, {  class: 'form-control' } %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <h4>Create a new producer</h4>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :name, class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :name, id: :producer_profile_name, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :location, class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :location, id: :producer_profile_location, class: 'form-control' %>
+        <span class="help-block">City and state will do for now.</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :latitude, "Producer latitude", class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :latitude, id: :producer_profile_latitude, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :longitude, "Producer longitude", class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :longitude, id: :producer_profile_longitude, class: 'form-control' %>
+      </div>
+    </div>
+  </section>
+  <section class="panel">
+    <header class="panel-heading">
+      Crop
+    </header>
+    <div class="form-group">
+      <%= form.label :crop_year, class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :crop_year, id: :crop_crop_year, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :zone, class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :zone, id: :crop_zone, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :varietal, "Crop varietal", class: 'col-sm-2 control-label' %>
+      <div class="col-sm-10">
+        <%= form.text_field :varietal, id: :crop_varietal, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <%= form.label :bag_size, "Crop Bag Size", class: 'col-sm-4 control-label' %>
+          <div class="col-sm-8">
+            <%= form.select :bag_size, [["60 kg", "60kg"], ["40 kg", "40kg"]], {}, {id: :crop_bag_size, class: 'form-control'} %>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="form-group">
+          <%= form.label :bags, "Number of bags", class: 'col-sm-4 control-label' %>
+          <div class="col-sm-8">
+            <%= form.phone_field :bags, id: :crop_bags, class: 'form-control' %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <%= form.submit "Submit", class: "btn btn-primary" %>
+    </div>
+  </section>
+<% end %>

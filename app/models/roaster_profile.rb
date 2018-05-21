@@ -17,4 +17,6 @@ class RoasterProfile < ApplicationRecord
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
   has_many :users
+  has_many :wallets
+  has_many :transactions
 end
