@@ -22,6 +22,7 @@ class ProducerProfilesController < ApplicationController
 
   def show
     @producer = ProducerProfile.friendly.find(params[:id])
+    @crops = @producer.crops
   end
   
   private
