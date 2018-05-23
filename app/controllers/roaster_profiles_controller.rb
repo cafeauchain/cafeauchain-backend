@@ -14,6 +14,7 @@ class RoasterProfilesController < ApplicationController
   # GET /roaster_profiles/1
   # GET /roaster_profiles/1.json
   def show
+    @transactions = @roaster_profile.transactions
   end
 
   # GET /roaster_profiles/new

@@ -26,5 +26,35 @@
   <%= link_to "Facebook", "https://facebook.com/#{@roaster_profile.facebook}" %>
 </p>
 
+<section class="panel">
+  <header class="panel-heading">
+    Transactions
+  </header>
+
+  <table class="table table-striped table-hover table-advance table-responsive">
+    <thead>
+      <tr>
+        <th><i class="far fa-compass"></i> Crop Name</th>
+        <th><i class="fas fa-dna"></i> Transaction Type</th>
+        <th><i class="fas fa-frog"></i> Quantity</th>
+        <th><i class="fas fa-warehouse"></i> Transaction ID</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% unless @transactions.nil? %>
+        <% @transactions.each do |tx| %>
+          <tr>
+            <td><%= link_to tx.crop.name, tx.crop %></td>
+            <td><%= tx.trans_type %></td>
+            <td><%= tx.quantity %> bags</td>
+            <td><%= tx.tx_id %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</section>
+
 <%= link_to 'Edit', edit_roaster_profile_path(@roaster_profile) %> |
 <%= link_to 'Back', roaster_profiles_path %>
