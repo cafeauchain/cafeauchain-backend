@@ -6,6 +6,7 @@
 #  bag_size            :string
 #  bags                :integer
 #  crop_year           :string
+#  name                :string
 #  varietal            :string
 #  zone                :string
 #  created_at          :datetime         not null
