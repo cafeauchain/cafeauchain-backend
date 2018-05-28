@@ -15,6 +15,7 @@ class RoasterProfilesController < ApplicationController
   # GET /roaster_profiles/1.json
   def show
     @transactions = @roaster_profile.transactions
+    @crops = @transactions.collect{ |t| t.crop }
   end
 
   # GET /roaster_profiles/new

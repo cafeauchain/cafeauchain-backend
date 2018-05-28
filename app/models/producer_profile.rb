@@ -35,4 +35,8 @@ class ProducerProfile < ApplicationRecord
     address = MultichainServices::GetNodeAddressService.new(self.slug, self.rpc_port).call
     self.update(wallet_address: address)
   end
+
+  def total_bags(crop_id)
+    self.crops.sum(:bags)
+  end
 end
