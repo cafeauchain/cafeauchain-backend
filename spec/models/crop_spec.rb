@@ -3,8 +3,6 @@
 # Table name: crops
 #
 #  id                  :bigint(8)        not null, primary key
-#  bag_size            :string
-#  bags                :integer
 #  crop_year           :string
 #  name                :string
 #  varietal            :string

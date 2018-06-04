@@ -19,15 +19,16 @@ class RoasterProfile < ApplicationRecord
   has_many :users
   has_many :wallets
   has_many :transactions
-  has_many :crops, through: :transactions
+  has_many :lots
+  has_many :crops, through: :lots
 
-  def bags_delivered(crop_id)
-    self.transactions.collect{ |t| t.quantity.to_i if t.crop_id == crop_id }.sum
+  def bags_delivered(lot_id)
+    self.transactions.collect{ |t| t.quantity.to_i if t.lot_id == lot_id }.sum
   end
 
-  def bags_remaining(producer_id, crop_id)
+  def bags_remaining(producer_id, lot_id)
     producer = ProducerProfile.find(producer_id)
-    crop = Crop.find(crop_id)
-    bags_remaining = crop.bags - self.bags_delivered(crop_id)
+    lot = Lot.find(lot_id)
+    bags_remaining = lot.bags - self.bags_delivered(lot_id)
   end
 end

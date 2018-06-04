@@ -3,8 +3,6 @@
 # Table name: crops
 #
 #  id                  :bigint(8)        not null, primary key
-#  bag_size            :string
-#  bags                :integer
 #  crop_year           :string
 #  name                :string
 #  varietal            :string
@@ -25,4 +23,6 @@
 class Crop < ApplicationRecord
   belongs_to :producer_profile
   has_many :transactions
+  has_many :lots
+  has_many :roaster_profiles, through: :lots
 end

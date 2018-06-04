@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180522224515) do
+ActiveRecord::Schema.define(version: 20180529140424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,8 +20,6 @@ ActiveRecord::Schema.define(version: 20180522224515) do
     t.string "crop_year"
     t.string "zone"
     t.string "varietal"
-    t.integer "bags"
-    t.string "bag_size"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
@@ -38,6 +36,18 @@ ActiveRecord::Schema.define(version: 20180522224515) do
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id"
     t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
+  end
+
+  create_table "lots", force: :cascade do |t|
+    t.integer "number_of_bags"
+    t.string "bag_size"
+    t.bigint "crop_id"
+    t.bigint "roaster_profile_id"
+    t.float "price_per_pound"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["crop_id"], name: "index_lots_on_crop_id"
+    t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"
   end
 
   create_table "producer_profiles", force: :cascade do |t|
@@ -109,6 +119,8 @@ ActiveRecord::Schema.define(version: 20180522224515) do
   end
 
   add_foreign_key "crops", "producer_profiles"
+  add_foreign_key "lots", "crops"
+  add_foreign_key "lots", "roaster_profiles"
   add_foreign_key "transactions", "crops"
   add_foreign_key "transactions", "roaster_profiles"
   add_foreign_key "users", "roaster_profiles"
