@@ -3,8 +3,7 @@
 # Table name: lots
 #
 #  id                 :bigint(8)        not null, primary key
-#  bag_size           :string
-#  number_of_bags     :integer
+#  pounds_of_coffee   :float
 #  price_per_pound    :float
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
@@ -25,4 +24,9 @@
 class Lot < ApplicationRecord
   belongs_to :crop
   belongs_to :roaster_profile
+  has_many :batches
+
+  def lot_value
+    return self.price_per_pound * self.pounds_of_coffee
+  end
 end

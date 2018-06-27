@@ -33,6 +33,10 @@
 #                            PATCH  /producers/:id(.:format)                                 producer_profiles#update
 #                            PUT    /producers/:id(.:format)                                 producer_profiles#update
 #                            DELETE /producers/:id(.:format)                                 producer_profiles#destroy
+#                roast_index GET    /roast(.:format)                                         roast#index
+#                            GET    /roast/step_1/:id(.:format)                              roast#step_1
+#               roast_step_2 POST   /roast/step_2(.:format)                                  roast#step_2
+#          onboarding_step_1 GET    /onboarding/step_1(.:format)                             onboarding#step_1
 #           new_user_session GET    /users/sign_in(.:format)                                 devise/sessions#new
 #               user_session POST   /users/sign_in(.:format)                                 devise/sessions#create
 #       destroy_user_session DELETE /users/sign_out(.:format)                                devise/sessions#destroy
@@ -60,6 +64,15 @@ Rails.application.routes.draw do
     resources :crops
     resources :lots
   end
+
+  resources :roast, only: [:index]
+  get 'roast/step_1/:id', to: 'roast#step_1'
+  post 'roast/step_2', to: 'roast#step_2'
+  post 'roast/step_3', to: 'roast#step_3'
+  get 'roast/load_lot/:id', to: 'roast#load_lot'
+  get 'roast/new_lot/:id', to: 'roast#new_lot'
+  get 'onboarding/step_1', to: 'onboarding#step_1'
+
   devise_for :users, controllers: { registrations: "registrations" }
 
   root to: 'high_voltage/pages#show', id: 'home'

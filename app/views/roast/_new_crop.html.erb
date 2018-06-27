@@ -1,0 +1,104 @@
+<%= form_with(model: @producer, url: roast_step_2_path, class: 'row') do |form| %>
+  <h3>Producer</h3>
+  <% if @producer.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@producer.errors.count, "error") %> prohibited this Producer from being saved:</h2>
+
+      <ul>
+      <% @producer.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="form-group">
+    <label class="control-label col-lg-2" for="inputSuccess">Choose a producer:</label>
+    <div class="col-lg-10">
+      <%= form.select :crop_producer, @producers, { include_blank: 'Please choose...' }, {  class: 'form-control', id: "crop_producer"} %>
+    </div>
+  </div>
+  <div class="hidden" id="new_producer">
+    <div class="row">
+      <div class="col-lg-12">
+        <h4>Create a new producer</h4>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :name, class: 'control-label' %>
+      <div class="">
+        <%= form.text_field :name, id: :producer_profile_name, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="form-group">
+      <%= form.label :location, class: 'control-label' %>
+      <div class="">
+        <%= form.text_field :location, id: :producer_profile_location, class: 'form-control' %>
+        <span class="help-block">City and state will do for now.</span>
+      </div>
+    </div>
+  </div>
+  <h3>Crop</h3>
+  <div class="form-group">
+    <%= form.label :crop_name, class: 'control-label' %>
+    <div class="">
+      <%= form.text_field :crop_name, id: :crop_crop_name, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= form.label :crop_year, class: 'control-label' %>
+    <div class="">
+      <%= form.text_field :crop_year, id: :crop_crop_year, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= form.label :harvest_season, class: 'control-label' %>
+    <div class="">
+      <%= form.text_field :harvest_season, id: :crop_harvest_season, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= form.label :country, class: 'control-label' %>
+    <div class="">
+      <%= form.text_field :country, id: :crop_country, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= form.label :region, class: 'control-label' %>
+    <div class="">
+      <%= form.text_field :region, id: :crop_region, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= form.label :varietal, class: 'control-label' %>
+    <div class="">
+      <%= form.text_field :varietal, id: :crop_varietal, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= form.label :process, class: 'control-label' %>
+    <div class="">
+      <%= form.text_field :process, id: :crop_process, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= form.label :altitude, class: 'control-label' %>
+    <div class="">
+      <%= form.text_field :altitude, id: :crop_altitude, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-12">
+      <%= form.submit "Next step", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  $('#crop_producer').change(function() {
+    if(this.value == ""){
+      $('#new_producer').removeClass('hidden')
+    } else {
+      $('#new_producer').addClass('hidden')
+    }
+  })
+</script>

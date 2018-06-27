@@ -1,0 +1,25 @@
+<h3><%= @crop.name %></h3>
+<%= form_with(model: @lot, url: roast_step_3_path, class: 'row') do |form| %>
+  <%= hidden_field_tag :crop_id, @crop.id %>
+  <%= select_tag :lot_select, options_for_select(@options), { prompt: "Select or create a lot", include_blank: 'Create new lot...', class: 'form-control' } %>
+  <div id="lot_info"></div>
+  <div class="form-group">
+    <%= form.label :starting_amount, "How many pounds of coffee are you roasting right now?", class: 'control-label' %>
+    <%= form.text_field :starting_amount, id: :lot_starting_amount, class: 'form-control' %>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-12">
+      <%= form.submit "Next step", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  $('#lot_select').change(function() {
+    if(this.value == ""){
+      $.ajax({url: '/roast/new_lot/' + this.value})
+    } else {
+      $.ajax({url: '/roast/load_lot/' + this.value})
+    }
+  })
+</script>

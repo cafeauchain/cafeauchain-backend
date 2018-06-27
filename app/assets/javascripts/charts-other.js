@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	
+	console.log("Loading Charts")
 	/* ---------- Sparkline Charts ---------- */
 	//generate random number for charts
 	randNum = function(){

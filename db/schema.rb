@@ -10,19 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180529140424) do
+ActiveRecord::Schema.define(version: 20180625142848) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "batches", force: :cascade do |t|
+    t.bigint "lot_id"
+    t.float "starting_amount"
+    t.float "ending_amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lot_id"], name: "index_batches_on_lot_id"
+  end
+
   create_table "crops", force: :cascade do |t|
     t.bigint "producer_profile_id"
     t.string "crop_year"
-    t.string "zone"
     t.string "varietal"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.string "region"
+    t.string "country"
+    t.string "harvest_season"
+    t.string "altitude"
+    t.string "process"
     t.index ["producer_profile_id"], name: "index_crops_on_producer_profile_id"
   end
 
@@ -39,13 +52,12 @@ ActiveRecord::Schema.define(version: 20180529140424) do
   end
 
   create_table "lots", force: :cascade do |t|
-    t.integer "number_of_bags"
-    t.string "bag_size"
     t.bigint "crop_id"
     t.bigint "roaster_profile_id"
     t.float "price_per_pound"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "pounds_of_coffee"
     t.index ["crop_id"], name: "index_lots_on_crop_id"
     t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"
   end
@@ -118,6 +130,7 @@ ActiveRecord::Schema.define(version: 20180529140424) do
     t.index ["roaster_profile_id"], name: "index_wallets_on_roaster_profile_id"
   end
 
+  add_foreign_key "batches", "lots"
   add_foreign_key "crops", "producer_profiles"
   add_foreign_key "lots", "crops"
   add_foreign_key "lots", "roaster_profiles"

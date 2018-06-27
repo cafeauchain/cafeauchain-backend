@@ -17,10 +17,16 @@
 
 class ProducerProfile < ApplicationRecord
   extend FriendlyId
+  after_create_commit :generate_port_numbers
+  after_create_commit :create_chain
+  
   friendly_id :name, use: [:slugged, :finders]
+
   has_many :crops
   has_many :wallets
+  
   accepts_nested_attributes_for :crops, reject_if: ->(attributes){ attributes['name'].blank? }, allow_destroy: true
+
   def generate_port_numbers
     if self.rpc_port.nil?
       rpc_port = ProducerProfile.first.rpc_port.to_i  + self.id

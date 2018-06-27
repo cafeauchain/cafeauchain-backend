@@ -3,10 +3,14 @@
 # Table name: crops
 #
 #  id                  :bigint(8)        not null, primary key
+#  altitude            :string
+#  country             :string
 #  crop_year           :string
+#  harvest_season      :string
 #  name                :string
+#  process             :string
+#  region              :string
 #  varietal            :string
-#  zone                :string
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  producer_profile_id :bigint(8)
