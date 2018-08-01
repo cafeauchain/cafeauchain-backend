@@ -3,6 +3,7 @@
 # Table name: lots
 #
 #  id                 :bigint(8)        not null, primary key
+#  harvest_year       :string
 #  pounds_of_coffee   :float
 #  price_per_pound    :float
 #  created_at         :datetime         not null

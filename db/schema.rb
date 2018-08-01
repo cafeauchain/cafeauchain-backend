@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180625142848) do
+ActiveRecord::Schema.define(version: 20180628140952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,7 +26,6 @@ ActiveRecord::Schema.define(version: 20180625142848) do
 
   create_table "crops", force: :cascade do |t|
     t.bigint "producer_profile_id"
-    t.string "crop_year"
     t.string "varietal"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -58,6 +57,7 @@ ActiveRecord::Schema.define(version: 20180625142848) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.float "pounds_of_coffee"
+    t.string "harvest_year"
     t.index ["crop_id"], name: "index_lots_on_crop_id"
     t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"
   end
@@ -94,7 +94,11 @@ ActiveRecord::Schema.define(version: 20180625142848) do
     t.datetime "updated_at", null: false
     t.integer "trans_type", default: 0
     t.bigint "roaster_profile_id"
+    t.bigint "lot_id"
+    t.bigint "batch_id"
+    t.index ["batch_id"], name: "index_transactions_on_batch_id"
     t.index ["crop_id"], name: "index_transactions_on_crop_id"
+    t.index ["lot_id"], name: "index_transactions_on_lot_id"
     t.index ["roaster_profile_id"], name: "index_transactions_on_roaster_profile_id"
   end
 
@@ -134,7 +138,9 @@ ActiveRecord::Schema.define(version: 20180625142848) do
   add_foreign_key "crops", "producer_profiles"
   add_foreign_key "lots", "crops"
   add_foreign_key "lots", "roaster_profiles"
+  add_foreign_key "transactions", "batches"
   add_foreign_key "transactions", "crops"
+  add_foreign_key "transactions", "lots"
   add_foreign_key "transactions", "roaster_profiles"
   add_foreign_key "users", "roaster_profiles"
   add_foreign_key "wallets", "producer_profiles"

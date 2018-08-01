@@ -41,8 +41,9 @@ class RoastController < ApplicationController
     else
       @lot = Lot.find(params[:lot_select])
     end
-    @batch = @lot.batches.create(starting_amount: params[:lot][:starting_amount]) 
-    @roasted = @lot.batches.pluck(:starting_amount).sum # need to add ending amount field
+    @batch = @lot.batches.create(starting_amount: params[:lot][:starting_amount], ending_amount: params[:lot][:ending_amount]) 
+    @starting_roast_weight = @lot.batches.pluck(:starting_amount).sum
+    @roasted = @lot.batches.pluck(:ending_amount).sum # need to add ending amount field
     puts @lot.pounds_of_coffee
     puts @roasted
     @chaff = @lot.pounds_of_coffee - @roasted
@@ -53,7 +54,6 @@ class RoastController < ApplicationController
   end
 
   def new_lot
-    
   end
   
   private

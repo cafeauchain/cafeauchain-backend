@@ -36,7 +36,11 @@
 #                roast_index GET    /roast(.:format)                                         roast#index
 #                            GET    /roast/step_1/:id(.:format)                              roast#step_1
 #               roast_step_2 POST   /roast/step_2(.:format)                                  roast#step_2
+#               roast_step_3 POST   /roast/step_3(.:format)                                  roast#step_3
+#                            GET    /roast/load_lot/:id(.:format)                            roast#load_lot
+#                            GET    /roast/new_lot/:id(.:format)                             roast#new_lot
 #          onboarding_step_1 GET    /onboarding/step_1(.:format)                             onboarding#step_1
+#                  dashboard GET    /dashboard(.:format)                                     dashboard#index
 #           new_user_session GET    /users/sign_in(.:format)                                 devise/sessions#new
 #               user_session POST   /users/sign_in(.:format)                                 devise/sessions#create
 #       destroy_user_session DELETE /users/sign_out(.:format)                                devise/sessions#destroy
@@ -59,6 +63,7 @@ require 'high_voltage'
 
 Rails.application.routes.draw do
 
+
   resources :roaster_profiles, path: "roasters"
   resources :producer_profiles, path: "producers" do
     resources :crops
@@ -70,11 +75,12 @@ Rails.application.routes.draw do
   post 'roast/step_2', to: 'roast#step_2'
   post 'roast/step_3', to: 'roast#step_3'
   get 'roast/load_lot/:id', to: 'roast#load_lot'
-  get 'roast/new_lot/:id', to: 'roast#new_lot'
+  get 'roast/new_lot', to: 'roast#new_lot'
   get 'onboarding/step_1', to: 'onboarding#step_1'
+  get 'dashboard', to: 'dashboard#index'
 
   devise_for :users, controllers: { registrations: "registrations" }
 
-  root to: 'high_voltage/pages#show', id: 'home'
+  root to: 'dashboard#index'
 
 end

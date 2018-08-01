@@ -5,7 +5,6 @@
 #  id                  :bigint(8)        not null, primary key
 #  altitude            :string
 #  country             :string
-#  crop_year           :string
 #  harvest_season      :string
 #  name                :string
 #  process             :string
