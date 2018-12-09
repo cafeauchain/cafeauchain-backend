@@ -17,8 +17,8 @@
 
 class ProducerProfile < ApplicationRecord
   extend FriendlyId
-  after_create_commit :generate_port_numbers
-  after_create_commit :create_chain
+  # after_create_commit :generate_port_numbers
+  # after_create_commit :create_chain
   
   friendly_id :name, use: [:slugged, :finders]
 
