@@ -34,5 +34,5 @@ class Transaction < ApplicationRecord
   belongs_to :batch, optional: true
   belongs_to :roaster_profile, optional: true
 
-  enum trans_type: [:asset_issue, :asset_transfer, :asset_delivery, :roasted] 
+  enum trans_type: [:asset_issue, :asset_transfer, :asset_delivery, :roasted, :ready_for_sale] 
 end

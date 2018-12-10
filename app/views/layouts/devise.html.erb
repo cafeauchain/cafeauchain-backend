@@ -10,12 +10,7 @@
   </head>
   <body class="<%= yield(:body_class) %>">
     <section id="container">
-      <%= render 'layouts/navigation' %>
-      <section id="main-content">
-        <section class="wrapper">
-          <%= yield %>
-        </section>
-      </section>
+      <%= yield %>
     </section>
   </body>
 </html>
