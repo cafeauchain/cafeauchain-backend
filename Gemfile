@@ -5,14 +5,14 @@ git_source(:github) do |repo_name|
 end
 
 ruby '2.4.3'
-gem 'rails', '~> 5.1.4'
+gem 'rails', '~> 5.1.6'
 gem 'puma', '~> 3.7'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails'
 gem 'jbuilder', '~> 2.5'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-gem 'bootstrap', '~> 4.0.0'
+gem "bootstrap", ">= 4.1.2"
 gem 'pg', '~> 0.18'
 gem 'devise'
 gem 'high_voltage'
