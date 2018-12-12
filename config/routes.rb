@@ -63,6 +63,9 @@ require 'high_voltage'
 
 Rails.application.routes.draw do
 
+  namespace :admin do
+    resources :plans
+  end
 
   resources :roaster_profiles, path: "roasters"
   resources :producer_profiles, path: "producers" do

@@ -15,7 +15,7 @@ class Admin::PlansController < ApplicationController
   def create
     @plan = Plan.new(plan_params)
     if @plan.save!
-      redirect_to plan_path(@plan), notice: 'Plan successfully created!'
+      redirect_to admin_plan_path(@plan), notice: 'Plan successfully created!'
     else
       render :new, alert: "Something went wrong: #{@plan.errors.full_messages}"
     end
@@ -26,9 +26,9 @@ class Admin::PlansController < ApplicationController
 
   def update
     if @plan.update!(plan_params)
-      redirect_to plan_path(@plan), notice: 'Plan successfully created!'
+      redirect_to admin_plan_path(@plan), notice: 'Plan successfully created!'
     else
-      render :new, alert: "Something went wrong: #{@plan.errors.full_messages}"
+      render :edit, alert: "Something went wrong: #{@plan.errors.full_messages}"
     end
   end
   

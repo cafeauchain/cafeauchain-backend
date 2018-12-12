@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180628140952) do
+ActiveRecord::Schema.define(version: 20181211024226) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,15 @@ ActiveRecord::Schema.define(version: 20180628140952) do
     t.string "harvest_year"
     t.index ["crop_id"], name: "index_lots_on_crop_id"
     t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"
+  end
+
+  create_table "plans", force: :cascade do |t|
+    t.string "stripe_plan_id"
+    t.integer "price_in_cents"
+    t.string "interval"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "producer_profiles", force: :cascade do |t|

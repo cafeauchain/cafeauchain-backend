@@ -7674,11 +7674,11 @@ div[data-role="editor-toolbar"] {
 
   border-radius: 0px;
 
-  height: 34px;
+  // height: 34px;
 
   position: relative;
 
-  margin: 0 0 19px 0;
+  margin: 0 20px 19px 0;
 
   overflow: hidden;
 
@@ -7687,8 +7687,6 @@ div[data-role="editor-toolbar"] {
 .breadcrumb li {
 
   position: relative;
-
-  margin-right: 0;
 
 }
 
