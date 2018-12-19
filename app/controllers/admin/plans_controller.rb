@@ -15,7 +15,8 @@ class Admin::PlansController < ApplicationController
   def create
     @plan = Plan.new(plan_params)
     if @plan.save!
-      redirect_to admin_plan_path(@plan), notice: 'Plan successfully created!'
+      @plan.update(interval: 'monthly')
+      redirect_to admin_plans_path, notice: 'Plan successfully created!'
     else
       render :new, alert: "Something went wrong: #{@plan.errors.full_messages}"
     end

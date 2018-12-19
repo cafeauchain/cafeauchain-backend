@@ -2,9 +2,11 @@
   <div class="col-lg-12">
     <h3 class="page-header"><i class="fas fa-user-astronaut"></i> Admin</h3>
     <ol class="breadcrumb">
-      <li><i class="fa fa-home fa-lg"></i><a href="/"> Home</a></li>
+      <li><i class="fa fa-home fa-lg"></i> <%= link_to 'Home', admin_dashboard_path %></li>
       <li><i class="fas fa-user-astronaut fa-lg"></i> Admin</li>
-      <li><i class="fab fa-stripe fa-lg"></i> <%= link_to 'Plans', admin_plans_path %></li>
+      <% if controller_name == 'plans' %>
+        <li><i class="fab fa-stripe fa-lg"></i> <%= link_to 'Plans', admin_plans_path %></li>
+      <% end %>
     </ol>
   </div>
 </div>

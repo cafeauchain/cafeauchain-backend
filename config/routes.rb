@@ -65,6 +65,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :plans
+    get 'dashboard', to: 'dashboard#index'
   end
 
   resources :roaster_profiles, path: "roasters"
