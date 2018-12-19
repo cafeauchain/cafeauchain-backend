@@ -16,11 +16,12 @@ gem "bootstrap", ">= 4.1.2"
 gem 'pg', '~> 0.18'
 gem 'devise'
 gem 'high_voltage'
-# gem 'font-awesome-rails'
 gem 'font_awesome5_rails'
 gem 'friendly_id', '~> 5.1.0'
 gem 'multichain', github: 'cafeauchain/multichain-client'
 gem 'faraday'
+gem 'webpacker'
+gem 'react-rails'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
