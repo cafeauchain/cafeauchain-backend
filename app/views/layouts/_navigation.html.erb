@@ -227,6 +227,13 @@
         </a>
         <ul class="dropdown-menu extended logout">
           <div class="log-arrow-up"></div>
+          <% if current_user.admin? %>
+            <li class="eborder-top">
+              <%= link_to admin_dashboard_path do %>
+                <i class="fas fa-user-astronaut"></i> Admin Dashboard
+              <% end %>
+            </li>
+          <% end %>
           <li class="eborder-top">
             <%= link_to edit_user_registration_path do %>
               <i class="icon_profile"></i> My Account
