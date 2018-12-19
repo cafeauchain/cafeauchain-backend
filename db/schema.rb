@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181219171140) do
+ActiveRecord::Schema.define(version: 20181219171523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,6 +95,16 @@ ActiveRecord::Schema.define(version: 20181219171140) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "subscription_charges", force: :cascade do |t|
+    t.bigint "subscription_id"
+    t.string "stripe_charge_id"
+    t.text "description"
+    t.integer "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subscription_id"], name: "index_subscription_charges_on_subscription_id"
+  end
+
   create_table "subscription_items", force: :cascade do |t|
     t.bigint "subscription_id"
     t.bigint "plan_id"
@@ -166,6 +176,7 @@ ActiveRecord::Schema.define(version: 20181219171140) do
   add_foreign_key "crops", "producer_profiles"
   add_foreign_key "lots", "crops"
   add_foreign_key "lots", "roaster_profiles"
+  add_foreign_key "subscription_charges", "subscriptions"
   add_foreign_key "subscription_items", "plans"
   add_foreign_key "subscription_items", "subscriptions"
   add_foreign_key "subscriptions", "users"
