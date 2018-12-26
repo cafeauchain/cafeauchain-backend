@@ -18,7 +18,7 @@
             <tr>
               <td><%= plan.name %></td>
               <td><%= plan.interval.humanize %></td>
-              <td><%= sprintf("%0.2f", plan.price_in_cents.to_f / 100) %></td>
+              <td>$<%= sprintf("%0.2f", plan.price_in_cents.to_f / 100) %></td>
               <td><%= plan.stripe_plan_id %></td>
             </tr>
           <% end %>

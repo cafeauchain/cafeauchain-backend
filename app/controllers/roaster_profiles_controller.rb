@@ -1,5 +1,7 @@
 class RoasterProfilesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_roaster_profile, only: [:show, :edit, :update, :destroy]
+  layout :devise
 
   # GET /roaster_profiles
   # GET /roaster_profiles.json

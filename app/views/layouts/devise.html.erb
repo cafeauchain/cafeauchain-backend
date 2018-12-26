@@ -5,6 +5,7 @@
     <title><%= content_for?(:title) ? yield(:title) : "Cafeauchain Backend" %></title>
     <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Cafe au Chain | Proof of Perk" %>">
     <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= stylesheet_link_tag 'bootstrap-theme', media: 'all' %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_pack_tag 'application' %>
     <%= csrf_meta_tags %>

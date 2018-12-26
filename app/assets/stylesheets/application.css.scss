@@ -11,11 +11,61 @@
  * It is generally better to create a new file per style scope.
  *
  *= require font_awesome5
- *= require_tree .
  *= require_self
  */
+@import "bootstrap";
 @import "elegant-icons-style";
+@import "line_icons";
 
 .hidden {
   display: none;
+}
+
+.login-img-body{
+
+  background: image-url('bg-1.jpg') no-repeat center center fixed;
+
+  -webkit-background-size: cover;
+
+  -moz-background-size: cover;
+
+  -o-background-size: cover;
+
+  background-size: cover;
+
+}
+
+.login-img2-body{
+
+  background: image-url('bg-1.jpg') no-repeat center center fixed;
+
+  -webkit-background-size: cover;
+
+  -moz-background-size: cover;
+
+  -o-background-size: cover;
+
+  background-size: cover;
+
+}
+
+.login-img3-body{
+
+  background: image-url('bg-1.jpg') no-repeat center center fixed;
+
+  -webkit-background-size: cover;
+
+  -moz-background-size: cover;
+
+  -o-background-size: cover;
+
+  background-size: cover;
+
+}
+
+.jumbotron {
+  background: rgba(233, 236, 239, 0.8)
+}
+footer {
+  background: rgba(233, 236, 239, 1)
 }

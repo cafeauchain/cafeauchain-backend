@@ -1,6 +1,15 @@
 # == Route Map
 #
 #                     Prefix Verb   URI Pattern                                              Controller#Action
+#                admin_plans GET    /admin/plans(.:format)                                   admin/plans#index
+#                            POST   /admin/plans(.:format)                                   admin/plans#create
+#             new_admin_plan GET    /admin/plans/new(.:format)                               admin/plans#new
+#            edit_admin_plan GET    /admin/plans/:id/edit(.:format)                          admin/plans#edit
+#                 admin_plan GET    /admin/plans/:id(.:format)                               admin/plans#show
+#                            PATCH  /admin/plans/:id(.:format)                               admin/plans#update
+#                            PUT    /admin/plans/:id(.:format)                               admin/plans#update
+#                            DELETE /admin/plans/:id(.:format)                               admin/plans#destroy
+#            admin_dashboard GET    /admin/dashboard(.:format)                               admin/dashboard#index
 #           roaster_profiles GET    /roasters(.:format)                                      roaster_profiles#index
 #                            POST   /roasters(.:format)                                      roaster_profiles#create
 #        new_roaster_profile GET    /roasters/new(.:format)                                  roaster_profiles#new
@@ -38,7 +47,7 @@
 #               roast_step_2 POST   /roast/step_2(.:format)                                  roast#step_2
 #               roast_step_3 POST   /roast/step_3(.:format)                                  roast#step_3
 #                            GET    /roast/load_lot/:id(.:format)                            roast#load_lot
-#                            GET    /roast/new_lot/:id(.:format)                             roast#new_lot
+#              roast_new_lot GET    /roast/new_lot(.:format)                                 roast#new_lot
 #          onboarding_step_1 GET    /onboarding/step_1(.:format)                             onboarding#step_1
 #                  dashboard GET    /dashboard(.:format)                                     dashboard#index
 #           new_user_session GET    /users/sign_in(.:format)                                 devise/sessions#new
@@ -57,6 +66,8 @@
 #                            DELETE /users(.:format)                                         registrations#destroy
 #                            POST   /users(.:format)                                         registrations#create
 #                       root GET    /                                                        high_voltage/pages#show {:id=>"home"}
+#                       home GET    /home(.:format)                                          redirect(301, /)
+#                            GET    /                                                        high_voltage/pages#show {:id=>"home"}
 #                       page GET    /*id                                                     high_voltage/pages#show
 
 require 'high_voltage'
@@ -83,8 +94,10 @@ Rails.application.routes.draw do
   get 'onboarding/step_1', to: 'onboarding#step_1'
   get 'dashboard', to: 'dashboard#index'
 
-  devise_for :users, controllers: { registrations: "registrations" }
+  devise_for :users, controllers: { registrations: "users/registrations" }
 
-  root to: 'dashboard#index'
+  # root to: 'dashboard#index'
+  # root to: 'pages#show', id: 'home'
+  root 'high_voltage/pages#show', id: 'home'
 
 end
