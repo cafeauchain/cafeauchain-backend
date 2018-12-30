@@ -11,9 +11,11 @@
             Home <span class="sr-only">(current)</span>
           <% end %>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
+        <% if user_signed_in? && !current_user.admin? && current_user.roaster_profile.nil? %>
+          <li class="nav-item">
+            <%= link_to 'Finish setting up your profile', new_roaster_profile_path, class: 'nav-link' %>
+          </li>
+        <% end %>
       </ul>
       <ul class="navbar-nav navbar-right">
         <li class="nav-item dropdown">

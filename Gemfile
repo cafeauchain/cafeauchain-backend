@@ -5,7 +5,8 @@ git_source(:github) do |repo_name|
 end
 
 ruby '2.4.3'
-gem 'rails', '~> 5.1.6'
+gem 'rails', '~> 5.2'
+gem 'bootsnap'
 gem 'puma', '~> 3.7'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
@@ -22,6 +23,7 @@ gem 'multichain', github: 'cafeauchain/multichain-client'
 gem 'faraday'
 gem 'webpacker'
 gem 'react-rails'
+gem 'semantic-ui-sass'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
@@ -33,6 +35,7 @@ group :development do
   gem 'rails_layout'
   gem 'spring-commands-rspec'
   gem 'annotate'
+  gem "binding_of_caller"
 end
 
 group :development, :test do

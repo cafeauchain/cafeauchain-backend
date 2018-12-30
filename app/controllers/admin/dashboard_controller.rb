@@ -3,6 +3,7 @@ class Admin::DashboardController < ApplicationController
 
   def index
     @plans = Plan.all
+    @users = User.all
   end
   
 end

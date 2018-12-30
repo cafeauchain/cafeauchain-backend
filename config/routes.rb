@@ -79,7 +79,15 @@ Rails.application.routes.draw do
     get 'dashboard', to: 'dashboard#index'
   end
 
-  resources :roaster_profiles, path: "roasters"
+  resources :roaster_profiles, path: "roasters" do
+    collection do
+      get :step1, to: "roaster_profiles#new"
+      get :step2
+      get :step3
+      get :step4
+    end
+  end
+
   resources :producer_profiles, path: "producers" do
     resources :crops
     resources :lots
