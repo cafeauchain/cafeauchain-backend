@@ -16,6 +16,7 @@
     "typescript": "^3.2.2"
   },
   "devDependencies": {
+    "@babel/polyfill": "^7.2.5",
     "webpack-dev-server": "2.11.2"
   }
 }

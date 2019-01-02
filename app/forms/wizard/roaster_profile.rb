@@ -15,22 +15,21 @@ module Wizard
 
     class Step1 < Base
       validates :name, presence: true
-    end
-
-    class Step2 < Step1
-      validates :logo, presence: true
       validates :about, presence: true
     end
 
-    class Step3 < Step2
+    class Step2 < Step1
       validates :address_1, presence: true
       validates :zip_code, presence: true
       validates :city, presence: true
       validates :state, presence: true
     end
 
-    class Step4 < Step3
+    class Step3 < Step2
       validates :url, presence: true
+    end
+
+    class Step4 < Step3
     end
   end
 end

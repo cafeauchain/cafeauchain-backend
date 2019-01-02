@@ -24,6 +24,7 @@ gem 'faraday'
 gem 'webpacker'
 gem 'react-rails'
 gem 'semantic-ui-sass'
+gem 'mini_magick'
 
 group :development do
   gem 'web-console', '>= 3.3.0'

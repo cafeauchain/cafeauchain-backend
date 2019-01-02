@@ -5,6 +5,7 @@
 #  id         :bigint(8)        not null, primary key
 #  about      :text
 #  address_1  :string
+#  address_2  :string
 #  city       :string
 #  facebook   :string
 #  location   :string

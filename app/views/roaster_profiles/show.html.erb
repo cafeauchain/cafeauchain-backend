@@ -4,6 +4,7 @@
   </header>
 
   <div class="col-sm-12">
+    <%= image_tag url_for(@roaster_profile.logo) %>
     <p id="notice"><%= notice %></p>
 
     <div class="row">
@@ -11,11 +12,6 @@
         <h3 class="page-header"><%= @roaster_profile.name %></h3>
       </div>
     </div>
-
-    <p>
-      <strong>Location:</strong>
-      <%= @roaster_profile.location %>
-    </p>
 
     <p>
       <strong>Website:</strong>
@@ -31,11 +27,6 @@
       <strong>Facebook:</strong>
       <%= link_to "Facebook", "https://facebook.com/#{@roaster_profile.facebook}" %>
     </p>
-
-    <% @crops.each do |crop| %>
-      <h4><%= crop.name %></h4>
-      <p>Bags received: <%= @roaster_profile.bags_delivered(crop.id) %> | Bags remaining: <%= @roaster_profile.bags_remaining(crop.producer_profile.id, crop.id) %></p>
-    <% end %>
   
   </div>
 </section>

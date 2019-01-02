@@ -6,7 +6,7 @@ class IconHeader extends React.Component {
     return (
       <div>
         <Header as='h2' icon textAlign='center'>
-          <Icon name={this.props.iconName} circular />
+          <Icon name={this.props.iconName} circular inverted />
           <Header.Content>{this.props.header}</Header.Content>
         </Header>
       </div>
