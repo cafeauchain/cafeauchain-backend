@@ -2,24 +2,22 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= content_for?(:title) ? yield(:title) : "Cafeauchain Backend" %></title>
+    <title><%= content_for?(:title) ? yield(:title) : "Cafe au Chain | Proof of Perk" %></title>
     <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Cafe au Chain | Proof of Perk" %>">
     <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= stylesheet_link_tag 'bootstrap-theme', media: 'all' %>
     <%= javascript_include_tag 'application' %>
+    <%= javascript_pack_tag 'application' %>
     <%= csrf_meta_tags %>
   </head>
   <body class="<%= yield(:body_class) %>">
     <section id="container">
-      <% unless devise_controller? %>
-        <%= render 'layouts/navigation' %>
-        <section id="main-content">
-          <section class="wrapper">
-      <% end %>
-      <%= yield %>
-      <% unless devise_controller? %>
+      <%= render 'layouts/navigation' %>
+      <section id="main-content">
+        <section class="wrapper">
+          <%= yield %>
         </section>
       </section>
-      <% end %>
     </section>
   </body>
 </html>

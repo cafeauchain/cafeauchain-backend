@@ -14,7 +14,7 @@ module MultichainServices
       m = Multichain::Client.new("multichainrpc", "thisisatest", Rails.application.secrets.host, @rpc_port)
       response = m.sendassetfrom([@producer.wallet_address, @roaster_wallet, @crop.bag_size, @quantity])
       if response["error"].nil?
-        ::LedgerServices::RecordTransaction.new(:assettx, response["result"], @quantity, @crop.id, @roaster.id).call
+        ::LedgerServices::RecordTransaction.new(:asset_transfer, response["result"], @quantity, @crop.id, @roaster.id).call
       else
         return response["error"]
       end

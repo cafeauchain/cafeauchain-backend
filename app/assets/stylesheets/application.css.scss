@@ -10,8 +10,44 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require font-awesome
- *= require_tree .
+ *= require font_awesome5
  *= require_self
  */
+@import "bootstrap";
 @import "elegant-icons-style";
+@import "line_icons";
+@import "semantic-ui";
+
+.hidden {
+  display: none;
+}
+.roaster-wizard.form {
+  position: relative;
+  background: rgb(255, 255, 255);
+  box-shadow: rgb(204, 204, 204) 0px 1px 2px;
+  padding: 3em 2em;
+  margin: 1em 0;
+}
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.login-img-body{
+  background: image-url('bg-1.jpg'), linear-gradient(rgba(255,255,255,0.5),rgba(255,255,255,0.5)) no-repeat center center fixed;
+  background-blend-mode: overlay;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.jumbotron {
+  background: rgba(233, 236, 239, 0.8)
+}
+footer {
+  background: rgba(233, 236, 239, 1)
+}

@@ -1,0 +1,13 @@
+<h3 class="page-header">Roast a batch</h3>
+<div class="col-sm-12" id="batch_roast_wizard">
+  <h4>Select an option:</h4>
+  <%= select_tag :producer_crop, grouped_options_for_select(@options), { prompt: "Select or create a crop", class: 'form-control' } %>
+
+  <div id="producer" class="col-sm-12"></div>
+</div>
+
+<script>
+  $('#producer_crop').change(function() {
+    $.ajax({url: '/roast/step_1/' + this.value})
+  })
+</script>

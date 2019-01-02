@@ -63,6 +63,7 @@ pickle-email-*.html
 
 # Mac finder artifacts
 .DS_Store
+.vscode
 
 # Netbeans project directory
 /nbproject/
@@ -87,5 +88,13 @@ pickle-email-*.html
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
-config/secrets.yml
+!.elasticbeanstalk/*.global.yml/public/packs
+/public/packs-test
+/node_modules
+yarn-debug.log*
+.yarn-integrity
+public/packs
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+storage/

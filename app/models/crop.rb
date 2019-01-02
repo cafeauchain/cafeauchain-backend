@@ -3,11 +3,13 @@
 # Table name: crops
 #
 #  id                  :bigint(8)        not null, primary key
-#  bag_size            :string
-#  bags                :integer
-#  crop_year           :string
+#  altitude            :string
+#  country             :string
+#  harvest_season      :string
+#  name                :string
+#  process             :string
+#  region              :string
 #  varietal            :string
-#  zone                :string
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  producer_profile_id :bigint(8)
@@ -24,4 +26,8 @@
 class Crop < ApplicationRecord
   belongs_to :producer_profile
   has_many :transactions
+  has_many :lots
+  has_many :roaster_profiles, through: :lots
+  
+  accepts_nested_attributes_for :lots, reject_if: ->(attributes){ attributes['price_per_pound'].blank? }, allow_destroy: true
 end

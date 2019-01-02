@@ -1,0 +1,13 @@
+$('#batch_roast_wizard').html("<%= escape_javascript(render partial: 'step_3', locals: { crop: @crop }) %>");
+console.log("Chart loaded")
+var doughnutData = [
+  {
+    value: <%= @lot.pounds_of_coffee %>,
+    color:"#F7464A"
+  },
+  {
+    value : <%= @batch.starting_amount %>,
+    color : "#46BFBD"
+  }
+];
+new Chart(document.getElementById("roastChart").getContext("2d")).Doughnut(doughnutData);

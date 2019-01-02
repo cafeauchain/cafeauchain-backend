@@ -10,20 +10,52 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180521024856) do
+ActiveRecord::Schema.define(version: 2019_01_01_190042) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "crops", force: :cascade do |t|
-    t.bigint "producer_profile_id"
-    t.string "crop_year"
-    t.string "zone"
-    t.string "varietal"
-    t.integer "bags"
-    t.string "bag_size"
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "batches", force: :cascade do |t|
+    t.bigint "lot_id"
+    t.float "starting_amount"
+    t.float "ending_amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["lot_id"], name: "index_batches_on_lot_id"
+  end
+
+  create_table "crops", force: :cascade do |t|
+    t.bigint "producer_profile_id"
+    t.string "varietal"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.string "region"
+    t.string "country"
+    t.string "harvest_season"
+    t.string "altitude"
+    t.string "process"
     t.index ["producer_profile_id"], name: "index_crops_on_producer_profile_id"
   end
 
@@ -37,6 +69,27 @@ ActiveRecord::Schema.define(version: 20180521024856) do
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id"
     t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
+  end
+
+  create_table "lots", force: :cascade do |t|
+    t.bigint "crop_id"
+    t.bigint "roaster_profile_id"
+    t.float "price_per_pound"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.float "pounds_of_coffee"
+    t.string "harvest_year"
+    t.index ["crop_id"], name: "index_lots_on_crop_id"
+    t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"
+  end
+
+  create_table "plans", force: :cascade do |t|
+    t.string "stripe_plan_id"
+    t.integer "price_in_cents"
+    t.string "interval"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "producer_profiles", force: :cascade do |t|
@@ -61,6 +114,41 @@ ActiveRecord::Schema.define(version: 20180521024856) do
     t.string "facebook"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "address_1"
+    t.string "zip_code"
+    t.string "state"
+    t.string "city"
+    t.text "about"
+    t.string "address_2"
+  end
+
+  create_table "subscription_charges", force: :cascade do |t|
+    t.bigint "subscription_id"
+    t.string "stripe_charge_id"
+    t.text "description"
+    t.integer "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subscription_id"], name: "index_subscription_charges_on_subscription_id"
+  end
+
+  create_table "subscription_items", force: :cascade do |t|
+    t.bigint "subscription_id"
+    t.bigint "plan_id"
+    t.integer "quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["plan_id"], name: "index_subscription_items_on_plan_id"
+    t.index ["subscription_id"], name: "index_subscription_items_on_subscription_id"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.bigint "user_id"
+    t.integer "status"
+    t.string "stripe_customer_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -71,7 +159,11 @@ ActiveRecord::Schema.define(version: 20180521024856) do
     t.datetime "updated_at", null: false
     t.integer "trans_type", default: 0
     t.bigint "roaster_profile_id"
+    t.bigint "lot_id"
+    t.bigint "batch_id"
+    t.index ["batch_id"], name: "index_transactions_on_batch_id"
     t.index ["crop_id"], name: "index_transactions_on_crop_id"
+    t.index ["lot_id"], name: "index_transactions_on_lot_id"
     t.index ["roaster_profile_id"], name: "index_transactions_on_roaster_profile_id"
   end
 
@@ -107,8 +199,18 @@ ActiveRecord::Schema.define(version: 20180521024856) do
     t.index ["roaster_profile_id"], name: "index_wallets_on_roaster_profile_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "batches", "lots"
   add_foreign_key "crops", "producer_profiles"
+  add_foreign_key "lots", "crops"
+  add_foreign_key "lots", "roaster_profiles"
+  add_foreign_key "subscription_charges", "subscriptions"
+  add_foreign_key "subscription_items", "plans"
+  add_foreign_key "subscription_items", "subscriptions"
+  add_foreign_key "subscriptions", "users"
+  add_foreign_key "transactions", "batches"
   add_foreign_key "transactions", "crops"
+  add_foreign_key "transactions", "lots"
   add_foreign_key "transactions", "roaster_profiles"
   add_foreign_key "users", "roaster_profiles"
   add_foreign_key "wallets", "producer_profiles"

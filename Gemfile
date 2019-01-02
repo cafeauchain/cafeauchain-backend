@@ -5,21 +5,26 @@ git_source(:github) do |repo_name|
 end
 
 ruby '2.4.3'
-gem 'rails', '~> 5.1.4'
+gem 'rails', '~> 5.2'
+gem 'bootsnap'
 gem 'puma', '~> 3.7'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails'
 gem 'jbuilder', '~> 2.5'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-gem 'bootstrap', '~> 4.0.0'
+gem "bootstrap", ">= 4.1.2"
 gem 'pg', '~> 0.18'
 gem 'devise'
 gem 'high_voltage'
-gem 'font-awesome-rails'
+gem 'font_awesome5_rails'
 gem 'friendly_id', '~> 5.1.0'
 gem 'multichain', github: 'cafeauchain/multichain-client'
 gem 'faraday'
+gem 'webpacker'
+gem 'react-rails'
+gem 'semantic-ui-sass'
+gem 'mini_magick'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
@@ -31,6 +36,7 @@ group :development do
   gem 'rails_layout'
   gem 'spring-commands-rspec'
   gem 'annotate'
+  gem "binding_of_caller"
 end
 
 group :development, :test do
