@@ -4,7 +4,7 @@
   </header>
 
   <div class="col-sm-12">
-    <%= image_tag url_for(@roaster_profile.logo) %>
+    <%= image_tag url_for(@roaster_profile.logo) if !@roaster_profile.logo.attachment.nil? %>
     <p id="notice"><%= notice %></p>
 
     <div class="row">

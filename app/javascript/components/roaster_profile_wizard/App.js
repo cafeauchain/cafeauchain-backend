@@ -43,7 +43,7 @@ class App extends Component {
 
   nextStep = async () => {
     let { current_step } = this.state;
-    let url = "/roasters/validate_step"
+    let url = "/api/v1/roasters/validate_step"
     const params = transformStateToParams(this.state)
     const token = decodeURIComponent(readCookie("X-CSRF-Token"));
     let response = await fetch(url, {
@@ -74,7 +74,7 @@ class App extends Component {
   }
 
   submitProfile = async () => {
-    let url = "/roasters/validate_step"
+    let url = "/api/v1/roasters/validate_step"
     const params = transformStateToParams(this.state)
     const token = decodeURIComponent(readCookie("X-CSRF-Token"));
     let response = await fetch(url, {
