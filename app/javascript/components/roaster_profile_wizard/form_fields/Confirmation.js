@@ -24,6 +24,7 @@ class Confirmation extends Component {
         <Grid.Column width={12}>
           <Form>
             <IconHeader iconName='coffee' header="Confirm your profile info" />
+            
             <Button type='submit' onClick={this.goBack} className="ui left floated" icon labelPosition='left'>
               Previous Step
               <Icon name='left arrow' />
