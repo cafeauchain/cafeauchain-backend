@@ -43,6 +43,7 @@
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  background-attachment: fixed;
 }
 
 .jumbotron {
@@ -50,4 +51,9 @@
 }
 footer {
   background: rgba(233, 236, 239, 1)
+}
+
+// Fix Semantic-ui inline fields
+.ui.form .inline.fields > .field:last-child {
+	padding: 0;
 }
