@@ -28,6 +28,7 @@ module Api::V1
           ActiveStorageServices::ImageAttachment.new(logo, roaster_profile.id, "RoasterProfile", "logo").call
         end
         session[:roaster_profile_attributes] = nil
+        StripeServices::EnrollBaseSubscription.enroll
         render json: {"redirect":true,"redirect_url": roaster_profile_path(@roaster_profile_wizard.roaster_profile)}, status: 200
       else
         redirect_to new_roaster_profile_path, alert: 'There were a problem when creating the Roaster Profile.'
