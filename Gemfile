@@ -4,7 +4,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-ruby '2.4.3'
+ruby '2.4.5'
 gem 'rails', '~> 5.2'
 gem 'bootsnap'
 gem 'puma', '~> 3.7'
@@ -25,6 +25,7 @@ gem 'webpacker'
 gem 'react-rails'
 gem 'semantic-ui-sass'
 gem 'mini_magick'
+gem 'mini_racer'
 
 group :development do
   gem 'web-console', '>= 3.3.0'

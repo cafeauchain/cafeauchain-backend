@@ -12,7 +12,6 @@
 //
 //= require font_awesome5
 //= require jquery
-//= require popper
 //= require bootstrap
 //= require rails-ujs
 //= require_tree .

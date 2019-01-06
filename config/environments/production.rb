@@ -57,6 +57,8 @@ config.webpacker.check_yarn_integrity = false
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
 
+  config.require_master_key = true
+
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
