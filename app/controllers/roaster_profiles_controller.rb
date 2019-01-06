@@ -6,6 +6,7 @@ class RoasterProfilesController < ApplicationController
   # GET /roaster_profiles
   # GET /roaster_profiles.json
   def index
+      @roaster_profiles = RoasterProfile.all
   end
 
   # GET /roaster_profiles/1
