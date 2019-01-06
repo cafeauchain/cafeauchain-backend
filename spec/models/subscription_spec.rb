@@ -4,7 +4,10 @@
 #
 #  id                     :bigint(8)        not null, primary key
 #  status                 :integer
+<<<<<<< HEAD
 #  trial_end              :datetime
+=======
+>>>>>>> Adds owner to roaster profile and Stripe subscription id to subscription
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  stripe_customer_id     :string

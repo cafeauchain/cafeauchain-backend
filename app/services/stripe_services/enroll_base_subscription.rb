@@ -3,7 +3,7 @@ require 'stripe'
 module StripeServices
   class EnrollBaseSubscription
 
-    def self.enroll(user_id)
+    def self.initial_enroll(user_id)
       Stripe.api_key = Rails.application.credentials.stripe_api_key
       @plan = Plan.find_by(name: 'Proof of Perk Base')
       @user = User.find(user_id)
@@ -14,11 +14,11 @@ module StripeServices
       else
         stripe_customer_id = Stripe::Customer.create(description: "Account for #{@user.roaster_profile.name}")['id']
       end
-      @subscription = @user.create_subscription(stripe_customer_id: stripe_customer_id)
-      SubscriptionItem.create(subscription: @subscription, plan: @plan, quantity: 1)
-      Stripe::Subscription.create(customer: stripe_customer_id, trial_from_plan: true, items: [
+      stripe_sub = Stripe::Subscription.create(customer: stripe_customer_id, trial_from_plan: true, items: [
         {plan: @plan.stripe_plan_id}
       ])
+      @subscription = @user.create_subscription(stripe_customer_id: stripe_customer_id, stripe_subscription_id: stripe_sub["id"])
+      SubscriptionItem.create(subscription: @subscription, plan: @plan, quantity: 1)
     end
     
   end
