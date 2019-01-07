@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes, { object } from "prop-types";
+import PropTypes from "prop-types";
 import { Form, Container, Header, Image, Divider } from "semantic-ui-react";
 
 import usStates from "../utilities/usStates";
@@ -108,6 +108,7 @@ class App extends Component {
     }
 }
 
+const { object } = PropTypes;
 App.propTypes = {
     profile: object.isRequired
 };
