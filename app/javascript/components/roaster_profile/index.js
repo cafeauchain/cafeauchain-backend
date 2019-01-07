@@ -1,0 +1,116 @@
+import React, { Component } from "react";
+import { Form, Container, Header, Image, Divider } from "semantic-ui-react";
+
+import usStates from "../utilities/usStates";
+import Input from "../shared/input";
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      details: props.profile
+    };
+  }
+
+  handleSubmit = e => {
+    console.log(this.state.details);
+  };
+
+  handleInputChange = (event, { value, name, checked }) => {
+    const details = { ...this.state.details };
+    if (name === "") return;
+    const val = value ? value : checked;
+    details[name] = val;
+    this.setState({ details });
+  };
+
+  renderInput = props => <Input {...props} onChange={this.handleInputChange} />;
+
+  render() {
+    const { details } = this.state;
+    const {
+      name,
+      about,
+      address_1,
+      address_2,
+      city,
+      facebook,
+      id,
+      location,
+      state,
+      twitter,
+      url,
+      zip_code,
+      img_url
+    } = details;
+
+    const Input = this.renderInput;
+    return (
+      <Container className="form roaster-wizard">
+        <Header as="h2">Roaster Profile</Header>
+        <Image src={img_url} />
+        <Divider />
+        <Form onSubmit={this.handleSubmit}>
+          <Input label="Name" value={name} />
+
+          <Form.Group inline widths="equal">
+            <Input label="Address 1" value={address_1} />
+            <Input label="Address 2" value={address_2} />
+          </Form.Group>
+
+          <Form.Group inline widths="equal">
+            <Input label="City" value={city} />
+            <Input label="Zip" value={zip_code} name="zip_code" />
+            <Input
+              inputType="select"
+              label="State"
+              defaultValue={state}
+              options={usStates}
+            />
+          </Form.Group>
+
+          <Form.Group inline widths="equal">
+            <Input label="Twitter" value={twitter} />
+            <Input label="Facebook" value={facebook} />
+          </Form.Group>
+
+          <Input inputType="textarea" label="About" defaultValue={about} />
+
+          <Input
+            inputType="checkbox"
+            label="Is this true"
+            defaultChecked={true}
+            name="hey"
+          />
+
+          <Input
+            inputType="radio"
+            name="radioGroup2"
+            label="radioGroup2"
+            dataArray={[
+              {
+                label: "Kyle",
+                value: "Kyle",
+                checked: this.state.details["radioGroup2"] === "Kyle"
+              },
+              {
+                label: "Jessica",
+                value: "Jessica",
+                checked: this.state.details["radioGroup2"] === "Jessica"
+              },
+              {
+                label: "Lydia",
+                value: "Lydia",
+                checked: this.state.details["radioGroup2"] === "Lydia"
+              }
+            ]}
+          />
+
+          <Form.Button>Submit</Form.Button>
+        </Form>
+      </Container>
+    );
+  }
+}
+
+export default App;
