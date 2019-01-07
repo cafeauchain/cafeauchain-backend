@@ -30,13 +30,17 @@ const Input = props => {
                     fluid={fluid}
                 />
             )}
+
             {inputType === "textarea" && (
                 <Form.TextArea {...rest} label={label} placeholder={placeholder} name={name} onChange={onChange} />
             )}
+
             {inputType === "select" && (
                 <Form.Select {...rest} label={label} name={name} onChange={onChange} options={options} fluid={fluid} />
             )}
+
             {inputType === "checkbox" && <Form.Checkbox {...rest} label={label} name={name} onChange={onChange} />}
+
             {inputType === "radio" &&
                 dataArray.map(item => (
                     <Form.Radio
