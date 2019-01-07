@@ -16,6 +16,7 @@ class App extends Component {
     handleSubmit = e => {
         e.preventDefault();
         const { details } = this.state;
+        // eslint-disable-next-line
         console.log(details);
     };
 
@@ -40,10 +41,13 @@ class App extends Component {
             address_2,
             city,
             facebook,
+            // eslint-disable-next-line
             id,
+            // eslint-disable-next-line
             location,
             state,
             twitter,
+            // eslint-disable-next-line
             url,
             zip_code,
             img_url
@@ -86,16 +90,19 @@ class App extends Component {
                             {
                                 label: "Kyle",
                                 value: "Kyle",
+                                // eslint-disable-next-line
                                 checked: this.state.details.radioGroup2 === "Kyle"
                             },
                             {
                                 label: "Jessica",
                                 value: "Jessica",
+                                // eslint-disable-next-line
                                 checked: this.state.details.radioGroup2 === "Jessica"
                             },
                             {
                                 label: "Lydia",
                                 value: "Lydia",
+                                // eslint-disable-next-line
                                 checked: this.state.details.radioGroup2 === "Lydia"
                             }
                         ]}
