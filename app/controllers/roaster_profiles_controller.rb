@@ -32,6 +32,11 @@ class RoasterProfilesController < ApplicationController
   # DELETE /roaster_profiles/1.json
   def destroy
   end
+
+  def manage_subscription
+    
+  end
+  
   
   private
   

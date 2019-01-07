@@ -41,4 +41,6 @@ class User < ApplicationRecord
 
   belongs_to :roaster_profile, optional: true
   has_one :subscription
+  has_many :cards, through: :subscription
+  
 end

@@ -23,5 +23,7 @@
 class Subscription < ApplicationRecord
   belongs_to :user
 
+  has_many :cards
+
   enum status: [:active, :trial, :inactive, :suspended]
 end

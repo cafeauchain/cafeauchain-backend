@@ -12,7 +12,7 @@
 #                       admin_dashboard GET    /admin/dashboard(.:format)                                                               admin/dashboard#index
 # validate_step_api_v1_roaster_profiles POST   /api/v1/roasters/validate_step(.:format)                                                 api/v1/roaster_profiles#validate_step
 #               api_v1_roaster_profiles POST   /api/v1/roasters(.:format)                                                               api/v1/roaster_profiles#create
-#                step1_roaster_profiles GET    /roasters/step1(.:format)                                                                roaster_profiles#new
+#  manage_subscription_roaster_profiles GET    /roasters/manage_subscription(.:format)                                                  roaster_profiles#manage_subscription
 #                      roaster_profiles GET    /roasters(.:format)                                                                      roaster_profiles#index
 #                                       POST   /roasters(.:format)                                                                      roaster_profiles#create
 #                   new_roaster_profile GET    /roasters/new(.:format)                                                                  roaster_profiles#new
@@ -101,8 +101,14 @@ Rails.application.routes.draw do
 
   resources :roaster_profiles, path: "roasters" do
     collection do
+<<<<<<< HEAD
       get :step1, to: "roaster_profiles#new"
 
+=======
+      
+      get :manage_subscription
+      
+>>>>>>> Added Card model and layout updates
     end
   end
 
