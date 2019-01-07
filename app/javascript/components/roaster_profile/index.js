@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes, { object } from "prop-types";
 import { Form, Container, Header, Image, Divider } from "semantic-ui-react";
 
 import usStates from "../utilities/usStates";
@@ -13,13 +14,17 @@ class App extends Component {
   }
 
   handleSubmit = e => {
-    console.log(this.state.details);
+    e.preventDefault();
+    const { details } = this.state;
+    console.log(details);
   };
 
   handleInputChange = (event, { value, name, checked }) => {
-    const details = { ...this.state.details };
+    let { details } = this.state;
+    details = { ...details };
+    // const details = { ...this.state.details };
     if (name === "") return;
-    const val = value ? value : checked;
+    const val = value || checked;
     details[name] = val;
     this.setState({ details });
   };
@@ -61,12 +66,7 @@ class App extends Component {
           <Form.Group inline widths="equal">
             <Input label="City" value={city} />
             <Input label="Zip" value={zip_code} name="zip_code" />
-            <Input
-              inputType="select"
-              label="State"
-              defaultValue={state}
-              options={usStates}
-            />
+            <Input inputType="select" label="State" defaultValue={state} options={usStates} />
           </Form.Group>
 
           <Form.Group inline widths="equal">
@@ -76,12 +76,7 @@ class App extends Component {
 
           <Input inputType="textarea" label="About" defaultValue={about} />
 
-          <Input
-            inputType="checkbox"
-            label="Is this true"
-            defaultChecked={true}
-            name="hey"
-          />
+          <Input inputType="checkbox" label="Is this true" defaultChecked name="hey" />
 
           <Input
             inputType="radio"
@@ -91,17 +86,17 @@ class App extends Component {
               {
                 label: "Kyle",
                 value: "Kyle",
-                checked: this.state.details["radioGroup2"] === "Kyle"
+                checked: this.state.details.radioGroup2 === "Kyle"
               },
               {
                 label: "Jessica",
                 value: "Jessica",
-                checked: this.state.details["radioGroup2"] === "Jessica"
+                checked: this.state.details.radioGroup2 === "Jessica"
               },
               {
                 label: "Lydia",
                 value: "Lydia",
-                checked: this.state.details["radioGroup2"] === "Lydia"
+                checked: this.state.details.radioGroup2 === "Lydia"
               }
             ]}
           />
@@ -112,5 +107,9 @@ class App extends Component {
     );
   }
 }
+
+App.propTypes = {
+  profile: object.isRequired
+};
 
 export default App;
