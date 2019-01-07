@@ -23,7 +23,6 @@ class App extends Component {
     handleInputChange = (event, { value, name, checked }) => {
         let { details } = this.state;
         details = { ...details };
-        // const details = { ...this.state.details };
         if (name === "") return;
         const val = value || checked;
         details[name] = val;
