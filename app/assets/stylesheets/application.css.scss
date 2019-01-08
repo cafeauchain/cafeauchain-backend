@@ -19,41 +19,46 @@
 @import "semantic-ui";
 
 .hidden {
-  display: none;
+    display: none;
 }
 .roaster-wizard.form {
-  position: relative;
-  background: rgb(255, 255, 255);
-  box-shadow: rgb(204, 204, 204) 0px 1px 2px;
-  padding: 3em 2em;
-  margin: 1em 0;
+    position: relative;
+    background: rgb(255, 255, 255);
+    box-shadow: rgb(204, 204, 204) 0px 1px 2px;
+    padding: 3em 2em;
+    margin: 1em 0;
 }
 .inputfile {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
 }
-.login-img-body{
-  background: image-url('bg-1.jpg'), linear-gradient(rgba(255,255,255,0.5),rgba(255,255,255,0.5)) no-repeat center center fixed;
-  background-blend-mode: overlay;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-attachment: fixed;
+.login-img-body {
+    background: image-url("bg-1.jpg"),
+        linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) no-repeat center center fixed;
+    background-blend-mode: overlay;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-attachment: fixed;
 }
 
 .jumbotron {
-  background: rgba(233, 236, 239, 0.8)
+    background: rgba(233, 236, 239, 0.8);
 }
 footer {
-  background: rgba(233, 236, 239, 1)
+    background: rgba(233, 236, 239, 1);
 }
 
 // Fix Semantic-ui inline fields
 .ui.form .inline.fields > .field:last-child {
-	padding: 0;
+    padding: 0;
+}
+
+.dimmer .content {
+    width: 100%;
 }
