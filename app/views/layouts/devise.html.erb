@@ -11,7 +11,8 @@
     <%= csrf_meta_tags %>
   </head>
   <body class="<%= yield(:body_class) %>">
-    <%= render 'layouts/static_nav' if !devise_controller? %>
+    <%= render 'layouts/navigation' %>
+    <%= render 'layouts/newnav' %>
     <%= yield %>
   </body>
 </html>
