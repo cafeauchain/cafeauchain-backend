@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { Dimmer, Image, Container } from "semantic-ui-react";
 
-import ImageUpload from "../shared/ImageUpload";
+import ImageUpload from "./ImageUpload";
 
 class ImageChange extends Component {
     constructor(props) {

@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { Form, Container, Header, Divider } from "semantic-ui-react";
 
-import ImageChange from "../roaster_profile/ImageChange";
-
 import usStates from "../utilities/usStates";
 import Input from "../shared/input";
+import ImageChange from "../shared/ImageChange";
 
 const dummy = {
     name: "Joe Smith",

@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Form, Container, Header, Divider } from "semantic-ui-react";
 
-import ImageChange from "./ImageChange";
-
 import usStates from "../utilities/usStates";
 import Input from "../shared/input";
+import ImageChange from "../shared/ImageChange";
 
 class App extends Component {
     constructor(props) {
