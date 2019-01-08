@@ -44,11 +44,8 @@ class App extends Component {
             facebook,
             // eslint-disable-next-line
             id,
-            // eslint-disable-next-line
-            location,
             state,
             twitter,
-            // eslint-disable-next-line
             url,
             zip_code,
             img_url
@@ -81,35 +78,9 @@ class App extends Component {
                         <Input label="Facebook" value={facebook} />
                     </Form.Group>
 
+                    <Input label="Website URL" name="url" value={url} />
+
                     <Input inputType="textarea" label="About" defaultValue={about} />
-
-                    <Input inputType="checkbox" label="Is this true" defaultChecked name="hey" />
-
-                    <Input
-                        inputType="radio"
-                        name="radioGroup2"
-                        label="radioGroup2"
-                        dataArray={[
-                            {
-                                label: "Kyle",
-                                value: "Kyle",
-                                // eslint-disable-next-line
-                                checked: this.state.details.radioGroup2 === "Kyle"
-                            },
-                            {
-                                label: "Jessica",
-                                value: "Jessica",
-                                // eslint-disable-next-line
-                                checked: this.state.details.radioGroup2 === "Jessica"
-                            },
-                            {
-                                label: "Lydia",
-                                value: "Lydia",
-                                // eslint-disable-next-line
-                                checked: this.state.details.radioGroup2 === "Lydia"
-                            }
-                        ]}
-                    />
 
                     <Form.Button>Submit</Form.Button>
                 </Form>
