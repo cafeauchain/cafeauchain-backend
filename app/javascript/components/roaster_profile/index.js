@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form, Container, Header, Image, Divider } from "semantic-ui-react";
+import { Form, Container, Header, Divider } from "semantic-ui-react";
+
+import ImageChange from "./ImageChange";
 
 import usStates from "../utilities/usStates";
 import Input from "../shared/input";
@@ -56,7 +58,9 @@ class App extends Component {
         return (
             <Container className="form roaster-wizard">
                 <Header as="h2">Roaster Profile</Header>
-                <Image src={img_url} />
+                <Container align="center">
+                    <ImageChange src={img_url} profile={details} />
+                </Container>
                 <Divider />
                 <Form onSubmit={this.handleSubmit}>
                     <Input label="Name" value={name} />
