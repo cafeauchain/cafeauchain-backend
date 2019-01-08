@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form, Icon, Segment, Header } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
 
 import readCookie from "../utilities/readCookie";
 
@@ -9,10 +9,12 @@ class LogoUpload extends Component {
         let reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = function() {
+            // eslint-disable-next-line
             console.log("in function", reader.result);
             cb(reader.result);
         };
         reader.onerror = function(error) {
+            // eslint-disable-next-line
             console.log("Error: ", error);
         };
     };
@@ -43,8 +45,10 @@ class LogoUpload extends Component {
             }
         });
         if (response.status === 200) {
+            // eslint-disable-next-line
             console.log(response);
         } else {
+            // eslint-disable-next-line
             console.log("error", response);
         }
     };
