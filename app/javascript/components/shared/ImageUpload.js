@@ -56,7 +56,7 @@ class LogoUpload extends Component {
     render() {
         return (
             <Form>
-                <Form.Field>
+                <Form.Field inline>
                     <input
                         type="file"
                         onChange={this.uploadFile}
@@ -64,7 +64,7 @@ class LogoUpload extends Component {
                         id="logoFileInput"
                         accept=".jpg,.jpeg,.png image/*"
                     />
-                    <label htmlFor="logoFileInput" className="ui huge green button">
+                    <label htmlFor="logoFileInput" className="ui primary button">
                         <i className="ui upload icon" />
                         Upload Logo
                     </label>
