@@ -1,0 +1,6 @@
+$var: red;
+
+// export the variable object
+:export {
+    var: $var;
+}
