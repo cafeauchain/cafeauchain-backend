@@ -2,6 +2,7 @@ import React, { Component, Fragment as F } from "react";
 import { Container } from "semantic-ui-react";
 import NavBar from "./responsiveNavbar";
 
+import links from "./navlinks";
 import "./nav.scss";
 
 class Nav extends Component {
@@ -15,7 +16,7 @@ class Nav extends Component {
     render() {
         return (
             <F>
-                <NavBar />
+                <NavBar leftItems={links.left} rightItems={links.right} />
                 <Container style={{ height: 1000, background: "white" }}>This is some content</Container>
             </F>
         );
