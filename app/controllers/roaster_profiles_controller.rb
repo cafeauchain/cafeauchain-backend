@@ -1,6 +1,6 @@
 class RoasterProfilesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_roaster_profile, only: [:show, :edit, :update, :destroy]
+  before_action :set_roaster_profile, only: [:show, :edit, :update, :destroy, :manage_subscription]
   layout "devise"
 
   # GET /roaster_profiles
@@ -34,9 +34,8 @@ class RoasterProfilesController < ApplicationController
   end
 
   def manage_subscription
-    
+    @cards = @roaster_profile.subscription.cards
   end
-  
   
   private
   

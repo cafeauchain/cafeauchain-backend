@@ -1,6 +1,6 @@
 module Api::V1
   class RoasterProfilesController < ApplicationController
-    before_action :load_roaster_profile_wizard, except: [:validate_step, :update]
+    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :cards]
   
     def validate_step
       current_step = params[:current_step]
@@ -35,6 +35,7 @@ module Api::V1
       end
     end
 
+<<<<<<< HEAD
     def update
       @roaster_profile = RoasterProfile.find(params[:id])
       if current_user == @roaster_profile.owner
@@ -50,6 +51,13 @@ module Api::V1
       end
     end
     
+=======
+    def cards
+      @roaster = RoasterProfile.find(params[:id])
+      StripeServices::CreateCard.call(@roaster.subscription.id, params[:token])
+      render json: @roaster.subscription.cards, status: 200
+    end
+>>>>>>> [WIP] Added Stripe Elements for card management and additional card services
 
     private
 

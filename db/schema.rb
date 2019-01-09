@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_07_152906) do
+ActiveRecord::Schema.define(version: 2019_01_08_164216) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 2019_01_07_152906) do
     t.boolean "default"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "stripe_card_id"
     t.index ["subscription_id"], name: "index_cards_on_subscription_id"
   end
 

@@ -11,8 +11,9 @@
 #                                       DELETE /admin/plans/:id(.:format)                                                               admin/plans#destroy
 #                       admin_dashboard GET    /admin/dashboard(.:format)                                                               admin/dashboard#index
 # validate_step_api_v1_roaster_profiles POST   /api/v1/roasters/validate_step(.:format)                                                 api/v1/roaster_profiles#validate_step
+#          cards_api_v1_roaster_profile POST   /api/v1/roasters/:id/cards(.:format)                                                     api/v1/roaster_profiles#cards
 #               api_v1_roaster_profiles POST   /api/v1/roasters(.:format)                                                               api/v1/roaster_profiles#create
-#  manage_subscription_roaster_profiles GET    /roasters/manage_subscription(.:format)                                                  roaster_profiles#manage_subscription
+#   manage_subscription_roaster_profile GET    /roasters/:id/manage_subscription(.:format)                                              roaster_profiles#manage_subscription
 #                      roaster_profiles GET    /roasters(.:format)                                                                      roaster_profiles#index
 #                                       POST   /roasters(.:format)                                                                      roaster_profiles#create
 #                   new_roaster_profile GET    /roasters/new(.:format)                                                                  roaster_profiles#new
@@ -95,20 +96,21 @@ Rails.application.routes.draw do
           post :validate_step
 
         end
+
+        member do
+          post :cards
+        end
       end
     end
   end
 
   resources :roaster_profiles, path: "roasters" do
     collection do
-<<<<<<< HEAD
       get :step1, to: "roaster_profiles#new"
-
-=======
-      
+    end
+    member do
       get :manage_subscription
-      
->>>>>>> Added Card model and layout updates
+      resources :roast, only: [:index]
     end
   end
 
@@ -117,15 +119,7 @@ Rails.application.routes.draw do
     resources :lots
   end
 
-  resources :roast, only: [:index]
-  get 'roast/step_1/:id', to: 'roast#step_1'
-  post 'roast/step_2', to: 'roast#step_2'
-  post 'roast/step_3', to: 'roast#step_3'
-  get 'roast/load_lot/:id', to: 'roast#load_lot'
-  get 'roast/new_lot', to: 'roast#new_lot'
-  get 'onboarding/step_1', to: 'onboarding#step_1'
   get 'dashboard', to: 'dashboard#index'
-
   devise_for :users, controllers: { registrations: "users/registrations" }
 
   devise_scope :user do

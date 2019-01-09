@@ -27,6 +27,11 @@
               <%= link_to edit_user_registration_path, class: 'dropdown-item' do %>
                 <i class="icon_profile"></i> My Account
               <% end %>
+              <% if current_user.is_owner %>
+                <%= link_to manage_subscription_roaster_profile_path(current_user.roaster_profile), class: 'dropdown-item' do %>
+                  <i class="icon sync"></i> Manage Subscription
+                <% end %>
+              <% end %>
               <div class="dropdown-divider"></div>
               <%= link_to "<i class='icon_key_alt'></i> Log Out".html_safe, destroy_user_session_path, method: :delete, class: 'dropdown-item' %>
             </div>

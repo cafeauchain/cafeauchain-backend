@@ -42,5 +42,8 @@ class User < ApplicationRecord
   belongs_to :roaster_profile, optional: true
   has_one :subscription
   has_many :cards, through: :subscription
-  
+
+  def is_owner
+    roaster_profile.owner == self
+  end
 end

@@ -10,6 +10,7 @@
 #  last4           :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  stripe_card_id  :string
 #  subscription_id :bigint(8)
 #
 # Indexes

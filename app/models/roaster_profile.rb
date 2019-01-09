@@ -34,6 +34,8 @@ class RoasterProfile < ApplicationRecord
 
   delegate :subscription, to: :owner
 
+  delegate :subscription, to: :owner
+
   def bags_delivered(lot_id)
     self.transactions.collect{ |t| t.quantity.to_i if t.lot_id == lot_id }.sum
   end

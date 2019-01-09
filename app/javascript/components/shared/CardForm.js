@@ -8,8 +8,9 @@ class CheckoutForm extends Component {
     this.submit = this.submit.bind(this);
   }
 
-  async submit(ev) {
-    this.props.handleSubmit(ev)
+  submit = async ev => {
+    let {token} = await this.props.stripe.createToken({name: "Name"});
+    this.props.handleSubmit(token)
   }
 
   render() {
