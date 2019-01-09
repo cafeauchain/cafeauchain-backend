@@ -1,0 +1,8 @@
+.ui.menu .item.no-border {
+    &:before {
+        content: none;
+    }
+}
+.item.no-left-border {
+    border: 0 !important;
+}

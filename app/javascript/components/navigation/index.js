@@ -1,22 +1,23 @@
-import React, { Component } from "react";
-import { Form, Container, Header, Divider, Menu } from "semantic-ui-react";
+import React, { Component, Fragment as F } from "react";
+import { Container } from "semantic-ui-react";
+import NavBar from "./responsiveNavbar";
+
+import "./nav.scss";
 
 class Nav extends Component {
     constructor(props) {
         super(props);
+        //eslint-disable-next-line
         console.log(props);
         this.state = {};
     }
-    handleClick = (e, { name }) => this.setState({ activeItem: name });
 
     render() {
-        const { activeItem } = this.state;
         return (
-            <Menu borderless>
-                <Menu.Item name="Home" active={activeItem === "Home"} onClick={this.handleClick} />
-                <Menu.Item name="Profile" active={activeItem === "Profile"} onClick={this.handleClick} />
-                <Menu.Item name="Logout" active={activeItem === "Logout"} onClick={this.handleClick} />
-            </Menu>
+            <F>
+                <NavBar />
+                <Container style={{ height: 1000, background: "white" }}>This is some content</Container>
+            </F>
         );
     }
 }
