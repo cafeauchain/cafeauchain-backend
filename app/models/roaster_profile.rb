@@ -32,9 +32,7 @@ class RoasterProfile < ApplicationRecord
 
   has_one_attached :logo
 
-  after_create :set_owner
-
-  delegate :subscription, to: :owner
+  delegate :subscription, to: :owner, optional: true
 
   def bags_delivered(lot_id)
     self.transactions.collect{ |t| t.quantity.to_i if t.lot_id == lot_id }.sum
