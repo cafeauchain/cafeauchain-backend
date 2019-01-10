@@ -39,4 +39,12 @@ class RoasterProfile < ApplicationRecord
     lot = Lot.find(lot_id)
     bags_remaining = lot.bags - self.bags_delivered(lot_id)
   end
+
+  def set_owner
+    if self.owner.nil?
+      owner = self.users.first
+      self.update(owner: owner)
+    end
+  end
+
 end
