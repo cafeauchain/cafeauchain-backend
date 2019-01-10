@@ -19,7 +19,7 @@ module Api::V1
     end
 
     def create
-      if @roaster_profile_wizard.roaster_profile.save
+      if @roaster_profile_wizard.roaster_profile.save!
         logo = (params[:roaster_profile][:logo])
         roaster_profile = @roaster_profile_wizard.roaster_profile
         roaster_profile.users << current_user
@@ -30,7 +30,7 @@ module Api::V1
         session[:roaster_profile_attributes] = nil
         render json: {"redirect":true,"redirect_url": roaster_profile_path(@roaster_profile_wizard.roaster_profile)}, status: 200
       else
-        redirect_to({ "redirect_url": new_roaster_profile_path }, alert: 'There were a problem when creating the Roaster Profile.')
+        redirect_to new_roaster_profile_path, alert: 'There were a problem when creating the Roaster Profile.'
       end
     end
 
