@@ -32,6 +32,19 @@ module Api::V1
       end
     end
 
+    def update
+      @roaster_profile = RoasterProfile.find(params[:id])
+      if current_user == @roaster_profile.owner
+        if @roaster_profile.update(roaster_profile_params)
+          logo = (params[:roaster_profile][:logo])
+          if !logo.blank?
+            ActiveStorageServices::ImageAttachment.new(logo, @roaster_profile.id, "RoasterProfile", "logo").call
+          end          
+        end
+      end
+    end
+    
+
     private
 
     def load_roaster_profile_wizard
