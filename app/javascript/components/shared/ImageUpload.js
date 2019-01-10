@@ -29,15 +29,13 @@ class LogoUpload extends Component {
         let { profile } = this.props;
         profile = { ...profile, logo };
         // TODO Probably just need an UPDATE (PUT) endpoint
-        let current_step = "step1";
-        let url = "/api/v1/roasters/validate_step";
+        let url = `/api/v1/roasters/${profile.id}`;
         const params = {
-            roaster_profile: profile,
-            current_step
+            roaster_profile: profile
         };
         const token = decodeURIComponent(readCookie("X-CSRF-Token"));
         let response = await fetch(url, {
-            method: "POST",
+            method: "PUT",
             body: JSON.stringify(params),
             headers: {
                 "Content-Type": "application/json",
