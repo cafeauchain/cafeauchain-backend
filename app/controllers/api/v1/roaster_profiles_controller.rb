@@ -40,7 +40,9 @@ module Api::V1
           if !logo.blank?
             ActiveStorageServices::ImageAttachment.new(logo, @roaster_profile.id, "RoasterProfile", "logo").call
           end
-          render json: @roaster_profile, status: 200        
+          render json: @roaster_profile, status: 200     
+        else
+          render json: @roaster_profile.errors, status: 422   
         end
       end
     end
