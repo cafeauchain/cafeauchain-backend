@@ -89,7 +89,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :roaster_profiles, only: [:create], path: "roasters" do
+      resources :roaster_profiles, only: [:create, :update], path: "roasters" do
         collection do
 
           post :validate_step

@@ -17,6 +17,7 @@
 #  zip_code   :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  owner_id   :integer
 #
 
 class RoasterProfile < ApplicationRecord
@@ -27,8 +28,11 @@ class RoasterProfile < ApplicationRecord
   has_many :transactions
   has_many :lots
   has_many :crops, through: :lots
+  belongs_to :owner, class_name: "User", foreign_key: "owner_id", optional: true
 
   has_one_attached :logo
+
+  delegate :subscription, to: :owner
 
   def bags_delivered(lot_id)
     self.transactions.collect{ |t| t.quantity.to_i if t.lot_id == lot_id }.sum
@@ -39,4 +43,12 @@ class RoasterProfile < ApplicationRecord
     lot = Lot.find(lot_id)
     bags_remaining = lot.bags - self.bags_delivered(lot_id)
   end
+
+  def set_owner
+    if self.owner.nil?
+      owner = self.users.first
+      self.update(owner: owner)
+    end
+  end
+
 end

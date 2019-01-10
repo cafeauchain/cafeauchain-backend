@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_01_190042) do
+ActiveRecord::Schema.define(version: 2019_01_07_152906) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,18 @@ ActiveRecord::Schema.define(version: 2019_01_01_190042) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["lot_id"], name: "index_batches_on_lot_id"
+  end
+
+  create_table "cards", force: :cascade do |t|
+    t.bigint "subscription_id"
+    t.string "last4"
+    t.integer "exp_month"
+    t.integer "exp_year"
+    t.string "brand"
+    t.boolean "default"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subscription_id"], name: "index_cards_on_subscription_id"
   end
 
   create_table "crops", force: :cascade do |t|
@@ -120,6 +132,7 @@ ActiveRecord::Schema.define(version: 2019_01_01_190042) do
     t.string "city"
     t.text "about"
     t.string "address_2"
+    t.integer "owner_id"
   end
 
   create_table "subscription_charges", force: :cascade do |t|
@@ -148,6 +161,8 @@ ActiveRecord::Schema.define(version: 2019_01_01_190042) do
     t.string "stripe_customer_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "stripe_subscription_id"
+    t.datetime "trial_end"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
@@ -201,6 +216,7 @@ ActiveRecord::Schema.define(version: 2019_01_01_190042) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "batches", "lots"
+  add_foreign_key "cards", "subscriptions"
   add_foreign_key "crops", "producer_profiles"
   add_foreign_key "lots", "crops"
   add_foreign_key "lots", "roaster_profiles"

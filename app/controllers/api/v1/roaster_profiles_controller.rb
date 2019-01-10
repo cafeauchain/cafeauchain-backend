@@ -1,6 +1,6 @@
 module Api::V1
   class RoasterProfilesController < ApplicationController
-    before_action :load_roaster_profile_wizard, except: [:validate_step]
+    before_action :load_roaster_profile_wizard, except: [:validate_step, :update]
   
     def validate_step
       current_step = params[:current_step]
@@ -19,18 +19,36 @@ module Api::V1
     end
 
     def create
-      if @roaster_profile_wizard.roaster_profile.save
+      if @roaster_profile_wizard.roaster_profile.save!
         logo = (params[:roaster_profile][:logo])
         roaster_profile = @roaster_profile_wizard.roaster_profile
+        roaster_profile.users << current_user
+        roaster_profile.set_owner
         if !logo.blank?
           ActiveStorageServices::ImageAttachment.new(logo, roaster_profile.id, "RoasterProfile", "logo").call
         end
         session[:roaster_profile_attributes] = nil
         render json: {"redirect":true,"redirect_url": roaster_profile_path(@roaster_profile_wizard.roaster_profile)}, status: 200
       else
-        redirect_to({ action: Wizard::RoasterProfile::STEPS.first }, alert: 'There were a problem when creating the Roaster Profile.')
+        redirect_to new_roaster_profile_path, alert: 'There were a problem when creating the Roaster Profile.'
       end
     end
+
+    def update
+      @roaster_profile = RoasterProfile.find(params[:id])
+      if current_user == @roaster_profile.owner
+        if @roaster_profile.update(roaster_profile_params)
+          logo = (params[:roaster_profile][:logo])
+          if !logo.blank?
+            ActiveStorageServices::ImageAttachment.new(logo, @roaster_profile.id, "RoasterProfile", "logo").call
+          end
+          render json: @roaster_profile, status: 200     
+        else
+          render json: @roaster_profile.errors, status: 422   
+        end
+      end
+    end
+    
 
     private
 

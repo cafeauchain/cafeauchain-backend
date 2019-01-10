@@ -1,34 +1,5 @@
-<section class="panel">
-  <header class="panel-heading">
-    Roaster Profiles
-  </header>
-  <table class="table table-striped table-hover table-advance table-responsive">
-    <thead>
-      <tr>
-        <th><i class="icon_profile"></i> Name</th>
-        <th><i class="icon_pin_alt"></i> Location</th>
-        <th><i class="icon_documents_alt"></i> Website</th>
-        <th><i class="fab fa-twitter"></i> Twitter</th>
-        <th><i class="fab fa-facebook"></i> Facebook</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% unless @roaster_profiles.nil? %>
-        <% @roaster_profiles.each do |roaster_profile| %>
-          <tr>
-            <td><%= link_to roaster_profile.name, roaster_profile %></td>
-            <td><%= roaster_profile.location %></td>
-            <td><%= link_to "Website", "http://#{roaster_profile.url}" %></td>
-            <td><%= link_to "Twitter", "https://twitter.com/#{roaster_profile.twitter}" %></td>
-            <td><%= link_to "Facebook", "https://facebook.com/#{roaster_profile.facebook}" %></td>
-          </tr>
-        <% end %>
-      <% end %>
-    </tbody>
-  </table>
-</section>
-
-<br>
-
-<%= link_to 'New Roaster Profile', new_roaster_profile_path if current_user.admin %>
+<% content_for :body_class, 'login-img-body' %>
+<div class="ui container">
+    <% @profiles = render(template: 'roaster_profiles/index.json') %>
+    <%= react_component "roaster_profile/profiles", props = {profiles: JSON.parse(@profiles)} %>
+</div>
