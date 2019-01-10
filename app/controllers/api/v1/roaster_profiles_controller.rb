@@ -22,6 +22,8 @@ module Api::V1
       if @roaster_profile_wizard.roaster_profile.save
         logo = (params[:roaster_profile][:logo])
         roaster_profile = @roaster_profile_wizard.roaster_profile
+        roaster_profile.users << current_user
+        roaster_profile.set_owner
         if !logo.blank?
           ActiveStorageServices::ImageAttachment.new(logo, roaster_profile.id, "RoasterProfile", "logo").call
         end
