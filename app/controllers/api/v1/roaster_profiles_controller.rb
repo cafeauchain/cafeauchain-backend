@@ -1,6 +1,6 @@
 module Api::V1
   class RoasterProfilesController < ApplicationController
-    before_action :load_roaster_profile_wizard, except: [:validate_step]
+    before_action :load_roaster_profile_wizard, except: [:validate_step, :update]
   
     def validate_step
       current_step = params[:current_step]
