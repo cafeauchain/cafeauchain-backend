@@ -39,7 +39,8 @@ module Api::V1
           logo = (params[:roaster_profile][:logo])
           if !logo.blank?
             ActiveStorageServices::ImageAttachment.new(logo, @roaster_profile.id, "RoasterProfile", "logo").call
-          end          
+          end
+          render json: @roaster_profile, status: 200        
         end
       end
     end
