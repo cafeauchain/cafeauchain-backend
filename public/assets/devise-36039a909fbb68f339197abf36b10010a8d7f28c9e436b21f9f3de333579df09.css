@@ -1,9 +1,0 @@
-/* line 1, /Users/pendragondev/Development/Projects/cafeauchain-backend/app/assets/stylesheets/devise.css.scss */
-body > .grid {
-  height: 100% !important;
-}
-
-/* line 4, /Users/pendragondev/Development/Projects/cafeauchain-backend/app/assets/stylesheets/devise.css.scss */
-.login-form.column {
-  max-width: 450px !important;
-}
