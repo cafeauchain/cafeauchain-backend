@@ -1,20 +1,24 @@
 import React, {Component} from 'react';
-import {Container, Card, Icon} from 'semantic-ui-react';
+import {Grid, Card, Icon} from 'semantic-ui-react';
 
 class CardView extends Component {
 
   render () {
+    const { card } = this.props
+    const exp = [
+      card.exp_month,
+      card.exp_year
+    ].join("/")
     return(
-      <Container>
+      <Grid.Column>
         <Card>
-          <Card.Content header='About Amy' />
-          <Card.Content description="This is a description" />
+          <Card.Content header={exp} />
           <Card.Content extra>
-            <Icon name='user' />
-            {this.props.card.last4}
+            <Icon name={["cc",card.brand.toLowerCase()].join(" ")} />
+            {card.last4}
           </Card.Content>
         </Card>
-      </Container>
+      </Grid.Column>
     )
   }
 }

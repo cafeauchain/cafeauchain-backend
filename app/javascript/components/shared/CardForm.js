@@ -10,6 +10,7 @@ class CheckoutForm extends Component {
 
   submit = async ev => {
     let {token} = await this.props.stripe.createToken({name: "Name"});
+    this._element.clear()
     this.props.handleSubmit(token)
   }
 
@@ -17,8 +18,10 @@ class CheckoutForm extends Component {
     return (
       <div className="checkout">
         <p>Would you like to complete the purchase?</p>
-        <CardElement />
-        <Button onClick={this.submit}>Send</Button>
+        <CardElement 
+            onReady={(element) => this._element = element}
+          />
+        <Button onClick={this.submit}>Create Card</Button>
       </div>
     );
   }
