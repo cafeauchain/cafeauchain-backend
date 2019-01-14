@@ -27,7 +27,7 @@
               <%= link_to edit_user_registration_path, class: 'dropdown-item' do %>
                 <i class="icon_profile"></i> My Account
               <% end %>
-              <% if current_user.is_owner %>
+              <% if !current_user.roaster_profile.nil? && current_user.is_owner %>
                 <%= link_to manage_subscription_roaster_profile_path(current_user.roaster_profile), class: 'dropdown-item' do %>
                   <i class="icon sync"></i> Manage Subscription
                 <% end %>

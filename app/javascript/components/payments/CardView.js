@@ -11,7 +11,7 @@ class CardView extends Component {
           <Card.Content description="This is a description" />
           <Card.Content extra>
             <Icon name='user' />
-            4 Friends
+            {this.props.card.last4}
           </Card.Content>
         </Card>
       </Container>

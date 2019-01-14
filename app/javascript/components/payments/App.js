@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Elements, StripeProvider} from 'react-stripe-elements';
-import readCookie from '../utilities/readCookie';
 import {Container} from 'semantic-ui-react';
+import readCookie from '../utilities/readCookie';
 import CardForm from '../shared/CardForm';
 import CardView from './CardView';
 
@@ -34,6 +34,13 @@ class App extends Component {
     }
   }
 
+  renderCards = () => {
+    const { cards } = this.state
+    {cards.forEach(card => {
+      return <CardView card={card} />
+    })}
+  }
+
   render() {
     return (
       <StripeProvider apiKey={this.props.stripeApiKey}>
@@ -44,7 +51,7 @@ class App extends Component {
               <CardForm handleSubmit={this.handleSubmit} />
             </Elements>
           </div>
-          <CardView />
+          {this.renderCards()}
         </Container>
       </StripeProvider>
     );
