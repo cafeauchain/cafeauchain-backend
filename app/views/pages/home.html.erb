@@ -1,2 +1,1 @@
-<% content_for :body_class, 'login-img-body' %>
-<div>This is the home page</div>
+<%= react_component "home", props = {user: current_user, loggedIn: user_signed_in?} %>
