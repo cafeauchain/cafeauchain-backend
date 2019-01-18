@@ -62,3 +62,14 @@ footer {
 .dimmer .content {
     width: 100%;
 }
+
+// Pin footer to bottom
+body {
+    display: flex;
+    flex-flow: column;
+    min-height: 100vh;
+    height: auto;
+    .site-footer {
+        margin-top: auto;
+    }
+}
