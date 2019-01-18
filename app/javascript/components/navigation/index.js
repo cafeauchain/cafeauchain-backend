@@ -1,5 +1,4 @@
-import React, { Component, Fragment as F } from "react";
-import { Container } from "semantic-ui-react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import NavBar from "./responsiveNavbar";
@@ -21,13 +20,7 @@ class Nav extends Component {
 
     render() {
         const { links } = this.state;
-        return (
-            <F>
-                <NavBar leftItems={links.left} rightItems={links.right} />
-                <div className="navbar-spacer" style={{ marginTop: "68px" }} />
-                <Container style={{ height: 100, background: "white" }}>This is some spacer content</Container>
-            </F>
-        );
+        return <NavBar leftItems={links.left} rightItems={links.right} />;
     }
 }
 
