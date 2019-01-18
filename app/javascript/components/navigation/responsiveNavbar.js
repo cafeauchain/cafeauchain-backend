@@ -51,12 +51,13 @@ class NavBar extends Component {
     render() {
         const { leftItems, rightItems } = this.props;
         const { visible, screenSize } = this.state;
+        let logoBorder = leftItems.length ? "" : " no-border";
 
         return (
             <Menu fixed="top">
                 <Container>
-                    <Menu.Item className="no-left-border">
-                        <Image size="mini" src={logo} />
+                    <Menu.Item className={"no-left-border" + logoBorder}>
+                        <Image size="mini" src={logo} as="a" href="/" />
                     </Menu.Item>
                     {screenSize !== "desktop" && (
                         <F>

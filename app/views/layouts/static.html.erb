@@ -11,7 +11,7 @@
     <%= csrf_meta_tags %>
   </head>
   <body class="<%= yield(:body_class) %>">
-    <%= render 'layouts/static_nav' %>
+    <%= react_component "navigation", props = {user: current_user, loggedIn: user_signed_in?} %>
     <%= yield %>
     <hr class="featurette-divider">
     <footer class="container">
