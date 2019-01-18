@@ -21,15 +21,21 @@ class NavBar extends Component {
 
     componentDidMount() {
         window.addEventListener("resize", this.handleWindowResize);
-        const { menuDrawn } = this.state;
-        if (!menuDrawn) {
-            setTimeout(() => this.setState({ menuDrawn: true }), 200);
-        }
     }
 
     componentWillUnmount() {
         window.removeEventListener("resize", this.handleWindowResize);
     }
+
+    logoLoaded = () => {
+        let { menuHeight } = this.state;
+        if (this.menuRef.current) {
+            let el = this.menuRef.current.getElementsByClassName("right-side-menu")[0];
+            if (menuHeight !== el.offsetHeight + 10) {
+                this.setState({ menuHeight: el.offsetHeight + 10 });
+            }
+        }
+    };
 
     getScreenSize = () => {
         const width = window.innerWidth;
@@ -58,23 +64,15 @@ class NavBar extends Component {
 
     render() {
         const { leftItems, rightItems } = this.props;
-        const { visible, screenSize, menuDrawn } = this.state;
-        let { menuHeight } = this.state;
-        const ref = this.menuRef.current;
-        if (menuDrawn && ref) {
-            let el = ref.getElementsByClassName("right-side-menu")[0];
-            menuHeight = el.offsetHeight;
-            //eslint-disable-next-line
-            console.log(el.getBoundingClientRect());
-        }
+        const { visible, screenSize, menuHeight } = this.state;
         let logoBorder = leftItems.length ? "" : " no-border";
 
         return (
-            <div className="navbar-spacer" ref={this.menuRef} style={{ paddingTop: menuHeight + 10 }}>
+            <div className="navbar-spacer" ref={this.menuRef} style={{ paddingTop: menuHeight }}>
                 <Menu fixed="top">
                     <Container>
                         <Menu.Item className={"no-left-border" + logoBorder}>
-                            <Image size="mini" src={logo} as="a" href="/" />
+                            <Image size="mini" src={logo} as="a" href="/" onLoad={this.logoLoaded} />
                         </Menu.Item>
                         {screenSize !== "desktop" && (
                             <F>
