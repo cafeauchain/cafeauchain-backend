@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import shortid from 'shortid';
-import { Button, Form, Grid, Icon, List, Image } from "semantic-ui-react";
+import moment from 'moment';
+import { Button, Form, Grid, Icon, Image, List, Message } from "semantic-ui-react";
 import humanize from "../../utilities/humanize";
 import IconHeader from "../../shared/IconHeader";
 
@@ -47,11 +48,27 @@ class Confirmation extends Component {
     }
 
     render() {
+        const trialEnd = moment().add('days', 30).format("dddd, MMM Do YYYY")
         return (
             <Grid centered>
                 <Grid.Column width={12}>
                     <Form>
                         <IconHeader iconName="coffee" header="Confirm your profile info" />
+                        <Message info>
+                            <Message.Header>Complete your registration</Message.Header>
+                            <Message.List>
+                                <Message.Item>
+                                    Start your free 30-day trial, ending&nbsp;
+                                    {trialEnd}
+                                </Message.Item>
+                                <Message.Item>
+                                    During your trial, you can track up to 1000lbs of green coffee through the roasting process
+                                </Message.Item>
+                                <Message.Item>
+                                    We don‘t need a credit card for your trial, but we recommend you add one so you don‘t experience an interruption
+                                </Message.Item>
+                            </Message.List>
+                        </Message>
                         <List>
                             {this.renderProfileItems()}
                         </List>
@@ -72,7 +89,7 @@ class Confirmation extends Component {
                             icon
                             labelPosition="right"
                         >
-                            Next Step
+                            Complete Registration
                             <Icon name="right arrow" />
                         </Button>
                     </Form>
