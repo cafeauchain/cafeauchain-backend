@@ -1,4 +1,11 @@
 $heroBackground: rgb(108, 63, 50);
+$offwhite: #fafafa;
+$text: #3a3a3a;
+$lightgray: #ededed;
+$darkgray: #a2a2a2;
+
+// full-width might be necessary anymore since I removed the main yield from a container
+// leave it for now
 .full-width {
     left: 50%;
     transform: translate(-50%, 0);
@@ -31,9 +38,17 @@ $heroBackground: rgb(108, 63, 50);
     }
 }
 
-.ui.segment:not(.home-hero) {
-    background: #fafafa;
+section.ui.segment {
+    background: $offwhite;
+    padding: 8em 0;
+    &:nth-of-type(even) {
+        background: $lightgray;
+    }
 }
 :export {
     heroBackground: $heroBackground;
+    offwhite: $offwhite;
+    text: $text;
+    lightgray: $lightgray;
+    darkgray: $darkgray;
 }
