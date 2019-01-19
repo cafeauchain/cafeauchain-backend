@@ -12,7 +12,7 @@
   </head>
   <body class="<%= yield(:body_class) %>">
     <%= react_component "navigation", props = {user: current_user, loggedIn: user_signed_in?} %>
-    <div class="ui container"><%= yield %></div>
+    <%= yield %>
     <%= react_component "footer", props = {user: current_user, loggedIn: user_signed_in?}, {:class => "site-footer"} %>
   </body>
 </html>
