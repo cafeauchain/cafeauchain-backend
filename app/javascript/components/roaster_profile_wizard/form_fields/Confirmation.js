@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import shortid from 'shortid';
-import { Button, Grid, Icon, Form, List } from "semantic-ui-react";
+import { Button, Form, Grid, Icon, List, Image } from "semantic-ui-react";
 import humanize from "../../utilities/humanize";
 import IconHeader from "../../shared/IconHeader";
 
@@ -22,22 +22,38 @@ class Confirmation extends Component {
         previousStep();
     };
 
-    render() {
+    renderProfileItems = () => {
         const { values } = this.props;
+        return Object.keys(values).map((key) => {
+            switch (key){
+            case "logo":
+                return (
+                    <List.Item key={shortid.generate()}>
+                        <Image src={values[key]} size="small" />
+                        <List.Content>
+                            <List.Header>{humanize(key)}</List.Header>
+                        </List.Content>
+                    </List.Item>
+                );
+            default:
+                return (
+                    <List.Item key={shortid.generate()}>
+                        <List.Header>{humanize(key)}</List.Header>
+                        {values[key]}
+                    </List.Item>
+                );
+            }
+        })
+    }
+
+    render() {
         return (
             <Grid centered>
                 <Grid.Column width={12}>
                     <Form>
                         <IconHeader iconName="coffee" header="Confirm your profile info" />
                         <List>
-                            {Object.keys(values).map((key) => {
-                                return (
-                                    <List.Item key={shortid.generate()}>
-                                        <List.Header>{humanize(key)}</List.Header>
-                                        {values[key]}
-                                    </List.Item>
-                                );
-                            })}
+                            {this.renderProfileItems()}
                         </List>
                         <Button
                             type="submit"
