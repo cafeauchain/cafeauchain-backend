@@ -4,7 +4,7 @@ import logo from "../../../assets/images/cac-unofficial-logo.png";
 
 const Footer = () => {
     return (
-        <Segment inverted style={{ margin: "3em 0em 0em", padding: "3em 0em", background: "#3a3a3a" }} vertical>
+        <Segment inverted style={{ padding: "3em 0em", background: "#3a3a3a" }} vertical>
             <Container textAlign="center">
                 <Grid columns={2} divided stackable inverted>
                     <Grid.Row>
