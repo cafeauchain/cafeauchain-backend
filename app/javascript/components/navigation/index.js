@@ -20,7 +20,7 @@ class Nav extends Component {
 
     render() {
         const { links } = this.state;
-        return <NavBar leftItems={links.left} rightItems={links.right} />;
+        return <NavBar leftItems={links.left} rightItems={links.right} buttons={links.buttons} />;
     }
 }
 

@@ -39,12 +39,7 @@ class NavBar extends Component {
 
     getScreenSize = () => {
         const width = window.innerWidth;
-        let size = "mini";
-        if (width > 600) {
-            size = "desktop";
-        } else if (width > 340) {
-            size = "tablet";
-        }
+        const size = width > 600 ? "desktop" : "tablet";
         return size;
     };
 
@@ -63,7 +58,7 @@ class NavBar extends Component {
         });
 
     render() {
-        const { leftItems, rightItems } = this.props;
+        const { leftItems, rightItems, buttons } = this.props;
         const { visible, screenSize, menuHeight } = this.state;
         let logoBorder = leftItems.length ? "" : " no-border";
 
@@ -74,7 +69,7 @@ class NavBar extends Component {
                         <Menu.Item className={"no-left-border" + logoBorder}>
                             <Image size="mini" src={logo} as="a" href="/" onLoad={this.logoLoaded} />
                         </Menu.Item>
-                        {screenSize !== "desktop" && (
+                        {screenSize === "tablet" && (
                             <F>
                                 <Menu.Item onClick={this.handleToggle} className="no-border">
                                     <Icon name="sidebar" />
@@ -84,7 +79,8 @@ class NavBar extends Component {
                                         top: "100%",
                                         position: "absolute",
                                         minHeight: "100vh",
-                                        width: "100%"
+                                        width: "100%",
+                                        visibility: visible ? "visible" : "hidden"
                                     }}
                                 >
                                     <Sidebar.Pusher dimmed={visible} onClick={this.handleToggle} />
@@ -93,21 +89,17 @@ class NavBar extends Component {
                                         animation="overlay"
                                         vertical
                                         visible={visible}
-                                        content={menuItemBuilder(
-                                            leftItems.concat(screenSize === "mini" ? rightItems : [])
-                                        )}
+                                        content={menuItemBuilder(leftItems.concat(rightItems))}
                                     />
                                 </Sidebar.Pushable>
                             </F>
                         )}
                         {screenSize === "desktop" && menuItemBuilder(leftItems)}
-                        {screenSize !== "mini" && (
-                            <Menu.Menu
-                                position="right"
-                                content={menuItemBuilder(rightItems)}
-                                className="right-side-menu"
-                            />
-                        )}
+                        <Menu.Menu
+                            position="right"
+                            content={menuItemBuilder(screenSize === "tablet" ? buttons : rightItems.concat(buttons))}
+                            className="right-side-menu"
+                        />
                     </Container>
                 </Menu>
             </div>
@@ -118,7 +110,8 @@ class NavBar extends Component {
 const { array } = PropTypes;
 NavBar.propTypes = {
     leftItems: array,
-    rightItems: array
+    rightItems: array,
+    buttons: array
 };
 
 export default NavBar;
