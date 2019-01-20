@@ -1,8 +1,31 @@
-.ui.menu .item.no-border {
-    &:before {
-        content: none;
+@import "../../../assets/stylesheets/variables";
+
+.ui.menu {
+    .item {
+        &.no-border {
+            &:before {
+                content: none;
+            }
+        }
+        &.no-left-border {
+            border: 0 !important;
+        }
+        > .button {
+            box-shadow: 0 0 0 2px inset $lightgreen;
+            color: white;
+            background: $lightgreen;
+            &.login-btn {
+                // margin-right: 10px;
+                background: white;
+                color: $lightgreen;
+            }
+        }
+        &:hover {
+            > .button {
+                background: $darkgreen;
+                box-shadow: 0 0 0 2px inset $darkgreen;
+                color: white;
+            }
+        }
     }
-}
-.item.no-left-border {
-    border: 0 !important;
 }

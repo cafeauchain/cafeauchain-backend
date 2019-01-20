@@ -1,8 +1,5 @@
-$heroBackground: rgb(108, 63, 50);
-$offwhite: #fafafa;
-$text: #3a3a3a;
-$lightgray: #ededed;
-$darkgray: #a2a2a2;
+@import "../../../assets/stylesheets/variables";
+$heroBackground: $brown;
 
 // full-width might be necessary anymore since I removed the main yield from a container
 // leave it for now
@@ -44,11 +41,4 @@ section.ui.segment {
     &:nth-of-type(even) {
         background: $lightgray;
     }
-}
-:export {
-    heroBackground: $heroBackground;
-    offwhite: $offwhite;
-    text: $text;
-    lightgray: $lightgray;
-    darkgray: $darkgray;
 }
