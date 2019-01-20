@@ -23,7 +23,12 @@
 class Subscription < ApplicationRecord
   belongs_to :user
 
+  has_many :subscription_items
   has_many :cards
 
   enum status: [:active, :trial, :inactive, :suspended]
+
+  def default_card
+    cards.find_by(default: true)
+  end
 end

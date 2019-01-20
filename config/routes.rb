@@ -99,6 +99,7 @@ Rails.application.routes.draw do
 
         member do
           post :cards
+          put :set_as_default
         end
       end
     end

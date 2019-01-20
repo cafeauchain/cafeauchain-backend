@@ -1,6 +1,7 @@
 module Api::V1
   class RoasterProfilesController < ApplicationController
-    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :cards]
+    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :cards, :set_as_default]
+    before_action :set_roaster, only: [:update, :cards, :set_as_default]
   
     def validate_step
       current_step = params[:current_step]
@@ -36,7 +37,6 @@ module Api::V1
     end
 
     def update
-      @roaster_profile = RoasterProfile.find(params[:id])
       if current_user == @roaster_profile.owner
         if @roaster_profile.update(roaster_profile_params)
           logo = (params[:roaster_profile][:logo])
@@ -51,9 +51,19 @@ module Api::V1
     end
     
     def cards
-      @roaster = RoasterProfile.find(params[:id])
-      StripeServices::CreateCard.call(@roaster.subscription.id, params[:token])
-      render json: @roaster.subscription.cards, status: 200
+      StripeServices::CreateCard.call(@roaster_profile.subscription.id, params[:token])
+      render json: @roaster_profile.subscription.cards, status: 200
+    end
+
+    def set_as_default
+      @card = Card.find(params[:card_id])
+      if @roaster_profile.subscription.default_card.update(default: false)
+        @card.update(default: true)
+        StripeServices::UpdateDefaultCard.call(@roaster_profile.subscription.id, @card.stripe_card_id)
+        render json: @roaster_profile.subscription.cards, status: 200
+      else
+        render json: @card.errors, status: 422
+      end 
     end
 
     private
@@ -74,6 +84,10 @@ module Api::V1
       raise InvalidStep unless step.in?(Wizard::RoasterProfile::STEPS)
   
       "Wizard::RoasterProfile::#{step.camelize}".constantize.new(session[:roaster_profile_attributes])
+    end
+
+    def set_roaster
+      @roaster_profile = RoasterProfile.friendly.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
