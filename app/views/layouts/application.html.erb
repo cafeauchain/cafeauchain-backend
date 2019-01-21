@@ -2,8 +2,8 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= content_for?(:title) ? yield(:title) : "Cafe au Chain | Proof of Perk" %></title>
-    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Cafe au Chain | Proof of Perk" %>">
+    <title><%= content_for?(:title) ? yield(:title) : "Cafe au Chain | Know where your coffee comes from" %></title>
+    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Cafe au Chain | Proof of Perk helps roaster track their coffee from distributors through the roasting process, and helps their customers learn where their coffee comes from." %>">
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_pack_tag 'application' %>
@@ -11,13 +11,9 @@
     <%= csrf_meta_tags %>
   </head>
   <body class="<%= yield(:body_class) %>">
-    <section id="container">
-      <%= render 'layouts/navigation' %>
-      <section id="main-content">
-        <section class="wrapper">
-          <%= yield %>
-        </section>
-      </section>
-    </section>
+    <%= react_component "navigation", props = {user: current_user, loggedIn: user_signed_in?} %>
+    <%= render 'layouts/navigation' %>
+    <%= yield %>
+    <%= react_component "footer", props = {user: current_user, loggedIn: user_signed_in?}, {:class => "site-footer"} %>
   </body>
 </html>

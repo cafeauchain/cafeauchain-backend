@@ -102,7 +102,7 @@ Rails.application.routes.draw do
   resources :roaster_profiles, path: "roasters" do
     collection do
       get :step1, to: "roaster_profiles#new"
-      
+
     end
   end
 
@@ -121,6 +121,10 @@ Rails.application.routes.draw do
   get 'dashboard', to: 'dashboard#index'
 
   devise_for :users, controllers: { registrations: "users/registrations" }
+
+  devise_scope :user do
+    get "/logout" => "devise/sessions#destroy"
+  end
 
   # root to: 'dashboard#index'
   # root to: 'pages#show', id: 'home'
