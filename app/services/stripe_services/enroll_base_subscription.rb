@@ -17,7 +17,7 @@ module StripeServices
       stripe_sub = Stripe::Subscription.create(customer: stripe_customer_id, trial_from_plan: true, items: [
         {plan: @plan.stripe_plan_id}
       ])
-      @subscription = @user.create_subscription(stripe_customer_id: stripe_customer_id, stripe_subscription_id: stripe_sub["id"], trial_end: stripe_sub["trial_end"], status: "trial")
+      @subscription = @user.create_subscription(stripe_customer_id: stripe_customer_id, stripe_subscription_id: stripe_sub["id"], trial_end: Time.at(stripe_sub["trial_end"]), status: "trial")
       SubscriptionItem.create(subscription: @subscription, plan: @plan, quantity: 1)
       # SubscriptionMailer.enroll_and_welcome(@user).deliver_now! # Send welcome email
     end

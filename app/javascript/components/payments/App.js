@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import shortid from 'shortid';
+import moment from 'moment';
 import {Elements, StripeProvider} from 'react-stripe-elements';
-import {Container, Divider, Grid, Header, Icon, Message} from 'semantic-ui-react';
+import {Container, Divider, Grid, Header, Icon, Message, Segment, Label, Comment, List} from 'semantic-ui-react';
 import readCookie from '../utilities/readCookie';
 import CardForm from '../shared/CardForm';
 import CardView from './CardView';
@@ -11,11 +12,26 @@ class App extends Component {
 
     constructor(props) {
         super(props)
-        let { cards, roasterId } = this.props
+        let { cards, roasterId, subscription } = this.props
         this.state = {
             cards,
             roasterId,
+            subscription,
             errors: {}
+        }
+    }
+
+    componentDidMount = async () => {
+        const { subscription } = this.props
+        let response = await fetch('/api/v1/subscriptions/' + subscription.id, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        if (response.ok) {
+            let subscription = await response.json()
+            this.setState({subscription})
         }
     }
 
@@ -111,12 +127,39 @@ class App extends Component {
     }
 
     render() {
+        const { subscription } = this.state
         const { stripeApiKey } = this.props
+        const trialEnd = moment(subscription.trial_end).format("dddd, MMM Do YYYY")
         return (
             <StripeProvider apiKey={stripeApiKey}>
                 <Container className="form roaster-wizard">
+                    <Segment padded>
+                        <h2>
+                            Subscription Details
+                            <Label attached="top right">{subscription.status.toUpperCase()}</Label>
+                        </h2>
+                        {subscription.status == "trial" ?
+                            <Comment.Metadata content={"Your trial ends: " + trialEnd} />
+                            : null
+                        }
+                        <p>
+                            Your next charge will be:&nbsp;
+                            $
+                            {subscription.next_charge}
+                        </p>
+                        <h3>Current subscriptions</h3>
+                        <List>
+                            {console.log(subscription.subscription_items !== undefined)}
+
+                            {subscription.subscription_items !== undefined ? 
+                                subscription.subscription_items.map(si => {
+                                    return <List.Item key={shortid.generate()} header={si.plan_name} content={"$" + (si.plan_price / 100) + "/" + si.interval} />
+                                }) : null
+                            }
+                        </List>
+                    </Segment>
                     <div className="example">
-                        <h1>Manage Payment Methods</h1>
+                        <h2>Manage Payment Methods</h2>
                         <Elements>
                             <CardForm handleSubmit={this.handleSubmit} />
                         </Elements>
@@ -137,11 +180,12 @@ class App extends Component {
     }
 }
 
-const { array, number, string } = PropTypes;
+const { array, number, object, string } = PropTypes;
 App.propTypes = {
     stripeApiKey: string,
     cards: array,
-    roasterId: number
+    roasterId: number,
+    subscription: object
 };
 
 export default App;

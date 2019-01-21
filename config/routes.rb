@@ -17,6 +17,14 @@
 #               api_v1_roaster_profiles POST   /api/v1/roasters(.:format)                                                               api/v1/roaster_profiles#create
 #                api_v1_roaster_profile PATCH  /api/v1/roasters/:id(.:format)                                                           api/v1/roaster_profiles#update
 #                                       PUT    /api/v1/roasters/:id(.:format)                                                           api/v1/roaster_profiles#update
+#                  api_v1_subscriptions GET    /api/v1/subscriptions(.:format)                                                          api/v1/subscriptions#index
+#                                       POST   /api/v1/subscriptions(.:format)                                                          api/v1/subscriptions#create
+#               new_api_v1_subscription GET    /api/v1/subscriptions/new(.:format)                                                      api/v1/subscriptions#new
+#              edit_api_v1_subscription GET    /api/v1/subscriptions/:id/edit(.:format)                                                 api/v1/subscriptions#edit
+#                   api_v1_subscription GET    /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#show
+#                                       PATCH  /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#update
+#                                       PUT    /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#update
+#                                       DELETE /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#destroy
 #   manage_subscription_roaster_profile GET    /roasters/:id/manage_subscription(.:format)                                              roaster_profiles#manage_subscription
 #                           roast_index GET    /roasters/:id/roast(.:format)                                                            roast#index
 #                      roaster_profiles GET    /roasters(.:format)                                                                      roaster_profiles#index
@@ -88,6 +96,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      
       resources :roaster_profiles, only: [:create, :update], path: "roasters" do
         collection do
 
@@ -96,11 +105,16 @@ Rails.application.routes.draw do
         end
 
         member do
+
           post :cards
           delete :cards, to: "roaster_profiles#remove_card"
           put :set_as_default
+
         end
       end
+
+      resources :subscriptions
+
     end
   end
 

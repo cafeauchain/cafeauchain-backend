@@ -34,7 +34,7 @@ class RoasterProfilesController < ApplicationController
   end
 
   def manage_subscription
-    @subscription = @roaster_profile.subscription
+    @subscription = Subscription.includes(:subscription_items).find_by(user: @roaster_profile.owner)
     @cards = @subscription.cards
   end
   

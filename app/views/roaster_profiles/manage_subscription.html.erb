@@ -1,9 +1,3 @@
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <%= react_component("payments/App", {stripeApiKey: "pk_test_K6zQIJFbrUdgl3U9MiAJrExo", cards: @cards, roasterId: @roaster_profile.id}) %>
-    </div>
-  </div>
-</div>
+<%= react_component("payments/App", {stripeApiKey: "pk_test_K6zQIJFbrUdgl3U9MiAJrExo", cards: @cards, roasterId: @roaster_profile.id, subscription: @subscription}) %>
 <% content_for :body_class, 'login-img-body' %>
 <script src="https://js.stripe.com/v3/"></script>

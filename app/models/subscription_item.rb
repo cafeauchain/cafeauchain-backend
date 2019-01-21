@@ -23,4 +23,7 @@
 class SubscriptionItem < ApplicationRecord
   belongs_to :subscription
   belongs_to :plan
+
+  delegate :name, to: :plan, prefix: true
+  delegate :price_in_cents, to: :plan, prefix: true
 end
