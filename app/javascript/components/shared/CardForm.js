@@ -20,7 +20,7 @@ class CheckoutForm extends Component {
     render() {
         return (
             <div className="checkout">
-                <p>Would you like to complete the purchase?</p>
+                <p>Add a new card:</p>
                 <CardElement 
                     onReady={(element) => this._element = element}
                 />

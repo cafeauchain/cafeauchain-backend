@@ -116,7 +116,7 @@ class App extends Component {
             <StripeProvider apiKey={stripeApiKey}>
                 <Container className="form roaster-wizard">
                     <div className="example">
-                        <h1>Manage Subscription</h1>
+                        <h1>Manage Payment Methods</h1>
                         <Elements>
                             <CardForm handleSubmit={this.handleSubmit} />
                         </Elements>

@@ -34,7 +34,8 @@ class RoasterProfilesController < ApplicationController
   end
 
   def manage_subscription
-    @cards = @roaster_profile.subscription.cards
+    @subscription = @roaster_profile.subscription
+    @cards = @subscription.cards
   end
   
   private
