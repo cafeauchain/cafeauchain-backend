@@ -9,7 +9,7 @@ const links = {
             as: "a",
             content: <Button className="logout-btn">Logout</Button>,
             key: "logout",
-            href: "/logout-user",
+            href: "/logout",
             className: "no-border"
         }
     ]
