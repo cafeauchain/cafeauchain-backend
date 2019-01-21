@@ -149,11 +149,15 @@ class App extends Component {
                         </p>
                         <h3>Current subscriptions</h3>
                         <List>
-                            {console.log(subscription.subscription_items !== undefined)}
-
                             {subscription.subscription_items !== undefined ? 
                                 subscription.subscription_items.map(si => {
-                                    return <List.Item key={shortid.generate()} header={si.plan_name} content={"$" + (si.plan_price / 100) + "/" + si.interval} />
+                                    return(
+                                        <List.Item 
+                                            key={shortid.generate()} 
+                                            header={si.plan_name} 
+                                            content={"$" + (si.plan_price / 100) + "/" + si.interval} 
+                                        />
+                                    )
                                 }) : null
                             }
                         </List>
