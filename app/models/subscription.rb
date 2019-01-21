@@ -22,4 +22,24 @@
 
 class Subscription < ApplicationRecord
   belongs_to :user
+
+  has_many :subscription_items
+  has_many :subscription_charges
+  has_many :cards
+
+  enum status: [:active, :trial, :inactive, :suspended]
+
+  def default_card
+    cards.find_by(default: true)
+  end
+
+  def next_charge_amount
+    charge_amounts_in_cents = []
+    subscription_items.each do |si|
+      charge_amounts_in_cents.push(si.quantity * si.plan.price_in_cents.to_f)
+    end
+    next_charge = (charge_amounts_in_cents.sum / 100)
+  end
+  
+
 end

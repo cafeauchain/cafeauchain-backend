@@ -11,8 +11,22 @@
 #                                       DELETE /admin/plans/:id(.:format)                                                               admin/plans#destroy
 #                       admin_dashboard GET    /admin/dashboard(.:format)                                                               admin/dashboard#index
 # validate_step_api_v1_roaster_profiles POST   /api/v1/roasters/validate_step(.:format)                                                 api/v1/roaster_profiles#validate_step
+#          cards_api_v1_roaster_profile POST   /api/v1/roasters/:id/cards(.:format)                                                     api/v1/roaster_profiles#cards
+#                                       DELETE /api/v1/roasters/:id/cards(.:format)                                                     api/v1/roaster_profiles#remove_card
+# set_as_default_api_v1_roaster_profile PUT    /api/v1/roasters/:id/set_as_default(.:format)                                            api/v1/roaster_profiles#set_as_default
 #               api_v1_roaster_profiles POST   /api/v1/roasters(.:format)                                                               api/v1/roaster_profiles#create
-#                step1_roaster_profiles GET    /roasters/step1(.:format)                                                                roaster_profiles#new
+#                api_v1_roaster_profile PATCH  /api/v1/roasters/:id(.:format)                                                           api/v1/roaster_profiles#update
+#                                       PUT    /api/v1/roasters/:id(.:format)                                                           api/v1/roaster_profiles#update
+#                  api_v1_subscriptions GET    /api/v1/subscriptions(.:format)                                                          api/v1/subscriptions#index
+#                                       POST   /api/v1/subscriptions(.:format)                                                          api/v1/subscriptions#create
+#               new_api_v1_subscription GET    /api/v1/subscriptions/new(.:format)                                                      api/v1/subscriptions#new
+#              edit_api_v1_subscription GET    /api/v1/subscriptions/:id/edit(.:format)                                                 api/v1/subscriptions#edit
+#                   api_v1_subscription GET    /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#show
+#                                       PATCH  /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#update
+#                                       PUT    /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#update
+#                                       DELETE /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#destroy
+#   manage_subscription_roaster_profile GET    /roasters/:id/manage_subscription(.:format)                                              roaster_profiles#manage_subscription
+#                           roast_index GET    /roasters/:id/roast(.:format)                                                            roast#index
 #                      roaster_profiles GET    /roasters(.:format)                                                                      roaster_profiles#index
 #                                       POST   /roasters(.:format)                                                                      roaster_profiles#create
 #                   new_roaster_profile GET    /roasters/new(.:format)                                                                  roaster_profiles#new
@@ -45,13 +59,6 @@
 #                                       PATCH  /producers/:id(.:format)                                                                 producer_profiles#update
 #                                       PUT    /producers/:id(.:format)                                                                 producer_profiles#update
 #                                       DELETE /producers/:id(.:format)                                                                 producer_profiles#destroy
-#                           roast_index GET    /roast(.:format)                                                                         roast#index
-#                                       GET    /roast/step_1/:id(.:format)                                                              roast#step_1
-#                          roast_step_2 POST   /roast/step_2(.:format)                                                                  roast#step_2
-#                          roast_step_3 POST   /roast/step_3(.:format)                                                                  roast#step_3
-#                                       GET    /roast/load_lot/:id(.:format)                                                            roast#load_lot
-#                         roast_new_lot GET    /roast/new_lot(.:format)                                                                 roast#new_lot
-#                     onboarding_step_1 GET    /onboarding/step_1(.:format)                                                             onboarding#step_1
 #                             dashboard GET    /dashboard(.:format)                                                                     dashboard#index
 #                      new_user_session GET    /users/sign_in(.:format)                                                                 devise/sessions#new
 #                          user_session POST   /users/sign_in(.:format)                                                                 devise/sessions#create
@@ -89,20 +96,35 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      
       resources :roaster_profiles, only: [:create, :update], path: "roasters" do
         collection do
 
           post :validate_step
 
         end
+
+        member do
+
+          post :cards
+          delete :cards, to: "roaster_profiles#remove_card"
+          put :set_as_default
+
+        end
       end
+
+      resources :subscriptions
+
     end
   end
 
   resources :roaster_profiles, path: "roasters" do
     collection do
       get :step1, to: "roaster_profiles#new"
-
+    end
+    member do
+      get :manage_subscription
+      resources :roast, only: [:index]
     end
   end
 
@@ -111,15 +133,7 @@ Rails.application.routes.draw do
     resources :lots
   end
 
-  resources :roast, only: [:index]
-  get 'roast/step_1/:id', to: 'roast#step_1'
-  post 'roast/step_2', to: 'roast#step_2'
-  post 'roast/step_3', to: 'roast#step_3'
-  get 'roast/load_lot/:id', to: 'roast#load_lot'
-  get 'roast/new_lot', to: 'roast#new_lot'
-  get 'onboarding/step_1', to: 'onboarding#step_1'
   get 'dashboard', to: 'dashboard#index'
-
   devise_for :users, controllers: { registrations: "users/registrations" }
 
   devise_scope :user do

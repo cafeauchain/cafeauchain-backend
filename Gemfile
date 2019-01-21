@@ -26,6 +26,7 @@ gem 'react-rails'
 gem 'semantic-ui-sass'
 gem 'mini_magick'
 gem 'mini_racer'
+gem 'stripe'
 
 group :development do
   gem 'web-console', '>= 3.3.0'

@@ -1,6 +1,7 @@
 module Api::V1
   class RoasterProfilesController < ApplicationController
-    before_action :load_roaster_profile_wizard, except: [:validate_step, :update]
+    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :cards, :set_as_default, :remove_card]
+    before_action :set_roaster, only: [:update, :cards, :set_as_default, :remove_card]
   
     def validate_step
       current_step = params[:current_step]
@@ -28,6 +29,7 @@ module Api::V1
           ActiveStorageServices::ImageAttachment.new(logo, roaster_profile.id, "RoasterProfile", "logo").call
         end
         session[:roaster_profile_attributes] = nil
+        StripeServices::EnrollBaseSubscription.initial_enroll(current_user.id)
         render json: {"redirect":true,"redirect_url": roaster_profile_path(@roaster_profile_wizard.roaster_profile)}, status: 200
       else
         redirect_to new_roaster_profile_path, alert: 'There were a problem when creating the Roaster Profile.'
@@ -35,7 +37,6 @@ module Api::V1
     end
 
     def update
-      @roaster_profile = RoasterProfile.find(params[:id])
       if current_user == @roaster_profile.owner
         if @roaster_profile.update(roaster_profile_params)
           logo = (params[:roaster_profile][:logo])
@@ -49,6 +50,34 @@ module Api::V1
       end
     end
     
+    def cards
+      StripeServices::CreateCard.call(@roaster_profile.subscription.id, params[:token])
+      render json: @roaster_profile.subscription.cards, status: 200
+    end
+
+    def set_as_default
+      @card = Card.find(params[:card_id])
+      if @roaster_profile.subscription.default_card.update(default: false)
+        @card.update(default: true)
+        StripeServices::UpdateDefaultCard.call(@roaster_profile.subscription.id, @card.stripe_card_id)
+        render json: @roaster_profile.subscription.cards, status: 200
+      else
+        render json: @card.errors, status: 422
+      end 
+    end
+
+    def remove_card
+      @card = Card.find(params[:card_id])
+      if @roaster_profile.subscription.default_card != @card
+        StripeServices::RemoveCard.call(@roaster_profile.subscription.id, @card.stripe_card_id)
+        @card.destroy
+        render json: @roaster_profile.subscription.cards, status: 200
+      else
+        @card.errors.add(:base, "Cannot remove default card; please set another card as default first.")
+        puts @card.errors.full_messages
+        render json: @card.errors, status: 422
+      end
+    end
 
     private
 
@@ -68,6 +97,10 @@ module Api::V1
       raise InvalidStep unless step.in?(Wizard::RoasterProfile::STEPS)
   
       "Wizard::RoasterProfile::#{step.camelize}".constantize.new(session[:roaster_profile_attributes])
+    end
+
+    def set_roaster
+      @roaster_profile = RoasterProfile.friendly.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

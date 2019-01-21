@@ -38,5 +38,12 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+
   belongs_to :roaster_profile, optional: true
+  has_one :subscription
+  has_many :cards, through: :subscription
+
+  def is_owner
+    roaster_profile.owner == self
+  end
 end

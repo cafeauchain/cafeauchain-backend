@@ -1,43 +1,109 @@
-import React, { Component } from 'react'
-import { Button, Grid, Icon, Form, Input } from 'semantic-ui-react'
-import IconHeader from '../../shared/IconHeader';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import shortid from 'shortid';
+import moment from 'moment';
+import { Button, Form, Grid, Icon, Image, List, Message } from "semantic-ui-react";
+import humanize from "../../utilities/humanize";
+import IconHeader from "../../shared/IconHeader";
 
 class Confirmation extends Component {
-  state = {}
+    state = {};
 
-  handleChange = (e, { value }) => this.setState({ value })
+    saveAndContinue = e => {
+        const { submitProfile } = this.props
 
-  saveAndContinue = (e) => {
-    e.preventDefault()
-    this.props.submitProfile()
-  }
+        e.preventDefault();
+        submitProfile();
+    };
 
-  goBack = (e) => {
-    e.preventDefault()
-    this.props.previousStep()
-  }
+    goBack = e => {
+        const { previousStep } = this.props
 
-  render() {
-    const {value} = this.state
-    return (
-      <Grid centered>
-        <Grid.Column width={12}>
-          <Form>
-            <IconHeader iconName='coffee' header="Confirm your profile info" />
-            
-            <Button type='submit' onClick={this.goBack} className="ui left floated" icon labelPosition='left'>
-              Previous Step
-              <Icon name='left arrow' />
-            </Button>
-            <Button type='submit' onClick={this.saveAndContinue} className="ui primary right floated" icon labelPosition='right'>
-              Next Step
-              <Icon name='right arrow' />
-            </Button>
-          </Form>
-        </Grid.Column>
-      </Grid>
-    )
-  }
+        e.preventDefault();
+        previousStep();
+    };
+
+    renderProfileItems = () => {
+        const { values } = this.props;
+        return Object.keys(values).map((key) => {
+            switch (key){
+            case "logo":
+                return (
+                    <List.Item key={shortid.generate()}>
+                        <Image src={values[key]} size="small" />
+                        <List.Content>
+                            <List.Header>{humanize(key)}</List.Header>
+                        </List.Content>
+                    </List.Item>
+                );
+            default:
+                return (
+                    <List.Item key={shortid.generate()}>
+                        <List.Header>{humanize(key)}</List.Header>
+                        {values[key]}
+                    </List.Item>
+                );
+            }
+        })
+    }
+
+    render() {
+        const trialEnd = moment().add('days', 30).format("dddd, MMM Do YYYY")
+        return (
+            <Grid centered>
+                <Grid.Column width={12}>
+                    <Form>
+                        <IconHeader iconName="coffee" header="Confirm your profile info" />
+                        <Message info>
+                            <Message.Header>Complete your registration</Message.Header>
+                            <Message.List>
+                                <Message.Item>
+                                    Start your free 30-day trial, ending&nbsp;
+                                    {trialEnd}
+                                </Message.Item>
+                                <Message.Item>
+                                    During your trial, you can track up to 1000lbs of green coffee through the roasting process
+                                </Message.Item>
+                                <Message.Item>
+                                    We don‘t need a credit card for your trial, but we recommend you add one so you don‘t experience an interruption
+                                </Message.Item>
+                            </Message.List>
+                        </Message>
+                        <List>
+                            {this.renderProfileItems()}
+                        </List>
+                        <Button
+                            type="submit"
+                            onClick={this.goBack}
+                            className="ui left floated"
+                            icon
+                            labelPosition="left"
+                        >
+                            Previous Step
+                            <Icon name="left arrow" />
+                        </Button>
+                        <Button
+                            type="submit"
+                            onClick={this.saveAndContinue}
+                            className="ui primary right floated"
+                            icon
+                            labelPosition="right"
+                        >
+                            Complete Registration
+                            <Icon name="right arrow" />
+                        </Button>
+                    </Form>
+                </Grid.Column>
+            </Grid>
+        );
+    }
 }
+
+const { func, object } = PropTypes;
+Confirmation.propTypes = {
+    submitProfile: func,
+    previousStep: func,
+    values: object
+};
 
 export default Confirmation;
