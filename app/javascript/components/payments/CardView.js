@@ -4,7 +4,7 @@ import {Button, Grid, Card, Icon} from 'semantic-ui-react';
 
 const CardView = props => {
 
-    const { card, setAsDefault } = props
+    const { card, setAsDefault, removeCard } = props
     const exp = [
         card.exp_month,
         card.exp_year
@@ -17,7 +17,7 @@ const CardView = props => {
                         {card.default ? 
                             null :
                             (
-                                <Button floated="right" size='mini' onClick={(e) => setAsDefault(e, card.id)}>
+                                <Button floated="right" size='tiny' onClick={(e) => setAsDefault(e, card.id)}>
                                     Set as default
                                 </Button> 
                             )
@@ -28,7 +28,10 @@ const CardView = props => {
                 </Card.Content>
                 
                 <Card.Content extra>
-                    <Icon name={["cc",card.brand.toLowerCase()].join(" ")} />
+                    <Button floated="right" size='mini' onClick={(e) => removeCard(e, card.id)} negative compact>
+                        Remove card
+                    </Button> 
+                    <Icon name={["cc",card.brand.toLowerCase()].join(" ")} size="large" />
                     {card.last4}
                 </Card.Content>
             </Card>
@@ -39,7 +42,8 @@ const CardView = props => {
 const { func, object } = PropTypes;
 CardView.propTypes = {
     card: object,
-    setAsDefault: func
+    setAsDefault: func,
+    removeCard: func
 };
 
 export default CardView;

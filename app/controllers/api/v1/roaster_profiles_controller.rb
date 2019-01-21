@@ -1,7 +1,7 @@
 module Api::V1
   class RoasterProfilesController < ApplicationController
-    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :cards, :set_as_default]
-    before_action :set_roaster, only: [:update, :cards, :set_as_default]
+    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :cards, :set_as_default, :remove_card]
+    before_action :set_roaster, only: [:update, :cards, :set_as_default, :remove_card]
   
     def validate_step
       current_step = params[:current_step]
@@ -64,6 +64,19 @@ module Api::V1
       else
         render json: @card.errors, status: 422
       end 
+    end
+
+    def remove_card
+      @card = Card.find(params[:card_id])
+      if @roaster_profile.subscription.default_card != @card
+        StripeServices::RemoveCard.call(@roaster_profile.subscription.id, @card.stripe_card_id)
+        @card.destroy
+        render json: @roaster_profile.subscription.cards, status: 200
+      else
+        @card.errors.add(:base, "Cannot remove default card; please set another card as default first.")
+        puts @card.errors.full_messages
+        render json: @card.errors, status: 422
+      end
     end
 
     private

@@ -12,8 +12,13 @@
 #                       admin_dashboard GET    /admin/dashboard(.:format)                                                               admin/dashboard#index
 # validate_step_api_v1_roaster_profiles POST   /api/v1/roasters/validate_step(.:format)                                                 api/v1/roaster_profiles#validate_step
 #          cards_api_v1_roaster_profile POST   /api/v1/roasters/:id/cards(.:format)                                                     api/v1/roaster_profiles#cards
+#                                       DELETE /api/v1/roasters/:id/cards(.:format)                                                     api/v1/roaster_profiles#remove_card
+# set_as_default_api_v1_roaster_profile PUT    /api/v1/roasters/:id/set_as_default(.:format)                                            api/v1/roaster_profiles#set_as_default
 #               api_v1_roaster_profiles POST   /api/v1/roasters(.:format)                                                               api/v1/roaster_profiles#create
+#                api_v1_roaster_profile PATCH  /api/v1/roasters/:id(.:format)                                                           api/v1/roaster_profiles#update
+#                                       PUT    /api/v1/roasters/:id(.:format)                                                           api/v1/roaster_profiles#update
 #   manage_subscription_roaster_profile GET    /roasters/:id/manage_subscription(.:format)                                              roaster_profiles#manage_subscription
+#                           roast_index GET    /roasters/:id/roast(.:format)                                                            roast#index
 #                      roaster_profiles GET    /roasters(.:format)                                                                      roaster_profiles#index
 #                                       POST   /roasters(.:format)                                                                      roaster_profiles#create
 #                   new_roaster_profile GET    /roasters/new(.:format)                                                                  roaster_profiles#new
@@ -46,13 +51,6 @@
 #                                       PATCH  /producers/:id(.:format)                                                                 producer_profiles#update
 #                                       PUT    /producers/:id(.:format)                                                                 producer_profiles#update
 #                                       DELETE /producers/:id(.:format)                                                                 producer_profiles#destroy
-#                           roast_index GET    /roast(.:format)                                                                         roast#index
-#                                       GET    /roast/step_1/:id(.:format)                                                              roast#step_1
-#                          roast_step_2 POST   /roast/step_2(.:format)                                                                  roast#step_2
-#                          roast_step_3 POST   /roast/step_3(.:format)                                                                  roast#step_3
-#                                       GET    /roast/load_lot/:id(.:format)                                                            roast#load_lot
-#                         roast_new_lot GET    /roast/new_lot(.:format)                                                                 roast#new_lot
-#                     onboarding_step_1 GET    /onboarding/step_1(.:format)                                                             onboarding#step_1
 #                             dashboard GET    /dashboard(.:format)                                                                     dashboard#index
 #                      new_user_session GET    /users/sign_in(.:format)                                                                 devise/sessions#new
 #                          user_session POST   /users/sign_in(.:format)                                                                 devise/sessions#create
@@ -99,6 +97,7 @@ Rails.application.routes.draw do
 
         member do
           post :cards
+          delete :cards, to: "roaster_profiles#remove_card"
           put :set_as_default
         end
       end
