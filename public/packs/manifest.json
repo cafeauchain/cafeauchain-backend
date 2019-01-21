@@ -3,14 +3,12 @@
   "_/assets/images/cac-unofficial-logo.png": "/packs/_/assets/images/cac-unofficial-logo-72f737cf23cd413dd4b1f3b2b9eeb46b.png",
   "_/assets/images/coffee-imgs/coffee-img-23.jpg": "/packs/_/assets/images/coffee-imgs/coffee-img-23-fc70df84739333175eb057650a65de07.jpg",
   "_/assets/images/coffee-imgs/coffee-img-31.jpg": "/packs/_/assets/images/coffee-imgs/coffee-img-31-b4a03e1aa50fc294e1a7af50491dcfc2.jpg",
-  "application.css": "/packs/application-4396716e2cf1e0ba4958f0daeec2b9c7.css",
-  "application.css.map": "/packs/application-4396716e2cf1e0ba4958f0daeec2b9c7.css.map",
-  "application.js": "/packs/application-24c1f9a6e8cbaf307e4a.js",
-  "application.js.map": "/packs/application-24c1f9a6e8cbaf307e4a.js.map",
-  "hello_typescript.js": "/packs/hello_typescript-24c1f9a6e8cbaf307e4a.js",
-  "hello_typescript.js.map": "/packs/hello_typescript-24c1f9a6e8cbaf307e4a.js.map",
-  "server_rendering.css": "/packs/server_rendering-4396716e2cf1e0ba4958f0daeec2b9c7.css",
-  "server_rendering.css.map": "/packs/server_rendering-4396716e2cf1e0ba4958f0daeec2b9c7.css.map",
-  "server_rendering.js": "/packs/server_rendering-24c1f9a6e8cbaf307e4a.js",
-  "server_rendering.js.map": "/packs/server_rendering-24c1f9a6e8cbaf307e4a.js.map"
+  "application.css": "/packs/application-b615afb2d94c34ebc82190c6c70440e2.css",
+  "application.js": "/packs/application-80aaaba4733801cee690.js",
+  "application.js.map": "/packs/application-80aaaba4733801cee690.js.map",
+  "hello_typescript.js": "/packs/hello_typescript-3ce93c48f59636a0afe0.js",
+  "hello_typescript.js.map": "/packs/hello_typescript-3ce93c48f59636a0afe0.js.map",
+  "server_rendering.css": "/packs/server_rendering-b615afb2d94c34ebc82190c6c70440e2.css",
+  "server_rendering.js": "/packs/server_rendering-dca2eb37126a5f448d82.js",
+  "server_rendering.js.map": "/packs/server_rendering-dca2eb37126a5f448d82.js.map"
 }
