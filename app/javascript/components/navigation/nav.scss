@@ -1,0 +1,30 @@
+@import "../../../assets/stylesheets/variables";
+
+.ui.menu {
+    .item {
+        &.no-border {
+            &:before {
+                content: none;
+            }
+        }
+        &.no-left-border {
+            border: 0 !important;
+        }
+        > .button {
+            box-shadow: 0 0 0 2px inset $lightgreen;
+            color: white;
+            background: $lightgreen;
+            &.login-btn {
+                background: white;
+                color: $lightgreen;
+            }
+        }
+        &:hover {
+            > .button {
+                background: $darkgreen;
+                box-shadow: 0 0 0 2px inset $darkgreen;
+                color: white;
+            }
+        }
+    }
+}

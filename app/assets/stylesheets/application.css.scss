@@ -13,10 +13,11 @@
  *= require font_awesome5
  *= require_self
  */
-@import "bootstrap";
+// @import "bootstrap";
 @import "elegant-icons-style";
 @import "line_icons";
 @import "semantic-ui";
+@import "variables";
 
 .hidden {
     display: none;
@@ -61,4 +62,15 @@ footer {
 
 .dimmer .content {
     width: 100%;
+}
+
+// Pin footer to bottom
+body {
+    display: flex;
+    flex-flow: column;
+    min-height: 100vh;
+    height: auto;
+    .site-footer {
+        margin-top: auto;
+    }
 }

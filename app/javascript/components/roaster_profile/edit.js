@@ -1,24 +1,49 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form, Container, Header, Divider } from "semantic-ui-react";
+import { Form, Container, Header, Divider, Dimmer, Loader } from "semantic-ui-react";
 
 import usStates from "../utilities/usStates";
 import Input from "../shared/input";
 import ImageChange from "../shared/ImageChange";
 
+import readCookie from "../utilities/readCookie";
+import API_URL from "../utilities/apiUtils/url";
+
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            details: props.profile
+            details: props.profile,
+            loading: false
         };
     }
 
-    handleSubmit = e => {
+    startSubmit = e => {
         e.preventDefault();
+        this.setState({ loading: true }, this.handleSubmit);
+    };
+
+    handleSubmit = async () => {
         const { details } = this.state;
-        // eslint-disable-next-line
-        console.log(details);
+        const url = `${API_URL}/roasters/${details.id}`;
+        const params = {
+            roaster_profile: details
+        };
+        const token = decodeURIComponent(readCookie("X-CSRF-Token"));
+        let response = await fetch(url, {
+            method: "PUT",
+            body: JSON.stringify(params),
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": token
+            }
+        });
+        if (response.status === 200) {
+            setTimeout(() => this.setState({ loading: false }), 600);
+        } else {
+            // eslint-disable-next-line
+            console.log("error", response);
+        }
     };
 
     handleInputChange = (event, { value, name, checked }) => {
@@ -33,7 +58,7 @@ class App extends Component {
     renderInput = props => <Input {...props} onChange={this.handleInputChange} />;
 
     render() {
-        const { details } = this.state;
+        const { details, loading } = this.state;
         const {
             name,
             about,
@@ -53,12 +78,15 @@ class App extends Component {
         const Input = this.renderInput;
         return (
             <Container className="form roaster-wizard">
+                <Dimmer active={loading} inverted>
+                    <Loader size="large">Saving</Loader>
+                </Dimmer>
                 <Header as="h2">Roaster Profile</Header>
                 <Container align="center">
-                    <ImageChange src={img_url} profile={details} />
+                    <ImageChange src={img_url} id={id} />
                 </Container>
                 <Divider />
-                <Form onSubmit={this.handleSubmit}>
+                <Form onSubmit={this.startSubmit}>
                     <Input label="Name" value={name} />
 
                     <Form.Group inline widths="equal">
