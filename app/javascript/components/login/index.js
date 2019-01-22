@@ -36,7 +36,8 @@ class Login extends Component {
             }
         });
         if (response.ok) {
-            window.location.href = "/admin/dashboard";
+            const responseJson = await response.json()
+            window.location.href = await responseJson.redirect_url
         } else {
             // TODO need to add error handling
             // eslint-disable-next-line
