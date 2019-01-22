@@ -93,6 +93,7 @@ pickle-email-*.html
 /node_modules
 yarn-debug.log*
 .yarn-integrity
+/public/packs
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
