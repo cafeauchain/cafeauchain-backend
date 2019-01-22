@@ -13,7 +13,11 @@ class Nav extends Component {
         //eslint-disable-next-line
         const { loggedIn, user } = props;
         this.state = {
+<<<<<<< HEAD
             links: loggedIn ? authorized(user) : base
+=======
+            links: loggedIn ? authorized(props) : base
+>>>>>>> Working on nav
         };
     }
 
