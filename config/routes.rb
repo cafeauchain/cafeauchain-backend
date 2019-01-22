@@ -9,7 +9,23 @@
 #                                       PATCH  /admin/plans/:id(.:format)                                                               admin/plans#update
 #                                       PUT    /admin/plans/:id(.:format)                                                               admin/plans#update
 #                                       DELETE /admin/plans/:id(.:format)                                                               admin/plans#destroy
+#               admin_producer_profiles GET    /admin/producers(.:format)                                                               admin/producer_profiles#index
+#                                       POST   /admin/producers(.:format)                                                               admin/producer_profiles#create
+#            new_admin_producer_profile GET    /admin/producers/new(.:format)                                                           admin/producer_profiles#new
+#           edit_admin_producer_profile GET    /admin/producers/:id/edit(.:format)                                                      admin/producer_profiles#edit
+#                admin_producer_profile GET    /admin/producers/:id(.:format)                                                           admin/producer_profiles#show
+#                                       PATCH  /admin/producers/:id(.:format)                                                           admin/producer_profiles#update
+#                                       PUT    /admin/producers/:id(.:format)                                                           admin/producer_profiles#update
+#                                       DELETE /admin/producers/:id(.:format)                                                           admin/producer_profiles#destroy
 #                       admin_dashboard GET    /admin/dashboard(.:format)                                                               admin/dashboard#index
+#        api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
+#                                       POST   /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#create
+#     new_api_v1_admin_producer_profile GET    /api/v1/admin/producers/new(.:format)                                                    api/v1/admin/producer_profiles#new
+#    edit_api_v1_admin_producer_profile GET    /api/v1/admin/producers/:id/edit(.:format)                                               api/v1/admin/producer_profiles#edit
+#         api_v1_admin_producer_profile GET    /api/v1/admin/producers/:id(.:format)                                                    api/v1/admin/producer_profiles#show
+#                                       PATCH  /api/v1/admin/producers/:id(.:format)                                                    api/v1/admin/producer_profiles#update
+#                                       PUT    /api/v1/admin/producers/:id(.:format)                                                    api/v1/admin/producer_profiles#update
+#                                       DELETE /api/v1/admin/producers/:id(.:format)                                                    api/v1/admin/producer_profiles#destroy
 # validate_step_api_v1_roaster_profiles POST   /api/v1/roasters/validate_step(.:format)                                                 api/v1/roaster_profiles#validate_step
 #          cards_api_v1_roaster_profile POST   /api/v1/roasters/:id/cards(.:format)                                                     api/v1/roaster_profiles#cards
 #                                       DELETE /api/v1/roasters/:id/cards(.:format)                                                     api/v1/roaster_profiles#remove_card
@@ -25,6 +41,7 @@
 #                                       PATCH  /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#update
 #                                       PUT    /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#update
 #                                       DELETE /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#destroy
+#                step1_roaster_profiles GET    /roasters/step1(.:format)                                                                roaster_profiles#new
 #   manage_subscription_roaster_profile GET    /roasters/:id/manage_subscription(.:format)                                              roaster_profiles#manage_subscription
 #                           roast_index GET    /roasters/:id/roast(.:format)                                                            roast#index
 #                      roaster_profiles GET    /roasters(.:format)                                                                      roaster_profiles#index
@@ -75,6 +92,7 @@
 #                                       PUT    /users(.:format)                                                                         users/registrations#update
 #                                       DELETE /users(.:format)                                                                         users/registrations#destroy
 #                                       POST   /users(.:format)                                                                         users/registrations#create
+#                                logout GET    /logout(.:format)                                                                        devise/sessions#destroy
 #                                  root GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
 #                                  home GET    /home(.:format)                                                                          redirect(301, /)
 #                                       GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
@@ -89,39 +107,32 @@ require 'high_voltage'
 
 Rails.application.routes.draw do
 
-  namespace :admin do
-    resources :plans
-    get 'dashboard', to: 'dashboard#index'
-  end
-
   namespace :api do
     namespace :v1 do
-      
+      namespace :admin do
+        resources :producer_profiles, path: "producers"
+      end
+      resources :subscriptions
       resources :roaster_profiles, only: [:create, :update], path: "roasters" do
         collection do
-
           post :validate_step
-
         end
-
         member do
-
           post :cards
           delete :cards, to: "roaster_profiles#remove_card"
           put :set_as_default
-
         end
       end
-
-      resources :subscriptions
-
     end
   end
 
+  namespace :admin do
+    resources :plans
+    resources :producer_profiles, path: "producers"
+    get 'dashboard', to: 'dashboard#index'
+  end
+
   resources :roaster_profiles, path: "roasters" do
-    collection do
-      get :step1, to: "roaster_profiles#new"
-    end
     member do
       get :manage_subscription
       resources :roast, only: [:index]
@@ -140,8 +151,6 @@ Rails.application.routes.draw do
     get "/logout" => "devise/sessions#destroy"
   end
 
-  # root to: 'dashboard#index'
-  # root to: 'pages#show', id: 'home'
   root 'high_voltage/pages#show', id: 'home'
 
 end
