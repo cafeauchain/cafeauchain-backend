@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, Dropdown } from "semantic-ui-react";
 
-<<<<<<< HEAD
 const links = user => {
     const { roaster_profile_id, admin } = user;
     const roasterString = "/roasters/" + roaster_profile_id;
@@ -41,24 +40,6 @@ const links = user => {
             }
         ]
     };
-=======
-const links = props => {
-    return(
-        {
-            left: [{ as: "a", content: "Home", key: "home", href: "/roasters/" + props.user.roaster_profile_id }, { as: "a", content: "Users", key: "users" }],
-            right: [{ as: "a", content: "Manage Subscription", key: "manage_subscription", href: "/roasters/" + props.user.roaster_profile_id + "/manage_subscription" }, { as: "a", content: "Register", key: "register" }],
-            buttons: [
-                {
-                    as: "a",
-                    content: <Button className="logout-btn">Logout</Button>,
-                    key: "logout",
-                    href: "/logout",
-                    className: "no-border"
-                }
-            ]
-        }
-    )
->>>>>>> Working on nav
 };
 
 export default links;
