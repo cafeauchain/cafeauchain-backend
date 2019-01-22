@@ -1,4 +1,16 @@
 <% content_for :body_class, 'login-img-body' %>
+<%= react_component "login", props = {
+    user: current_user,
+    loggedIn: user_signed_in?,
+    url: registration_path(resource_name),
+    resource: resource,
+    name: resource_name,
+    errors: devise_error_messages!,
+    fieldType: "register"
+} %>
+<% if false %>
+
+
 <div class="ui middle aligned center aligned grid">
   <div class="login-form column">
     <h2 class="ui teal image header">
@@ -43,41 +55,5 @@
   </div>
 </div>
 
-<script>
-  $(document)
-    .ready(function() {
-      $('.ui.form')
-        .form({
-          fields: {
-            email: {
-              identifier  : 'email',
-              rules: [
-                {
-                  type   : 'empty',
-                  prompt : 'Please enter your e-mail'
-                },
-                {
-                  type   : 'email',
-                  prompt : 'Please enter a valid e-mail'
-                }
-              ]
-            },
-            password: {
-              identifier  : 'password',
-              rules: [
-                {
-                  type   : 'empty',
-                  prompt : 'Please enter your password'
-                },
-                {
-                  type   : 'length[6]',
-                  prompt : 'Your password must be at least 6 characters'
-                }
-              ]
-            }
-          }
-        })
-      ;
-    })
-  ;
-</script>
+
+<% end %>

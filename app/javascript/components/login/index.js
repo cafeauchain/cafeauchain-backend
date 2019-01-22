@@ -2,7 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Button, Form, Grid, Header, Image, Message, Segment } from "semantic-ui-react";
 
+import fields from "./fields";
+
+import Input from "../shared/input";
+
 import readCookie from "../utilities/readCookie";
+import capitalize from "../utilities/capitalize";
 import logo from "../../../assets/images/cac-unofficial-logo.png";
 
 class Login extends Component {
@@ -19,10 +24,7 @@ class Login extends Component {
         const { url } = this.props;
         const { details } = this.state;
         const body = {
-            user: {
-                email: details.email,
-                password: details.password
-            }
+            user: { ...details }
         };
         const token = decodeURIComponent(readCookie("X-CSRF-Token"));
         let response = await fetch(url, {
@@ -33,9 +35,10 @@ class Login extends Component {
                 "X-CSRF-Token": token
             }
         });
-        if (response.status === 200) {
+        if (response.ok) {
             window.location.href = "/admin/dashboard";
         } else {
+            // TODO need to add error handling
             // eslint-disable-next-line
             console.log("error", response);
         }
@@ -50,49 +53,69 @@ class Login extends Component {
         this.setState({ details });
     };
 
-    render() {
-        return (
-            <Grid textAlign="center" style={{ height: "100%" }} verticalAlign="middle">
-                <Grid.Column style={{ maxWidth: 450 }}>
-                    <Header as="h2" textAlign="center" style={{ display: "flex", alignItems: "center" }}>
-                        <Image src={logo} />
-                        <span>Log in to your account</span>
-                    </Header>
-                    <Form size="large" onSubmit={this.handleSubmit}>
-                        <Segment>
-                            <Form.Input
-                                fluid
-                                icon="user"
-                                iconPosition="left"
-                                placeholder="E-mail"
-                                name="email"
-                                onChange={this.handleInputChange}
-                                autoComplete="true"
-                            />
-                            <Form.Input
-                                fluid
-                                icon="lock"
-                                iconPosition="left"
-                                placeholder="Password"
-                                type="password"
-                                name="password"
-                                onChange={this.handleInputChange}
-                                autoComplete="true"
-                            />
+    renderInputs = inputs =>
+        inputs.map(input => (
+            <Input
+                {...input}
+                key={input.label}
+                onChange={this.handleInputChange}
+                autoComplete="true"
+                iconPosition="left"
+                labelPosition="left"
+            />
+        ));
 
+    setText = fieldType => {
+        let text = {};
+        switch (fieldType) {
+        case "login":
+            text.heading = "Log in to you account";
+            text.message = "Need an Account?";
+            text.url = "/users/sign_up";
+            text.linkText = "Sign Up!";
+            break;
+        case "register":
+            text.heading = "Create an account";
+            text.message = "Already signed up?";
+            text.url = "/users/sign_in";
+            text.linkText = "Log In!";
+            break;
+        }
+        return text;
+    };
+
+    render() {
+        const { fieldType } = this.props;
+        const text = this.setText(fieldType);
+        return (
+            <Grid
+                textAlign="center"
+                style={{ height: "100%", margin: "auto 0", padding: "4em 0" }}
+                verticalAlign="middle"
+            >
+                <Grid.Column style={{ maxWidth: 450 }}>
+                    <Header
+                        as="h2"
+                        textAlign="center"
+                        style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                    >
+                        <Image src={logo} style={{ marginRight: 10 }} />
+                        <span>{text.heading}</span>
+                    </Header>
+                    <Form size="large" onSubmit={this.handleSubmit} style={{ textAlign: "left" }}>
+                        <Segment>
+                            {this.renderInputs(fields[fieldType])}
                             <Button fluid size="large" primary>
-                                Login
-                            </Button>
-                            <br />
-                            <Button fluid size="large" primary inverted>
-                                Cancel
+                                {capitalize(fieldType)}
                             </Button>
                         </Segment>
                     </Form>
                     <Message>
-                        New to us? 
-                        {' '}
-                        <a href="/users/sign_up">Sign Up</a>
+                        <span>
+                            {text.message}
+                            {' '}
+                        </span>
+                        <a href={text.url}>{text.linkText}</a>
                     </Message>
                 </Grid.Column>
             </Grid>
@@ -101,7 +124,8 @@ class Login extends Component {
 }
 const { string } = PropTypes;
 Login.propTypes = {
-    url: string
+    url: string,
+    fieldType: string
 };
 
 export default Login;
