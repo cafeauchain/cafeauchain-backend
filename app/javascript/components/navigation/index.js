@@ -11,10 +11,9 @@ class Nav extends Component {
     constructor(props) {
         super(props);
         //eslint-disable-next-line
-        console.log(props);
-        const { loggedIn } = props;
+        const { loggedIn, user } = props;
         this.state = {
-            links: loggedIn ? authorized : base
+            links: loggedIn ? authorized(user) : base
         };
     }
 
@@ -24,9 +23,10 @@ class Nav extends Component {
     }
 }
 
-const { bool } = PropTypes;
+const { bool, object } = PropTypes;
 Nav.propTypes = {
-    loggedIn: bool.isRequired
+    loggedIn: bool.isRequired,
+    user: object
 };
 
 export default Nav;
