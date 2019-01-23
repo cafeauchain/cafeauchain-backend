@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Button, Form, Grid, Header, Image, Message, Segment } from "semantic-ui-react";
 
 import fields from "./fields";
+import messaging from "./messaging";
 
 import Input from "../shared/input";
 
@@ -73,25 +74,6 @@ class Login extends Component {
             />
         ));
 
-    setText = fieldType => {
-        let text = {};
-        switch (fieldType) {
-        case "login":
-            text.heading = "Log in to you account";
-            text.message = "Need an Account?";
-            text.url = "/users/sign_up";
-            text.linkText = "Sign Up!";
-            break;
-        case "register":
-            text.heading = "Create an account";
-            text.message = "Already signed up?";
-            text.url = "/users/sign_in";
-            text.linkText = "Log In!";
-            break;
-        }
-        return text;
-    };
-
     renderErrors = () => {
         const { error } = this.state;
         const errorArray = Object.keys(error);
@@ -107,7 +89,7 @@ class Login extends Component {
 
     render() {
         const { fieldType } = this.props;
-        const text = this.setText(fieldType);
+        const text = messaging[fieldType];
         return (
             <Grid
                 textAlign="center"
