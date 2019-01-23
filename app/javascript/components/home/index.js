@@ -7,6 +7,8 @@ import General from "./sections/general";
 import About from "./sections/about";
 import Features from "./sections/features";
 
+import Fees from "../shared/feeCalc/index";
+
 import "./styles.scss";
 import bg from "../../../assets/images/bg-1.jpg";
 
@@ -135,6 +137,9 @@ ResponsiveContainer.propTypes = {
 
 const HomepageLayout = () => (
     <ResponsiveContainer>
+        <Segment vertical as="section">
+            <Fees />
+        </Segment>
         <Segment vertical as="section">
             <General />
         </Segment>
