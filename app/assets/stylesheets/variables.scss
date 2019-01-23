@@ -6,28 +6,27 @@ $text: #3a3a3a;
 $lightgray: #ededed;
 $darkgray: #a2a2a2;
 
+$track-color: $darkgray;
+$thumb-color: $lightgreen;
 
-$track-color: red;
-$thumb-color: purple;
-
-$thumb-radius: 50%;
-$thumb-height: 100px;
-$thumb-width: 100px;
+// $thumb-radius: 50%;
+$thumb-height: 30px;
+$thumb-width: 30px;
 // $thumb-shadow-size: 4px;
 // $thumb-shadow-blur: 4px;
 // $thumb-shadow-color: rgba(0, 0, 0, 0.2);
-// $thumb-border-width: 2px;
+$thumb-border-width: 1px;
 // $thumb-border-color: #eceff1;
 //
 // $track-width: 100%;
-// $track-height: 8px;
+$track-height: 18px;
 // $track-shadow-size: 1px;
 // $track-shadow-blur: 1px;
 // $track-shadow-color: rgba(0, 0, 0, 0.2);
-$track-border-width: 30px;
+// $track-border-width: 2px;
 // $track-border-color: #cfd8dc;
 //
-$track-radius: 15px;
+// $track-radius: 3px;
 // $contrast: 5%;
 
 :export {

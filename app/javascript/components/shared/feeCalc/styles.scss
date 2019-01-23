@@ -1,3 +1,8 @@
 @import "~stylesheets/variables";
-$thumb-radius: 25%;
+$thumb-radius: 50%;
+.no-padding input {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    border: 0 !important;
+}
 @import "~input-range-scss";
