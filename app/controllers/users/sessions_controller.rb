@@ -1,17 +1,17 @@
 class Users::SessionsController < Devise::SessionsController
 
-  def create 
+  def create
     resource = warden.authenticate!(:scope => resource_name, :recall => "#{controller_path}#failure")
     if resource.roaster_profile.nil?
       render json: {"redirect":true,"redirect_url": new_roaster_profile_path}, status: 200
     else
       render json: {"redirect":true,"redirect_url": root_path}, status: 200
     end
-  end 
+  end
 
-  def failure   
+  def failure
     warden.custom_failure!
-    
-    render json: { success: false, error: t("devise.failure.#{request.env['warden'].message}")}, status: 401
+
+    render json: { success: false, error: { message: t("devise.failure.#{request.env['warden'].message}") }}, status: 401
   end
 end

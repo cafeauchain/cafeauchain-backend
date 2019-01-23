@@ -8,15 +8,25 @@ import Input from "../shared/input";
 
 import readCookie from "../utilities/readCookie";
 import capitalize from "../utilities/capitalize";
+import humanize from "../utilities/humanize";
 import logo from "../../../assets/images/cac-unofficial-logo.png";
 
 class Login extends Component {
     constructor(props) {
         super(props);
+        const details = this.buildDetails(fields[props.fieldType]);
+        this.state = {
+            details,
+            error: {}
+        };
     }
 
-    state = {
-        details: {}
+    buildDetails = details => {
+        let obj = {};
+        for (const field of details) {
+            obj[field.label.replace(" ", "_").toLowerCase()] = "";
+        }
+        return obj;
     };
 
     handleSubmit = async e => {
@@ -35,13 +45,11 @@ class Login extends Component {
                 "X-CSRF-Token": token
             }
         });
+        let respJSON = await response.json();
         if (response.ok) {
-            const responseJson = await response.json()
-            window.location.href = await responseJson.redirect_url
+            window.location.href = await respJSON.redirect_url;
         } else {
-            // TODO need to add error handling
-            // eslint-disable-next-line
-            await console.log("error", response.json());
+            this.setState({ error: respJSON.error });
         }
     };
 
@@ -60,7 +68,6 @@ class Login extends Component {
                 {...input}
                 key={input.label}
                 onChange={this.handleInputChange}
-                autoComplete="true"
                 iconPosition="left"
                 labelPosition="left"
             />
@@ -85,6 +92,19 @@ class Login extends Component {
         return text;
     };
 
+    renderErrors = () => {
+        const { error } = this.state;
+        const errorArray = Object.keys(error);
+        if (error && errorArray.length) {
+            const errors = error.message
+                ? [error.message]
+                : errorArray.map(e => humanize(capitalize(e)) + " " + error[e][0]);
+            const header = errorArray.length > 1 ? "were errors" : "was an error";
+
+            return <Message size="tiny" error header={`There ${header}:`} list={errors} />;
+        }
+    };
+
     render() {
         const { fieldType } = this.props;
         const text = this.setText(fieldType);
@@ -103,6 +123,7 @@ class Login extends Component {
                         <Image src={logo} style={{ marginRight: 10 }} />
                         <span>{text.heading}</span>
                     </Header>
+                    {this.renderErrors()}
                     <Form size="large" onSubmit={this.handleSubmit} style={{ textAlign: "left" }}>
                         <Segment>
                             {this.renderInputs(fields[fieldType])}
