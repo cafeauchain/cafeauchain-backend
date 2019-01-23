@@ -41,7 +41,7 @@ class Login extends Component {
         } else {
             // TODO need to add error handling
             // eslint-disable-next-line
-            console.log("error", response);
+            await console.log("error", response.json());
         }
     };
 

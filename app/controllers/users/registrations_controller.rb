@@ -9,7 +9,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
         render json: {"redirect":true,"redirect_url": new_roaster_profile_path}, status: 200
       else
         render json: {"redirect":true,"redirect_url": root_path}, status: 200
-      end  
+      end 
+    else
+      render json: { success: false, error: resource.errors }, status: 422 
     end
   end 
 
