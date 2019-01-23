@@ -1,0 +1,26 @@
+// Buttons
+.ui.button {
+    &.primary {
+        background: $lightgreen;
+        color: white;
+        &:focus,
+        &:hover {
+            background: $darkgreen;
+        }
+        &.inverted {
+            background: white;
+            box-shadow: 0 0 0 2px inset $lightgreen !important;
+            color: $lightgreen;
+            &:hover,
+            &:focus {
+                box-shadow: 0 0 0 2px inset $darkgreen !important;
+                background: $darkgreen;
+                color: white;
+            }
+        }
+    }
+}
+
+.ui.header {
+    color: $darkgreen;
+}
