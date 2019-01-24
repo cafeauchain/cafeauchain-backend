@@ -5,6 +5,8 @@ $offwhite: #fafafa;
 $text: #3a3a3a;
 $lightgray: #ededed;
 $darkgray: #a2a2a2;
+$primary: $lightgreen;
+$secondary: $darkgreen;
 
 $track-color: $darkgray;
 $thumb-color: $lightgreen;
@@ -37,4 +39,6 @@ $track-height: 18px;
     text: $text;
     lightgray: $lightgray;
     darkgray: $darkgray;
+    primary: $primary;
+    secondary: $secondary;
 }
