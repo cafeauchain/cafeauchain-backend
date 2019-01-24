@@ -10,7 +10,8 @@ import Features from "./sections/features";
 import Fees from "../shared/feeCalc/index";
 
 import "./styles.scss";
-import bg from "../../../assets/images/bg-1.jpg";
+// eslint-disable-next-line
+import bg from "images/bg-1.jpg";
 
 // Heads up!
 // We using React Static to prerender our docs with server side rendering, this is a quite simple solution.

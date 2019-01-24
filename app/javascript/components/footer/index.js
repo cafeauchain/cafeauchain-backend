@@ -1,6 +1,7 @@
 import React from "react";
 import { Segment, Container, Grid, Header, List, Image, Divider } from "semantic-ui-react";
-import logo from "../../../assets/images/cac-unofficial-logo.png";
+// eslint-disable-next-line
+import logo from "images/cac-unofficial-logo.png";
 
 const Footer = () => {
     return (

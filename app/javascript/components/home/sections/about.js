@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, Header, Image } from "semantic-ui-react";
-
-import img from "../../../../assets/images/coffee-imgs/coffee-img-31.jpg";
+// eslint-disable-next-line
+import img from "images/coffee-imgs/coffee-img-31.jpg";
 
 const About = () => {
     return (
