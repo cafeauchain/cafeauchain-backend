@@ -29,8 +29,8 @@ class ProducerProfile < ApplicationRecord
 
   def generate_port_numbers
     if self.rpc_port.nil?
-      rpc_port = ProducerProfile.first.rpc_port.to_i  + self.id
-      network_port = ProducerProfile.first.network_port.to_i  + self.id
+      rpc_port = ProducerProfile.first.rpc_port.to_i + self.id
+      network_port = ProducerProfile.first.network_port.to_i + self.id
       self.update(rpc_port: rpc_port.to_s, network_port: network_port.to_s)
     else
       return "Ports already set"
