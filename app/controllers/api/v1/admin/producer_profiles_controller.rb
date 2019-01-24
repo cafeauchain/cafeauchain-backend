@@ -3,9 +3,9 @@ module Api::V1::Admin
 
     def index
       if !params[:page].present?
-        @producers = ProducerProfile.page(params[:page]).per(15)
+        @producers = ProducerProfile.page(params[:page_number]).per(15)
       else
-        @producers = ProducerProfile.page(params[:page][:number]).per(15)
+        @producers = ProducerProfile.page(params[:page_number]).per(15)
       end
       
       total_pages = (ProducerProfile.all.count / 15.to_f).ceil
@@ -13,9 +13,9 @@ module Api::V1::Admin
       render json: @producers,
         meta: {
           pagination: {
-            per_page: 15,
-            total_pages: total_pages,
-            total_objects: ProducerProfile.all.count
+            perpage: 15,
+            totalpages: total_pages,
+            totalobjects: ProducerProfile.all.count
           }
         }
     end

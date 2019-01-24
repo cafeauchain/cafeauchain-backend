@@ -7370,6 +7370,13 @@ selfsigned@^1.9.1:
   dependencies:
     node-forge "0.7.5"
 
+semantic-ui-react-button-pagination@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/semantic-ui-react-button-pagination/-/semantic-ui-react-button-pagination-1.0.3.tgz#5faed628315de7ccad204f0fc72604e5cb56ea10"
+  integrity sha512-i4Y+WYc/p9ns/E/v/HIxtRaO4jDrHTcrc7DE9GWTUP+6DjgAjOtMB3GNLXtqb5xhY1DlCh6dqBHpztk90LRZCQ==
+  dependencies:
+    prop-types "^15.6.2"
+
 semantic-ui-react@^0.84.0:
   version "0.84.0"
   resolved "https://registry.yarnpkg.com/semantic-ui-react/-/semantic-ui-react-0.84.0.tgz#43f908fd547b1e8b2b108675a93cd7d7460bcdbe"

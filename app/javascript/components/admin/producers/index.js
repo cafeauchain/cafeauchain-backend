@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Divider, Grid, Header, Icon, Menu, Segment, Table } from "semantic-ui-react";
+import Pagination from 'semantic-ui-react-button-pagination';
 import CreateProducer from "./createProducer";
 import UploadProducers from "./uploadProducers";
 
@@ -12,14 +13,26 @@ class Producers extends Component {
         super(props)
         this.state = {
             producers: [],
-            pagination: {},
+            pagination: {
+                totalobjects: 0,
+                perpage: 15
+            },
             links: {},
+            offset: 15,
             error: {}
         };
     }
 
     componentDidMount = async () => {
-        let response = await fetch('/api/v1/admin/producers', {
+        await this.getProducers()
+    }
+
+    getProducers = async () => {
+        const { offset, perpage } = this.state
+        const pageNumber = await (offset/15)
+        // eslint-disable-next-line
+        console.log(pageNumber)
+        let response = await fetch(`/api/v1/admin/producers?page_number=${pageNumber}&page_size=15`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'
@@ -28,13 +41,17 @@ class Producers extends Component {
         if (response.ok) {
             let responseJson = await response.json()
             // eslint-disable-next-line
-            console.log(responseJson)
             const producers = responseJson.data
             const links = responseJson.links
             const pagination = responseJson.meta.pagination
-            // eslint-disable-next-line
             this.setState({producers, links, pagination})
         }
+
+    }
+
+    handleClick = async offset => {
+        this.setState({offset});
+        this.getProducers()
     }
 
     uploadToServer = async file => {
@@ -61,7 +78,7 @@ class Producers extends Component {
 
     render() {
         const { fieldType, url } = this.props;
-        const { producers, links } = this.state;
+        const { producers, links, pagination, offset } = this.state;
         return (
             <Grid
                 textAlign="center"
@@ -119,7 +136,7 @@ class Producers extends Component {
                                 <Table.Footer>
                                     <Table.Row>
                                         <Table.HeaderCell colSpan='3'>
-                                            <Menu floated='right' pagination>
+                                            {/* <Menu floated='right' pagination>
                                                 <Menu.Item as='a' href={links.first} icon>
                                                     <Icon name='chevron left' />
                                                     &nbsp;&nbsp;First
@@ -132,7 +149,14 @@ class Producers extends Component {
                                                     Last&nbsp;&nbsp;
                                                     <Icon name='chevron right' />
                                                 </Menu.Item>
-                                            </Menu>
+                                            </Menu> */}
+                                            <Pagination
+                                                offset={offset}
+                                                limit={pagination.perpage}
+                                                total={pagination.totalobjects}
+                                                onClick={(e, props, offset) => this.handleClick(offset)}
+                                                floated="right"
+                                            />
                                         </Table.HeaderCell>
                                     </Table.Row>
                                 </Table.Footer>
