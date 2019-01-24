@@ -11,7 +11,7 @@ const links = user => {
             { href: `${roasterString}/edit`, content: "Edit Profile" }
         ],
         nonRoaster: [{ href: "/roasters/new", content: "Complete Your Roaster Profile" }],
-        admin: [{ href: "/admin/dashboard", content: "Dashboard" }]
+        admin: [{ href: "/admin/dashboard", content: "Dashboard" }, {href: "/admin/producers", content: "Manage Producers"}]
     };
     return {
         left: [],
