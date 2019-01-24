@@ -5,7 +5,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-u = User.create!(name: "Test Admin", email: "user@example.com", password: 'changeme', password_confirmation: 'changeme', admin: true)
+# u = User.create!(name: "Test Admin", email: "user@example.com", password: 'changeme', password_confirmation: 'changeme', admin: true)
 # puts "#{u.name} created."
 # p1 = Plan.create!(stripe_plan_id: "plan_E8GqFxcQDJTsvk",
 #   price_in_cents: 200,
