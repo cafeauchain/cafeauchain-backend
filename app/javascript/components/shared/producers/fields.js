@@ -1,5 +1,5 @@
 const fields = {
-    producer: [
+    create_Producer: [
         {
             label: "Business Name",
             icon: "coffee"
@@ -7,6 +7,10 @@ const fields = {
         {
             label: "Location",
             icon: "map signs"
+        },
+        {
+            label: "Website URL",
+            icon: "globe"
         }
     ]
 };
