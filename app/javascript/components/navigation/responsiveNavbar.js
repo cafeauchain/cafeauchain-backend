@@ -2,7 +2,8 @@ import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
 import { Container, Icon, Image, Menu, Sidebar } from "semantic-ui-react";
 
-import logo from "../../../assets/images/cac-unofficial-logo.png";
+// eslint-disable-next-line
+import logo from "images/cac-unofficial-logo.png";
 
 const menuItemBuilder = array => array.map(item => <Menu.Item key={item.key} {...item} />);
 

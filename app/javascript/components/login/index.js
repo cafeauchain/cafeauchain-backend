@@ -10,7 +10,8 @@ import Input from "../shared/input";
 import readCookie from "../utilities/readCookie";
 import capitalize from "../utilities/capitalize";
 import humanize from "../utilities/humanize";
-import logo from "../../../assets/images/cac-unofficial-logo.png";
+// eslint-disable-next-line
+import logo from "images/cac-unofficial-logo.png";
 
 class Login extends Component {
     constructor(props) {

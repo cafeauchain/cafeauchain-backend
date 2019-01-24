@@ -7,8 +7,11 @@ import General from "./sections/general";
 import About from "./sections/about";
 import Features from "./sections/features";
 
+import Fees from "../shared/feeCalc/index";
+
 import "./styles.scss";
-import bg from "../../../assets/images/bg-1.jpg";
+// eslint-disable-next-line
+import bg from "images/bg-1.jpg";
 
 // Heads up!
 // We using React Static to prerender our docs with server side rendering, this is a quite simple solution.
@@ -135,6 +138,9 @@ ResponsiveContainer.propTypes = {
 
 const HomepageLayout = () => (
     <ResponsiveContainer>
+        <Segment vertical as="section">
+            <Fees />
+        </Segment>
         <Segment vertical as="section">
             <General />
         </Segment>
