@@ -56,8 +56,8 @@ class Producers extends Component {
         });
         let responseJson = await response.json();
         if (response.ok) {
-            // eslint-disable-next-line
-            console.log(responseJson);
+            const producers = responseJson.data;
+            this.setState({ producers, pagination: responseJson.meta.pagination });
         } else {
             // eslint-disable-next-line
             console.log("error", responseJson);

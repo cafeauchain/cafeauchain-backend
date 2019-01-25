@@ -35,7 +35,8 @@ module Api::V1::Admin
               perpage: 15,
               totalpages: total_pages,
               totalobjects: ProducerProfile.all.count
-            }
+            },
+            import: @import
           }, status: 200
       else
         render json: @import, status: 422
