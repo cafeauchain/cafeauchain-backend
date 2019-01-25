@@ -16,4 +16,4 @@
 #   interval: "monthly",
 #   name: "Proof of Perk Base")
 
-30.times {ProducerProfile.create(name: Faker::Company.unique.name, location: Faker::Coffee.origin)}
+300.times {ProducerProfile.create(name: Faker::Company.unique.name, location: Faker::Coffee.origin)}
