@@ -3,12 +3,13 @@ module Api::V1::Admin
 
     def index
       @producers = ProducerProfile.page(params[:page_number]).per(15)
-      total_pages = (ProducerProfile.all.count / 15.to_f).ceil
+      total_pages = (ProducerProfile.all.count / params[:page_size].to_f).ceil
 
       render json: @producers,
         meta: {
           pagination: {
-            perpage: 15,
+            pagenumber: params[:page_number].to_f,
+            pagesize: params[:page_size].to_f,
             totalpages: total_pages,
             totalobjects: ProducerProfile.all.count
           }
@@ -26,7 +27,7 @@ module Api::V1::Admin
       @import = ImportServices::ImportProducers.import(params[:file].tempfile)
       if @import
         @producers = ProducerProfile.page(params[:page_number]).per(15)
-        total_pages = (ProducerProfile.all.count / 15.to_f).ceil
+        total_pages = (ProducerProfile.all.count / params[:page_size].to_f).ceil
 
         render json: @producers,
           meta: {
@@ -40,13 +41,13 @@ module Api::V1::Admin
         render json: @import, status: 422
       end
     end
-    
+
 
     private
 
     def producer_params
       params.require(:producer_profile).permit(:name, :location, :url)
     end
-    
+
   end
 end
