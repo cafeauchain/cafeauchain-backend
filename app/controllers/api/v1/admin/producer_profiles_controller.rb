@@ -3,17 +3,18 @@ module Api::V1::Admin
 
     def index
       if !params[:page].present?
-        @producers = ProducerProfile.page(params[:page_number]).per(15)
+        @producers = ProducerProfile.page(params[:page_number]).per(params[:page_size])
       else
-        @producers = ProducerProfile.page(params[:page_number]).per(15)
+        @producers = ProducerProfile.page(params[:page_number]).per(params[:page_size])
       end
-      
-      total_pages = (ProducerProfile.all.count / 15.to_f).ceil
+
+      total_pages = (ProducerProfile.all.count / params[:page_size].to_f).ceil
 
       render json: @producers,
         meta: {
           pagination: {
-            perpage: 15,
+            pagenumber: params[:page_number].to_f,
+            pagesize: params[:page_size].to_f,
             totalpages: total_pages,
             totalobjects: ProducerProfile.all.count
           }
@@ -35,13 +36,13 @@ module Api::V1::Admin
       end
       render json: {message: "Uploaded"}, status: 200
     end
-    
+
 
     private
 
     def producer_params
       params.require(:producer_profile).permit(:name, :location, :url)
     end
-    
+
   end
 end
