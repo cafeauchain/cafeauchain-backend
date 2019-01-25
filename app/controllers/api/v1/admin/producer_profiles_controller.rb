@@ -26,8 +26,8 @@ module Api::V1::Admin
     def upload_csv
       @import = ImportServices::ImportProducers.import(params[:file].tempfile)
       if @import
-        @producers = ProducerProfile.page(params[:page_number]).per(15)
-        total_pages = (ProducerProfile.all.count / params[:page_size].to_f).ceil
+        @producers = ProducerProfile.page(1).per(15)
+        total_pages = (ProducerProfile.all.count / 15.to_f).ceil
 
         render json: @producers,
           meta: {
@@ -35,7 +35,8 @@ module Api::V1::Admin
               perpage: 15,
               totalpages: total_pages,
               totalobjects: ProducerProfile.all.count
-            }
+            },
+            import: @import
           }, status: 200
       else
         render json: @import, status: 422
