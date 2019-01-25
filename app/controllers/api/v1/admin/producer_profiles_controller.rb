@@ -2,12 +2,7 @@ module Api::V1::Admin
   class ProducerProfilesController < ApplicationController
 
     def index
-      if !params[:page].present?
-        @producers = ProducerProfile.page(params[:page_number]).per(15)
-      else
-        @producers = ProducerProfile.page(params[:page_number]).per(15)
-      end
-      
+      @producers = ProducerProfile.page(params[:page_number]).per(15)
       total_pages = (ProducerProfile.all.count / 15.to_f).ceil
 
       render json: @producers,
@@ -28,12 +23,22 @@ module Api::V1::Admin
     end
 
     def upload_csv
-      csv_text = File.read(params[:file].tempfile)
-      csv = CSV.parse(csv_text, :headers => true)
-      csv.each do |row|
-        puts row.to_hash
+      @import = ImportServices::ImportProducers.import(params[:file].tempfile)
+      if @import
+        @producers = ProducerProfile.page(params[:page_number]).per(15)
+        total_pages = (ProducerProfile.all.count / 15.to_f).ceil
+
+        render json: @producers,
+          meta: {
+            pagination: {
+              perpage: 15,
+              totalpages: total_pages,
+              totalobjects: ProducerProfile.all.count
+            }
+          }, status: 200
+      else
+        render json: @import, status: 422
       end
-      render json: {message: "Uploaded"}, status: 200
     end
     
 

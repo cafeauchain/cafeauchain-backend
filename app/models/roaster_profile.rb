@@ -23,11 +23,14 @@
 class RoasterProfile < ApplicationRecord
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
+
   has_many :users
   has_many :wallets
   has_many :transactions
   has_many :lots
   has_many :crops, through: :lots
+  has_many :addresses, as: :addressable, dependent: :destroy
+
   belongs_to :owner, class_name: "User", foreign_key: "owner_id", optional: true
 
   has_one_attached :logo
