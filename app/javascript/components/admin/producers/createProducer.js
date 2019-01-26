@@ -43,11 +43,11 @@ class CreateProducer extends Component {
         });
         let respJSON = await response.json();
         if (response.ok) {
-            // window.location.href = await respJSON.redirect_url;
+            window.location.href = await respJSON.redirect_url;
             // eslint-disable-next-line
             console.log(respJSON)
         } else {
-            // this.setState({ error: respJSON.error });
+            this.setState({ error: respJSON.error });
             // eslint-disable-next-line
             console.log(respJSON)
         }
