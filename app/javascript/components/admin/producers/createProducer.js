@@ -7,6 +7,7 @@ import Input from "../../shared/input";
 import readCookie from "../../utilities/readCookie";
 import capitalize from "../../utilities/capitalize";
 import humanize from "../../utilities/humanize";
+import transformStateToParams from '../../utilities/apiUtils/producerParams';
 
 class CreateProducer extends Component {
     constructor(props) {
@@ -30,9 +31,7 @@ class CreateProducer extends Component {
         e.preventDefault();
         const { url } = this.props;
         const { details } = this.state;
-        const body = {
-            user: { ...details }
-        };
+        const body = transformStateToParams(details);
         const token = decodeURIComponent(readCookie("X-CSRF-Token"));
         let response = await fetch(url, {
             method: "POST",
@@ -44,9 +43,13 @@ class CreateProducer extends Component {
         });
         let respJSON = await response.json();
         if (response.ok) {
-            window.location.href = await respJSON.redirect_url;
+            // window.location.href = await respJSON.redirect_url;
+            // eslint-disable-next-line
+            console.log(respJSON)
         } else {
-            this.setState({ error: respJSON.error });
+            // this.setState({ error: respJSON.error });
+            // eslint-disable-next-line
+            console.log(respJSON)
         }
     };
 

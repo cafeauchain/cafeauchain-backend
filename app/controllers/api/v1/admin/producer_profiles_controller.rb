@@ -18,8 +18,10 @@ module Api::V1::Admin
 
     def create
       @producer = ProducerProfile.new(producer_params)
-      if @producer.save!
-        render json: {"redirect":true, "redirect_url": "/admin/producers", producers: @producers}, status: 200
+      if @producer.save
+        render json: {"redirect":true, "redirect_url": "/admin/producers", producer: @producer}, status: 200
+      else
+        render json: {errors: @producer.errors}, status: 422
       end
     end
 
@@ -47,7 +49,7 @@ module Api::V1::Admin
     private
 
     def producer_params
-      params.require(:producer_profile).permit(:name, :location, :url)
+      params.require(:producer_profile).permit(:name, :location, addresses_attributes: [:street_1, :street_2, :city, :state, :postal_code, :country, :primary])
     end
 
   end
