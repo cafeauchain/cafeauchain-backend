@@ -5,11 +5,27 @@ const fields = {
             icon: "coffee"
         },
         {
-            label: "Location",
+            label: "Street Address",
+            icon: "address card"
+        },
+        {
+            label: "Suite",
+            icon: "address card outline"
+        },
+        {
+            label: "City",
             icon: "map signs"
         },
         {
-            label: "Website URL",
+            label: "State",
+            icon: "map signs"
+        },
+        {
+            label: "Postal Code",
+            icon: "map signs"
+        },
+        {
+            label: "Country",
             icon: "globe"
         }
     ]

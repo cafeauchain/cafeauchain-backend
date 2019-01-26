@@ -26,7 +26,7 @@ class ProducerProfile < ApplicationRecord
   has_many :addresses, as: :addressable, dependent: :destroy
   
   accepts_nested_attributes_for :crops, reject_if: ->(attributes){ attributes['name'].blank? }, allow_destroy: true
-  accepts_nested_attributes_for :addresses, reject_if: ->(attributes){ attributes['location_label'].blank? || attributes['street_1'].blank? }, allow_destroy: true
+  accepts_nested_attributes_for :addresses, reject_if: ->(attributes){ attributes['street_1'].blank? }, allow_destroy: true
 
   def generate_port_numbers
     if self.rpc_port.nil?

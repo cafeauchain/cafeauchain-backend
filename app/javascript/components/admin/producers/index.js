@@ -92,6 +92,11 @@ class Producers extends Component {
         this.setState({ pagination }, this.updatePage(activePage));
     };
 
+    goToProducer = (e, producer) => {
+        e.preventDefault();
+        alert(producer.attributes.name)
+    }
+
     render() {
         const { fieldType, url } = this.props;
         const { producers, pagination } = this.state;
@@ -119,7 +124,12 @@ class Producers extends Component {
                         </Grid>
                     </Segment>
                     <Segment>
-                        <FormattedTable producers={producers} pagination={pagination} onPageChange={this.handleClick} />
+                        <FormattedTable 
+                            producers={producers} 
+                            pagination={pagination} 
+                            onPageChange={this.handleClick} 
+                            onClick={this.goToProducer} 
+                        />
                     </Segment>
                 </Segment.Group>
             </Container>

@@ -9,10 +9,11 @@ class FormattedTable extends Component {
         super(props);
         this.state = {};
     }
+
     render() {
-        const { producers, pagination, onPageChange } = this.props;
+        const { producers, pagination, onPageChange, onClick } = this.props;
         return (
-            <Table celled striped>
+            <Table celled striped selectable>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell colSpan="3">Producers</Table.HeaderCell>
@@ -22,7 +23,7 @@ class FormattedTable extends Component {
                 <Table.Body>
                     {producers.map(producer => {
                         return (
-                            <Table.Row key={producer.id}>
+                            <Table.Row key={producer.id} onClick={e => onClick(e, producer)}>
                                 <Table.Cell collapsing>{producer.attributes.name}</Table.Cell>
                                 <Table.Cell>{producer.attributes.location}</Table.Cell>
                             </Table.Row>
@@ -49,6 +50,8 @@ const { array, func, object } = PropTypes;
 FormattedTable.propTypes = {
     producers: array,
     onPageChange: func,
+    onClick: func,
     pagination: object
 };
+
 export default FormattedTable;
