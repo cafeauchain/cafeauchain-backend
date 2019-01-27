@@ -1,3 +1,4 @@
+// TODO: Add roaster profile slug for links, and user role for conditional links
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 

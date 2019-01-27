@@ -1,6 +1,6 @@
 class RoasterProfilesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_roaster_profile, only: [:show, :edit, :update, :destroy, :manage_subscription]
+  before_action :set_roaster_profile, only: [:show, :edit, :update, :destroy, :dashboard, :manage_subscription, :manage_inventory]
   layout "devise"
 
   # GET /roaster_profiles
@@ -32,6 +32,15 @@ class RoasterProfilesController < ApplicationController
   # DELETE /roaster_profiles/1.json
   def destroy
   end
+
+  def dashboard
+    
+  end
+  
+  def manage_inventory
+    
+  end
+  
 
   def manage_subscription
     @subscription = Subscription.includes(:subscription_items).find_by(user: @roaster_profile.owner)

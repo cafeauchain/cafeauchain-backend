@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form, Message, Segment } from 'semantic-ui-react'
+import { Button, Form, Message } from 'semantic-ui-react'
 import fields from "../../shared/producers/fields";
 import Input from "../../shared/input";
 
@@ -92,12 +92,10 @@ class CreateProducer extends Component {
 
             <Form size="large" onSubmit={this.handleSubmit} style={{ textAlign: "left" }}>
                 {this.renderErrors()}
-                <Segment>
-                    {this.renderInputs(fields[fieldType])}
-                    <Button fluid size="large" primary>
-                        {humanize(fieldType)}
-                    </Button>
-                </Segment>
+                {this.renderInputs(fields[fieldType])}
+                <Button fluid size="large" primary>
+                    {humanize(fieldType)}
+                </Button>
             </Form>
         )
     }

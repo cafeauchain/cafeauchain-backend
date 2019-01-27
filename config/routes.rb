@@ -117,6 +117,9 @@ Rails.application.routes.draw do
         end
       end
       resources :subscriptions
+      resources :producer_profiles, path: "producers" do
+        resources :crops
+      end
       resources :roaster_profiles, only: [:create, :update], path: "roasters" do
         collection do
           post :validate_step
@@ -138,7 +141,9 @@ Rails.application.routes.draw do
 
   resources :roaster_profiles, path: "roasters" do
     member do
+      get :dashboard
       get :manage_subscription
+      get :manage_inventory
       resources :roast, only: [:index]
     end
   end
