@@ -16,6 +16,6 @@
 #
 
 class ProducerProfileSerializer < ActiveModel::Serializer
-  attributes :name, :location, :slug
+  attributes :id, :name, :slug
 
 end
