@@ -18,7 +18,31 @@
 #                                           PATCH  /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#update
 #                                           PUT    /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#update
 #                                           DELETE /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#destroy
+#             api_v1_producer_profile_crops GET    /api/v1/producers/:producer_profile_id/crops(.:format)                                   api/v1/crops#index
+#                                           POST   /api/v1/producers/:producer_profile_id/crops(.:format)                                   api/v1/crops#create
+#          new_api_v1_producer_profile_crop GET    /api/v1/producers/:producer_profile_id/crops/new(.:format)                               api/v1/crops#new
+#         edit_api_v1_producer_profile_crop GET    /api/v1/producers/:producer_profile_id/crops/:id/edit(.:format)                          api/v1/crops#edit
+#              api_v1_producer_profile_crop GET    /api/v1/producers/:producer_profile_id/crops/:id(.:format)                               api/v1/crops#show
+#                                           PATCH  /api/v1/producers/:producer_profile_id/crops/:id(.:format)                               api/v1/crops#update
+#                                           PUT    /api/v1/producers/:producer_profile_id/crops/:id(.:format)                               api/v1/crops#update
+#                                           DELETE /api/v1/producers/:producer_profile_id/crops/:id(.:format)                               api/v1/crops#destroy
+#                  api_v1_producer_profiles GET    /api/v1/producers(.:format)                                                              api/v1/producer_profiles#index
+#                                           POST   /api/v1/producers(.:format)                                                              api/v1/producer_profiles#create
+#               new_api_v1_producer_profile GET    /api/v1/producers/new(.:format)                                                          api/v1/producer_profiles#new
+#              edit_api_v1_producer_profile GET    /api/v1/producers/:id/edit(.:format)                                                     api/v1/producer_profiles#edit
+#                   api_v1_producer_profile GET    /api/v1/producers/:id(.:format)                                                          api/v1/producer_profiles#show
+#                                           PATCH  /api/v1/producers/:id(.:format)                                                          api/v1/producer_profiles#update
+#                                           PUT    /api/v1/producers/:id(.:format)                                                          api/v1/producer_profiles#update
+#                                           DELETE /api/v1/producers/:id(.:format)                                                          api/v1/producer_profiles#destroy
 #     validate_step_api_v1_roaster_profiles POST   /api/v1/roasters/validate_step(.:format)                                                 api/v1/roaster_profiles#validate_step
+#                               api_v1_lots GET    /api/v1/roasters/:id/lots(.:format)                                                      api/v1/lots#index
+#                                           POST   /api/v1/roasters/:id/lots(.:format)                                                      api/v1/lots#create
+#                            new_api_v1_lot GET    /api/v1/roasters/:id/lots/new(.:format)                                                  api/v1/lots#new
+#                           edit_api_v1_lot GET    /api/v1/roasters/:id/lots/:id/edit(.:format)                                             api/v1/lots#edit
+#                                api_v1_lot GET    /api/v1/roasters/:id/lots/:id(.:format)                                                  api/v1/lots#show
+#                                           PATCH  /api/v1/roasters/:id/lots/:id(.:format)                                                  api/v1/lots#update
+#                                           PUT    /api/v1/roasters/:id/lots/:id(.:format)                                                  api/v1/lots#update
+#                                           DELETE /api/v1/roasters/:id/lots/:id(.:format)                                                  api/v1/lots#destroy
 #              cards_api_v1_roaster_profile POST   /api/v1/roasters/:id/cards(.:format)                                                     api/v1/roaster_profiles#cards
 #                                           DELETE /api/v1/roasters/:id/cards(.:format)                                                     api/v1/roaster_profiles#remove_card
 #     set_as_default_api_v1_roaster_profile PUT    /api/v1/roasters/:id/set_as_default(.:format)                                            api/v1/roaster_profiles#set_as_default
@@ -42,7 +66,9 @@
 #                                           PUT    /admin/producers/:id(.:format)                                                           admin/producer_profiles#update
 #                                           DELETE /admin/producers/:id(.:format)                                                           admin/producer_profiles#destroy
 #                           admin_dashboard GET    /admin/dashboard(.:format)                                                               admin/dashboard#index
+#                 dashboard_roaster_profile GET    /roasters/:id/dashboard(.:format)                                                        roaster_profiles#dashboard
 #       manage_subscription_roaster_profile GET    /roasters/:id/manage_subscription(.:format)                                              roaster_profiles#manage_subscription
+#          manage_inventory_roaster_profile GET    /roasters/:id/manage_inventory(.:format)                                                 roaster_profiles#manage_inventory
 #                               roast_index GET    /roasters/:id/roast(.:format)                                                            roast#index
 #                          roaster_profiles GET    /roasters(.:format)                                                                      roaster_profiles#index
 #                                           POST   /roasters(.:format)                                                                      roaster_profiles#create
@@ -125,6 +151,8 @@ Rails.application.routes.draw do
           post :validate_step
         end
         member do
+          resources :lots
+          
           post :cards
           delete :cards, to: "roaster_profiles#remove_card"
           put :set_as_default

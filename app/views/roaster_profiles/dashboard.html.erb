@@ -1,2 +1,2 @@
 <% content_for :body_class, 'login-img-body' %>
-<%= react_component "roaster_profile/dashboard" %>
+<%= react_component "roaster_profile/inventory", props: {roaster_profile_id: @roaster_profile.id} %>
