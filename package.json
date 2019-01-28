@@ -5,7 +5,10 @@
     "@rails/webpacker": "4.0.0-rc.5",
     "@types/react": "^16.7.17",
     "@types/react-dom": "^16.0.11",
+<<<<<<< HEAD
     "commafy": "^0.0.5",
+=======
+>>>>>>> f7b091a21b96b05769ea11d4522cf5bb1b10229f
     "input-range-scss": "^1.5.1",
     "jquery": "^3.3.1",
     "moment": "^2.23.0",

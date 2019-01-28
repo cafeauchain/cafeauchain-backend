@@ -1,0 +1,15 @@
+.text--truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    width: 100%;
+}
+
+// TODO move this to variables/globals after merge to avoid conflicts
+.text--positive {
+    color: #21ba45 !important;
+}
+.text--negative {
+    color: #f18467 !important;
+}
