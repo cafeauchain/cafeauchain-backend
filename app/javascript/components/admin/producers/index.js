@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Divider, Grid, Header, Segment, Container } from "semantic-ui-react";
 import CreateProducer from "./createProducer";
 import UploadProducers from "./uploadProducers";
+import tableDefs from "./tableDefs";
 
 import FormattedTable from "../../shared/table";
 
@@ -94,8 +95,8 @@ class Producers extends Component {
 
     goToProducer = (e, producer) => {
         e.preventDefault();
-        alert(producer.attributes.name)
-    }
+        alert(producer.attributes.name);
+    };
 
     render() {
         const { fieldType, url } = this.props;
@@ -124,11 +125,12 @@ class Producers extends Component {
                         </Grid>
                     </Segment>
                     <Segment>
-                        <FormattedTable 
-                            producers={producers} 
-                            pagination={pagination} 
-                            onPageChange={this.handleClick} 
-                            onClick={this.goToProducer} 
+                        <FormattedTable
+                            tableDefs={tableDefs}
+                            data={producers}
+                            pagination={pagination}
+                            onPageChange={this.handleClick}
+                            onClick={this.goToProducer}
                         />
                     </Segment>
                 </Segment.Group>

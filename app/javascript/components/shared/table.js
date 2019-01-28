@@ -7,10 +7,6 @@ import { Pagination, Table } from "semantic-ui-react";
 import capitalize from "../utilities/capitalize";
 import namespacer from "../utilities/fieldNamespacer";
 
-// Temporary
-// TODO remove this
-import tableLayout from "../admin/producers/tableDefs";
-
 class FormattedTable extends Component {
     constructor(props) {
         super(props);
@@ -18,7 +14,8 @@ class FormattedTable extends Component {
     }
 
     buildTableCells = item => {
-        return tableLayout.fields.map(field => {
+        const { tableDefs } = this.props;
+        return tableDefs.fields.map(field => {
             let { namespace, name, ...rest } = field;
             let value = item[name];
             if (namespace) {
@@ -37,49 +34,51 @@ class FormattedTable extends Component {
     };
 
     render() {
-        const { producers, pagination, onPageChange, onClick } = this.props;
+        const { tableDefs, data, pagination, onPageChange, onClick } = this.props;
         return (
-            <Table {...tableLayout.props}>
+            <Table {...tableDefs.props}>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell colSpan={tableLayout.fields.length}>{tableLayout.title}</Table.HeaderCell>
+                        <Table.HeaderCell colSpan={tableDefs.fields.length}>{tableDefs.title}</Table.HeaderCell>
                     </Table.Row>
                     <Table.Row>
-                        {tableLayout.fields.map(field => (
+                        {tableDefs.fields.map(field => (
                             <Table.HeaderCell key={field.name}>{capitalize(field.name)}</Table.HeaderCell>
                         ))}
                     </Table.Row>
                 </Table.Header>
 
                 <Table.Body>
-                    {producers.map(producer => (
-                        <Table.Row key={producer.id} onClick={e => onClick(e, producer)}>
-                            {this.buildTableCells(producer)}
+                    {data.map(item => (
+                        <Table.Row key={item.id} onClick={e => onClick(e, item)}>
+                            {this.buildTableCells(item)}
                         </Table.Row>
                     ))}
                 </Table.Body>
-
-                <Table.Footer>
-                    <Table.Row>
-                        <Table.HeaderCell colSpan={tableLayout.fields.length} textAlign="right">
-                            <Pagination
-                                defaultActivePage={pagination.pagenumber}
-                                totalPages={pagination.totalpages}
-                                onPageChange={onPageChange}
-                            />
-                        </Table.HeaderCell>
-                    </Table.Row>
-                </Table.Footer>
+                {pagination && (
+                    <Table.Footer>
+                        <Table.Row>
+                            <Table.HeaderCell colSpan={tableDefs.fields.length} textAlign="right">
+                                <Pagination
+                                    defaultActivePage={pagination.pagenumber}
+                                    totalPages={pagination.totalpages}
+                                    onPageChange={onPageChange}
+                                />
+                            </Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Footer>
+                )}
             </Table>
         );
     }
 }
 const { array, func, object } = PropTypes;
 FormattedTable.propTypes = {
-    producers: array,
+    data: array.isRequired,
     onPageChange: func,
     onClick: func,
-    pagination: object
+    pagination: object,
+    tableDefs: object.isRequired
 };
 
 export default FormattedTable;
