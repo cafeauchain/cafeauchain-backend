@@ -26,9 +26,10 @@ class CropSelect extends Component {
 
 }
 
-const { array } = PropTypes;
+const { array, func } = PropTypes;
 CropSelect.propTypes = {
-    cropOptions: array
+    cropOptions: array,
+    onSelect: func
 }
 
 export default CropSelect;

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { Component } from "react";
-import { Container, Form, Input, Header, Label, Segment } from "semantic-ui-react";
+import { Button, Container, Form, Input, Header, Label, Segment } from "semantic-ui-react";
 import ProducerSelect from "../../shared/producers/producerSelect";
 import CropSelect from "../../shared/crops/cropSelect";
 import readCookie from "../../utilities/readCookie";
@@ -13,7 +13,8 @@ class Dashboard extends Component {
         this.state = {
             cropOptions: [],
             lotDetails: {
-                crop_id: null
+                crop_id: null,
+                roaster_profile_id: props.roaster_profile_id,
             }
         }
     }
@@ -39,6 +40,29 @@ class Dashboard extends Component {
         lotDetails[name] = val;
         this.setState({ lotDetails });
     };
+
+    handleSubmit = async ev => {
+        const { lotDetails  } = this.state
+        const { roaster_profile_id } = this.props
+        const url = `${API_URL}/roasters/${roaster_profile_id}/lots`;
+        // eslint-disable-next-line
+        console.log(this.props.roaster_profile_id)
+        const cookie = decodeURIComponent(readCookie("X-CSRF-Token"));
+        let response = await fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': cookie
+            },
+            body: JSON.stringify(lotDetails)
+        });
+        let respJSON = await response.json();
+        if (response.ok) {
+            window.location.href = await respJSON.redirect_url;
+        } else {
+            this.setState({ error: respJSON.error });
+        }
+    }
 
     addProducer = async producerName => {
         const url = `${API_URL}/producers`;
@@ -83,7 +107,7 @@ class Dashboard extends Component {
                         <Header as="h2" content="Add a new crop" />
                     </Segment>
                     <Segment>
-                        <Form>
+                        <Form onSubmit={this.handleSubmit}>
                             <Form.Group widths='equal'>
                                 <ProducerSelect onSelect={this.onSelect} />
                                 <CropSelect cropOptions={cropOptions} onSelect={this.selectCrop} />
@@ -143,6 +167,10 @@ class Dashboard extends Component {
                                     onChange={this.handleInputChange}
                                 />
                             </Form.Group>
+
+                            <Button fluid size="large" primary>
+                                Update Inventory
+                            </Button>
                         </Form>
                     </Segment>
                 </Segment.Group>
@@ -150,5 +178,7 @@ class Dashboard extends Component {
         )
     }
 }
+
+
 
 export default Dashboard;
