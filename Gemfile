@@ -13,7 +13,6 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails'
 gem 'jbuilder', '~> 2.5'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-gem "bootstrap", ">= 4.1.2"
 gem 'pg', '~> 0.18'
 gem 'devise'
 gem 'high_voltage'
@@ -27,6 +26,10 @@ gem 'semantic-ui-sass'
 gem 'mini_magick'
 gem 'mini_racer'
 gem 'stripe'
+
+gem "kaminari"
+gem "pager_api"
+gem 'active_model_serializers', '~> 0.10.0'
 
 group :development do
   gem 'web-console', '>= 3.3.0'

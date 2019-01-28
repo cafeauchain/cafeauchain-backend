@@ -102,7 +102,7 @@ class App extends Component {
         case "step1":
             return (
                 <Step1Fields
-                    handleChange = {this.handleChange}
+                    handleChange={this.handleChange}
                     setLogo={this.setLogo}
                     nextStep={this.nextStep}
                     values={values}
@@ -142,13 +142,13 @@ class App extends Component {
     }
 
     renderErrors = () => {
-        if (Object.keys(this.state.errors).length > 0) {
+        const {errors} = this.state
+        if (Object.keys(errors).length > 0) {
             const errors = []
-            const keys = Object.keys(this.state.errors)
+            const keys = Object.keys(errors)
             keys.forEach(key => {
-                errors.push(key.toString() + " " + this.state.errors[key])
+                errors.push(key.toString() + " " + errors[key])
             })
-            console.log("Errors: ", errors)
             return (
                 <Message warning visible>
                     <Message.Header>There was an issue:</Message.Header>

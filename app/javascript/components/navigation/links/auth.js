@@ -7,11 +7,21 @@ const links = user => {
     const buildItems = array => array.map(item => <Dropdown.Item as="a" key={item.content} {...item} />);
     const dropdowns = {
         roaster: [
+            { href: `${roasterString}/dashboard`, content: "Dashboard" },
+            { href: `${roasterString}/manage_inventory`, content: "Manage Inventory" },
             { href: `${roasterString}/manage_subscription`, content: "Manage Subscription" },
-            { href: `${roasterString}/edit`, content: "Edit Profile" }
+            { href: `${roasterString}/edit`, content: "Edit Roaster Profile" }
         ],
         nonRoaster: [{ href: "/roasters/new", content: "Complete Your Roaster Profile" }],
-        admin: [{ href: "/admin/dashboard", content: "Dashboard" }]
+        admin: [
+            { 
+                href: "/admin/dashboard",
+                content: "Dashboard" 
+            }, {
+                href: "/admin/producers", 
+                content: "Manage Producers"
+            }
+        ]
     };
     return {
         left: [],
