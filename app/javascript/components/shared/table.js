@@ -4,54 +4,81 @@ import PropTypes from "prop-types";
 // import Pagination from "semantic-ui-react-button-pagination";
 import { Pagination, Table } from "semantic-ui-react";
 
+import capitalize from "../utilities/capitalize";
+import namespacer from "../utilities/fieldNamespacer";
+
 class FormattedTable extends Component {
     constructor(props) {
         super(props);
         this.state = {};
     }
 
+    buildTableCells = item => {
+        const { tableDefs } = this.props;
+        return tableDefs.fields.map(field => {
+            let { namespace, name, ...rest } = field;
+            let value = item[name];
+            if (namespace) {
+                if (typeof namespace === "string") {
+                    value = item[namespace][name];
+                } else {
+                    value = namespacer(namespace, item)[name];
+                }
+            }
+            return (
+                <Table.Cell {...rest} key={field.name}>
+                    {value}
+                </Table.Cell>
+            );
+        });
+    };
+
     render() {
-        const { producers, pagination, onPageChange, onClick } = this.props;
+        const { tableDefs, data, pagination, onPageChange, onClick } = this.props;
         return (
-            <Table celled striped selectable>
+            <Table {...tableDefs.props}>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell colSpan="3">Producers</Table.HeaderCell>
+                        <Table.HeaderCell colSpan={tableDefs.fields.length}>{tableDefs.title}</Table.HeaderCell>
+                    </Table.Row>
+                    <Table.Row>
+                        {tableDefs.fields.map(field => (
+                            <Table.HeaderCell key={field.name}>{capitalize(field.name)}</Table.HeaderCell>
+                        ))}
                     </Table.Row>
                 </Table.Header>
 
                 <Table.Body>
-                    {producers.map(producer => {
-                        return (
-                            <Table.Row key={producer.id} onClick={e => onClick(e, producer)}>
-                                <Table.Cell collapsing>{producer.attributes.name}</Table.Cell>
-                                <Table.Cell>{producer.attributes.location}</Table.Cell>
-                            </Table.Row>
-                        );
-                    })}
+                    {data.map(item => (
+                        <Table.Row key={item.id} onClick={e => onClick(e, item)}>
+                            {this.buildTableCells(item)}
+                        </Table.Row>
+                    ))}
                 </Table.Body>
-
-                <Table.Footer>
-                    <Table.Row>
-                        <Table.HeaderCell colSpan="3">
-                            <Pagination
-                                defaultActivePage={pagination.pagenumber}
-                                totalPages={pagination.totalpages}
-                                onPageChange={onPageChange}
-                            />
-                        </Table.HeaderCell>
-                    </Table.Row>
-                </Table.Footer>
+                {pagination && (
+                    <Table.Footer>
+                        <Table.Row>
+                            <Table.HeaderCell colSpan={tableDefs.fields.length} textAlign="right">
+                                <Pagination
+                                    defaultActivePage={pagination.pagenumber}
+                                    totalPages={pagination.totalpages}
+                                    onPageChange={onPageChange}
+                                />
+                            </Table.HeaderCell>
+                        </Table.Row>
+                    </Table.Footer>
+                )}
             </Table>
         );
     }
 }
 const { array, func, object } = PropTypes;
 FormattedTable.propTypes = {
-    producers: array,
+    data: array.isRequired,
     onPageChange: func,
     onClick: func,
-    pagination: object
+    pagination: object,
+    tableDefs: object.isRequired
 };
 
 export default FormattedTable;
