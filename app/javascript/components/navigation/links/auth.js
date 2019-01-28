@@ -1,5 +1,8 @@
-import React from "react";
-import { Button, Dropdown } from "semantic-ui-react";
+import React, { Fragment as F } from "react";
+import { Button, Dropdown, Icon } from "semantic-ui-react";
+
+// eslint-disable-next-line
+import styles from "stylesheets/variables.scss";
 
 const links = user => {
     const { roaster_profile_id, admin } = user;
@@ -14,11 +17,12 @@ const links = user => {
         ],
         nonRoaster: [{ href: "/roasters/new", content: "Complete Your Roaster Profile" }],
         admin: [
-            { 
+            {
                 href: "/admin/dashboard",
-                content: "Dashboard" 
-            }, {
-                href: "/admin/producers", 
+                content: "Dashboard"
+            },
+            {
+                href: "/admin/producers",
                 content: "Manage Producers"
             }
         ]
@@ -32,7 +36,21 @@ const links = user => {
                         <Dropdown.Menu>
                             {roaster_profile_id && buildItems(dropdowns.roaster)}
                             {!roaster_profile_id && buildItems(dropdowns.nonRoaster)}
-                            {admin && buildItems(dropdowns.admin)}
+                            {admin && (
+                                <F>
+                                    <Dropdown.Header
+                                        icon={<Icon name="lock" size="large" />}
+                                        content="Admin"
+                                        style={{
+                                            background: styles.lightgray,
+                                            paddingTop: 10,
+                                            paddingBottom: 10,
+                                            margin: 0
+                                        }}
+                                    />
+                                    {buildItems(dropdowns.admin)}
+                                </F>
+                            )}
                         </Dropdown.Menu>
                     </Dropdown>
                 ),
