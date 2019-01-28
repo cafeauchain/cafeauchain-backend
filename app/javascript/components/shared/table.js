@@ -16,7 +16,7 @@ class FormattedTable extends Component {
     buildTableCells = item => {
         const { tableDefs } = this.props;
         return tableDefs.fields.map(field => {
-            let { namespace, name, ...rest } = field;
+            const { namespace, name, formatter: Formatter, ...rest } = field;
             let value = item[name];
             if (namespace) {
                 if (typeof namespace === "string") {
@@ -25,8 +25,11 @@ class FormattedTable extends Component {
                     value = namespacer(namespace, item)[name];
                 }
             }
+
+            if (Formatter) value = <Formatter content={value} />;
+
             return (
-                <Table.Cell {...rest} key={field.name}>
+                <Table.Cell {...rest} key={name}>
                     {value}
                 </Table.Cell>
             );
