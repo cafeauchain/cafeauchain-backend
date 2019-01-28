@@ -11,7 +11,10 @@ class Dashboard extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            cropOptions: []
+            cropOptions: [],
+            lotDetails: {
+                crop_id: null
+            }
         }
     }
 
@@ -20,6 +23,22 @@ class Dashboard extends Component {
         console.log(producerId)
         await this.getCrops(producerId)
     }
+
+    selectCrop = async cropId => {
+        let { lotDetails } = this.state;
+        lotDetails = { ...lotDetails };
+        lotDetails["crop_id"] = cropId;
+        this.setState({lotDetails})
+    }
+
+    handleInputChange = (event, { value, name, checked }) => {
+        let { lotDetails } = this.state;
+        lotDetails = { ...lotDetails };
+        if (name === "") return;
+        const val = value || checked;
+        lotDetails[name] = val;
+        this.setState({ lotDetails });
+    };
 
     addProducer = async producerName => {
         const url = `${API_URL}/producers`;
@@ -67,48 +86,61 @@ class Dashboard extends Component {
                         <Form>
                             <Form.Group widths='equal'>
                                 <ProducerSelect onSelect={this.onSelect} />
-                                <CropSelect cropOptions={cropOptions} />
+                                <CropSelect cropOptions={cropOptions} onSelect={this.selectCrop} />
                             </Form.Group>
                             <Form.Group widths='equal'>
                                 <Form.Field>
-                                    <Input 
+                                    <Input
+                                        name="lot_size"
                                         fluid 
                                         label='lbs'
                                         labelPosition='right' 
                                         placeholder="Pounds ordered from producer"
-
+                                        onChange={this.handleInputChange}
                                     />
                                 </Form.Field>
                                 <Form.Field>
-                                    <Input 
+                                    <Input
+                                        name="on_hand"
                                         fluid 
                                         label='lbs'
                                         labelPosition='right'  
-                                        placeholder='Pounds on hand'     
+                                        placeholder='Pounds on hand'   
+                                        onChange={this.handleInputChange}  
                                     />
                                 </Form.Field>
                             </Form.Group>
                             <Form.Group widths='equal'>
                                 <Form.Field>
-                                    <Input 
+                                    <Input
+                                        name="roasted"
                                         fluid 
                                         label='lbs'
                                         labelPosition='right'  
-                                        placeholder='Pounds roasted (green weight)'     
+                                        placeholder='Pounds roasted (green weight)'   
+                                        onChange={this.handleInputChange}  
                                     />
                                 </Form.Field>
                                 <Form.Field>
-                                    <Input labelPosition='right' type='text' placeholder='Price per pound'>
+                                    <Input
+                                        name="price_per_pound"
+                                        labelPosition='right' 
+                                        type='text' 
+                                        placeholder='Price per pound'
+                                        onChange={this.handleInputChange}
+                                    >
                                         <Label basic>$</Label>
                                         <input />
                                         <Label>/lb</Label>
                                     </Input>
                                 </Form.Field>
-                                <Form.Dropdown 
+                                <Form.Dropdown
+                                    name="harvest_year"
                                     fluid 
                                     selection 
                                     placeholder="Crop harvest year" 
                                     options={cropYears}
+                                    onChange={this.handleInputChange}
                                 />
                             </Form.Group>
                         </Form>
