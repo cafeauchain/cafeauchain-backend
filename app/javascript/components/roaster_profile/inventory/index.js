@@ -21,7 +21,7 @@ class Dashboard extends Component {
 
     onSelect = async producerId => {
         // eslint-disable-next-line
-        console.log(producerId)
+        this.setState({producerId})
         await this.getCrops(producerId)
     }
 
@@ -45,8 +45,6 @@ class Dashboard extends Component {
         const { lotDetails  } = this.state
         const { roaster_profile_id } = this.props
         const url = `${API_URL}/roasters/${roaster_profile_id}/lots`;
-        // eslint-disable-next-line
-        console.log(this.props.roaster_profile_id)
         const cookie = decodeURIComponent(readCookie("X-CSRF-Token"));
         let response = await fetch(url, {
             method: "POST",
@@ -76,6 +74,34 @@ class Dashboard extends Component {
                 "X-CSRF-Token": token
             }
         });
+        let responseJson = await response.json();
+        if (response.ok) {
+            const producerId = responseJson.slug
+            this.setState({producerId})
+        }
+    }
+
+    addCrop = async cropName => {
+        const { producerId } = this.state
+        const url = `${API_URL}/producers/${producerId}/crops`;
+        const body = {crop_name: cropName}
+        const token = decodeURIComponent(readCookie("X-CSRF-Token"));
+        let response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": token
+            }
+        });
+        let responseJson = await response.json();
+        if (response.ok) {
+            const cropId = responseJson.id
+            let { lotDetails } = this.state;
+            lotDetails = { ...lotDetails };
+            lotDetails["crop_id"] = cropId;
+            this.setState({lotDetails})
+        }
     }
 
     getCrops = async producerId => {
@@ -109,8 +135,8 @@ class Dashboard extends Component {
                     <Segment>
                         <Form onSubmit={this.handleSubmit}>
                             <Form.Group widths='equal'>
-                                <ProducerSelect onSelect={this.onSelect} />
-                                <CropSelect cropOptions={cropOptions} onSelect={this.selectCrop} />
+                                <ProducerSelect onSelect={this.onSelect} addProducer={this.addProducer} />
+                                <CropSelect cropOptions={cropOptions} onSelect={this.selectCrop} addCrop={this.addCrop} />
                             </Form.Group>
                             <Form.Group widths='equal'>
                                 <Form.Field>
