@@ -2,11 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 class Flex extends Component {
-    constructor(props) {
-        super(props);
-        console.log(props);
-        this.state = {};
-    }
     transformBoolsToStrings = () => {
         const { ...rest } = this.props;
         return Object.keys(rest).reduce((arr, key) => {
