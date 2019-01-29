@@ -2,11 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
 
+import underscorer from "../utilities/underscorer";
+
 const Input = props => {
     const {
         label,
-        placeholder = label,
-        name = label.toLowerCase().replace(" ", "_"),
+        placeholder = label.props ? label.props.children : label,
+        name = underscorer(label.props ? label.props.children : label),
         onChange,
         labelPosition = "left",
         autoComplete = "off",
@@ -57,9 +59,9 @@ const Input = props => {
     );
 };
 
-const { string, func, bool, array } = PropTypes;
+const { string, func, bool, array, oneOfType, object } = PropTypes;
 Input.propTypes = {
-    label: string.isRequired,
+    label: oneOfType([string, object]).isRequired,
     placeholder: string,
     name: string,
     onChange: func,
