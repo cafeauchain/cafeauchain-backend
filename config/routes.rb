@@ -35,6 +35,7 @@
 #                                           PUT    /api/v1/producers/:id(.:format)                                                          api/v1/producer_profiles#update
 #                                           DELETE /api/v1/producers/:id(.:format)                                                          api/v1/producer_profiles#destroy
 #     validate_step_api_v1_roaster_profiles POST   /api/v1/roasters/validate_step(.:format)                                                 api/v1/roaster_profiles#validate_step
+#                upload_lot_csv_api_v1_lots POST   /api/v1/roasters/:id/lots/upload_lot_csv(.:format)                                       api/v1/lots#upload_lot_csv
 #                               api_v1_lots GET    /api/v1/roasters/:id/lots(.:format)                                                      api/v1/lots#index
 #                                           POST   /api/v1/roasters/:id/lots(.:format)                                                      api/v1/lots#create
 #                            new_api_v1_lot GET    /api/v1/roasters/:id/lots/new(.:format)                                                  api/v1/lots#new
@@ -151,8 +152,11 @@ Rails.application.routes.draw do
           post :validate_step
         end
         member do
-          resources :lots
-          
+          resources :lots do
+            collection do
+              post :upload_lot_csv
+            end
+          end 
           post :cards
           delete :cards, to: "roaster_profiles#remove_card"
           put :set_as_default
