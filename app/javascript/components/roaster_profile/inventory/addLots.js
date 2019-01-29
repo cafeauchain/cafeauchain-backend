@@ -3,15 +3,19 @@ import { Container, Segment, Form, Header, Icon } from "semantic-ui-react";
 
 import Matcher from "./matcher";
 
+import Input from "../../shared/input";
+
 import fileHandler from "../../utilities/fileReader";
 import csvToJSON from "../../utilities/csvToJSON";
 
 /******* TODOs
 - Remove static keys array in favor of actual fields
 - Error handling
--- Including a warning if the same field is chosed twice
+-- Including a warning if the same field is chosen twice
 -- Should we limit the dropdowns in the Matcher to unselected options?
 - Does there need to be a confirmation? With possibly a sample to reassure that import is mapped correctly
+- How to we validate the Roaster crop name with our crop name/crop id?
+
 **********/
 const keys = [
     { name: "key_producer_name" },
@@ -51,31 +55,44 @@ class AddLots extends Component {
         return (
             <Container>
                 <Segment>
-                    <h1>Add Multiple Lots</h1>
-                    <Form>
-                        <Form.Field>
-                            <Header icon textAlign="center">
-                                <Icon name="file excel outline" />
-                                {file ? file : "No .xls, .xlsx, .csv added"}
-                            </Header>
+                    <Segment.Group>
+                        <Segment>
+                            <Header as="h2" content="Add Multiple Lots" />
+                        </Segment>
+                        <Segment>
                             {!file && (
-                                <F>
-                                    <input
-                                        type="file"
-                                        onChange={this.uploadFile}
-                                        className="input-file"
-                                        id="csvLotFileInput"
-                                        accept=".csv"
-                                    />
-                                    <label htmlFor="csvLotFileInput" className="ui huge green button">
-                                        <i className="ui upload icon" />
-                                        Upload file
-                                    </label>
-                                </F>
+                                <Segment placeholder style={{ maxWidth: 600, margin: "0 auto" }}>
+                                    <Form>
+                                        <Form.Field>
+                                            <Header icon textAlign="center">
+                                                <Icon name="file excel outline" />
+                                                No .xls, .xlsx, .csv added
+                                            </Header>
+
+                                            <Input
+                                                inputType="file"
+                                                onChange={this.uploadFile}
+                                                id="csvLotFileInput"
+                                                label={(
+                                                    <F>
+                                                        <Icon name="upload" />
+                                                        Upload file
+                                                    </F>
+                                                )}
+                                            />
+                                        </Form.Field>
+                                    </Form>
+                                </Segment>
                             )}
-                        </Form.Field>
-                    </Form>
-                    {file && <Matcher data={data} dbKeys={keys} />}
+                            {file && <Header as="h3">{file}</Header>}
+                        </Segment>
+
+                        {file && (
+                            <Segment>
+                                <Matcher data={data} dbKeys={keys} />
+                            </Segment>
+                        )}
+                    </Segment.Group>
                 </Segment>
             </Container>
         );

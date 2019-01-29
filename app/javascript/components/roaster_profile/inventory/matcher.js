@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Container, Button, Segment, Form } from "semantic-ui-react";
+import { Container, Button, Form, Header } from "semantic-ui-react";
 
 import Input from "../../shared/input";
 import humanize from "../../utilities/humanize";
@@ -9,13 +9,20 @@ import underscorer from "../../utilities/underscorer";
 class Matcher extends Component {
     constructor(props) {
         super(props);
-        let sheetKeys = Object.keys(props.data[0]);
+        const { dbKeys, data } = props;
+        const sheetKeys = Object.keys(data[0]);
+        const details = dbKeys.reduce((obj, item, idx) => ({ ...obj, [item.name]: sheetKeys[idx] }), {});
         this.state = {
-            details: props.dbKeys.reduce((obj, item, idx) => {
-                return { ...obj, [item.name]: sheetKeys[idx] };
-            }, {})
+            details,
+            disabled: true
         };
     }
+    componentDidMount() {
+        const { details } = this.state;
+        const disabled = !this.hasAnEmpty(details);
+        this.setState({ disabled });
+    }
+    hasAnEmpty = obj => Object.values(obj).every(x => !(x === null || x === "" || x === undefined));
     createOptions = array =>
         array.map(item => {
             const key = underscorer(item);
@@ -27,7 +34,8 @@ class Matcher extends Component {
         if (name === "") return;
         const val = value || checked;
         details[name] = val;
-        this.setState({ details });
+        const disabled = !this.hasAnEmpty(details);
+        this.setState({ details, disabled });
     };
     handleSubmit = e => {
         e.preventDefault();
@@ -45,45 +53,42 @@ class Matcher extends Component {
     };
     render() {
         const { dbKeys, data } = this.props;
+        const { disabled, details } = this.state;
         return (
-            <Container>
-                <Segment>
-                    <div>
-                        <p>
-                            Your upload was parsed correctly! Now, we need to map the columns in your sheet to the
-                            fields in our database!
-                        </p>
-                        <div>
-                            The fields in our database are:
-                            <br />
-                            <Form style={{ fontWeight: "bold" }} onSubmit={this.handleSubmit}>
-                                {dbKeys.map((item, idx) => {
-                                    const options = this.createOptions(Object.keys(data[0]));
-                                    return (
-                                        <Input
-                                            key={item.name}
-                                            inputType="select"
-                                            label={(
-                                                <label style={{ width: 160, textAlign: "right" }}>
-                                                    {/* TODO
-                                                        Remove the key replacer once we have actual db column names */}
-                                                    {humanize(item.name.replace("key_", ""))}
-                                                </label>
-                                            )}
-                                            name={item.name}
-                                            onChange={this.handleInputChange}
-                                            options={options}
-                                            defaultValue={options[idx].value}
-                                            inline
-                                            fluid={false}
-                                        />
-                                    );
-                                })}
-                                <Button content="Import Lots" />
-                            </Form>
-                        </div>
-                    </div>
-                </Segment>
+            <Container text>
+                <p>
+                    Your import was parsed correctly! Now, we need to map the columns in your import to the fields in
+                    our database! Please select the header from the dropdown that aligns with our database field.
+                </p>
+                <Header as="h4">Our Database Fields:</Header>
+                <Form onSubmit={this.handleSubmit}>
+                    {dbKeys.map(item => {
+                        const options = this.createOptions(Object.keys(data[0]));
+
+                        return (
+                            <Input
+                                key={item.name}
+                                inputType="select"
+                                label={(
+                                    <label style={{ width: 160, textAlign: "right", fontWeight: "bold" }}>
+                                        {/* TODO
+                                                Remove the key replacer once we have actual db column names */}
+                                        {humanize(item.name.replace("key_", ""))}
+                                    </label>
+                                )}
+                                name={item.name}
+                                onChange={this.handleInputChange}
+                                options={options}
+                                defaultValue={details[item.name]}
+                                inline
+                                fluid={false}
+                                clearable
+                                search
+                            />
+                        );
+                    })}
+                    <Button content="Import Lots" disabled={disabled} primary />
+                </Form>
             </Container>
         );
     }
