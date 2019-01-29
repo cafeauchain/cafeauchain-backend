@@ -105,7 +105,7 @@ class Dashboard extends Component {
     }
 
     getCrops = async producerId => {
-        const url = `${API_URL}/producers/${producerId}/crops`;
+        const url = await `${API_URL}/producers/${producerId}/crops`;
         const { cropOptions } = this.state;
         let response = await fetch(url);
         let responseJson = await response.json();

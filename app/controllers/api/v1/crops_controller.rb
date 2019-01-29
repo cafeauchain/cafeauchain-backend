@@ -8,7 +8,6 @@ module Api::V1
     end
 
     def create
-      @producer = ProducerProfile.find(params[:producer_id])
       @crop = @producer.crops.new(name: params[:crop_name])
       if @crop.save
         render json: @crop, status: 200
