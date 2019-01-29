@@ -11,7 +11,7 @@ module Api::V1
       end
     end
 
-    def upload_csv
+    def upload_lot_csv
       @errors = []
       @lots = JSON.parse(params[:lots])
       @lots.each do |lot|

@@ -1,5 +1,6 @@
 import React, { Component, Fragment as F } from "react";
 import { Container, Segment, Form, Header, Icon, Button } from "semantic-ui-react";
+import PropTypes from "prop-types";
 
 import Matcher from "./matcher";
 
@@ -60,6 +61,7 @@ class AddLots extends Component {
 
     render() {
         const { file, data } = this.state;
+        const { id } = this.props;
         return (
             <Container>
                 <Segment>
@@ -111,7 +113,7 @@ class AddLots extends Component {
 
                         {file && (
                             <Segment>
-                                <Matcher data={data} dbKeys={keys} />
+                                <Matcher data={data} dbKeys={keys} id={id} />
                             </Segment>
                         )}
                     </Segment.Group>
@@ -120,5 +122,10 @@ class AddLots extends Component {
         );
     }
 }
+
+const { oneOfType, string, number } = PropTypes;
+AddLots.propTypes = {
+    id: oneOfType([string, number])
+};
 
 export default AddLots;

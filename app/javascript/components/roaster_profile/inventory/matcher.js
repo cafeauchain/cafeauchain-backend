@@ -3,8 +3,11 @@ import PropTypes from "prop-types";
 import { Container, Button, Form, Header } from "semantic-ui-react";
 
 import Input from "../../shared/input";
+
 import humanize from "../../utilities/humanize";
 import underscorer from "../../utilities/underscorer";
+import readCookie from "../../utilities/readCookie";
+import API_URL from "../../utilities/apiUtils/url";
 
 class Matcher extends Component {
     constructor(props) {
@@ -37,7 +40,7 @@ class Matcher extends Component {
         const disabled = !this.hasAnEmpty(details);
         this.setState({ details, disabled });
     };
-    handleSubmit = e => {
+    startSubmit = e => {
         e.preventDefault();
         const { details } = this.state;
         const { data } = this.props;
@@ -48,8 +51,32 @@ class Matcher extends Component {
             }
             return obj;
         });
+        this.handleSubmit(body);
+    };
+
+    handleSubmit = async lots => {
+        const { id } = this.props;
+        const url = `${API_URL}/roasters/${id}/lots/upload_lot_csv`;
         // eslint-disable-next-line
-        console.log(details, data, body);
+        console.log(id);
+        const cookie = decodeURIComponent(readCookie("X-CSRF-Token"));
+        let response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": cookie
+            },
+            body: JSON.stringify({ lots, roaster_profile_id: id })
+        });
+        let respJSON = await response.json();
+        if (response.ok) {
+            console.log(respJSON);
+            //window.location.href = await respJSON.redirect_url;
+        } else {
+            // eslint-disable-next-line
+            //this.setState({ error: respJSON.error });
+            console.log(respJSON);
+        }
     };
     render() {
         const { dbKeys, data } = this.props;
@@ -61,7 +88,7 @@ class Matcher extends Component {
                     our database! Please select the header from the dropdown that aligns with our database field.
                 </p>
                 <Header as="h4">Our Database Fields:</Header>
-                <Form onSubmit={this.handleSubmit}>
+                <Form onSubmit={this.startSubmit}>
                     {dbKeys.map(item => {
                         const options = this.createOptions(Object.keys(data[0]));
 
@@ -94,10 +121,11 @@ class Matcher extends Component {
     }
 }
 
-const { array } = PropTypes;
+const { array, string, oneOfType, number } = PropTypes;
 Matcher.propTypes = {
     data: array,
-    dbKeys: array
+    dbKeys: array,
+    id: oneOfType([string, number])
 };
 
 export default Matcher;
