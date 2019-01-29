@@ -1,8 +1,9 @@
 import React, { Component, Fragment as F } from "react";
-import { Container, Segment, Form, Header, Icon } from "semantic-ui-react";
+import { Container, Segment, Form, Header, Icon, Button } from "semantic-ui-react";
 
 import Matcher from "./matcher";
 
+import Flex from "../../shared/flex";
 import Input from "../../shared/input";
 
 import fileHandler from "../../utilities/fileReader";
@@ -31,7 +32,10 @@ const keys = [
 class AddLots extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            file: "",
+            data: {}
+        };
     }
 
     uploadFile = async event => {
@@ -48,6 +52,10 @@ class AddLots extends Component {
             // eslint-disable-next-line
             console.log(e);
         }
+    };
+    resetState = e => {
+        e.preventDefault();
+        this.setState({ file: "", data: {} });
     };
 
     render() {
@@ -84,7 +92,21 @@ class AddLots extends Component {
                                     </Form>
                                 </Segment>
                             )}
-                            {file && <Header as="h3">{file}</Header>}
+                            {file && (
+                                <Flex spacebetween centercross wrap>
+                                    <div flex="fill" style={{ marginRight: 20 }}>
+                                        <Header as="h3" content={file} />
+                                    </div>
+                                    <Button
+                                        flex="auto"
+                                        style={{
+                                            marginLeft: "auto"
+                                        }}
+                                        onClick={this.resetState}
+                                        content="Start Over"
+                                    />
+                                </Flex>
+                            )}
                         </Segment>
 
                         {file && (
