@@ -1,12 +1,15 @@
-import React from "react";
+import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Form } from "semantic-ui-react";
+import { Form, Label } from "semantic-ui-react";
+
+import underscorer from "../utilities/underscorer";
+import getText from "../utilities/getTextFromChildren";
 
 const Input = props => {
     const {
         label,
-        placeholder = label,
-        name = label.toLowerCase().replace(" ", "_"),
+        placeholder = label.props ? getText(label.props.children) : label,
+        name = underscorer(label.props ? getText(label.props.children) : label),
         onChange,
         labelPosition = "left",
         autoComplete = "off",
@@ -14,6 +17,7 @@ const Input = props => {
         inputType = "input",
         options,
         dataArray,
+        id,
         ...rest
     } = props;
     return (
@@ -36,7 +40,15 @@ const Input = props => {
             )}
 
             {inputType === "select" && (
-                <Form.Select {...rest} label={label} name={name} onChange={onChange} options={options} fluid={fluid} />
+                <Form.Select
+                    {...rest}
+                    placeholder={placeholder}
+                    label={label}
+                    name={name}
+                    onChange={onChange}
+                    options={options}
+                    fluid={fluid}
+                />
             )}
 
             {inputType === "checkbox" && <Form.Checkbox {...rest} label={label} name={name} onChange={onChange} />}
@@ -53,13 +65,19 @@ const Input = props => {
                         onChange={onChange}
                     />
                 ))}
+            {inputType === "file" && (
+                <F>
+                    <Form.Input {...rest} type="file" onChange={onChange} className="input-file" id={id} label="" />
+                    <Label htmlFor={id} className="ui button" as="label" content={label} />
+                </F>
+            )}
         </React.Fragment>
     );
 };
 
-const { string, func, bool, array } = PropTypes;
+const { string, func, bool, array, oneOfType, object } = PropTypes;
 Input.propTypes = {
-    label: string.isRequired,
+    label: oneOfType([string, object]).isRequired,
     placeholder: string,
     name: string,
     onChange: func,
@@ -68,7 +86,8 @@ Input.propTypes = {
     fluid: bool,
     options: array,
     inputType: string,
-    dataArray: array
+    dataArray: array,
+    id: string
 };
 
 export default Input;

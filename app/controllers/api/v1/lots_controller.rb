@@ -11,9 +11,9 @@ module Api::V1
       end
     end
 
-    def upload_csv
+    def upload_lot_csv
       @errors = []
-      @lots = JSON.parse(params[:lots])
+      @lots = params[:lots]
       @lots.each do |lot|
         @import = ImportServices::ImportLots.import(@roaster.id, lot)
         if !@import[:errors].nil?

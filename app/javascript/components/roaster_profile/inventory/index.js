@@ -1,36 +1,39 @@
-/* eslint-disable */
 import React, { Component } from "react";
-import { Button, Container, Form, Input, Header, Label, Segment } from "semantic-ui-react";
+import PropTypes from "prop-types";
+import { Button, Container, Form, Grid, Input, Header, Label, Placeholder, Segment } from "semantic-ui-react";
+
+import AddLots from "./addLots";
+
 import ProducerSelect from "../../shared/producers/producerSelect";
 import CropSelect from "../../shared/crops/cropSelect";
+
 import readCookie from "../../utilities/readCookie";
 import API_URL from "../../utilities/apiUtils/url";
 
 class Dashboard extends Component {
-
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             cropOptions: [],
             lotDetails: {
                 crop_id: null,
-                roaster_profile_id: props.roaster_profile_id,
+                roaster_profile_id: props.roaster_profile_id
             }
-        }
+        };
     }
 
     onSelect = async producerId => {
         // eslint-disable-next-line
-        console.log(producerId)
-        await this.getCrops(producerId)
-    }
+        console.log(producerId);
+        await this.getCrops(producerId);
+    };
 
     selectCrop = async cropId => {
         let { lotDetails } = this.state;
         lotDetails = { ...lotDetails };
         lotDetails["crop_id"] = cropId;
-        this.setState({lotDetails})
-    }
+        this.setState({ lotDetails });
+    };
 
     handleInputChange = (event, { value, name, checked }) => {
         let { lotDetails } = this.state;
@@ -42,17 +45,18 @@ class Dashboard extends Component {
     };
 
     handleSubmit = async ev => {
-        const { lotDetails  } = this.state
-        const { roaster_profile_id } = this.props
+        ev.preventDefault();
+        const { lotDetails } = this.state;
+        const { roaster_profile_id } = this.props;
         const url = `${API_URL}/roasters/${roaster_profile_id}/lots`;
         // eslint-disable-next-line
-        console.log(this.props.roaster_profile_id)
+        console.log(this.props.roaster_profile_id);
         const cookie = decodeURIComponent(readCookie("X-CSRF-Token"));
         let response = await fetch(url, {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-Token': cookie
+                "Content-Type": "application/json",
+                "X-CSRF-Token": cookie
             },
             body: JSON.stringify(lotDetails)
         });
@@ -60,14 +64,16 @@ class Dashboard extends Component {
         if (response.ok) {
             window.location.href = await respJSON.redirect_url;
         } else {
+            // eslint-disable-next-line
             this.setState({ error: respJSON.error });
         }
-    }
+    };
 
     addProducer = async producerName => {
         const url = `${API_URL}/producers`;
-        const body = {producer_profile: {name: producerName}}
+        const body = { producer_profile: { name: producerName } };
         const token = decodeURIComponent(readCookie("X-CSRF-Token"));
+        // eslint-disable-next-line
         let response = await fetch(url, {
             method: "POST",
             body: JSON.stringify(body),
@@ -76,7 +82,7 @@ class Dashboard extends Component {
                 "X-CSRF-Token": token
             }
         });
-    }
+    };
 
     getCrops = async producerId => {
         const url = `${API_URL}/producers/${producerId}/crops`;
@@ -86,99 +92,135 @@ class Dashboard extends Component {
         if (response.ok) {
             const crops = responseJson.data;
             crops.map(crop => {
-                cropOptions.push({key: crop.id, value: crop.id, text: crop.attributes.name})
-            })
+                cropOptions.push({ key: crop.id, value: crop.id, text: crop.attributes.name });
+            });
             this.setState({ cropOptions });
         }
     };
 
     render = () => {
-        const { cropOptions } = this.state
+        const { cropOptions } = this.state;
+        const { roaster_profile_id: id } = this.props;
         const cropYears = [
-            {key: "2016", value: "2016", text: "2016"},
-            {key: "2017", value: "2017", text: "2017"},
-            {key: "2018", value: "2018", text: "2018"},
-            {key: "2019", value: "2019", text: "2019"},
-        ]
-        return(
+            { key: "2016", value: "2016", text: "2016" },
+            { key: "2017", value: "2017", text: "2017" },
+            { key: "2018", value: "2018", text: "2018" },
+            { key: "2019", value: "2019", text: "2019" }
+        ];
+        return (
             <Container style={{ margin: "4em 0" }}>
-                <Segment.Group>
-                    <Segment>
-                        <Header as="h2" content="Add a new crop" />
-                    </Segment>
-                    <Segment>
-                        <Form onSubmit={this.handleSubmit}>
-                            <Form.Group widths='equal'>
-                                <ProducerSelect onSelect={this.onSelect} />
-                                <CropSelect cropOptions={cropOptions} onSelect={this.selectCrop} />
-                            </Form.Group>
-                            <Form.Group widths='equal'>
-                                <Form.Field>
-                                    <Input
-                                        name="lot_size"
-                                        fluid 
-                                        label='lbs'
-                                        labelPosition='right' 
-                                        placeholder="Pounds ordered from producer"
+                <Grid>
+                    <Grid.Column width={10}>
+                        <Segment>
+                            <Header as="h2" content="Open contracts" />
+                            <Placeholder>
+                                <Placeholder.Paragraph>
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                </Placeholder.Paragraph>
+                                <Placeholder.Paragraph>
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                </Placeholder.Paragraph>
+                            </Placeholder>
+                            <Header as="h2" content="Recent Transactions" />
+                            <Placeholder>
+                                <Placeholder.Paragraph>
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                </Placeholder.Paragraph>
+                                <Placeholder.Paragraph>
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                </Placeholder.Paragraph>
+                            </Placeholder>
+                        </Segment>
+                    </Grid.Column>
+                    <Grid.Column width={6}>
+                        <AddLots id={id} />
+                        <Segment.Group>
+                            <Segment>
+                                <Header as="h2" content="Add a new contract" />
+                            </Segment>
+                            <Segment>
+                                <Form onSubmit={this.handleSubmit}>
+                                    <ProducerSelect onSelect={this.onSelect} />
+                                    <CropSelect cropOptions={cropOptions} onSelect={this.selectCrop} />
+                                    <Form.Field>
+                                        <Input
+                                            name="lot_size"
+                                            fluid
+                                            label="lbs"
+                                            labelPosition="right"
+                                            placeholder="Pounds ordered from producer"
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Form.Field>
+                                    <Form.Field>
+                                        <Input
+                                            name="on_hand"
+                                            fluid
+                                            label="lbs"
+                                            labelPosition="right"
+                                            placeholder="Pounds on hand"
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Form.Field>
+                                    <Form.Field>
+                                        <Input
+                                            name="roasted"
+                                            fluid
+                                            label="lbs"
+                                            labelPosition="right"
+                                            placeholder="Pounds roasted (green weight)"
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Form.Field>
+                                    <Form.Field>
+                                        <Input
+                                            name="price_per_pound"
+                                            labelPosition="right"
+                                            type="text"
+                                            placeholder="Price per pound"
+                                            onChange={this.handleInputChange}
+                                        >
+                                            <Label basic>$</Label>
+                                            <input />
+                                            <Label>/lb</Label>
+                                        </Input>
+                                    </Form.Field>
+                                    <Form.Dropdown
+                                        name="harvest_year"
+                                        fluid
+                                        selection
+                                        placeholder="Crop harvest year"
+                                        options={cropYears}
                                         onChange={this.handleInputChange}
                                     />
-                                </Form.Field>
-                                <Form.Field>
-                                    <Input
-                                        name="on_hand"
-                                        fluid 
-                                        label='lbs'
-                                        labelPosition='right'  
-                                        placeholder='Pounds on hand'   
-                                        onChange={this.handleInputChange}  
-                                    />
-                                </Form.Field>
-                            </Form.Group>
-                            <Form.Group widths='equal'>
-                                <Form.Field>
-                                    <Input
-                                        name="roasted"
-                                        fluid 
-                                        label='lbs'
-                                        labelPosition='right'  
-                                        placeholder='Pounds roasted (green weight)'   
-                                        onChange={this.handleInputChange}  
-                                    />
-                                </Form.Field>
-                                <Form.Field>
-                                    <Input
-                                        name="price_per_pound"
-                                        labelPosition='right' 
-                                        type='text' 
-                                        placeholder='Price per pound'
-                                        onChange={this.handleInputChange}
-                                    >
-                                        <Label basic>$</Label>
-                                        <input />
-                                        <Label>/lb</Label>
-                                    </Input>
-                                </Form.Field>
-                                <Form.Dropdown
-                                    name="harvest_year"
-                                    fluid 
-                                    selection 
-                                    placeholder="Crop harvest year" 
-                                    options={cropYears}
-                                    onChange={this.handleInputChange}
-                                />
-                            </Form.Group>
 
-                            <Button fluid size="large" primary>
-                                Update Inventory
-                            </Button>
-                        </Form>
-                    </Segment>
-                </Segment.Group>
+                                    <Button fluid size="large" primary>
+                                        Update Inventory
+                                    </Button>
+                                </Form>
+                            </Segment>
+                        </Segment.Group>
+                </Grid.Column>
+                </Grid>
             </Container>
-        )
-    }
+        );
+    };
 }
 
-
-
+const { oneOfType, number, string } = PropTypes;
+Dashboard.propTypes = {
+    roaster_profile_id: oneOfType([number, string])
+};
 export default Dashboard;

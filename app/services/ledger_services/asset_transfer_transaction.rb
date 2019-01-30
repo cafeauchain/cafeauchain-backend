@@ -8,7 +8,7 @@ module LedgerServices
     end
 
     def call
-      @tx = @lot.transactions.new(quantity: @quantity, trans_type:"asset_transfer", roaster_profile: @roaster
+      @tx = @lot.transactions.new(quantity: @quantity, trans_type:"asset_transfer", roaster_profile: @roaster)
       if @tx.save
         return "Success!"
       else

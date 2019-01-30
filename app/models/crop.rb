@@ -29,5 +29,4 @@ class Crop < ApplicationRecord
   has_many :lots
   has_many :roaster_profiles, through: :lots
   
-  accepts_nested_attributes_for :lots, reject_if: ->(attributes){ attributes['price_per_pound'].blank? }, allow_destroy: true
 end
