@@ -12,11 +12,17 @@ const requester = async ({ url, body, headers, method = "POST" }) => {
             body,
             headers
         });
-        let responseJson = await response.json();
-        return responseJson;
+        if (response.ok) {
+            let responseJson = await response.json();
+            return responseJson;
+        } else {
+            var error = new Error(response.statusText || response.status);
+            error.response = response;
+            throw error;
+        }
     } catch (e) {
         // eslint-disable-next-line
-        console.log(e);
+        console.log(e.response);
         return e;
     }
 };

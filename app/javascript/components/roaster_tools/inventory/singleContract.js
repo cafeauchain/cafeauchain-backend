@@ -45,7 +45,7 @@ class SingleContract extends Component {
         let respJSON = await requester({ url, body });
         if (respJSON instanceof Error) {
             // eslint-disable-next-line
-            console.log("there was an error");
+            console.log("there was an error", respJSON.response);
         } else {
             window.location.href = await respJSON.redirect_url;
         }
