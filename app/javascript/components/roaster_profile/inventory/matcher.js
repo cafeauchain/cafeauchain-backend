@@ -57,8 +57,6 @@ class Matcher extends Component {
     handleSubmit = async lots => {
         const { id } = this.props;
         const url = `${API_URL}/roasters/${id}/lots/upload_lot_csv`;
-        // eslint-disable-next-line
-        console.log(id);
         const cookie = decodeURIComponent(readCookie("X-CSRF-Token"));
         let response = await fetch(url, {
             method: "POST",
@@ -70,11 +68,11 @@ class Matcher extends Component {
         });
         let respJSON = await response.json();
         if (response.ok) {
-            console.log(respJSON);
-            //window.location.href = await respJSON.redirect_url;
+            window.location.href = await respJSON.redirect_url;
         } else {
             // eslint-disable-next-line
-            //this.setState({ error: respJSON.error });
+            this.setState({ error: respJSON.error });
+            // eslint-disable-next-line
             console.log(respJSON);
         }
     };
@@ -98,8 +96,6 @@ class Matcher extends Component {
                                 inputType="select"
                                 label={(
                                     <label style={{ width: 160, textAlign: "right", fontWeight: "bold" }}>
-                                        {/* TODO
-                                                Remove the key replacer once we have actual db column names */}
                                         {humanize(item.name.replace("key_", ""))}
                                     </label>
                                 )}
