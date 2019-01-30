@@ -94,15 +94,18 @@ class SingleContract extends Component {
             this.setState({ cropOptions });
         }
     };
+    getYears = num => {
+        const start = new Date().getFullYear();
+        const arr = [];
+        for (var i = 0; i < num; i++) {
+            arr.push(start - i);
+        }
+        return arr;
+    };
 
     render() {
         const cropOptions = [{ value: "temp", key: "temp", text: "Temp" }];
-        const cropYears = [
-            { key: "2016", value: "2016", text: "2016" },
-            { key: "2017", value: "2017", text: "2017" },
-            { key: "2018", value: "2018", text: "2018" },
-            { key: "2019", value: "2019", text: "2019" }
-        ];
+        const cropYears = this.getYears(4).map(x => ({ value: x, text: x, key: x }));
         return (
             <Segment.Group>
                 <Segment>
