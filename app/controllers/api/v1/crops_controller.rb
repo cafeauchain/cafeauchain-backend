@@ -7,6 +7,15 @@ module Api::V1
       render json: @crops, status: 200
     end
 
+    def create
+      @crop = @producer.crops.new(name: params[:crop_name])
+      if @crop.save
+        render json: @crop, status: 200
+      else
+        render json: @crop.errors, status: 422
+      end
+    end
+
     private
 
     def set_producer

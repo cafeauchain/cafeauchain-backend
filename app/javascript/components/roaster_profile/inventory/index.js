@@ -24,9 +24,9 @@ class Dashboard extends Component {
 
     onSelect = async producerId => {
         // eslint-disable-next-line
-        console.log(producerId);
-        await this.getCrops(producerId);
-    };
+        this.setState({producerId})
+        await this.getCrops(producerId)
+    }
 
     selectCrop = async cropId => {
         let { lotDetails } = this.state;
@@ -49,8 +49,6 @@ class Dashboard extends Component {
         const { lotDetails } = this.state;
         const { roaster_profile_id } = this.props;
         const url = `${API_URL}/roasters/${roaster_profile_id}/lots`;
-        // eslint-disable-next-line
-        console.log(this.props.roaster_profile_id);
         const cookie = decodeURIComponent(readCookie("X-CSRF-Token"));
         let response = await fetch(url, {
             method: "POST",
@@ -82,10 +80,38 @@ class Dashboard extends Component {
                 "X-CSRF-Token": token
             }
         });
-    };
+        let responseJson = await response.json();
+        if (response.ok) {
+            const producerId = responseJson.slug
+            this.setState({producerId})
+        }
+    }
+
+    addCrop = async cropName => {
+        const { producerId } = this.state
+        const url = `${API_URL}/producers/${producerId}/crops`;
+        const body = {crop_name: cropName}
+        const token = decodeURIComponent(readCookie("X-CSRF-Token"));
+        let response = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": token
+            }
+        });
+        let responseJson = await response.json();
+        if (response.ok) {
+            const cropId = responseJson.id
+            let { lotDetails } = this.state;
+            lotDetails = { ...lotDetails };
+            lotDetails["crop_id"] = cropId;
+            this.setState({lotDetails})
+        }
+    }
 
     getCrops = async producerId => {
-        const url = `${API_URL}/producers/${producerId}/crops`;
+        const url = await `${API_URL}/producers/${producerId}/crops`;
         const { cropOptions } = this.state;
         let response = await fetch(url);
         let responseJson = await response.json();
@@ -212,7 +238,7 @@ class Dashboard extends Component {
                                 </Form>
                             </Segment>
                         </Segment.Group>
-                </Grid.Column>
+                    </Grid.Column>
                 </Grid>
             </Container>
         );
