@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form, Input, Button, Label, Segment, Header } from "semantic-ui-react";
+import { Form, Input, Button, Segment, Header } from "semantic-ui-react";
 
 import ProducerSelect from "../../shared/producers/producerSelect";
 import CropSelect from "../../shared/crops/cropSelect";
@@ -106,6 +106,13 @@ class SingleContract extends Component {
     render() {
         const cropOptions = [{ value: "temp", key: "temp", text: "Temp" }];
         const cropYears = this.getYears(4).map(x => ({ value: x, text: x, key: x }));
+
+        const fields = [
+            { name: "lot_size", label: "lbs", placeholder: "Pounds ordered from producer" },
+            { name: "on_hand", label: "lbs", placeholder: "Pounds on hand" },
+            { name: "roasted", label: "lbs", placeholder: "Pounds roasted (green weight)" },
+            { name: "price_per_pound", label: "/lb", placeholder: "Price per pound", icon: "dollar" }
+        ];
         return (
             <Segment.Group>
                 <Segment>
@@ -115,49 +122,20 @@ class SingleContract extends Component {
                     <Form onSubmit={this.handleSubmit}>
                         <ProducerSelect onSelect={this.onSelect} />
                         <CropSelect cropOptions={cropOptions} onSelect={this.selectCrop} />
-                        <Form.Field>
-                            <Input
-                                name="lot_size"
-                                fluid
-                                label="lbs"
-                                labelPosition="right"
-                                placeholder="Pounds ordered from producer"
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
-                        <Form.Field>
-                            <Input
-                                name="on_hand"
-                                fluid
-                                label="lbs"
-                                labelPosition="right"
-                                placeholder="Pounds on hand"
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
-                        <Form.Field>
-                            <Input
-                                name="roasted"
-                                fluid
-                                label="lbs"
-                                labelPosition="right"
-                                placeholder="Pounds roasted (green weight)"
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
-                        <Form.Field>
-                            <Input
-                                name="price_per_pound"
-                                labelPosition="right"
-                                type="text"
-                                placeholder="Price per pound"
-                                onChange={this.handleInputChange}
-                            >
-                                <Label basic>$</Label>
-                                <input />
-                                <Label>/lb</Label>
-                            </Input>
-                        </Form.Field>
+                        {fields.map(field => (
+                            <Form.Field key={field.name}>
+                                <Input
+                                    name={field.name}
+                                    icon={field.icon}
+                                    iconPosition={field.icon ? "left" : undefined}
+                                    fluid
+                                    label={field.label}
+                                    labelPosition="right"
+                                    placeholder={field.placeholder}
+                                    onChange={this.handleInputChange}
+                                />
+                            </Form.Field>
+                        ))}
                         <Form.Dropdown
                             name="harvest_year"
                             fluid
