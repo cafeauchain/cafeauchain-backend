@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { Button, Container, Form, Grid, Input, Header, Label, Placeholder, Segment } from "semantic-ui-react";
 
 import AddLots from "./addLots";
+import OpenContracts from "../openContracts";
+import RecentTransactions from "../recentTransactions";
 
 import ProducerSelect from "../../shared/producers/producerSelect";
 import CropSelect from "../../shared/crops/cropSelect";
@@ -141,36 +143,8 @@ class Dashboard extends Component {
                 <Grid>
                     <Grid.Column width={10}>
                         <Segment>
-                            <Header as="h2" content="Open contracts" />
-                            <Placeholder>
-                                <Placeholder.Paragraph>
-                                    <Placeholder.Line />
-                                    <Placeholder.Line />
-                                    <Placeholder.Line />
-                                    <Placeholder.Line />
-                                    <Placeholder.Line />
-                                </Placeholder.Paragraph>
-                                <Placeholder.Paragraph>
-                                    <Placeholder.Line />
-                                    <Placeholder.Line />
-                                    <Placeholder.Line />
-                                </Placeholder.Paragraph>
-                            </Placeholder>
-                            <Header as="h2" content="Recent Transactions" />
-                            <Placeholder>
-                                <Placeholder.Paragraph>
-                                    <Placeholder.Line />
-                                    <Placeholder.Line />
-                                    <Placeholder.Line />
-                                    <Placeholder.Line />
-                                    <Placeholder.Line />
-                                </Placeholder.Paragraph>
-                                <Placeholder.Paragraph>
-                                    <Placeholder.Line />
-                                    <Placeholder.Line />
-                                    <Placeholder.Line />
-                                </Placeholder.Paragraph>
-                            </Placeholder>
+                            <OpenContracts />
+                            <RecentTransactions />
                         </Segment>
                     </Grid.Column>
                     <Grid.Column width={6}>
