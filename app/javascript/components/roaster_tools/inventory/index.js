@@ -24,9 +24,9 @@ class Dashboard extends Component {
 
     onSelect = async producerId => {
         // eslint-disable-next-line
-        this.setState({producerId})
-        await this.getCrops(producerId)
-    }
+        this.setState({ producerId });
+        await this.getCrops(producerId);
+    };
 
     selectCrop = async cropId => {
         let { lotDetails } = this.state;
@@ -82,15 +82,15 @@ class Dashboard extends Component {
         });
         let responseJson = await response.json();
         if (response.ok) {
-            const producerId = responseJson.slug
-            this.setState({producerId})
+            const producerId = responseJson.slug;
+            this.setState({ producerId });
         }
-    }
+    };
 
     addCrop = async cropName => {
-        const { producerId } = this.state
+        const { producerId } = this.state;
         const url = `${API_URL}/producers/${producerId}/crops`;
-        const body = {crop_name: cropName}
+        const body = { crop_name: cropName };
         const token = decodeURIComponent(readCookie("X-CSRF-Token"));
         let response = await fetch(url, {
             method: "POST",
@@ -102,13 +102,13 @@ class Dashboard extends Component {
         });
         let responseJson = await response.json();
         if (response.ok) {
-            const cropId = responseJson.id
+            const cropId = responseJson.id;
             let { lotDetails } = this.state;
             lotDetails = { ...lotDetails };
             lotDetails["crop_id"] = cropId;
-            this.setState({lotDetails})
+            this.setState({ lotDetails });
         }
-    }
+    };
 
     getCrops = async producerId => {
         const url = await `${API_URL}/producers/${producerId}/crops`;
@@ -135,6 +135,9 @@ class Dashboard extends Component {
         ];
         return (
             <Container style={{ margin: "4em 0" }}>
+                <Segment>
+                    <Header as="h1" content="Manage Inventory" />
+                </Segment>
                 <Grid>
                     <Grid.Column width={10}>
                         <Segment>
