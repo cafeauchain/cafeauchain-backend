@@ -1,51 +1,113 @@
-import React, { Component } from 'react';
-import { Form } from 'semantic-ui-react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import { Form } from "semantic-ui-react";
+import PropTypes from "prop-types";
 
-// import readCookie from "../../utilities/readCookie";
-// import paramatize from "../../utilities/params";
+import API_URL from "../../utilities/apiUtils/url";
+import requester from "../../utilities/apiUtils/requester";
 
 class CropSelect extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-        }
+            crops: [],
+            selected: {}
+        };
     }
+    componentDidMount() {
+        const { producerId } = this.props;
+        this.getCrops(producerId);
+    }
+    shouldComponentUpdate(nextProps) {
+        const { producerId } = this.props;
+        const { producerId: id } = nextProps;
+        if (id !== producerId) {
+            this.getCrops(id);
+        }
+        return true;
+    }
+
+    buildCrop = data => {
+        const { attributes, id } = data;
+        const { name } = attributes;
+        return {
+            text: name,
+            value: id,
+            key: id,
+            id,
+            name
+        };
+    };
+
+    getCrops = async id => {
+        const { parentState } = this.props;
+        const url = await `${API_URL}/producers/${id}/crops`;
+        let response = await fetch(url);
+        let responseJson = await response.json();
+        if (response.ok) {
+            const { data } = responseJson;
+            const crops = data.map(this.buildCrop);
+            this.setState({ crops, selected: {} }, parentState({ lotDetails: { crop_id: "" } }));
+        }
+    };
+
+    addCrop = async (event, { value }) => {
+        const { parentState, producerId } = this.props;
+        let { crops } = this.state;
+        crops = [...crops];
+        const url = `${API_URL}/producers/${producerId}/crops`;
+        const body = { crop_name: value };
+        const responseJson = await requester({ url, body });
+        if (responseJson instanceof Error) {
+            // eslint-disable-next-line
+            console.log("there was an error");
+        } else {
+            const { data } = responseJson;
+            const crop = this.buildCrop(data);
+            crops = [crop, ...crops];
+            this.setState({ crops, selected: crop }, parentState({ lotDetails: { crop_id: crop.id } }));
+        }
+    };
+
+    getCrop = id => {
+        const { crops } = this.state;
+        return crops.find(crop => crop.id === id);
+    };
 
     onSelect = (event, { value }) => {
-        const { onSelect } = this.props
-        onSelect(value)
-    }
-
-    addCrop = (event, { value }) => {
-        const { addCrop } = this.props
-        addCrop(value)
-    }
+        const { parentState } = this.props;
+        const crop = this.getCrop(value);
+        if (!crop) {
+            // eslint-disable-next-line
+            console.log("crop wasnt found. It was probably an add. Let the add handle the state update.");
+            return;
+        }
+        this.setState({ selected: crop }, parentState({ lotDetails: { crop_id: crop.id } }));
+    };
 
     render = () => {
-        const { cropOptions } = this.props
-        return(
-            <Form.Dropdown 
-                placeholder='Select Crop'
+        const { crops, selected } = this.state;
+        const value = selected ? selected.value : undefined;
+        return (
+            <Form.Dropdown
+                placeholder="Select Crop"
                 fluid
                 search
+                selection
                 deburr
-                selection 
-                options={cropOptions} 
-                onChange={this.onSelect} 
                 allowAdditions
+                value={value}
+                options={crops}
+                onChange={this.onSelect}
                 onAddItem={this.addCrop}
             />
-        )
-    }
-
+        );
+    };
 }
 
-const { array, func } = PropTypes;
+const { func, oneOfType, number, string } = PropTypes;
 CropSelect.propTypes = {
-    cropOptions: array,
-    onSelect: func,
-    addCrop: func
-}
+    producerId: oneOfType([number, string]),
+    parentState: func
+};
 
 export default CropSelect;
