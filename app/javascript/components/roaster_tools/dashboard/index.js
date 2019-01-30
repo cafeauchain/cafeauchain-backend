@@ -124,7 +124,6 @@ class Dashboard extends Component {
 
     render = () => {
         const { cropOptions } = this.state;
-        const { roaster_profile_id: id } = this.props;
         const cropYears = [
             { key: "2016", value: "2016", text: "2016" },
             { key: "2017", value: "2017", text: "2017" },
