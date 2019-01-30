@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Button, Container, Form, Input, Header, Label, Segment } from "semantic-ui-react";
+import { Button, Container, Form, Grid, Input, Header, Label, Placeholder, Segment } from "semantic-ui-react";
 
 import AddLots from "./addLots";
 
@@ -109,79 +109,111 @@ class Dashboard extends Component {
         ];
         return (
             <Container style={{ margin: "4em 0" }}>
-                <AddLots id={id} />
-                <Segment.Group>
-                    <Segment>
-                        <Header as="h2" content="Add a new crop" />
-                    </Segment>
-                    <Segment>
-                        <Form onSubmit={this.handleSubmit}>
-                            <Form.Group widths="equal">
-                                <ProducerSelect onSelect={this.onSelect} />
-                                <CropSelect cropOptions={cropOptions} onSelect={this.selectCrop} />
-                            </Form.Group>
-                            <Form.Group widths="equal">
-                                <Form.Field>
-                                    <Input
-                                        name="lot_size"
+                <Grid>
+                    <Grid.Column width={10}>
+                        <Segment>
+                            <Header as="h2" content="Open contracts" />
+                            <Placeholder>
+                                <Placeholder.Paragraph>
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                </Placeholder.Paragraph>
+                                <Placeholder.Paragraph>
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                </Placeholder.Paragraph>
+                            </Placeholder>
+                            <Header as="h2" content="Recent Transactions" />
+                            <Placeholder>
+                                <Placeholder.Paragraph>
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                </Placeholder.Paragraph>
+                                <Placeholder.Paragraph>
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                    <Placeholder.Line />
+                                </Placeholder.Paragraph>
+                            </Placeholder>
+                        </Segment>
+                    </Grid.Column>
+                    <Grid.Column width={6}>
+                        <AddLots id={id} />
+                        <Segment.Group>
+                            <Segment>
+                                <Header as="h2" content="Add a new contract" />
+                            </Segment>
+                            <Segment>
+                                <Form onSubmit={this.handleSubmit}>
+                                    <ProducerSelect onSelect={this.onSelect} />
+                                    <CropSelect cropOptions={cropOptions} onSelect={this.selectCrop} />
+                                    <Form.Field>
+                                        <Input
+                                            name="lot_size"
+                                            fluid
+                                            label="lbs"
+                                            labelPosition="right"
+                                            placeholder="Pounds ordered from producer"
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Form.Field>
+                                    <Form.Field>
+                                        <Input
+                                            name="on_hand"
+                                            fluid
+                                            label="lbs"
+                                            labelPosition="right"
+                                            placeholder="Pounds on hand"
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Form.Field>
+                                    <Form.Field>
+                                        <Input
+                                            name="roasted"
+                                            fluid
+                                            label="lbs"
+                                            labelPosition="right"
+                                            placeholder="Pounds roasted (green weight)"
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Form.Field>
+                                    <Form.Field>
+                                        <Input
+                                            name="price_per_pound"
+                                            labelPosition="right"
+                                            type="text"
+                                            placeholder="Price per pound"
+                                            onChange={this.handleInputChange}
+                                        >
+                                            <Label basic>$</Label>
+                                            <input />
+                                            <Label>/lb</Label>
+                                        </Input>
+                                    </Form.Field>
+                                    <Form.Dropdown
+                                        name="harvest_year"
                                         fluid
-                                        label="lbs"
-                                        labelPosition="right"
-                                        placeholder="Pounds ordered from producer"
+                                        selection
+                                        placeholder="Crop harvest year"
+                                        options={cropYears}
                                         onChange={this.handleInputChange}
                                     />
-                                </Form.Field>
-                                <Form.Field>
-                                    <Input
-                                        name="on_hand"
-                                        fluid
-                                        label="lbs"
-                                        labelPosition="right"
-                                        placeholder="Pounds on hand"
-                                        onChange={this.handleInputChange}
-                                    />
-                                </Form.Field>
-                            </Form.Group>
-                            <Form.Group widths="equal">
-                                <Form.Field>
-                                    <Input
-                                        name="roasted"
-                                        fluid
-                                        label="lbs"
-                                        labelPosition="right"
-                                        placeholder="Pounds roasted (green weight)"
-                                        onChange={this.handleInputChange}
-                                    />
-                                </Form.Field>
-                                <Form.Field>
-                                    <Input
-                                        name="price_per_pound"
-                                        labelPosition="right"
-                                        type="text"
-                                        placeholder="Price per pound"
-                                        onChange={this.handleInputChange}
-                                    >
-                                        <Label basic>$</Label>
-                                        <input />
-                                        <Label>/lb</Label>
-                                    </Input>
-                                </Form.Field>
-                                <Form.Dropdown
-                                    name="harvest_year"
-                                    fluid
-                                    selection
-                                    placeholder="Crop harvest year"
-                                    options={cropYears}
-                                    onChange={this.handleInputChange}
-                                />
-                            </Form.Group>
 
-                            <Button fluid size="large" primary>
-                                Update Inventory
-                            </Button>
-                        </Form>
-                    </Segment>
-                </Segment.Group>
+                                    <Button fluid size="large" primary>
+                                        Update Inventory
+                                    </Button>
+                                </Form>
+                            </Segment>
+                        </Segment.Group>
+                </Grid.Column>
+                </Grid>
             </Container>
         );
     };
