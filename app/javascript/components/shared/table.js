@@ -4,14 +4,44 @@ import PropTypes from "prop-types";
 // import Pagination from "semantic-ui-react-button-pagination";
 import { Pagination, Table } from "semantic-ui-react";
 
-import humanize from "../utilities/humanize";
-import namespacer from "../utilities/fieldNamespacer";
+/* eslint-disable */
+import humanize from "utilities/humanize";
+import namespacer from "utilities/fieldNamespacer";
+import sortBy from "utilities/sortBy";
+/* eslint-enable */
 
 class FormattedTable extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            column: null,
+            data: [],
+            direction: null
+        };
     }
+
+    static getDerivedStateFromProps(props) {
+        const data = props.data;
+        return { data };
+    }
+
+    handleSort = clickedColumn => () => {
+        const { column, data, direction } = this.state;
+        if (column !== clickedColumn) {
+            this.setState({
+                column: clickedColumn,
+                data: sortBy({ collection: data, id: clickedColumn }),
+                direction: "ascending"
+            });
+
+            return;
+        }
+
+        this.setState({
+            data: data.reverse(),
+            direction: direction === "ascending" ? "descending" : "ascending"
+        });
+    };
 
     buildTableCells = item => {
         const { tableDefs } = this.props;
@@ -37,7 +67,9 @@ class FormattedTable extends Component {
     };
 
     render() {
-        const { tableDefs, data, pagination, onPageChange, onClick } = this.props;
+        const { tableDefs, pagination, onPageChange, onClick } = this.props;
+        const { data, column, direction } = this.state;
+        const { props: tableProps } = tableDefs;
         return (
             <Table {...tableDefs.props}>
                 <Table.Header>
@@ -49,7 +81,11 @@ class FormattedTable extends Component {
 
                     <Table.Row>
                         {tableDefs.fields.map(field => (
-                            <Table.HeaderCell key={field.name}>
+                            <Table.HeaderCell
+                                sorted={column === field.name ? direction : null}
+                                onClick={tableProps.sortable ? this.handleSort(field.name) : null}
+                                key={field.name}
+                            >
                                 {humanize(field.label ? field.label : field.name)}
                             </Table.HeaderCell>
                         ))}
