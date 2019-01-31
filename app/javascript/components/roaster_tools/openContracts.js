@@ -15,6 +15,7 @@ class OpenContracts extends Component {
         const { id } = this.props;
         this.getContracts(id);
     }
+    
     buildContract = data => {
         const { attributes, id, relationships } = data;
         const { contract_value, harvest_year, on_hand, pounds_of_coffee, price_per_pound } = attributes;
@@ -31,6 +32,7 @@ class OpenContracts extends Component {
             id
         };
     };
+
     getContracts = async id => {
         const url = `${API_URL}/roasters/${id}/lots`;
         let response = await fetch(url);
