@@ -41,9 +41,12 @@ class FormattedTable extends Component {
         return (
             <Table {...tableDefs.props}>
                 <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell colSpan={tableDefs.fields.length}>{tableDefs.title}</Table.HeaderCell>
-                    </Table.Row>
+                    {tableDefs.title && (
+                        <Table.Row>
+                            <Table.HeaderCell colSpan={tableDefs.fields.length}>{tableDefs.title}</Table.HeaderCell>
+                        </Table.Row>
+                    )}
+
                     <Table.Row>
                         {tableDefs.fields.map(field => (
                             <Table.HeaderCell key={field.name}>
