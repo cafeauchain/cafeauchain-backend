@@ -23,7 +23,7 @@ class Dashboard extends Component {
                     <Grid.Column width={10}>
                         <Segment>
                             <OpenContracts id={id} />
-                            <RecentTransactions />
+                            <RecentTransactions id={id} />
                         </Segment>
                     </Grid.Column>
                     <Grid.Column width={6}>
