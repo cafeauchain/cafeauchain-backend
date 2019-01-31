@@ -18,7 +18,8 @@ const tableDefinition = {
         celled: true,
         striped: true,
         selectable: true,
-        sortable: true
+        sortable: true,
+        singleLine: true
     }
 };
 
