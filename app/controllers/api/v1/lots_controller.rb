@@ -2,6 +2,16 @@ module Api::V1
   class LotsController < ApplicationController
     before_action :set_roaster
 
+    def index
+      @lots = @roaster.lots
+      render json: @lots, status: 200
+    end
+
+    def show
+      @lot = Lot.find(params[:id])
+      render json: @lot, status: 200
+    end
+
     def create
       @lot = InventoryServices::CreateLot.new(@roaster.id, params[:crop_id], params)
       if @lot.call
