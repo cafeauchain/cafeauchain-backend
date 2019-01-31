@@ -22,13 +22,13 @@ class Dashboard extends Component {
                 <Grid>
                     <Grid.Column width={10}>
                         <Segment>
-                            <OpenContracts />
+                            <OpenContracts id={id} />
                             <RecentTransactions />
                         </Segment>
                     </Grid.Column>
                     <Grid.Column width={6}>
-                        <AddLots id={id} />
                         <SingleContract id={id} />
+                        <AddLots id={id} />
                     </Grid.Column>
                 </Grid>
             </Container>
