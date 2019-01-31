@@ -52,6 +52,14 @@
 #                                           PATCH  /api/v1/roasters/:id/batches/:id(.:format)                                               api/v1/batches#update
 #                                           PUT    /api/v1/roasters/:id/batches/:id(.:format)                                               api/v1/batches#update
 #                                           DELETE /api/v1/roasters/:id/batches/:id(.:format)                                               api/v1/batches#destroy
+#                       api_v1_transactions GET    /api/v1/roasters/:id/transactions(.:format)                                              api/v1/transactions#index
+#                                           POST   /api/v1/roasters/:id/transactions(.:format)                                              api/v1/transactions#create
+#                    new_api_v1_transaction GET    /api/v1/roasters/:id/transactions/new(.:format)                                          api/v1/transactions#new
+#                   edit_api_v1_transaction GET    /api/v1/roasters/:id/transactions/:id/edit(.:format)                                     api/v1/transactions#edit
+#                        api_v1_transaction GET    /api/v1/roasters/:id/transactions/:id(.:format)                                          api/v1/transactions#show
+#                                           PATCH  /api/v1/roasters/:id/transactions/:id(.:format)                                          api/v1/transactions#update
+#                                           PUT    /api/v1/roasters/:id/transactions/:id(.:format)                                          api/v1/transactions#update
+#                                           DELETE /api/v1/roasters/:id/transactions/:id(.:format)                                          api/v1/transactions#destroy
 #              cards_api_v1_roaster_profile POST   /api/v1/roasters/:id/cards(.:format)                                                     api/v1/roaster_profiles#cards
 #                                           DELETE /api/v1/roasters/:id/cards(.:format)                                                     api/v1/roaster_profiles#remove_card
 #     set_as_default_api_v1_roaster_profile PUT    /api/v1/roasters/:id/set_as_default(.:format)                                            api/v1/roaster_profiles#set_as_default
@@ -166,6 +174,7 @@ Rails.application.routes.draw do
             end
           end 
           resources :batches
+          resources :transactions
           post :cards
           delete :cards, to: "roaster_profiles#remove_card"
           put :set_as_default

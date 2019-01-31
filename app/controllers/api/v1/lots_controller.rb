@@ -1,6 +1,7 @@
 module Api::V1
   class LotsController < ApplicationController
     before_action :set_roaster
+    before_action :set_lot, only: [:show, :update]
 
     def index
       @lots = @roaster.lots
@@ -8,7 +9,6 @@ module Api::V1
     end
 
     def show
-      @lot = Lot.find(params[:id])
       render json: @lot, status: 200
     end
 
@@ -18,6 +18,17 @@ module Api::V1
         render json: {"redirect":true,"redirect_url": manage_inventory_roaster_profile_path(@roaster)}, status: 200
       else
         render @lot.errors, status: 422
+      end
+    end
+
+    def update
+      case params
+      when params[:accept_delivery].present?
+        # Accept deliver tx service
+      when params[:log_roast].present?
+        # roast tx service
+      else
+        @lot.update(lot_params)
       end
     end
 
@@ -41,6 +52,10 @@ module Api::V1
 
     def set_roaster
       @roaster = RoasterProfile.friendly.find(params[:id])
+    end
+
+    def set_lot
+      @lot = Lot.find(params[:id])
     end
   end
 end

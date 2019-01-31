@@ -5,7 +5,7 @@ class Users::SessionsController < Devise::SessionsController
     if resource.roaster_profile.nil?
       render json: {"redirect":true,"redirect_url": new_roaster_profile_path}, status: 200
     else
-      render json: {"redirect":true,"redirect_url": root_path}, status: 200
+      render json: {"redirect":true,"redirect_url": dashboard_roaster_profile_path(resource.roaster_profile)}, status: 200
     end
   end
 
