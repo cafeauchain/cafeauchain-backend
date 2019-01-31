@@ -15,14 +15,19 @@ class CropSelect extends Component {
     }
     componentDidMount() {
         const { producerId } = this.props;
-        this.getCrops(producerId);
+        if (producerId !== undefined) {
+            this.getCrops(producerId);
+        } else {
+            this.getCrops()
+        }
     }
+
     shouldComponentUpdate(nextProps) {
         const { producerId } = this.props;
         const { producerId: id } = nextProps;
-        if (id !== producerId) {
+        if (producerId !== undefined && id !== producerId) {
             this.getCrops(id);
-        }
+        } 
         return true;
     }
 
@@ -39,14 +44,23 @@ class CropSelect extends Component {
     };
 
     getCrops = async id => {
-        const { parentState } = this.props;
-        const url = await `${API_URL}/producers/${id}/crops`;
+        const { parentState, roasterId } = this.props;
+        let url = ""
+        if (id !== undefined ) {
+            url = await `${API_URL}/producers/${id}/crops`;
+        } else {
+            url = await `${API_URL}/roasters/${roasterId}/crops`;
+        }
         let response = await fetch(url);
         let responseJson = await response.json();
         if (response.ok) {
             const { data } = responseJson;
             const crops = data.map(this.buildCrop);
-            this.setState({ crops, selected: {} }, parentState({ lotDetails: { crop_id: "" } }));
+            if (parentState !== undefined) {
+                this.setState({ crops, selected: {} }, parentState({ lotDetails: { crop_id: "" } }));
+            } else {
+                this.setState({ crops, selected: {} });
+            }
         }
     };
 
@@ -81,7 +95,12 @@ class CropSelect extends Component {
             console.log("crop wasnt found. It was probably an add. Let the add handle the state update.");
             return;
         }
-        this.setState({ selected: crop }, parentState({ lotDetails: { crop_id: crop.id } }));
+
+        if (parentState !== undefined) {
+            this.setState({ selected: crop }, parentState({ lotDetails: { crop_id: crop.id } }));
+        } else {
+            this.setState({ selected: crop })
+        }
     };
 
     render = () => {
@@ -107,7 +126,8 @@ class CropSelect extends Component {
 const { func, oneOfType, number, string } = PropTypes;
 CropSelect.propTypes = {
     producerId: oneOfType([number, string]),
-    parentState: func
+    parentState: func,
+    roasterId: oneOfType([number, string])
 };
 
 export default CropSelect;

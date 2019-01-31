@@ -172,7 +172,8 @@ Rails.application.routes.draw do
             collection do
               post :upload_lot_csv
             end
-          end 
+          end
+          get :crops, to: 'roaster_profiles#crops'
           resources :batches
           resources :transactions
           post :cards
