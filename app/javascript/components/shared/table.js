@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 // import Pagination from "semantic-ui-react-button-pagination";
 import { Pagination, Table } from "semantic-ui-react";
 
-import capitalize from "../utilities/capitalize";
+import humanize from "../utilities/humanize";
 import namespacer from "../utilities/fieldNamespacer";
 
 class FormattedTable extends Component {
@@ -46,7 +46,9 @@ class FormattedTable extends Component {
                     </Table.Row>
                     <Table.Row>
                         {tableDefs.fields.map(field => (
-                            <Table.HeaderCell key={field.name}>{capitalize(field.name)}</Table.HeaderCell>
+                            <Table.HeaderCell key={field.name}>
+                                {humanize(field.label ? field.label : field.name)}
+                            </Table.HeaderCell>
                         ))}
                     </Table.Row>
                 </Table.Header>
