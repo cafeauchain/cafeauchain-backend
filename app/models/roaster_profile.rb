@@ -29,6 +29,7 @@ class RoasterProfile < ApplicationRecord
   has_many :transactions
   has_many :lots
   has_many :crops, through: :lots
+  has_many :batches, through: :lots
   has_many :addresses, as: :addressable, dependent: :destroy
 
   belongs_to :owner, class_name: "User", foreign_key: "owner_id", optional: true

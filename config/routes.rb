@@ -44,6 +44,14 @@
 #                                           PATCH  /api/v1/roasters/:id/lots/:id(.:format)                                                  api/v1/lots#update
 #                                           PUT    /api/v1/roasters/:id/lots/:id(.:format)                                                  api/v1/lots#update
 #                                           DELETE /api/v1/roasters/:id/lots/:id(.:format)                                                  api/v1/lots#destroy
+#                            api_v1_batches GET    /api/v1/roasters/:id/batches(.:format)                                                   api/v1/batches#index
+#                                           POST   /api/v1/roasters/:id/batches(.:format)                                                   api/v1/batches#create
+#                          new_api_v1_batch GET    /api/v1/roasters/:id/batches/new(.:format)                                               api/v1/batches#new
+#                         edit_api_v1_batch GET    /api/v1/roasters/:id/batches/:id/edit(.:format)                                          api/v1/batches#edit
+#                              api_v1_batch GET    /api/v1/roasters/:id/batches/:id(.:format)                                               api/v1/batches#show
+#                                           PATCH  /api/v1/roasters/:id/batches/:id(.:format)                                               api/v1/batches#update
+#                                           PUT    /api/v1/roasters/:id/batches/:id(.:format)                                               api/v1/batches#update
+#                                           DELETE /api/v1/roasters/:id/batches/:id(.:format)                                               api/v1/batches#destroy
 #              cards_api_v1_roaster_profile POST   /api/v1/roasters/:id/cards(.:format)                                                     api/v1/roaster_profiles#cards
 #                                           DELETE /api/v1/roasters/:id/cards(.:format)                                                     api/v1/roaster_profiles#remove_card
 #     set_as_default_api_v1_roaster_profile PUT    /api/v1/roasters/:id/set_as_default(.:format)                                            api/v1/roaster_profiles#set_as_default
@@ -157,6 +165,7 @@ Rails.application.routes.draw do
               post :upload_lot_csv
             end
           end 
+          resources :batches
           post :cards
           delete :cards, to: "roaster_profiles#remove_card"
           put :set_as_default
