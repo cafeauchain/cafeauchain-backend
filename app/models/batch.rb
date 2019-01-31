@@ -21,4 +21,7 @@
 class Batch < ApplicationRecord
   belongs_to :lot
   
+  def batch_cost # starting weight
+    starting_amount * lot.price_per_pound
+  end
 end
