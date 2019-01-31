@@ -7,6 +7,7 @@ import CropSelect from "../../shared/crops/cropSelect";
 
 import readCookie from "../../utilities/readCookie";
 import API_URL from "../../utilities/apiUtils/url";
+import AcceptDelivery from "../inventory/acceptDelivery";
 
 class Dashboard extends Component {
     constructor(props) {
@@ -124,6 +125,7 @@ class Dashboard extends Component {
 
     render = () => {
         const { cropOptions } = this.state;
+        const { roaster_profile_id } = this.props;
         const cropYears = [
             { key: "2016", value: "2016", text: "2016" },
             { key: "2017", value: "2017", text: "2017" },
@@ -137,6 +139,7 @@ class Dashboard extends Component {
                 </Segment>
                 <Grid>
                     <Grid.Column width={10}>
+                        <AcceptDelivery roasterId={roaster_profile_id} />
                         <Segment>
                             <Header as="h2" content="Open contracts" />
                             <Placeholder>

@@ -1,7 +1,7 @@
 module Api::V1
   class RoasterProfilesController < ApplicationController
-    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :cards, :set_as_default, :remove_card]
-    before_action :set_roaster, only: [:update, :cards, :set_as_default, :remove_card]
+    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :crops, :cards, :set_as_default, :remove_card]
+    before_action :set_roaster, only: [:update, :crops, :cards, :set_as_default, :remove_card]
   
     def validate_step
       current_step = params[:current_step]
@@ -48,6 +48,11 @@ module Api::V1
           render json: @roaster_profile.errors, status: 422   
         end
       end
+    end
+
+    def crops
+      @crops = @roaster_profile.crops
+      render json: @crops, status: 200
     end
     
     def cards
