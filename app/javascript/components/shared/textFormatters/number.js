@@ -20,7 +20,7 @@ const Comma = props => {
     result += money ? "$" : "";
     result += commafy(Math.abs(value).toFixed(decimals));
 
-    return <span className={className}>{result}</span>;
+    return <span className={className + " text--number"}>{result}</span>;
 };
 
 const { node, string, number, bool } = PropTypes;
