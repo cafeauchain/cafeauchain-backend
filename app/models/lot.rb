@@ -38,4 +38,7 @@ class Lot < ApplicationRecord
     return (delivered - roasted)
   end
 
+  def amount_roasted
+    roasted = self.batches.pluck(:starting_amount).sum
+  end
 end
