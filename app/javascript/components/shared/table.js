@@ -135,6 +135,11 @@ class FormattedTable extends Component {
                                         {this.buildTableCells(item)}
                                     </Table.Row>
                                 ))}
+                                {!data.length && (
+                                    <Table.Row>
+                                        <Table.Cell colSpan={tableDefs.fields.length} content="No data available" />
+                                    </Table.Row>
+                                )}
                             </Table.Body>
                             {pagination && (
                                 <Table.Footer>

@@ -25,7 +25,7 @@ class RecentTransactions extends Component {
         const response = await fetch(url);
         if (response.ok) {
             const res = await response.json();
-            const data = res;
+            const { data } = res;
             this.setState({ data });
         }
     };
