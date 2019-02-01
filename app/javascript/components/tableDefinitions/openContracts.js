@@ -2,24 +2,28 @@ import { Money, AsNumber } from "../shared/textFormatters";
 
 const tableDefinition = {
     fields: [
-        { name: "id" },
-        { name: "crop_id" },
-        { name: "harvest_year" },
-        { name: "on_hand", formatter: AsNumber },
-        { name: "pounds_of_coffee", formatter: AsNumber },
+        { name: "crop_name", namespace: "attributes", label: "Crop Name (Harvest Year)", width: 8 },
+        { name: "on_hand", namespace: "attributes", formatter: AsNumber, label: "In House" },
+        { name: "pounds_of_coffee", namespace: "attributes", formatter: AsNumber, label: "On Contract" },
+        { name: "amount_roasted", namespace: "attributes", formatter: AsNumber, label: "Roasted" },
         {
             name: "price_per_pound",
-            formatter: props => Money({ ...props, type: "positive" })
+            namespace: "attributes",
+            formatter: props => Money({ ...props, type: "positive" }),
+            label: "$/lb"
         },
         {
             name: "contract_value",
-            formatter: props => Money({ ...props, type: "positive", decimals: 0 })
+            namespace: "attributes",
+            formatter: props => Money({ ...props, type: "positive", decimals: 0 }),
+            label: "Total Value"
         }
     ],
     props: {
         celled: true,
         striped: true,
-        selectable: true
+        selectable: true,
+        singleLine: true
     }
 };
 
