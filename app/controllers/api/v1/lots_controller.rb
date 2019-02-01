@@ -51,7 +51,7 @@ module Api::V1
     private
 
     def set_roaster
-      @roaster = RoasterProfile.friendly.find(params[:id])
+      @roaster = RoasterProfile.friendly.find(params[:roaster_profile_id])
     end
 
     def set_lot
