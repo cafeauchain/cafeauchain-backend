@@ -1,5 +1,5 @@
 class LotSerializer < ActiveModel::Serializer
-  attributes :id, :crop_name, :pounds_of_coffee, :price_per_pound, :harvest_year, :on_hand, :contract_value
+  attributes :id, :crop_name, :pounds_of_coffee, :price_per_pound, :harvest_year, :on_hand, :contract_value, :amount_roasted
 
   belongs_to :crop
   belongs_to :roaster_profile
@@ -13,7 +13,7 @@ class LotSerializer < ActiveModel::Serializer
   end
 
   def crop_name
-    self.object.crop.name
+    self.object.crop.name + " (" + self.object.harvest_year + ")"
   end
 
   def amount_roasted
