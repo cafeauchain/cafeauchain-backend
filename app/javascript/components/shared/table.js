@@ -80,7 +80,7 @@ class FormattedTable extends Component {
             const { namespace, name, formatter: Formatter, ...rest } = field;
             let value = item[name];
             if (namespace) {
-                if (typeof namespace === "string") {
+                if (typeof namespace === "string" && namespace.indexOf("/") === -1) {
                     value = item[namespace][name];
                 } else {
                     value = namespacer(namespace, item)[name];
