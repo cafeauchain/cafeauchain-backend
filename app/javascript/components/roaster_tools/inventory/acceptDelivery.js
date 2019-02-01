@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types'
 import { Segment, Header, Input, Form, Button } from 'semantic-ui-react';
-import CropSelect from '../../shared/crops/cropSelect';
+import LotSelect from '../../shared/lots/lotSelect';
 
 import API_URL from "../../utilities/apiUtils/url";
 import requester from "../../utilities/apiUtils/requester";
@@ -32,8 +32,9 @@ class AcceptDelivery extends Component {
     handleSubmit = async ev => {
         ev.preventDefault();
         const { lotDetails } = this.state;
+        const lotId = lotDetails.lot_id
         const { roasterId } = this.props;
-        const url = `${API_URL}/roasters/${roasterId}/lots`;
+        const url = `${API_URL}/roasters/${roasterId}/lots/${lotId}`;
         const method = "PUT", headers = {};
         let body = { lotDetails };
         let respJSON = await requester({ url, body, headers, method });
@@ -52,7 +53,8 @@ class AcceptDelivery extends Component {
                 <Header as='h2' content="Accept delivery" />
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group widths='equal'>
-                        <CropSelect roasterId={roasterId} parentState={this.parentState} />
+                        <LotSelect roasterId={roasterId} parentState={this.parentState} />
+
                         <Form.Field>
                             <Input 
                                 name="quantity" 
