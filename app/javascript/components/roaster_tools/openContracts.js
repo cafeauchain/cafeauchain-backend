@@ -20,29 +20,12 @@ class OpenContracts extends Component {
         this.getContracts(id);
     }
 
-    buildContract = data => {
-        const { attributes, id, relationships } = data;
-        const { contract_value, harvest_year, on_hand, pounds_of_coffee, price_per_pound } = attributes;
-        const { crop } = relationships;
-        const { data: cropData } = crop;
-        const { id: crop_id } = cropData;
-        return {
-            contract_value,
-            harvest_year,
-            on_hand,
-            pounds_of_coffee,
-            price_per_pound,
-            crop_id,
-            id
-        };
-    };
-
     getContracts = async id => {
         const url = `${API_URL}/roasters/${id}/lots`;
         let response = await fetch(url);
         if (response.ok) {
             let res = await response.json();
-            let data = res.data.map(this.buildContract);
+            let { data } = res;
             this.setState({ data });
         }
     };
