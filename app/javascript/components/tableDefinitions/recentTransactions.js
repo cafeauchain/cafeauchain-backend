@@ -2,7 +2,6 @@ import { AsNumber, Time } from "../shared/textFormatters";
 
 const tableDefinition = {
     fields: [
-        { name: "id" },
         { name: "crop_name", namespace: ["attributes", "crop"] },
         { name: "harvest_year", namespace: "attributes/crop" },
         { name: "quantity", namespace: "attributes", formatter: AsNumber },
