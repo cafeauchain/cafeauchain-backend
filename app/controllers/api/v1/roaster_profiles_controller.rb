@@ -51,8 +51,8 @@ module Api::V1
     end
 
     def crops
-      @crops = @roaster_profile.crops
-      render json: @crops, status: 200
+      @crops = @roaster_profile.crops.includes(:lots)
+      render json: @crops.includes(:lots), status: 200
     end
     
     def cards

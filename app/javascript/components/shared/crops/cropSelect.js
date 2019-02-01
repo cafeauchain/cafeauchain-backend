@@ -57,7 +57,7 @@ class CropSelect extends Component {
             const { data } = responseJson;
             const crops = data.map(this.buildCrop);
             if (parentState !== undefined) {
-                this.setState({ crops, selected: {} }, parentState({ lotDetails: { crop_id: "" } }));
+                this.setState({ crops, data, selected: {} }, parentState({ lotDetails: { crop_id: "" } }));
             } else {
                 this.setState({ crops, selected: {} });
             }

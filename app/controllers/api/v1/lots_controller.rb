@@ -55,7 +55,7 @@ module Api::V1
     end
 
     def set_lot
-      @lot = Lot.find(params[:id])
+      @lot = Lot.find_by(crop_id: params[:crop_id], roaster_profile_id: params[:roaster_profile_id])
     end
   end
 end
