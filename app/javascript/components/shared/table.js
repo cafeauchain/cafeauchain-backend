@@ -16,24 +16,27 @@ class FormattedTable extends Component {
         super(props);
         this.state = {
             column: null,
-            data: [],
+            data: props.data,
             direction: null,
-            scrollable: false
+            scrollable: true
         };
         this.tableRef = React.createRef();
         this.containerRef = React.createRef();
         this._handleWindowResize = debounce(this._handleWindowResize, 250);
     }
 
-    static getDerivedStateFromProps(props) {
-        const data = props.data;
-        return { data };
-    }
-
     componentDidMount() {
         this._isMounted = true;
         window.addEventListener("resize", this._handleWindowResize);
         this._handleWindowResize();
+    }
+    componentDidUpdate(props) {
+        const { data: newData } = this.props;
+        const { data: oldData } = props;
+        if (newData !== oldData) {
+            // eslint-disable-next-line
+            this.setState({ data: newData }, this._handleWindowResize());
+        }
     }
     componentWillUnmount() {
         this._isMounted = false;
@@ -44,16 +47,18 @@ class FormattedTable extends Component {
         // TODO Revist to hide overflow on initial load and/or add in loader until there is data
         // Also add in ability to hide scroll while resizing
         // Also add in abiltiy to make column(s) and header row(s) sticky
-        let scrollable = false;
+        let { data, scrollable: oldScroll } = this.state;
+        let scrollable = oldScroll;
 
-        if (this.containerRef.current && this.tableRef.current) {
+        if (this.containerRef.current && data.length) {
             let containerWidth = this.containerRef.current.getBoundingClientRect().width;
-            let tableWidth = this.tableRef.current.getBoundingClientRect().width;
-            if (containerWidth < tableWidth) {
-                scrollable = true;
-            }
+            let table = this.containerRef.current.getElementsByTagName("table")[0];
+            let tableWidth = table.getBoundingClientRect().width;
+            scrollable = containerWidth < tableWidth;
         }
-        this.setState({ scrollable });
+        if (scrollable !== oldScroll) {
+            this.setState({ scrollable });
+        }
     };
 
     handleSort = clickedColumn => () => {
@@ -104,58 +109,56 @@ class FormattedTable extends Component {
 
         return (
             <Ref innerRef={this.containerRef}>
-                <div style={{ overflowX: scrollable ? "scroll" : undefined }}>
-                    <Ref innerRef={this.tableRef}>
-                        <Table {...tableDefs.props}>
-                            <Table.Header>
-                                {tableDefs.title && (
-                                    <Table.Row>
-                                        <Table.HeaderCell colSpan={tableDefs.fields.length}>
-                                            {tableDefs.title}
-                                        </Table.HeaderCell>
-                                    </Table.Row>
-                                )}
-
+                <div style={{ overflowX: scrollable ? "scroll" : "hidden" }}>
+                    <Table {...tableProps}>
+                        <Table.Header>
+                            {tableDefs.title && (
                                 <Table.Row>
-                                    {tableDefs.fields.map(field => (
-                                        <Table.HeaderCell
-                                            sorted={column === field.name ? direction : null}
-                                            onClick={tableProps.sortable ? this.handleSort(field.name) : null}
-                                            key={field.name}
-                                        >
-                                            {humanize(field.label ? field.label : field.name)}
-                                        </Table.HeaderCell>
-                                    ))}
+                                    <Table.HeaderCell colSpan={tableDefs.fields.length}>
+                                        {tableDefs.title}
+                                    </Table.HeaderCell>
                                 </Table.Row>
-                            </Table.Header>
-
-                            <Table.Body>
-                                {data.map(item => (
-                                    <Table.Row key={item.id} onClick={e => onClick(e, item)}>
-                                        {this.buildTableCells(item)}
-                                    </Table.Row>
-                                ))}
-                                {!data.length && (
-                                    <Table.Row>
-                                        <Table.Cell colSpan={tableDefs.fields.length} content="No data available" />
-                                    </Table.Row>
-                                )}
-                            </Table.Body>
-                            {pagination && (
-                                <Table.Footer>
-                                    <Table.Row>
-                                        <Table.HeaderCell colSpan={tableDefs.fields.length} textAlign="right">
-                                            <Pagination
-                                                defaultActivePage={pagination.pagenumber}
-                                                totalPages={pagination.totalpages}
-                                                onPageChange={onPageChange}
-                                            />
-                                        </Table.HeaderCell>
-                                    </Table.Row>
-                                </Table.Footer>
                             )}
-                        </Table>
-                    </Ref>
+
+                            <Table.Row>
+                                {tableDefs.fields.map(field => (
+                                    <Table.HeaderCell
+                                        sorted={column === field.name ? direction : null}
+                                        onClick={tableProps.sortable ? this.handleSort(field.name) : null}
+                                        key={field.name}
+                                    >
+                                        {humanize(field.label ? field.label : field.name)}
+                                    </Table.HeaderCell>
+                                ))}
+                            </Table.Row>
+                        </Table.Header>
+
+                        <Table.Body>
+                            {data.map(item => (
+                                <Table.Row key={item.id} onClick={e => onClick(e, item)}>
+                                    {this.buildTableCells(item)}
+                                </Table.Row>
+                            ))}
+                            {!data.length && (
+                                <Table.Row>
+                                    <Table.Cell colSpan={tableDefs.fields.length} content="No data available" />
+                                </Table.Row>
+                            )}
+                        </Table.Body>
+                        {pagination && (
+                            <Table.Footer>
+                                <Table.Row>
+                                    <Table.HeaderCell colSpan={tableDefs.fields.length} textAlign="right">
+                                        <Pagination
+                                            defaultActivePage={pagination.pagenumber}
+                                            totalPages={pagination.totalpages}
+                                            onPageChange={onPageChange}
+                                        />
+                                    </Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Footer>
+                        )}
+                    </Table>
                 </div>
             </Ref>
         );
