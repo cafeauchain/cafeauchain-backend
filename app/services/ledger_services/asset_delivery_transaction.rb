@@ -1,5 +1,5 @@
 module LedgerServices
-  class AssetTransferTransaction
+  class AssetDeliveryTransaction
     #####################
     # Asset transfers occur when the producer transfers coffee between the actors of the coffee supply chain.
     # 
@@ -13,7 +13,7 @@ module LedgerServices
     end
 
     def call
-      @tx = @lot.transactions.new(quantity: @quantity, trans_type:"asset_transfer", roaster_profile: @roaster)
+      @tx = @lot.transactions.new(quantity: @quantity, trans_type:"asset_delivery", roaster_profile: @roaster)
       if @tx.save
         return "Success!"
       else

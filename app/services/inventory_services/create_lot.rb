@@ -4,7 +4,7 @@ module InventoryServices
     def initialize(roaster_profile_id, crop_id, params)
       @roaster = RoasterProfile.find(roaster_profile_id)
       @crop    = Crop.find(crop_id)
-      @params = params
+      @params = params[:lotDetails]
     end
 
     def call
@@ -12,6 +12,7 @@ module InventoryServices
       @batch = self.batch_creation
       LedgerServices::AssetIssueTransaction.new(@params[:lot_size], @crop.id, @roaster.id).call
       LedgerServices::AssetTransferTransaction.new(@params[:on_hand], @lot.id, @roaster.id).call
+      LedgerServices::AssetDeliveryTransaction.new(@params[:on_hand], @lot.id, @roaster.id).call
       LedgerServices::RoastTransaction.new(@params[:roasted], @batch.id, @roaster.id).call
     end
 

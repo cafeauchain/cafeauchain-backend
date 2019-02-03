@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Button, Container, Form, Grid, Input, Header, Label, Placeholder, Segment } from "semantic-ui-react";
+import { Container, Grid, Header, Placeholder, Segment } from "semantic-ui-react";
 
-import ProducerSelect from "../../shared/producers/producerSelect";
-import CropSelect from "../../shared/crops/cropSelect";
+import SingleContract from "../inventory/singleContract"
 
 import readCookie from "../../utilities/readCookie";
 import API_URL from "../../utilities/apiUtils/url";
@@ -124,14 +123,14 @@ class Dashboard extends Component {
     };
 
     render = () => {
-        const { cropOptions } = this.state;
-        const { roaster_profile_id } = this.props;
-        const cropYears = [
-            { key: "2016", value: "2016", text: "2016" },
-            { key: "2017", value: "2017", text: "2017" },
-            { key: "2018", value: "2018", text: "2018" },
-            { key: "2019", value: "2019", text: "2019" }
-        ];
+        // const { cropOptions } = this.state;
+        const { roaster_profile_id: id } = this.props;
+        // const cropYears = [
+        //     { key: "2016", value: "2016", text: "2016" },
+        //     { key: "2017", value: "2017", text: "2017" },
+        //     { key: "2018", value: "2018", text: "2018" },
+        //     { key: "2019", value: "2019", text: "2019" }
+        // ];
         return (
             <Container style={{ margin: "4em 0" }}>
                 <Segment>
@@ -139,7 +138,7 @@ class Dashboard extends Component {
                 </Segment>
                 <Grid>
                     <Grid.Column width={10}>
-                        <AcceptDelivery roasterId={roaster_profile_id} />
+                        <AcceptDelivery roasterId={id} />
                         <Segment>
                             <Header as="h2" content="Open contracts" />
                             <Placeholder>
@@ -174,72 +173,7 @@ class Dashboard extends Component {
                         </Segment>
                     </Grid.Column>
                     <Grid.Column width={6}>
-                        <Segment.Group>
-                            <Segment>
-                                <Header as="h2" content="Add a new contract" />
-                            </Segment>
-                            <Segment>
-                                <Form onSubmit={this.handleSubmit}>
-                                    <ProducerSelect onSelect={this.onSelect} />
-                                    <CropSelect cropOptions={cropOptions} onSelect={this.selectCrop} />
-                                    <Form.Field>
-                                        <Input
-                                            name="lot_size"
-                                            fluid
-                                            label="lbs"
-                                            labelPosition="right"
-                                            placeholder="Pounds ordered from producer"
-                                            onChange={this.handleInputChange}
-                                        />
-                                    </Form.Field>
-                                    <Form.Field>
-                                        <Input
-                                            name="on_hand"
-                                            fluid
-                                            label="lbs"
-                                            labelPosition="right"
-                                            placeholder="Pounds on hand"
-                                            onChange={this.handleInputChange}
-                                        />
-                                    </Form.Field>
-                                    <Form.Field>
-                                        <Input
-                                            name="roasted"
-                                            fluid
-                                            label="lbs"
-                                            labelPosition="right"
-                                            placeholder="Pounds roasted (green weight)"
-                                            onChange={this.handleInputChange}
-                                        />
-                                    </Form.Field>
-                                    <Form.Field>
-                                        <Input
-                                            name="price_per_pound"
-                                            labelPosition="right"
-                                            type="text"
-                                            placeholder="Price per pound"
-                                            onChange={this.handleInputChange}
-                                        >
-                                            <Label basic>$</Label>
-                                            <input />
-                                            <Label>/lb</Label>
-                                        </Input>
-                                    </Form.Field>
-                                    <Form.Dropdown
-                                        name="harvest_year"
-                                        fluid
-                                        selection
-                                        placeholder="Crop harvest year"
-                                        options={cropYears}
-                                        onChange={this.handleInputChange}
-                                    />
-
-                                    <Button fluid size="large" primary>
-                                        Update Inventory
-                                    </Button>
-                                </Form>
-                            </Segment>
-                        </Segment.Group>
+                        <SingleContract id={id} />
                     </Grid.Column>
                 </Grid>
             </Container>
