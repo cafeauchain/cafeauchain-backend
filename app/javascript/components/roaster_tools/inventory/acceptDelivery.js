@@ -10,9 +10,7 @@ class AcceptDelivery extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            lotDetails: {
-                accepts_delivery: true
-            }
+            lotDetails: {}
         }
     }
 
@@ -36,6 +34,7 @@ class AcceptDelivery extends Component {
         const { roasterId } = this.props;
         const url = `${API_URL}/roasters/${roasterId}/lots/${lotId}`;
         const method = "PUT", headers = {};
+        lotDetails["accept_delivery"] = true
         let body = { lotDetails };
         let respJSON = await requester({ url, body, headers, method });
         if (respJSON instanceof Error) {

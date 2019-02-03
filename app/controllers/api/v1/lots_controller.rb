@@ -13,7 +13,7 @@ module Api::V1
     end
 
     def create
-      @lot = InventoryServices::CreateLot.new(@roaster.id, params[:crop_id], params)
+      @lot = InventoryServices::CreateLot.new(@roaster.id, params[:lotDetails][:crop_id], params)
       if @lot.call
         render json: {"redirect":true,"redirect_url": manage_inventory_roaster_profile_path(@roaster)}, status: 200
       else
@@ -22,14 +22,15 @@ module Api::V1
     end
 
     def update
-      case params
-      when params[:accept_delivery].present?
-        # Accept deliver tx service
-      when params[:log_roast].present?
+      if params[:lotDetails][:accept_delivery].present?
+        puts "Yeah buddy"
+        LedgerServices::AssetTransferTransaction.new(params[:lotDetails][:quantity], @lot.id, @roaster.id).call
+      elsif params[:lotDetails][:log_roast].present?
         # roast tx service
       else
         @lot.update(lot_params)
       end
+      render json: {"redirect":true,"redirect_url": dashboard_roaster_profile_path(@roaster)}, status: 200
     end
 
     def upload_lot_csv
@@ -55,7 +56,7 @@ module Api::V1
     end
 
     def set_lot
-      @lot = Lot.find_by(crop_id: params[:crop_id], roaster_profile_id: params[:roaster_profile_id])
+      @lot = Lot.find(params[:id])
     end
   end
 end
