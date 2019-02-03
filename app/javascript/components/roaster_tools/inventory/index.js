@@ -19,7 +19,7 @@ class Dashboard extends Component {
                 <Segment>
                     <Header as="h1" content="Manage Inventory" />
                 </Segment>
-                <Grid>
+                <Grid doubling columns={2}>
                     <Grid.Column width={10}>
                         <Segment>
                             <OpenContracts id={id} />

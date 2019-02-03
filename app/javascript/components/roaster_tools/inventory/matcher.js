@@ -2,12 +2,14 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Container, Button, Form, Header } from "semantic-ui-react";
 
-import Input from "../../shared/input";
+/* eslint-disable */
+import Input from "shared/input";
 
-import humanize from "../../utilities/humanize";
-import underscorer from "../../utilities/underscorer";
-import readCookie from "../../utilities/readCookie";
-import API_URL from "../../utilities/apiUtils/url";
+import humanize from "utilities/humanize";
+import underscorer from "utilities/underscorer";
+import readCookie from "utilities/readCookie";
+import API_URL from "utilities/apiUtils/url";
+/* eslint-enable */
 
 class Matcher extends Component {
     constructor(props) {
@@ -80,7 +82,7 @@ class Matcher extends Component {
         const { dbKeys, data } = this.props;
         const { disabled, details } = this.state;
         return (
-            <Container text>
+            <Container>
                 <p>
                     Your import was parsed correctly! Now, we need to map the columns in your import to the fields in
                     our database! Please select the header from the dropdown that aligns with our database field.
@@ -95,7 +97,13 @@ class Matcher extends Component {
                                 key={item.name}
                                 inputType="select"
                                 label={(
-                                    <label style={{ width: 160, textAlign: "right", fontWeight: "bold" }}>
+                                    <label
+                                        style={
+                                            {
+                                                /* width: 160, textAlign: "right", fontWeight: "bold" */
+                                            }
+                                        }
+                                    >
                                         {humanize(item.name.replace("key_", ""))}
                                     </label>
                                 )}
@@ -103,7 +111,7 @@ class Matcher extends Component {
                                 onChange={this.handleInputChange}
                                 options={options}
                                 defaultValue={details[item.name]}
-                                inline
+                                inline={false}
                                 fluid={false}
                                 clearable
                                 search

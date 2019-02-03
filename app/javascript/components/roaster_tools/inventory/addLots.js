@@ -1,5 +1,5 @@
 import React, { Component, Fragment as F } from "react";
-import { Container, Segment, Form, Header, Icon, Button } from "semantic-ui-react";
+import { Segment, Form, Header, Icon, Button } from "semantic-ui-react";
 import PropTypes from "prop-types";
 
 import Matcher from "./matcher";
@@ -63,62 +63,58 @@ class AddLots extends Component {
         const { file, data } = this.state;
         const { id } = this.props;
         return (
-            <Container>
+            <Segment.Group>
                 <Segment>
-                    <Segment.Group>
-                        <Segment>
-                            <Header as="h2" content="Add Multiple Lots" />
-                        </Segment>
-                        <Segment>
-                            {!file && (
-                                <Segment placeholder style={{ maxWidth: 600, margin: "0 auto" }}>
-                                    <Form>
-                                        <Form.Field>
-                                            <Header icon textAlign="center">
-                                                <Icon name="file excel outline" />
-                                                No .xls, .xlsx, .csv added
-                                            </Header>
-
-                                            <Input
-                                                inputType="file"
-                                                onChange={this.uploadFile}
-                                                id="csvLotFileInput"
-                                                label={(
-                                                    <F>
-                                                        <Icon name="upload" />
-                                                        Upload file
-                                                    </F>
-                                                )}
-                                            />
-                                        </Form.Field>
-                                    </Form>
-                                </Segment>
-                            )}
-                            {file && (
-                                <Flex spacebetween centercross wrap>
-                                    <div flex="fill" style={{ marginRight: 20 }}>
-                                        <Header as="h3" content={file} />
-                                    </div>
-                                    <Button
-                                        flex="auto"
-                                        style={{
-                                            marginLeft: "auto"
-                                        }}
-                                        onClick={this.resetState}
-                                        content="Start Over"
-                                    />
-                                </Flex>
-                            )}
-                        </Segment>
-
-                        {file && (
-                            <Segment>
-                                <Matcher data={data} dbKeys={keys} id={id} />
-                            </Segment>
-                        )}
-                    </Segment.Group>
+                    <Header as="h2" content="Add Multiple Lots" />
                 </Segment>
-            </Container>
+                <Segment>
+                    {!file && (
+                        <Segment placeholder style={{ maxWidth: 600, margin: "0 auto" }}>
+                            <Form>
+                                <Form.Field>
+                                    <Header icon textAlign="center">
+                                        <Icon name="file excel outline" />
+                                        No .xls, .xlsx, .csv added
+                                    </Header>
+
+                                    <Input
+                                        inputType="file"
+                                        onChange={this.uploadFile}
+                                        id="csvLotFileInput"
+                                        label={(
+                                            <F>
+                                                <Icon name="upload" />
+                                                Upload file
+                                            </F>
+                                        )}
+                                    />
+                                </Form.Field>
+                            </Form>
+                        </Segment>
+                    )}
+                    {file && (
+                        <Flex spacebetween centercross wrap>
+                            <div flex="fill" style={{ marginRight: 20 }}>
+                                <Header as="h3" content={file} />
+                            </div>
+                            <Button
+                                flex="auto"
+                                style={{
+                                    marginLeft: "auto"
+                                }}
+                                onClick={this.resetState}
+                                content="Start Over"
+                            />
+                        </Flex>
+                    )}
+                </Segment>
+
+                {file && (
+                    <Segment>
+                        <Matcher data={data} dbKeys={keys} id={id} />
+                    </Segment>
+                )}
+            </Segment.Group>
         );
     }
 }
