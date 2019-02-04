@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Container, Grid, Header, Placeholder, Segment } from "semantic-ui-react";
+import { Container, Grid, Header, Placeholder, Segment, Modal, Button } from "semantic-ui-react";
 
-import SingleContract from "../inventory/singleContract"
+import SingleContract from "../inventory/singleContract";
+import QuickActions from "./quickActions";
 
 import readCookie from "../../utilities/readCookie";
 import API_URL from "../../utilities/apiUtils/url";
@@ -136,9 +137,9 @@ class Dashboard extends Component {
                 <Segment>
                     <Header as="h1" content="Dashboard" />
                 </Segment>
-                <Grid>
+                <Grid doubling>
                     <Grid.Column width={10}>
-                        <AcceptDelivery roasterId={id} />
+                        <QuickActions id={id} />
                         <Segment>
                             <Header as="h2" content="Open contracts" />
                             <Placeholder>
