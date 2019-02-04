@@ -1,12 +1,16 @@
 import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Form, Input, Button, Segment, Header, Divider } from "semantic-ui-react";
+import { Form, Input, Button, Divider } from "semantic-ui-react";
 
 import ProducerSelect from "../../shared/producers/producerSelect";
 import CropSelect from "../../shared/crops/cropSelect";
 
 import API_URL from "../../utilities/apiUtils/url";
 import requester from "../../utilities/apiUtils/requester";
+
+// TODO can 'on_hand' and 'roasted' be defaulted to 0? or removed? or in some way opted in?
+// Since the only time they should be used is when onboarding
+// Possibly a prop to omit/hide/defualt to 0 when added from quick actions?
 
 const fields = [
     { name: "lot_size", label: "lbs", placeholder: "Pounds ordered from producer" },
@@ -67,53 +71,46 @@ class SingleContract extends Component {
     render() {
         const { producerId, lotDetails } = this.state;
         return (
-            <Segment.Group>
-                <Segment>
-                    <Header as="h2" content="Add a new contract" />
-                </Segment>
-                <Segment>
-                    <Form onSubmit={this.handleSubmit}>
-                        <ProducerSelect parentState={this.parentState} />
-                        {producerId && (
+            <Form onSubmit={this.handleSubmit}>
+                <ProducerSelect parentState={this.parentState} />
+                {producerId && (
+                    <F>
+                        <CropSelect producerId={producerId} parentState={this.parentState} />
+                        {lotDetails.crop_id && (
+                            <Form.Dropdown
+                                name="harvest_year"
+                                fluid
+                                selection
+                                placeholder="Crop harvest year"
+                                options={this.cropYears}
+                                onChange={this.handleInputChange}
+                            />
+                        )}
+                        <Divider />
+                        {lotDetails.harvest_year && (
                             <F>
-                                <CropSelect producerId={producerId} parentState={this.parentState} />
-                                {lotDetails.crop_id && (
-                                    <Form.Dropdown
-                                        name="harvest_year"
-                                        fluid
-                                        selection
-                                        placeholder="Crop harvest year"
-                                        options={this.cropYears}
-                                        onChange={this.handleInputChange}
-                                    />
-                                )}
-                                <Divider />
-                                {lotDetails.harvest_year && (
-                                    <F>
-                                        {fields.map(field => (
-                                            <Form.Field key={field.name}>
-                                                <Input
-                                                    name={field.name}
-                                                    icon={field.icon}
-                                                    iconPosition={field.icon ? "left" : undefined}
-                                                    fluid
-                                                    label={field.label}
-                                                    labelPosition="right"
-                                                    placeholder={field.placeholder}
-                                                    onChange={this.handleInputChange}
-                                                />
-                                            </Form.Field>
-                                        ))}
-                                        <Button fluid size="large" primary>
-                                            Update Inventory
-                                        </Button>
-                                    </F>
-                                )}
+                                {fields.map(field => (
+                                    <Form.Field key={field.name}>
+                                        <Input
+                                            name={field.name}
+                                            icon={field.icon}
+                                            iconPosition={field.icon ? "left" : undefined}
+                                            fluid
+                                            label={field.label}
+                                            labelPosition="right"
+                                            placeholder={field.placeholder}
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Form.Field>
+                                ))}
+                                <Button fluid size="large" primary>
+                                    Add Contract
+                                </Button>
                             </F>
                         )}
-                    </Form>
-                </Segment>
-            </Segment.Group>
+                    </F>
+                )}
+            </Form>
         );
     }
 }

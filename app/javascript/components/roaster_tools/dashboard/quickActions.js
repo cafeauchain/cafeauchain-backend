@@ -5,6 +5,7 @@ import { Segment, Modal, Header, Button } from "semantic-ui-react";
 /* eslint-disable */
 import AcceptDelivery from "roaster_tools/inventory/acceptDelivery";
 import StartBatch from "roaster_tools/startBatch";
+import SingleContract from "roaster_tools/inventory/singleContract";
 /* eslint-enable */
 
 class QuickActions extends Component {
@@ -28,6 +29,7 @@ class QuickActions extends Component {
                     component={<AcceptDelivery roasterId={id} />}
                 />
                 <BuildModal text="Start a Batch" title="Start a Batch" component={<StartBatch roasterId={id} />} />
+                <BuildModal text="New Contract" title="Add a new contract" component={<SingleContract id={id} />} />
             </Segment>
         );
     }
