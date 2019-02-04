@@ -30,7 +30,7 @@ class LotSelect extends Component {
     };
 
     getLots = async id => {
-        const { parentState } = this.props
+        const { parentState } = this.props;
         const url = await `${API_URL}/roasters/${id}/lots`;
         let response = await fetch(url);
         let responseJson = await response.json();
@@ -55,7 +55,6 @@ class LotSelect extends Component {
             return;
         }
         this.setState({ selected: lot }, parentState({ lotDetails: { lot_id: lot.id } }));
-        
     };
 
     render = () => {
@@ -64,6 +63,7 @@ class LotSelect extends Component {
         return (
             <Form.Dropdown
                 placeholder="Select Lot"
+                label="Select Lot"
                 fluid
                 search
                 selection
