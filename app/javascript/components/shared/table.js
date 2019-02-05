@@ -126,6 +126,7 @@ class FormattedTable extends Component {
                                         sorted={column === field.name ? direction : null}
                                         onClick={tableProps.sortable ? this.handleSort(field.name) : null}
                                         key={field.name}
+                                        title={field.title}
                                     >
                                         {humanize(field.label ? field.label : field.name)}
                                     </Table.HeaderCell>

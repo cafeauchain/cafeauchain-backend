@@ -4,6 +4,7 @@ import { Container, Grid, Header, Placeholder, Segment } from "semantic-ui-react
 
 /* eslint-disable */
 import Budgeter from "roaster_tools/budgeter";
+import RoastLog from "roaster_tools/roastLog";
 /* eslint-enable */
 
 import QuickActions from "./quickActions";
@@ -24,6 +25,9 @@ class Dashboard extends Component {
                 <Grid doubling>
                     <Grid.Column width={10}>
                         <QuickActions id={id} />
+                        <Segment>
+                            <RoastLog id={id} />
+                        </Segment>
                     </Grid.Column>
                     <Grid.Column width={6}>
                         <Segment>
