@@ -40,19 +40,29 @@ class Budgeter extends Component {
             return total + value;
         }, 0);
     };
+    getRemaining = value => {
+        value = Number(value);
+        if (value < 500) {
+            return 500 - value;
+        }
+        return Math.ceil(value / 100) * 100 - value;
+    };
 
     render() {
-        const { total } = this.state;
+        let { total } = this.state;
+        let showContent = total !== undefined;
         return (
             <F>
                 <Header as="h2" content="Activity" />
-                {total && (
+                {showContent && (
                     <div>
-                        <span>To date, you've roasted </span>
+                        <F>To date, youve roasted </F>
                         <AsNumber type="positive">{total}</AsNumber>
-                        <span> pounds of green coffee. Your current bill is </span>
+                        <F> pounds of green coffee. Your current bill is </F>
                         <Money type="negative">{roasterCostCalc(total)}</Money>
-                        <span>.</span>
+                        <F>. You can roast another </F>
+                        <AsNumber type="positive">{this.getRemaining(total)}</AsNumber>
+                        <F> pounds before you will be charged another $2.</F>
                     </div>
                 )}
             </F>
