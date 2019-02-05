@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Container, Grid, Header, Placeholder, Segment } from "semantic-ui-react";
 
+/* eslint-disable */
+import Budgeter from "roaster_tools/budgeter";
+/* eslint-enable */
+
 import QuickActions from "./quickActions";
 
 class Dashboard extends Component {
@@ -22,6 +26,9 @@ class Dashboard extends Component {
                         <QuickActions id={id} />
                     </Grid.Column>
                     <Grid.Column width={6}>
+                        <Segment>
+                            <Budgeter id={id} />
+                        </Segment>
                         <Segment>
                             <Header as="h2" content="Sidebar?" />
                             <Placeholder>
