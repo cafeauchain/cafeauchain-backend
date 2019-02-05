@@ -44,4 +44,4 @@ LedgerServices::AssetDeliveryTransaction.new(440.0, lot.id, roaster.id).call
 
 batch = lot.batches.create(starting_amount: 176.0, ending_amount: 158.4)
 LedgerServices::RoastTransaction.new(176.0, batch.id, roaster.id).call
-puts "Batch created."
+puts "Batch created."   
