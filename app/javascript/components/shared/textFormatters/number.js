@@ -18,7 +18,7 @@ const Comma = props => {
 
     let result = value < 0 ? "-" : "";
     result += money ? "$" : "";
-    result += commafy(Math.abs(value).toFixed(decimals));
+    result += value ? commafy(Math.abs(value).toFixed(decimals)) : 0;
 
     return <span className={className + " text--number"}>{result}</span>;
 };
