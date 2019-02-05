@@ -13,7 +13,7 @@ class Flex extends Component {
     };
     flexChildren = children => {
         return React.Children.map(children, child => {
-            const { className: kidClasses, flex, ...rest } = child.props;
+            const { className: kidClasses = "", flex, ...rest } = child.props;
             let flexString = "";
             if (flex) {
                 flexString = " flex-child__" + flex;
@@ -22,7 +22,7 @@ class Flex extends Component {
             return newKid;
         });
     };
-    buildFlexClasses = className => {
+    buildFlexClasses = (className = "") => {
         let classes = "flex-parent";
         let extras = this.transformBoolsToStrings();
         if (extras.length) {
@@ -32,18 +32,19 @@ class Flex extends Component {
         return classes;
     };
     render() {
-        const { className, children, as = "div" } = this.props;
+        const { className, children, as = "div", style } = this.props;
         let classes = this.buildFlexClasses(className);
         let modified = this.flexChildren(children);
-        return React.createElement(as, { className: classes }, [modified]);
+        return React.createElement(as, { style, className: classes }, [modified]);
     }
 }
 
-const { string, node, bool } = PropTypes;
+const { string, node, bool, object } = PropTypes;
 Flex.propTypes = {
     className: string,
     children: node,
     as: string,
+    style: object,
     column: bool,
     wrap: bool,
     centerboth: bool,
