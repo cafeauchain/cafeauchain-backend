@@ -50,7 +50,7 @@ class RoastLog extends Component {
         });
         let transformed = randomData.map(date => {
             let amounts = date.amounts.reduce((acc, item) => ({ ...acc, [item.lot_id]: item.amount_roasted }), {});
-            return { date: date.date, ...amounts, id: date.date };
+            return { date: moment(date.date).format("MMM DD"), ...amounts, id: date.date };
         });
 
         this.setState({ data: transformed, lots: data, month: moment(dateRange.start).format("YYYY-MM") });
