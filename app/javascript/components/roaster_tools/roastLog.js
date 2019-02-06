@@ -83,6 +83,12 @@ class RoastLog extends Component {
         return { ...rest, fields };
     };
 
+    // eslint-disable-next-line
+    checkMonth = (month, dir) => {
+        // TODO When there is real data, decide on a way to disable Previous when there would be no data
+        return moment(month).isBefore(moment(), "month");
+    };
+
     render() {
         const { data, lots, month } = this.state;
         const modified = this.modifyTableDefs(lots);
@@ -91,8 +97,13 @@ class RoastLog extends Component {
                 <Header as="h2" content={"Roast log: " + moment(month).format("MMMM YYYY")} />
                 <Table tableDefs={modified} data={data} />
                 <Flex spacebetween style={{ marginTop: 20 }}>
-                    <Button onClick={e => this.updateData(e, "previous")} content="Previous Month" />
-                    <Button onClick={e => this.updateData(e, "next")} content="Next Month" />
+                    <Button primary onClick={e => this.updateData(e, "previous")} content="Previous Month" />
+                    <Button
+                        primary
+                        onClick={e => this.updateData(e, "next")}
+                        disabled={!this.checkMonth(month)}
+                        content="Next Month"
+                    />
                 </Flex>
             </F>
         );
