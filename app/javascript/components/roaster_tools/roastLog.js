@@ -56,7 +56,9 @@ class RoastLog extends Component {
         this.setState({ data: transformed, lots: data, month: moment(dateRange.start).format("YYYY-MM") });
     };
     updateData = (event, dir) => {
+        const { target } = event;
         event.preventDefault();
+        target.blur();
         const { id } = this.props;
         const { month: statemonth } = this.state;
         let increment = 1;
