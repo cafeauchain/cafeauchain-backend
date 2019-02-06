@@ -10,10 +10,14 @@ import SingleContract from "roaster_tools/inventory/singleContract";
 
 class QuickActions extends Component {
     buildModal = ({ text, title, component, size = "mini", centered = false, icon = "archive" }) => {
+        const { refreshParent } = this.props;
+        const Inner = props => React.cloneElement(component, { ...props, refreshParent });
         return (
             <Modal trigger={<Button primary>{text}</Button>} closeIcon size={size} centered={centered}>
                 <Header icon={icon} content={title} />
-                <Modal.Content>{component}</Modal.Content>
+                <Modal.Content>
+                    <Inner />
+                </Modal.Content>
             </Modal>
         );
     };
@@ -35,9 +39,10 @@ class QuickActions extends Component {
     }
 }
 
-const { oneOfType, number, string } = PropTypes;
+const { oneOfType, number, string, func } = PropTypes;
 QuickActions.propTypes = {
-    id: oneOfType([number, string])
+    id: oneOfType([number, string]),
+    refreshParent: func
 };
 
 export default QuickActions;

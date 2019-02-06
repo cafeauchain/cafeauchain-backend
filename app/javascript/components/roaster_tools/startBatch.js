@@ -41,16 +41,21 @@ class StartBatch extends Component {
     handleSubmit = async ev => {
         ev.preventDefault();
         const { lotDetails } = this.state;
-        const { roasterId } = this.props;
+        const { roasterId, refreshParent } = this.props;
         const url = `${API_URL}/roasters/${roasterId}/batches`;
-        const method = "PUT";
-        let body = { lotDetails };
-        let respJSON = await requester({ url, body, method });
+        let body = { ...lotDetails };
+        let respJSON = await requester({ url, body });
         if (respJSON instanceof Error) {
             // eslint-disable-next-line
             console.log("there was an error", respJSON.response);
         } else {
-            window.location.href = await respJSON.redirect_url;
+            if (respJSON.redirect) {
+                window.location.href = await respJSON.redirect_url;
+            } else {
+                // TODO figure out how to close modal
+                console.log(respJSON, "need to update parent component(s)");
+                refreshParent();
+            }
         }
     };
 
@@ -75,9 +80,10 @@ class StartBatch extends Component {
     }
 }
 
-const { oneOfType, string, number } = PropTypes;
+const { oneOfType, string, number, func } = PropTypes;
 StartBatch.propTypes = {
-    roasterId: oneOfType([number, string])
+    roasterId: oneOfType([number, string]),
+    refreshParent: func
 };
 
 export default StartBatch;

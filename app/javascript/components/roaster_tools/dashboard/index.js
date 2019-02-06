@@ -14,6 +14,10 @@ class Dashboard extends Component {
         super(props);
         this.state = {};
     }
+    refreshParent = () => {
+        // eslint-disable-next-line
+        this.setState({ timestamp: new Date() });
+    };
 
     render = () => {
         const { roaster_profile_id: id } = this.props;
@@ -24,7 +28,7 @@ class Dashboard extends Component {
                 </Segment>
                 <Grid doubling>
                     <Grid.Column width={10}>
-                        <QuickActions id={id} />
+                        <QuickActions id={id} refreshParent={this.refreshParent} />
                         <Segment>
                             <RoastLog id={id} />
                         </Segment>
