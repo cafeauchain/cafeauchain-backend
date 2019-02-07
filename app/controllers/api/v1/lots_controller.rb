@@ -4,8 +4,9 @@ module Api::V1
     before_action :set_lot, only: [:show, :update]
 
     def index
+      period = params[:period] || :day
       @lots = @roaster.lots
-      render json: @lots, status: 200
+      render json: @lots, period: period, status: 200
     end
 
     def show
@@ -23,7 +24,6 @@ module Api::V1
 
     def update
       if params[:lotDetails][:accept_delivery].present?
-        puts "Yeah buddy"
         LedgerServices::AssetTransferTransaction.new(params[:lotDetails][:quantity], @lot.id, @roaster.id).call
       elsif params[:lotDetails][:log_roast].present?
         # roast tx service

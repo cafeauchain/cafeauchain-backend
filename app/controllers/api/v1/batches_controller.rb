@@ -5,8 +5,6 @@ module Api::V1
     before_action :set_lot, only: [:create]
 
     def index
-      period = params[:period] || :day
-      @batches = InventoryServices::BatchGrouping.group(@roaster.batches, period)
       render json: @batches, status: 200
     end
 
