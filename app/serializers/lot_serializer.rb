@@ -1,3 +1,27 @@
+# == Schema Information
+#
+# Table name: lots
+#
+#  id                 :bigint(8)        not null, primary key
+#  harvest_year       :string
+#  pounds_of_coffee   :float
+#  price_per_pound    :float
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  crop_id            :bigint(8)
+#  roaster_profile_id :bigint(8)
+#
+# Indexes
+#
+#  index_lots_on_crop_id             (crop_id)
+#  index_lots_on_roaster_profile_id  (roaster_profile_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (crop_id => crops.id)
+#  fk_rails_...  (roaster_profile_id => roaster_profiles.id)
+#
+
 class LotSerializer < ActiveModel::Serializer
   attributes :id, :crop_name, :pounds_of_coffee, :price_per_pound, :harvest_year, :on_hand, :contract_value, :amount_roasted
 

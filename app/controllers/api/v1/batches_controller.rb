@@ -6,7 +6,7 @@ module Api::V1
 
     def index
       period = params[:period] || :day
-      @batches = @roaster.batches.group_by_period(period, permit: ["day", "week", "month"]){ |batch| batch.created_at}
+      @batches = InventoryServices::BatchGrouping.group(@roaster.batches, period)
       render json: @batches, status: 200
     end
 
