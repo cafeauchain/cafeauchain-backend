@@ -12,6 +12,7 @@ import Table from "shared/table";
 import { Money, AsNumber } from "shared/textFormatters";
 import Flex from "shared/flex";
 
+import getTimePeriod from "utilities/getTimePeriod";
 import abbreviator from "utilities/abbreviator";
 import requester from "utilities/apiUtils/requester";
 import API_URL from "utilities/apiUtils/url";
@@ -25,7 +26,7 @@ class RoastLog extends Component {
         this.state = {
             data: [],
             lots: [],
-            month: "2019-02"
+            month: moment().format("YYYY-MM")
         };
     }
     componentDidMount() {
@@ -35,25 +36,50 @@ class RoastLog extends Component {
         this.getData(id, dateRange);
     }
     getDateRange = month => {
-        return {
-            start: moment(month).startOf("month"),
-            end: moment(month).endOf("month"),
-            unit: "day"
-        };
+        const start = moment(month).startOf("month");
+        const end = moment(month).endOf("month");
+        return getTimePeriod(start, end, "day");
     };
     getData = async (id, dateRange) => {
         let response = await fetch(`/api/v1/roasters/${id}/lots`);
         const { data } = await response.json();
-        const randomData = getRandomData({
-            ...dateRange,
-            lots: data.map(lot => lot.id)
-        });
-        let transformed = randomData.map(date => {
-            let amounts = date.amounts.reduce((acc, item) => ({ ...acc, [item.lot_id]: item.amount_roasted }), {});
-            return { date: moment(date.date).format("MMM DD"), ...amounts, id: date.date };
-        });
+        const month = moment(dateRange[0]).format("YYYY-MM-DD");
 
-        this.setState({ data: transformed, lots: data, month: moment(dateRange.start).format("YYYY-MM") });
+        // This is the faked data
+        const randomNumber = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+        const randomDate = (start, end) =>
+            new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+
+        const transformed = data.map(lot => {
+            const array = Array.from(Array(randomNumber(1, 28))).map(() => {
+                let amount_roasted = randomNumber(0, 50);
+                return {
+                    date: moment(
+                        randomDate(new Date(moment(month).startOf("month")), new Date(moment(month).endOf("month")))
+                    ),
+                    amount_roasted
+                };
+            });
+            return { lot, amounts: array };
+        });
+        this.setState({ lots: data, month }, this.transformData(transformed, dateRange));
+    };
+
+    transformData = (data, dateRange) => {
+        // This is the transformer to create loops and add data to each row
+        const days = dateRange.map(day => {
+            const amounts = data.reduce((obj, item) => {
+                const match = item.amounts.find(datematch => moment(datematch.date).isSame(day, "day"));
+                const amount = match ? match.amount_roasted : 0;
+                return { ...obj, ["lot_" + item.lot.id]: amount };
+            }, {});
+            return {
+                date: day.format("MMM DD"),
+                ...amounts,
+                id: day.format("MMM DD")
+            };
+        });
+        this.setState({ data: days });
     };
     updateData = (event, dir) => {
         const { target } = event;
@@ -79,7 +105,7 @@ class RoastLog extends Component {
         let newFields = lots.map(lot => {
             const { crop_name: title } = lot.attributes;
             const label = title ? abbreviator(title, exclude, true) : lot.id;
-            return { name: lot.id, label, formatter: AsNumber, title };
+            return { name: "lot_" + lot.id, label, formatter: AsNumber, title };
         });
         fields = [...fields, ...newFields];
         return { ...rest, fields };
