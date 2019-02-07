@@ -3,8 +3,8 @@ module Api::V1
     before_action :set_roaster
 
     def index
-      @limit = params[:limit] ? params[:limit] : 10
-      @transactions = @roaster.transactions.filter(params.slice(:trans_type, :order_by)).limit(@limit)
+      limit = params[:limit] || 10
+      @transactions = @roaster.transactions.filter(params.slice(:trans_type, :order_by)).limit(limit)
       render json: @transactions, status: 200
     end
 
