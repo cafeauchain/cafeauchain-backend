@@ -5,7 +5,7 @@ module Api::V1
     before_action :set_lot, only: [:create]
 
     def index
-      @batches = @roaster.batches
+      @batches = @roaster.batches.group_by_period(params[:period], permit: ["day", "week", "month"]){ |batch| batch.created_at}
       render json: @batches, status: 200
     end
 
