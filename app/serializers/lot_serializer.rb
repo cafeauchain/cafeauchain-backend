@@ -41,7 +41,7 @@ class LotSerializer < ActiveModel::Serializer
   end
 
   def batches
-    batches = InventoryServices::BatchGrouping.group(self.object.batches, instance_options[:period])
+    batches = InventoryServices::BatchGrouping.group(self.object.batches.where(created_at: instance_options[:range]), instance_options[:period])
   end
 
   def total_amount_roasted
