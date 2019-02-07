@@ -23,7 +23,7 @@
 #
 
 class LotSerializer < ActiveModel::Serializer
-  attributes :id, :crop_name, :pounds_of_coffee, :price_per_pound, :harvest_year, :on_hand, :contract_value, :amount_roasted
+  attributes :id, :crop_name, :pounds_of_coffee, :price_per_pound, :harvest_year, :on_hand, :contract_value, :batches, :amount_roasted
 
   belongs_to :crop
   belongs_to :roaster_profile
@@ -38,6 +38,11 @@ class LotSerializer < ActiveModel::Serializer
 
   def crop_name
     self.object.crop.name + " (" + self.object.harvest_year + ")"
+  end
+
+  def batches
+    puts instance_options[:period]
+    batches = InventoryServices::BatchGrouping.group(self.object.roaster_profile.batches, instance_options[:period])
   end
 
   def amount_roasted
