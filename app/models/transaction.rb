@@ -29,10 +29,13 @@
 #
 
 class Transaction < ApplicationRecord
+  include Filterable
   belongs_to :crop, optional: true
   belongs_to :lot, optional: true
   belongs_to :batch, optional: true
   belongs_to :roaster_profile, optional: true
 
-  enum trans_type: [:asset_issue, :asset_transfer, :asset_delivery, :roasted, :ready_for_sale] 
+  enum trans_type: [:asset_issue, :asset_transfer, :asset_delivery, :roasted, :ready_for_sale]
+  scope :trans_type, -> (trans_type) { where trans_type: trans_type }
+  scope :order_by, -> (order_by) { order order_by }
 end
