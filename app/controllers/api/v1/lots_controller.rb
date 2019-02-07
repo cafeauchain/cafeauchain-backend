@@ -5,8 +5,11 @@ module Api::V1
 
     def index
       period = params[:period] || :day
+      beginning_of_month = Time.current.beginning_of_month
+      end_of_month = beginning_of_month.end_of_month
+      range = params[:range] || (beginning_of_month..end_of_month)
       @lots = @roaster.lots
-      render json: @lots, period: period, status: 200
+      render json: @lots, range: range, period: period, status: 200
     end
 
     def show
