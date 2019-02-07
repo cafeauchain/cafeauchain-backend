@@ -45,33 +45,37 @@ class RoastLog extends Component {
         const { data } = await response.json();
         const month = moment(dateRange[0]).format("YYYY-MM-DD");
 
-        // This is the faked data
-        const randomNumber = (min, max) => Math.floor(Math.random() * (max - min)) + min;
-        const randomDate = (start, end) =>
-            new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-
-        const transformed = data.map(lot => {
-            const array = Array.from(Array(randomNumber(1, 28))).map(() => {
-                let amount_roasted = randomNumber(0, 50);
-                return {
-                    date: moment(
-                        randomDate(new Date(moment(month).startOf("month")), new Date(moment(month).endOf("month")))
-                    ),
-                    amount_roasted
-                };
-            });
-            return { lot, amounts: array };
-        });
-        this.setState({ lots: data, month }, this.transformData(transformed, dateRange));
+        // // This is the faked data
+        // const randomNumber = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+        // const randomDate = (start, end) =>
+        //     new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+        //
+        // const transformed = data.map(lot => {
+        //     const array = Array.from(Array(randomNumber(1, 28))).map(() => {
+        //         let amount_roasted = randomNumber(0, 50);
+        //         return {
+        //             date: moment(
+        //                 randomDate(new Date(moment(month).startOf("month")), new Date(moment(month).endOf("month")))
+        //             ),
+        //             amount_roasted
+        //         };
+        //     });
+        //     return { lot, amounts: array };
+        // });
+        // End Fake Data
+        this.setState({ lots: data, month }, this.transformData(data, dateRange));
     };
 
     transformData = (data, dateRange) => {
         // This is the transformer to create loops and add data to each row
         const days = dateRange.map(day => {
             const amounts = data.reduce((obj, item) => {
-                const match = item.amounts.find(datematch => moment(datematch.date).isSame(day, "day"));
-                const amount = match ? match.amount_roasted : 0;
-                return { ...obj, ["lot_" + item.lot.id]: amount };
+                const match = item.attributes.batches[moment(day).format("YYYY-MM-DD")];
+                const amount = match ? match.reduce((total, batch) => total + batch.starting_amount, 0) : 0;
+                return { ...obj, ["lot_" + item.id]: amount };
+                // const match = item.amounts.find(datematch => moment(datematch.date).isSame(day, "day"));
+                // const amount = match ? match.amount_roasted : 0;
+                // return { ...obj, ["lot_" + item.lot.id]: amount };
             }, {});
             return {
                 date: day.format("MMM DD"),
