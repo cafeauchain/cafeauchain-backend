@@ -28,7 +28,7 @@ const QuickActions = ({ refreshParent }) => (
                         text="Start a Batch"
                         title="Start a Batch"
                         refreshParent={refreshParent}
-                        component={<StartBatch id={id} />}
+                        component={<StartBatch />}
                     />
                     <Modal
                         text="New Contract"

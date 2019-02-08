@@ -8,8 +8,18 @@ import LotSelect from "shared/lots/lotSelect";
 
 import requester from "utilities/apiUtils/requester";
 import API_URL from "utilities/apiUtils/url";
+import User from "contexts/user";
 /* eslint-enable */
 
+const Wrapper = props => {
+    return (
+        <User>
+            {user => {
+                return <StartBatch {...props} id={user.id} />;
+            }}
+        </User>
+    );
+};
 class StartBatch extends Component {
     constructor(props) {
         super(props);
@@ -89,4 +99,4 @@ StartBatch.propTypes = {
     refreshAndClose: func
 };
 
-export default StartBatch;
+export default Wrapper;
