@@ -41,8 +41,8 @@ class StartBatch extends Component {
     handleSubmit = async ev => {
         ev.preventDefault();
         const { lotDetails } = this.state;
-        const { roasterId, refreshParent } = this.props;
-        const url = `${API_URL}/roasters/${roasterId}/batches`;
+        const { id, refreshAndClose } = this.props;
+        const url = `${API_URL}/roasters/${id}/batches`;
         let body = { ...lotDetails };
         let respJSON = await requester({ url, body });
         if (respJSON instanceof Error) {
@@ -53,25 +53,28 @@ class StartBatch extends Component {
                 window.location.href = await respJSON.redirect_url;
             } else {
                 // TODO figure out how to close modal
+                // eslint-disable-next-line
                 console.log(respJSON, "need to update parent component(s)");
-                refreshParent();
+                refreshAndClose();
             }
         }
     };
 
     render() {
-        const { roasterId } = this.props;
+        const { id } = this.props;
         const { lotDetails } = this.state;
         return (
             <Form onSubmit={this.handleSubmit}>
-                <LotSelect roasterId={roasterId} parentState={this.parentState} fluid />
+                <LotSelect roasterId={id} parentState={this.parentState} fluid />
                 <Input name="starting_amount" label="Amount to be Roasted (in lbs)" onChange={this.handleInputChange} />
-                <Input
-                    name="ending_amount"
-                    label="Expected Yield (in lbs)"
-                    onChange={this.handleInputChange}
-                    value={lotDetails.ending_amount}
-                />
+                {false && (
+                    <Input
+                        name="ending_amount"
+                        label="Expected Yield (in lbs)"
+                        onChange={this.handleInputChange}
+                        value={lotDetails.ending_amount}
+                    />
+                )}
                 <Button size="small" primary fluid>
                     Start a Batch
                 </Button>
@@ -82,8 +85,8 @@ class StartBatch extends Component {
 
 const { oneOfType, string, number, func } = PropTypes;
 StartBatch.propTypes = {
-    roasterId: oneOfType([number, string]),
-    refreshParent: func
+    id: oneOfType([number, string]),
+    refreshAndClose: func
 };
 
 export default StartBatch;

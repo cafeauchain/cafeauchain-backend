@@ -1,47 +1,49 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import { Segment, Modal, Header, Button } from "semantic-ui-react";
+import { Segment, Header } from "semantic-ui-react";
 
 /* eslint-disable */
 import AcceptDelivery from "roaster_tools/inventory/acceptDelivery";
 import StartBatch from "roaster_tools/startBatch";
 import SingleContract from "roaster_tools/inventory/singleContract";
+
+import Modal from "shared/modal";
+
+import Consumer from "contexts/user";
 /* eslint-enable */
 
-class QuickActions extends Component {
-    buildModal = ({ text, title, component, size = "mini", centered = false, icon = "archive" }) => {
-        const { refreshParent } = this.props;
-        const Inner = props => React.cloneElement(component, { ...props, refreshParent });
-        return (
-            <Modal trigger={<Button primary>{text}</Button>} closeIcon size={size} centered={centered}>
-                <Header icon={icon} content={title} />
-                <Modal.Content>
-                    <Inner />
-                </Modal.Content>
-            </Modal>
-        );
-    };
-    render() {
-        const { id } = this.props;
-        const BuildModal = this.buildModal;
-        return (
-            <Segment>
-                <Header as="h2" content="Quick Actions" />
-                <BuildModal
-                    text="Accept Delivery"
-                    title="Accept Delivery"
-                    component={<AcceptDelivery roasterId={id} />}
-                />
-                <BuildModal text="Start a Batch" title="Start a Batch" component={<StartBatch roasterId={id} />} />
-                <BuildModal text="New Contract" title="Add a new contract" component={<SingleContract id={id} />} />
-            </Segment>
-        );
-    }
-}
+const QuickActions = ({ refreshParent }) => (
+    <Consumer>
+        {({ id }) => {
+            return (
+                <Segment>
+                    <Header as="h2" content="Quick Actions" />
+                    <Modal
+                        text="Accept Delivery"
+                        title="Accept Delivery"
+                        refreshParent={refreshParent}
+                        component={<AcceptDelivery id={id} />}
+                    />
+                    <Modal
+                        text="Start a Batch"
+                        title="Start a Batch"
+                        refreshParent={refreshParent}
+                        component={<StartBatch id={id} />}
+                    />
+                    <Modal
+                        text="New Contract"
+                        title="Add a new contract"
+                        refreshParent={refreshParent}
+                        component={<SingleContract id={id} />}
+                    />
+                </Segment>
+            );
+        }}
+    </Consumer>
+);
 
-const { oneOfType, number, string, func } = PropTypes;
+const { func } = PropTypes;
 QuickActions.propTypes = {
-    id: oneOfType([number, string]),
     refreshParent: func
 };
 

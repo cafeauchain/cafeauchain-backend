@@ -34,8 +34,8 @@ class AcceptDelivery extends Component {
         ev.preventDefault();
         const { lotDetails } = this.state;
         const lotId = lotDetails.lot_id;
-        const { roasterId } = this.props;
-        const url = `${API_URL}/roasters/${roasterId}/lots/${lotId}`;
+        const { id } = this.props;
+        const url = `${API_URL}/roasters/${id}/lots/${lotId}`;
         const method = "PUT";
         lotDetails["accept_delivery"] = true;
         let body = { lotDetails };
@@ -49,10 +49,10 @@ class AcceptDelivery extends Component {
     };
 
     render() {
-        const { roasterId } = this.props;
+        const { id } = this.props;
         return (
             <Form onSubmit={this.handleSubmit}>
-                <LotSelect roasterId={roasterId} parentState={this.parentState} fluid />
+                <LotSelect roasterId={id} parentState={this.parentState} fluid />
                 <Form.Input
                     name="quantity"
                     fluid
@@ -70,7 +70,7 @@ class AcceptDelivery extends Component {
 
 const { oneOfType, string, number } = PropTypes;
 AcceptDelivery.propTypes = {
-    roasterId: oneOfType([number, string])
+    id: oneOfType([number, string])
 };
 
 export default AcceptDelivery;
