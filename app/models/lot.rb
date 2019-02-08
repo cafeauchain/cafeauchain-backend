@@ -3,9 +3,12 @@
 # Table name: lots
 #
 #  id                 :bigint(8)        not null, primary key
+#  contract_filled    :datetime
+#  contract_open      :datetime
 #  harvest_year       :string
 #  pounds_of_coffee   :float
 #  price_per_pound    :float
+#  status             :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  crop_id            :bigint(8)
@@ -27,6 +30,8 @@ class Lot < ApplicationRecord
   belongs_to :roaster_profile
   has_many :batches
   has_many :transactions
+
+  enum status: [:open, :delivered_in_full, :roasted_in_full]
 
   def contract_value
     return self.price_per_pound * self.pounds_of_coffee
