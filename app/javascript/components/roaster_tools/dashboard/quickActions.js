@@ -22,7 +22,7 @@ const QuickActions = ({ refreshParent }) => (
                         text="Accept Delivery"
                         title="Accept Delivery"
                         refreshParent={refreshParent}
-                        component={<AcceptDelivery id={id} />}
+                        component={<AcceptDelivery />}
                     />
                     <Modal
                         text="Start a Batch"

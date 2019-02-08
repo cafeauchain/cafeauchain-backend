@@ -7,7 +7,19 @@ import LotSelect from "shared/lots/lotSelect";
 
 import requester from "utilities/apiUtils/requester";
 import API_URL from "utilities/apiUtils/url";
+
+import User from "contexts/user";
 /* eslint-enable */
+
+const Wrapper = props => {
+    return (
+        <User>
+            {user => {
+                return <AcceptDelivery {...props} id={user.id} />;
+            }}
+        </User>
+    );
+};
 
 class AcceptDelivery extends Component {
     constructor(props) {
@@ -49,7 +61,6 @@ class AcceptDelivery extends Component {
     };
 
     render() {
-        const { id } = this.props;
         return (
             <Form onSubmit={this.handleSubmit}>
                 <LotSelect parentState={this.parentState} fluid />
@@ -73,4 +84,4 @@ AcceptDelivery.propTypes = {
     id: oneOfType([number, string])
 };
 
-export default AcceptDelivery;
+export default Wrapper;
