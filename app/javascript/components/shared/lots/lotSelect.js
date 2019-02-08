@@ -1,8 +1,21 @@
 import React, { Component } from "react";
 import { Form } from "semantic-ui-react";
 import PropTypes from "prop-types";
+/* eslint-disable */
+import API_URL from "utilities/apiUtils/url";
 
-import API_URL from "../../utilities/apiUtils/url";
+import User from "contexts/user";
+/* eslint-enable */
+
+const Wrapper = props => {
+    return (
+        <User>
+            {user => {
+                return <LotSelect {...props} lots={user.lots} />;
+            }}
+        </User>
+    );
+};
 
 class LotSelect extends Component {
     constructor(props) {
@@ -13,8 +26,8 @@ class LotSelect extends Component {
         };
     }
     componentDidMount() {
-        const { roasterId } = this.props;
-        this.getLots(roasterId);
+        const { lots } = this.props;
+        this.getLots(lots);
     }
 
     buildLot = data => {
@@ -29,16 +42,10 @@ class LotSelect extends Component {
         };
     };
 
-    getLots = async id => {
+    getLots = data => {
         const { parentState } = this.props;
-        const url = await `${API_URL}/roasters/${id}/lots`;
-        let response = await fetch(url);
-        let responseJson = await response.json();
-        if (response.ok) {
-            const { data } = responseJson;
-            const lots = data.map(this.buildLot);
-            this.setState({ lots, selected: {} }, parentState({ lotDetails: { lot_id: "" } }));
-        }
+        const lots = data.map(this.buildLot);
+        this.setState({ lots, selected: {} }, parentState({ lotDetails: { lot_id: "" } }));
     };
 
     getLot = id => {
@@ -76,10 +83,10 @@ class LotSelect extends Component {
     };
 }
 
-const { func, oneOfType, number, string } = PropTypes;
+const { func, array } = PropTypes;
 LotSelect.propTypes = {
     parentState: func,
-    roasterId: oneOfType([number, string])
+    lots: array
 };
 
-export default LotSelect;
+export default Wrapper;
