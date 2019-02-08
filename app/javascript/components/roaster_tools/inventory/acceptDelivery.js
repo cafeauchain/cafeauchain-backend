@@ -52,7 +52,7 @@ class AcceptDelivery extends Component {
         const { id } = this.props;
         return (
             <Form onSubmit={this.handleSubmit}>
-                <LotSelect roasterId={id} parentState={this.parentState} fluid />
+                <LotSelect parentState={this.parentState} fluid />
                 <Form.Input
                     name="quantity"
                     fluid
