@@ -34,7 +34,7 @@ const QuickActions = ({ refreshParent }) => (
                         text="New Contract"
                         title="Add a new contract"
                         refreshParent={refreshParent}
-                        component={<SingleContract id={id} />}
+                        component={<SingleContract />}
                     />
                 </Segment>
             );

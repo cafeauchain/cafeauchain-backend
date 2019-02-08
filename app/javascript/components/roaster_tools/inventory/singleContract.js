@@ -2,11 +2,25 @@ import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
 import { Form, Input, Button, Divider } from "semantic-ui-react";
 
-import ProducerSelect from "../../shared/producers/producerSelect";
-import CropSelect from "../../shared/crops/cropSelect";
+/* eslint-disable */
+import ProducerSelect from "shared/producers/producerSelect";
+import CropSelect from "shared/crops/cropSelect";
 
-import API_URL from "../../utilities/apiUtils/url";
-import requester from "../../utilities/apiUtils/requester";
+import API_URL from "utilities/apiUtils/url";
+import requester from "utilities/apiUtils/requester";
+
+import User from "contexts/user";
+/* eslint-enable */
+
+const Wrapper = props => {
+    return (
+        <User>
+            {user => {
+                return <SingleContract {...props} id={user.id} />;
+            }}
+        </User>
+    );
+};
 
 // TODO can 'on_hand' and 'roasted' be defaulted to 0? or removed? or in some way opted in?
 // Since the only time they should be used is when onboarding
@@ -120,4 +134,4 @@ SingleContract.propTypes = {
     id: oneOfType([number, string])
 };
 
-export default SingleContract;
+export default Wrapper;
