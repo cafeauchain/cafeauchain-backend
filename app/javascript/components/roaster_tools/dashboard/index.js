@@ -82,7 +82,7 @@ class Dashboard extends Component {
                         </Grid.Column>
                         <Grid.Column width={6}>
                             <Segment>
-                                <Budgeter id={id} />
+                                <Budgeter />
                             </Segment>
                             <Segment>
                                 <Header as="h2" content="Sidebar?" />

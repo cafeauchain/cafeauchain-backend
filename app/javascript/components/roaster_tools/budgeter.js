@@ -1,5 +1,4 @@
 import React, { Component, Fragment as F } from "react";
-import PropTypes from "prop-types";
 import { Header } from "semantic-ui-react";
 
 /* eslint-disable */
@@ -7,29 +6,34 @@ import { Money, AsNumber } from "shared/textFormatters";
 
 import roasterCostCalc from "utilities/roasterCostCalc";
 import API_URL from "utilities/apiUtils/url";
+
+import User from "contexts/user";
 /* eslint-enable */
 
 class Budgeter extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            lots: []
+        };
     }
-    componentDidMount() {
-        const { id } = this.props;
-        this.getData(id);
+
+    componentDidUpdate(props, state) {
+        const { lots } = this.context;
+        if (state.lots.length !== lots.length) {
+            // eslint-disable-next-line
+            this.setState({ lots }, this.getData(lots));
+        }
     }
-    getData = async id => {
-        let response = await fetch(`${API_URL}/roasters/${id}/lots`);
-        const { data } = await response.json();
-        const total = data.reduce((total, amount) => total + amount.attributes.total_amount_roasted, 0);
+
+    getData = lots => {
+        const total = lots.reduce((total, amount) => total + amount.attributes.total_amount_roasted, 0);
         this.setState({ total });
     };
+
     getRemaining = value => {
         value = Number(value);
-        if (value < 500) {
-            return 500 - value;
-        }
-        return Math.ceil(value / 100) * 100 - value;
+        return value < 500 ? 500 - value : Math.ceil(value / 100) * 100 - value;
     };
 
     render() {
@@ -54,9 +58,6 @@ class Budgeter extends Component {
     }
 }
 
-const { oneOfType, string, number } = PropTypes;
-Budgeter.propTypes = {
-    id: oneOfType([number, string])
-};
+Budgeter.contextType = User;
 
 export default Budgeter;
