@@ -13,10 +13,11 @@ class ConfigProvider extends React.Component {
         super(props);
         /* eslint-disable */
         this.state = {
+            id: props.value.id,
             lots: [],
             producers: [],
             batches: [],
-            id: props.value.id
+            transactions: []
         };
         /* eslint-enable */
     }
@@ -27,6 +28,7 @@ class ConfigProvider extends React.Component {
         this.getProducers();
         // TODO Batches is not currently working
         // this.getBatches(id);
+        this.getTransactions(id);
     }
 
     getData = async (url, name) => {
@@ -48,6 +50,11 @@ class ConfigProvider extends React.Component {
     getBatches = id => {
         const url = `${API_URL}/roasters/${id}/batches`;
         this.getData(url, "batches");
+    };
+
+    getTransactions = id => {
+        const url = `${API_URL}/roasters/${id}/transactions`;
+        this.getData(url, "transactions");
     };
 
     render() {
