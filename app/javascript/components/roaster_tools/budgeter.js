@@ -1,4 +1,5 @@
 import React, { Component, Fragment as F } from "react";
+import PropTypes from "prop-types";
 import { Header } from "semantic-ui-react";
 
 /* eslint-disable */
@@ -10,6 +11,8 @@ import API_URL from "utilities/apiUtils/url";
 import User from "contexts/user";
 /* eslint-enable */
 
+const Wrapper = props => <User>{user => <Budgeter {...props} lots={user.lots} />}</User>;
+
 class Budgeter extends Component {
     constructor(props) {
         super(props);
@@ -18,13 +21,21 @@ class Budgeter extends Component {
         };
     }
 
-    componentDidUpdate(props, state) {
-        const { lots } = this.context;
-        if (state.lots.length !== lots.length) {
-            // eslint-disable-next-line
+    componentDidMount() {
+        this.handleLotUpdate();
+    }
+
+    componentDidUpdate() {
+        this.handleLotUpdate();
+    }
+
+    handleLotUpdate = () => {
+        const { lots } = this.props;
+        const { lots: statelots } = this.state;
+        if (lots.length && statelots.length !== lots.length) {
             this.setState({ lots }, this.getData(lots));
         }
-    }
+    };
 
     getData = lots => {
         const total = lots.reduce((total, amount) => total + amount.attributes.total_amount_roasted, 0);
@@ -58,6 +69,9 @@ class Budgeter extends Component {
     }
 }
 
-Budgeter.contextType = User;
+const { array } = PropTypes;
+Budgeter.propTypes = {
+    lots: array
+};
 
-export default Budgeter;
+export default Wrapper;

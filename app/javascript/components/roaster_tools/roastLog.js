@@ -1,4 +1,5 @@
 import React, { Component, Fragment as F } from "react";
+import PropTypes from "prop-types";
 import { Header, Button } from "semantic-ui-react";
 import moment from "moment";
 
@@ -17,6 +18,8 @@ import API_URL from "utilities/apiUtils/url";
 import User from "contexts/user";
 /* eslint-enable */
 
+const Wrapper = props => <User>{user => <RoastLog {...props} lots={user.lots} />}</User>;
+
 class RoastLog extends Component {
     constructor(props) {
         super(props);
@@ -27,15 +30,22 @@ class RoastLog extends Component {
         };
     }
 
-    componentDidUpdate(props, state) {
-        const { lots } = this.context;
-        if (state.lots.length !== lots.length) {
-            const { month } = this.state;
-            const dateRange = this.getDateRange(month);
-            // eslint-disable-next-line
+    componentDidMount() {
+        this.handleLotUpdate();
+    }
+
+    componentDidUpdate() {
+        this.handleLotUpdate();
+    }
+
+    handleLotUpdate = () => {
+        const { lots } = this.props;
+        const { month, lots: statelots } = this.state;
+        const dateRange = this.getDateRange(month);
+        if (lots.length && statelots.length !== lots.length) {
             this.setState({ lots }, this.getData(lots, dateRange));
         }
-    }
+    };
 
     getDateRange = month => {
         const start = moment(month).startOf("month");
@@ -122,6 +132,9 @@ class RoastLog extends Component {
     }
 }
 
-RoastLog.contextType = User;
+const { array } = PropTypes;
+RoastLog.propTypes = {
+    lots: array
+};
 
-export default RoastLog;
+export default Wrapper;

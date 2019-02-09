@@ -3,7 +3,59 @@ import PropTypes from "prop-types";
 
 const { Provider, Consumer } = createContext();
 
-const ConfigProvider = ({ children, value }) => <Provider value={value}>{children}</Provider>;
+/* eslint-disable */
+import API_URL from "utilities/apiUtils/url";
+/* eslint-enable */
+
+// const ConfigProvider = ({ children, value }) => <Provider value={value}>{children}</Provider>;
+class ConfigProvider extends React.Component {
+    constructor(props) {
+        super(props);
+        /* eslint-disable */
+        this.state = {
+            lots: [],
+            producers: [],
+            batches: [],
+            id: props.value.id
+        };
+        /* eslint-enable */
+    }
+
+    componentDidMount() {
+        const { id } = this.state;
+        this.getLots(id);
+        this.getProducers();
+        // TODO Batches is not currently working
+        // this.getBatches(id);
+    }
+
+    getData = async (url, name) => {
+        const response = await fetch(url);
+        const { data } = await response.json();
+        this.setState({ [name]: data });
+    };
+
+    getLots = id => {
+        const url = `${API_URL}/roasters/${id}/lots`;
+        this.getData(url, "lots");
+    };
+
+    getProducers = () => {
+        const url = `${API_URL}/producers`;
+        this.getData(url, "producers");
+    };
+
+    getBatches = id => {
+        const url = `${API_URL}/roasters/${id}/batches`;
+        this.getData(url, "batches");
+    };
+
+    render() {
+        // TODO Figure out why updates are not being reported to children
+        const { children } = this.props;
+        return <Provider value={{ ...this.state }}>{children}</Provider>;
+    }
+}
 
 export { ConfigProvider };
 

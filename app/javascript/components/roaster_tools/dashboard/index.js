@@ -15,43 +15,6 @@ import { ConfigProvider } from "contexts/user";
 import QuickActions from "./quickActions";
 
 class Dashboard extends Component {
-    constructor(props) {
-        super(props);
-        /* eslint-disable */
-        this.state = {
-            lots: [],
-            producers: [],
-            batches: []
-        };
-        /* eslint-enable */
-    }
-
-    componentDidMount() {
-        const { roaster_profile_id: id } = this.props;
-        this.getLots(id);
-        this.getProducers();
-        // TODO Batches is not currently working
-        // this.getBatches(id);
-    }
-
-    getData = async (url, name) => {
-        const response = await fetch(url);
-        const { data } = await response.json();
-        this.setState({ [name]: data });
-    };
-    getLots = id => {
-        const url = `${API_URL}/roasters/${id}/lots`;
-        this.getData(url, "lots");
-    };
-    getProducers = () => {
-        const url = `${API_URL}/producers`;
-        this.getData(url, "producers");
-    };
-    getBatches = id => {
-        const url = `${API_URL}/roasters/${id}/batches`;
-        this.getData(url, "batches");
-    };
-
     refreshParent = () => {
         // eslint-disable-next-line
         console.log("refreshing Parent");
@@ -61,7 +24,7 @@ class Dashboard extends Component {
 
     render = () => {
         const { roaster_profile_id: id } = this.props;
-        const contextValue = { id, ...this.state };
+        const contextValue = { id };
         return (
             <ConfigProvider value={contextValue}>
                 <Container style={{ margin: "4em 0" }}>
