@@ -28,6 +28,8 @@ class Dashboard extends Component {
                         <Grid.Column width={10}>
                             <Segment>
                                 <OpenContracts />
+                            </Segment>
+                            <Segment>
                                 <RecentTransactions id={id} />
                             </Segment>
                         </Grid.Column>
