@@ -14,45 +14,10 @@ import { ConfigProvider } from "contexts/user";
 /* eslint-enable */
 
 class Dashboard extends Component {
-    constructor(props) {
-        super(props);
-        /* eslint-disable */
-        this.state = {
-            lots: [],
-            producers: [],
-            batches: []
-        };
-        /* eslint-enable */
-    }
-
-    componentDidMount() {
-        const { roaster_profile_id: id } = this.props;
-        this.getLots(id);
-        this.getProducers();
-        // TODO Batches is not currently working
-        // this.getBatches(id);
-    }
-
-    getData = async (url, name) => {
-        const response = await fetch(url);
-        const { data } = await response.json();
-        this.setState({ [name]: data });
-    };
-    getLots = id => {
-        const url = `${API_URL}/roasters/${id}/lots`;
-        this.getData(url, "lots");
-    };
-    getProducers = () => {
-        const url = `${API_URL}/producers`;
-        this.getData(url, "producers");
-    };
-    getBatches = id => {
-        const url = `${API_URL}/roasters/${id}/batches`;
-        this.getData(url, "batches");
-    };
+    state = {};
     render = () => {
         const { roaster_profile_id: id } = this.props;
-        const contextValue = { id, ...this.state };
+        const contextValue = { id };
         return (
             <ConfigProvider value={contextValue}>
                 <Container style={{ margin: "4em 0" }}>
@@ -62,7 +27,7 @@ class Dashboard extends Component {
                     <Grid doubling columns={2}>
                         <Grid.Column width={10}>
                             <Segment>
-                                <OpenContracts id={id} />
+                                <OpenContracts />
                                 <RecentTransactions id={id} />
                             </Segment>
                         </Grid.Column>
