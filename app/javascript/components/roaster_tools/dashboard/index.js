@@ -11,6 +11,7 @@ import API_URL from "utilities/apiUtils/url";
 
 import { ConfigProvider as UserProvider } from "contexts/user";
 import { ConfigProvider as LotsProvider } from "contexts/lots";
+import { ConfigProvider as ProducerProvider } from "contexts/producers";
 /* eslint-enable */
 
 import QuickActions from "./quickActions";
@@ -26,29 +27,31 @@ class Dashboard extends Component {
         return (
             <UserProvider value={{ roaster }}>
                 <LotsProvider value={{ id }}>
-                    <Container style={{ margin: "4em 0" }}>
-                        <Segment>
-                            <Header as="h1" content="Dashboard" />
-                        </Segment>
-                        <Grid doubling>
-                            <Grid.Column width={10}>
-                                <QuickActions />
-                                {false && (
+                    <ProducerProvider value={{ id }}>
+                        <Container style={{ margin: "4em 0" }}>
+                            <Segment>
+                                <Header as="h1" content="Dashboard" />
+                            </Segment>
+                            <Grid doubling>
+                                <Grid.Column width={10}>
+                                    <QuickActions />
+                                    {false && (
+                                        <Segment>
+                                            <BatchLog id={id} />
+                                        </Segment>
+                                    )}
                                     <Segment>
-                                        <BatchLog id={id} />
+                                        <RoastLog />
                                     </Segment>
-                                )}
-                                <Segment>
-                                    <RoastLog />
-                                </Segment>
-                            </Grid.Column>
-                            <Grid.Column width={6}>
-                                <Segment>
-                                    <Budgeter />
-                                </Segment>
-                            </Grid.Column>
-                        </Grid>
-                    </Container>
+                                </Grid.Column>
+                                <Grid.Column width={6}>
+                                    <Segment>
+                                        <Budgeter />
+                                    </Segment>
+                                </Grid.Column>
+                            </Grid>
+                        </Container>
+                    </ProducerProvider>
                 </LotsProvider>
             </UserProvider>
         );

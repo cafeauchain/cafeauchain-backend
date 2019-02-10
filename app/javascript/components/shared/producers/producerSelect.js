@@ -2,8 +2,16 @@ import React, { Component } from "react";
 import { Form } from "semantic-ui-react";
 import PropTypes from "prop-types";
 
-import API_URL from "../../utilities/apiUtils/url";
-import requester from "../../utilities/apiUtils/requester";
+/* eslint-disable */
+import API_URL from "utilities/apiUtils/url";
+import requester from "utilities/apiUtils/requester";
+
+import Producers from "contexts/producers";
+/* eslint-enable */
+
+const Wrapper = props => (
+    <Producers>{producers => <ProducerSelect {...props} producers={producers.producers} />}</Producers>
+);
 
 class ProducerSelect extends Component {
     constructor(props) {
@@ -49,15 +57,10 @@ class ProducerSelect extends Component {
         }
     };
 
-    getProducers = async () => {
-        const url = `${API_URL}/producers`;
-        let response = await fetch(url);
-        let responseJson = await response.json();
-        if (response.ok) {
-            const { data } = responseJson;
-            const producers = data.map(this.buildProducer);
-            this.setState({ producers });
-        }
+    getProducers = () => {
+        const { producers: data } = this.props;
+        const producers = data.map(this.buildProducer);
+        this.setState({ producers });
     };
 
     getProducer = id => {
@@ -97,9 +100,10 @@ class ProducerSelect extends Component {
     };
 }
 
-const { func } = PropTypes;
+const { func, array } = PropTypes;
 ProducerSelect.propTypes = {
-    parentState: func
+    parentState: func,
+    producers: array
 };
 
-export default ProducerSelect;
+export default Wrapper;
