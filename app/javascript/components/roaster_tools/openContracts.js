@@ -7,21 +7,22 @@ import Table from "shared/table";
 
 import tableDefs from "tableDefinitions/openContracts";
 
-import User from "contexts/user";
+import Lots from "contexts/lots";
 /* eslint-enable */
 
-const Wrapper = props => <User>{user => <OpenContracts {...props} lots={user.lots} />}</User>;
+const Wrapper = props => <Lots>{lots => <OpenContracts {...props} lots={lots.lots} loading={lots.loading} />}</Lots>;
 
-const OpenContracts = ({ lots }) => (
+const OpenContracts = ({ lots, loading }) => (
     <F>
         <Header as="h2" content="Open Contracts" />
-        <Table tableDefs={tableDefs} data={lots} />
+        <Table tableDefs={tableDefs} data={lots} loading={loading} />
     </F>
 );
 
-const { array } = PropTypes;
+const { array, bool } = PropTypes;
 OpenContracts.propTypes = {
-    lots: array
+    lots: array,
+    loading: bool
 };
 
 export default Wrapper;
