@@ -16,9 +16,10 @@ import requester from "utilities/apiUtils/requester";
 import API_URL from "utilities/apiUtils/url";
 
 import User from "contexts/user";
+import Lots from "contexts/lots";
 /* eslint-enable */
 
-const Wrapper = props => <User>{user => <RoastLog {...props} lots={user.lots} />}</User>;
+const Wrapper = props => <Lots>{lots => <RoastLog {...props} lots={lots.lots} loading={lots.loading} />}</Lots>;
 
 class RoastLog extends Component {
     constructor(props) {
@@ -42,7 +43,7 @@ class RoastLog extends Component {
         const { lots } = this.props;
         const { month, lots: statelots } = this.state;
         const dateRange = this.getDateRange(month);
-        if (lots.length && statelots.length !== lots.length) {
+        if (lots.length && statelots !== lots) {
             this.setState({ lots }, this.getData(lots, dateRange));
         }
     };
@@ -58,7 +59,7 @@ class RoastLog extends Component {
     };
 
     transformData = (data, dateRange) => {
-        // This is the transformer to create loops and add data to each row
+        // This is the transformer to create dates and add data to each row
         const days = dateRange.map(day => {
             const amounts = data.reduce((obj, item) => {
                 const match = item.attributes.batches[moment(day).format("YYYY-MM-DD")];
@@ -112,12 +113,13 @@ class RoastLog extends Component {
     };
 
     render() {
+        const { loading } = this.props;
         const { data, lots, month } = this.state;
         const modified = this.modifyTableDefs(lots);
         return (
             <F>
                 <Header as="h2" content={"Roast log: " + moment(month).format("MMMM YYYY")} />
-                <Table tableDefs={modified} data={data} />
+                <Table tableDefs={modified} data={data} loading={loading} />
                 <Flex spacebetween style={{ marginTop: 20 }}>
                     <Button primary onClick={e => this.updateData(e, "previous")} content="Previous Month" />
                     <Button
@@ -132,9 +134,10 @@ class RoastLog extends Component {
     }
 }
 
-const { array } = PropTypes;
+const { array, bool } = PropTypes;
 RoastLog.propTypes = {
-    lots: array
+    lots: array,
+    loading: bool
 };
 
 export default Wrapper;

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 // TODO Remove semantic-ui-react-button-pagination
 // import Pagination from "semantic-ui-react-button-pagination";
-import { Pagination, Table, Ref } from "semantic-ui-react";
+import { Pagination, Table, Ref, Loader, Dimmer, Container } from "semantic-ui-react";
 
 /* eslint-disable */
 import humanize from "utilities/humanize";
@@ -103,75 +103,81 @@ class FormattedTable extends Component {
     };
 
     render() {
-        const { tableDefs, pagination, onPageChange, onClick } = this.props;
+        const { tableDefs, pagination, onPageChange, onClick, loading } = this.props;
         const { data, column, direction, scrollable } = this.state;
         const { props: tableProps } = tableDefs;
 
         return (
             <Ref innerRef={this.containerRef}>
-                <div style={{ overflowX: scrollable ? "scroll" : "hidden" }}>
-                    <Table {...tableProps}>
-                        <Table.Header>
-                            {tableDefs.title && (
-                                <Table.Row>
-                                    <Table.HeaderCell colSpan={tableDefs.fields.length}>
-                                        {tableDefs.title}
-                                    </Table.HeaderCell>
-                                </Table.Row>
-                            )}
+                <Container>
+                    <Dimmer active={loading} inverted>
+                        <Loader active={loading} size="large" style={{ top: 0, marginTop: 60 }} />
+                    </Dimmer>
+                    <div style={{ overflowX: scrollable ? "scroll" : "hidden" }}>
+                        <Table {...tableProps}>
+                            <Table.Header>
+                                {tableDefs.title && (
+                                    <Table.Row>
+                                        <Table.HeaderCell colSpan={tableDefs.fields.length}>
+                                            {tableDefs.title}
+                                        </Table.HeaderCell>
+                                    </Table.Row>
+                                )}
 
-                            <Table.Row>
-                                {tableDefs.fields.map(field => (
-                                    <Table.HeaderCell
-                                        sorted={column === field.name ? direction : null}
-                                        onClick={tableProps.sortable ? this.handleSort(field.name) : null}
-                                        key={field.name}
-                                        title={field.title}
-                                    >
-                                        {humanize(field.label ? field.label : field.name)}
-                                    </Table.HeaderCell>
+                                <Table.Row>
+                                    {tableDefs.fields.map(field => (
+                                        <Table.HeaderCell
+                                            sorted={column === field.name ? direction : null}
+                                            onClick={tableProps.sortable ? this.handleSort(field.name) : null}
+                                            key={field.name}
+                                            title={field.title}
+                                        >
+                                            {humanize(field.label ? field.label : field.name)}
+                                        </Table.HeaderCell>
+                                    ))}
+                                </Table.Row>
+                            </Table.Header>
+
+                            <Table.Body>
+                                {data.map(item => (
+                                    <Table.Row key={item.id} onClick={e => onClick(e, item)}>
+                                        {this.buildTableCells(item)}
+                                    </Table.Row>
                                 ))}
-                            </Table.Row>
-                        </Table.Header>
-
-                        <Table.Body>
-                            {data.map(item => (
-                                <Table.Row key={item.id} onClick={e => onClick(e, item)}>
-                                    {this.buildTableCells(item)}
-                                </Table.Row>
-                            ))}
-                            {!data.length && (
-                                <Table.Row>
-                                    <Table.Cell colSpan={tableDefs.fields.length} content="No data available" />
-                                </Table.Row>
+                                {!data.length && (
+                                    <Table.Row>
+                                        <Table.Cell colSpan={tableDefs.fields.length} content="No data available" />
+                                    </Table.Row>
+                                )}
+                            </Table.Body>
+                            {pagination && (
+                                <Table.Footer>
+                                    <Table.Row>
+                                        <Table.HeaderCell colSpan={tableDefs.fields.length} textAlign="right">
+                                            <Pagination
+                                                defaultActivePage={pagination.pagenumber}
+                                                totalPages={pagination.totalpages}
+                                                onPageChange={onPageChange}
+                                            />
+                                        </Table.HeaderCell>
+                                    </Table.Row>
+                                </Table.Footer>
                             )}
-                        </Table.Body>
-                        {pagination && (
-                            <Table.Footer>
-                                <Table.Row>
-                                    <Table.HeaderCell colSpan={tableDefs.fields.length} textAlign="right">
-                                        <Pagination
-                                            defaultActivePage={pagination.pagenumber}
-                                            totalPages={pagination.totalpages}
-                                            onPageChange={onPageChange}
-                                        />
-                                    </Table.HeaderCell>
-                                </Table.Row>
-                            </Table.Footer>
-                        )}
-                    </Table>
-                </div>
+                        </Table>
+                    </div>
+                </Container>
             </Ref>
         );
     }
 }
-const { array, func, object } = PropTypes;
+const { array, func, object, bool } = PropTypes;
 FormattedTable.propTypes = {
     data: array.isRequired,
     onPageChange: func,
     onClick: func,
     pagination: object,
-    tableDefs: object.isRequired
+    tableDefs: object.isRequired,
+    loading: bool
 };
 
 export default FormattedTable;

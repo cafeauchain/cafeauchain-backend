@@ -8,15 +8,15 @@ import LotSelect from "shared/lots/lotSelect";
 
 import requester from "utilities/apiUtils/requester";
 import API_URL from "utilities/apiUtils/url";
+
 import User from "contexts/user";
+import Lots from "contexts/lots";
 /* eslint-enable */
 
 const Wrapper = props => {
     return (
         <User>
-            {user => {
-                return <StartBatch {...props} id={user.id} />;
-            }}
+            {user => <Lots>{lots => <StartBatch {...props} id={user.id} updateContext={lots.updateContext} />}</Lots>}
         </User>
     );
 };
@@ -41,17 +41,13 @@ class StartBatch extends Component {
         if (name === "") return;
         const val = value || checked;
         lotDetails[name] = val;
-        if (name === "starting_amount") {
-            let endAmt = Number.isNaN(Number(val)) ? 0 : (Number(val) * 0.9).toFixed(0);
-            lotDetails["ending_amount"] = endAmt;
-        }
         this.setState({ lotDetails });
     };
 
     handleSubmit = async ev => {
         ev.preventDefault();
         const { lotDetails } = this.state;
-        const { id, refreshAndClose } = this.props;
+        const { id } = this.props;
         const url = `${API_URL}/roasters/${id}/batches`;
         let body = { ...lotDetails };
         let respJSON = await requester({ url, body });
@@ -62,11 +58,23 @@ class StartBatch extends Component {
             if (respJSON.redirect) {
                 window.location.href = await respJSON.redirect_url;
             } else {
-                // TODO figure out how to close modal
-                // eslint-disable-next-line
-                console.log(respJSON, "need to update parent component(s)");
-                refreshAndClose();
+                this.getLotData(id);
             }
+        }
+    };
+
+    // only called after successful submit
+    getLotData = async id => {
+        const url = `${API_URL}/roasters/${id}/lots`;
+        const { updateContext, closeModal } = this.props;
+        const response = await fetch(url);
+        const { data } = await response.json();
+        if (data instanceof Error) {
+            // eslint-disable-next-line
+            console.log("there was an error", data.response);
+        } else {
+            // TODO Add success/error messaging before closing
+            updateContext({ lots: data }, closeModal());
         }
     };
 
@@ -96,7 +104,8 @@ class StartBatch extends Component {
 const { oneOfType, string, number, func } = PropTypes;
 StartBatch.propTypes = {
     id: oneOfType([number, string]),
-    refreshAndClose: func
+    closeModal: func,
+    updateContext: func
 };
 
 export default Wrapper;

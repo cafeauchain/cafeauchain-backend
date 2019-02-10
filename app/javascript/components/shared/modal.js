@@ -9,13 +9,13 @@ class FormattedModal extends Component {
     state = {
         isOpen: false
     };
+
+    closeModal = () => this.setState({ isOpen: false });
+
     render() {
-        const { text, title, component, size, centered, icon, refreshParent, ...rest } = this.props;
+        const { text, title, component, size, centered, icon, ...rest } = this.props;
         const { isOpen } = this.state;
-        const refreshAndClose = () => {
-            this.setState({ isOpen: false }, refreshParent);
-        };
-        const Inner = props => React.cloneElement(component, { ...props, refreshAndClose });
+        const Inner = props => React.cloneElement(component, { ...props, closeModal: this.closeModal });
         return (
             <Modal
                 {...rest}
@@ -28,7 +28,7 @@ class FormattedModal extends Component {
                 size={size}
                 centered={centered}
                 open={isOpen}
-                onClose={() => this.setState({ isOpen: false })}
+                onClose={this.closeModal}
             >
                 <Header icon={icon} content={title} />
                 <Modal.Content>
@@ -39,9 +39,8 @@ class FormattedModal extends Component {
     }
 }
 
-const { string, func, node, bool } = PropTypes;
+const { string, node, bool } = PropTypes;
 FormattedModal.propTypes = {
-    refreshParent: func,
     text: string,
     title: string,
     component: node,

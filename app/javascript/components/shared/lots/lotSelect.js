@@ -1,21 +1,12 @@
 import React, { Component } from "react";
 import { Form } from "semantic-ui-react";
 import PropTypes from "prop-types";
-/* eslint-disable */
-import API_URL from "utilities/apiUtils/url";
 
-import User from "contexts/user";
+/* eslint-disable */
+import Lots from "contexts/lots";
 /* eslint-enable */
 
-const Wrapper = props => {
-    return (
-        <User>
-            {user => {
-                return <LotSelect {...props} lots={user.lots} />;
-            }}
-        </User>
-    );
-};
+const Wrapper = props => <Lots>{lots => <LotSelect {...props} lots={lots.lots} />}</Lots>;
 
 class LotSelect extends Component {
     constructor(props) {
