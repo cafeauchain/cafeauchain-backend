@@ -13,14 +13,9 @@ module Api::V1
     end
 
     def create
-      @batch = @lot.batches.create(starting_amount: params[:starting_amount], ending_amount: params[:ending_amount])
-      if @batch.save
-        @tx = LedgerServices::RoastTransaction.new(params[:starting_amount], @batch.id, @roaster.id)
-        if @tx.call
-            render json: {"redirect":false,"refresh_parent": true,"redirect_url": manage_inventory_roaster_profile_path(@roaster)}, status: 200
-        else
-          render @tx.errors, status: 422
-        end
+      @batch = InventoryServices::CreateBatch.start(@lot.id, params[:starting_amount])
+      if @batch.errors.full_messages.empty?
+        render json: {"redirect":false,"refresh_parent": true,"redirect_url": manage_inventory_roaster_profile_path(@roaster)}, status: 200
       else
         render @batch.errors, status: 422
       end
