@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Form, Button } from "semantic-ui-react";
+import moment from "moment";
 
 /* eslint-disable */
 import Input from "shared/input";
@@ -23,6 +24,7 @@ class StartBatch extends Component {
             lotDetails: {
                 starting_amount: "",
                 ending_amount: ""
+                // roast_date: moment().format("YYYY-MM-DD")
             }
         };
     }
@@ -79,6 +81,16 @@ class StartBatch extends Component {
         const { lotDetails } = this.state;
         return (
             <Form onSubmit={this.handleSubmit}>
+                {/* TODO Ready for roast date */}
+                {false && (
+                    <Input
+                        name="roast_date"
+                        label="Date"
+                        onChange={this.handleInputChange}
+                        type="date"
+                        defaultValue={moment().format("YYYY-MM-DD")}
+                    />
+                )}
                 <LotSelect roasterId={id} parentState={this.parentState} fluid />
                 <Input name="starting_amount" label="Amount to be Roasted (in lbs)" onChange={this.handleInputChange} />
                 {false && (
