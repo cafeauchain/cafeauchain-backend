@@ -9,7 +9,13 @@ import humanize from "utilities/humanize";
 import underscorer from "utilities/underscorer";
 import readCookie from "utilities/readCookie";
 import API_URL from "utilities/apiUtils/url";
+
+import Lots from "contexts/lots";
 /* eslint-enable */
+
+const Wrapper = props => (
+    <Lots>{lots => <Matcher {...props} id={lots.userId} updateContext={lots.updateContext} />}</Lots>
+);
 
 class Matcher extends Component {
     constructor(props) {
@@ -72,10 +78,26 @@ class Matcher extends Component {
         if (response.ok) {
             window.location.href = await respJSON.redirect_url;
         } else {
+            if (respJSON.redirect) {
+                window.location.href = await respJSON.redirect_url;
+            } else {
+                this.getLotData(id);
+            }
+        }
+    };
+
+    // only called after successful submit
+    getLotData = async id => {
+        const url = `${API_URL}/roasters/${id}/lots`;
+        const { updateContext } = this.props;
+        const response = await fetch(url);
+        const { data } = await response.json();
+        if (data instanceof Error) {
             // eslint-disable-next-line
-            this.setState({ error: respJSON.error });
-            // eslint-disable-next-line
-            console.log(respJSON);
+            console.log("there was an error", data.response);
+        } else {
+            // TODO Add success/error messaging before closing
+            updateContext({ lots: data });
         }
     };
     render() {
@@ -125,11 +147,12 @@ class Matcher extends Component {
     }
 }
 
-const { array, string, oneOfType, number } = PropTypes;
+const { array, string, oneOfType, number, func } = PropTypes;
 Matcher.propTypes = {
     data: array,
     dbKeys: array,
-    id: oneOfType([string, number])
+    id: oneOfType([string, number]),
+    updateContext: func
 };
 
-export default Matcher;
+export default Wrapper;

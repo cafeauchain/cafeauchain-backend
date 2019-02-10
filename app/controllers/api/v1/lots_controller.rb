@@ -46,7 +46,7 @@ module Api::V1
         end
       end
       if @errors.empty?
-        render json: {"redirect":true,"redirect_url": manage_inventory_roaster_profile_path(@roaster)}, status: 200
+        render json: {"redirect":false,"redirect_url": manage_inventory_roaster_profile_path(@roaster)}, status: 200
       else
         render @errors, status: 422
       end

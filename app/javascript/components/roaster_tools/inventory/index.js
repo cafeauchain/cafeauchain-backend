@@ -43,7 +43,7 @@ const Dashboard = () => (
                 <Segment>{true && <OpenContracts />}</Segment>
                 <Segment>{true && <RecentTransactions />}</Segment>
             </Grid.Column>
-            <Grid.Column width={6}>{false && <AddLots />}</Grid.Column>
+            <Grid.Column width={6}>{true && <AddLots />}</Grid.Column>
         </Grid>
     </Container>
 );
