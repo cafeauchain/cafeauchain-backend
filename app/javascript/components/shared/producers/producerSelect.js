@@ -53,6 +53,7 @@ class ProducerSelect extends Component {
             const { data } = responseJson;
             const producer = this.buildProducer(data);
             producers = [producer, ...producers];
+            // TODO probably need to have something in here to update Producer context
             this.setState({ producers, selected: producer }, parentState({ producerId: producer.slug }));
         }
     };
