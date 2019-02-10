@@ -5,6 +5,7 @@ module Api::V1
     before_action :set_lot, only: [:create]
 
     def index
+      @batches = @roaster.batches.where(status: :roast_in_progress)
       render json: @batches, status: 200
     end
 
