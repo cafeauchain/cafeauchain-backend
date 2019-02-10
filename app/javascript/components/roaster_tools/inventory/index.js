@@ -28,26 +28,19 @@ Wrapper.propTypes = {
     roaster: object
 };
 
-class Dashboard extends Component {
-    state = {};
-    render = () => {
-        return (
-            <div>
-                <Container style={{ margin: "4em 0" }}>
-                    <Segment>
-                        <Header as="h1" content="Manage Inventory" />
-                    </Segment>
-                    <Grid doubling columns={2}>
-                        <Grid.Column width={10}>
-                            <Segment>{true && <OpenContracts />}</Segment>
-                            <Segment>{false && <RecentTransactions />}</Segment>
-                        </Grid.Column>
-                        <Grid.Column width={6}>{false && <AddLots />}</Grid.Column>
-                    </Grid>
-                </Container>
-            </div>
-        );
-    };
-}
+const Dashboard = () => (
+    <Container style={{ margin: "4em 0" }}>
+        <Segment>
+            <Header as="h1" content="Manage Inventory" />
+        </Segment>
+        <Grid doubling columns={2}>
+            <Grid.Column width={10}>
+                <Segment>{true && <OpenContracts />}</Segment>
+                <Segment>{false && <RecentTransactions />}</Segment>
+            </Grid.Column>
+            <Grid.Column width={6}>{false && <AddLots />}</Grid.Column>
+        </Grid>
+    </Container>
+);
 
 export default Wrapper;
