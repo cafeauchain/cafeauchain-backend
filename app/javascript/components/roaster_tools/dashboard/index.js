@@ -23,10 +23,9 @@ class Dashboard extends Component {
     render = () => {
         const { roaster } = this.props;
         const { id } = roaster;
-        const contextValue = { id };
         return (
-            <UserProvider value={contextValue}>
-                <LotsProvider value={contextValue}>
+            <UserProvider value={{ roaster }}>
+                <LotsProvider value={{ id }}>
                     <Container style={{ margin: "4em 0" }}>
                         <Segment>
                             <Header as="h1" content="Dashboard" />

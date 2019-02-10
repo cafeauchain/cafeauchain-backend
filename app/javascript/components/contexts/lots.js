@@ -12,7 +12,7 @@ class ConfigProvider extends React.Component {
         super(props);
         /* eslint-disable */
         this.state = {
-            id: props.value.id,
+            userId: props.value.id,
             lots: [],
             updateContext: stateObj => this.setState({ loading: true }, this.setState(stateObj)),
             loading: true
@@ -21,8 +21,8 @@ class ConfigProvider extends React.Component {
     }
 
     componentDidMount() {
-        const { id } = this.state;
-        this.getLots(id);
+        const { userId } = this.state;
+        this.getLots(userId);
     }
 
     componentDidUpdate() {
@@ -39,8 +39,8 @@ class ConfigProvider extends React.Component {
         this.setState({ [name]: data });
     };
 
-    getLots = id => {
-        const url = `${API_URL}/roasters/${id}/lots`;
+    getLots = userId => {
+        const url = `${API_URL}/roasters/${userId}/lots`;
         this.getData(url, "lots");
     };
 

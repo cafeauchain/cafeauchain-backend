@@ -13,13 +13,9 @@ import User from "contexts/user";
 import Lots from "contexts/lots";
 /* eslint-enable */
 
-const Wrapper = props => {
-    return (
-        <User>
-            {user => <Lots>{lots => <StartBatch {...props} id={user.id} updateContext={lots.updateContext} />}</Lots>}
-        </User>
-    );
-};
+const Wrapper = props => (
+    <Lots>{lots => <StartBatch {...props} id={lots.userId} updateContext={lots.updateContext} />}</Lots>
+);
 class StartBatch extends Component {
     constructor(props) {
         super(props);
