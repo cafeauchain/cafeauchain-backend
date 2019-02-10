@@ -43,7 +43,9 @@ class Dashboard extends Component {
                                 </Segment>
                             </Grid.Column>
                             <Grid.Column width={6}>
-                                <Segment>{false && <Budgeter />}</Segment>
+                                <Segment>
+                                    <Budgeter />
+                                </Segment>
                             </Grid.Column>
                         </Grid>
                     </Container>

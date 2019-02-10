@@ -1,17 +1,16 @@
 import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Header } from "semantic-ui-react";
+import { Header, Dimmer, Loader } from "semantic-ui-react";
 
 /* eslint-disable */
 import { Money, AsNumber } from "shared/textFormatters";
 
 import roasterCostCalc from "utilities/roasterCostCalc";
-import API_URL from "utilities/apiUtils/url";
 
-import User from "contexts/user";
+import Lots from "contexts/lots";
 /* eslint-enable */
 
-const Wrapper = props => <User>{user => <Budgeter {...props} lots={user.lots} />}</User>;
+const Wrapper = props => <Lots>{lots => <Budgeter {...props} lots={lots.lots} loading={lots.loading} />}</Lots>;
 
 class Budgeter extends Component {
     constructor(props) {
@@ -32,7 +31,7 @@ class Budgeter extends Component {
     handleLotUpdate = () => {
         const { lots } = this.props;
         const { lots: statelots } = this.state;
-        if (lots.length && statelots.length !== lots.length) {
+        if (lots.length && statelots !== lots) {
             this.setState({ lots }, this.getData(lots));
         }
     };
@@ -49,12 +48,16 @@ class Budgeter extends Component {
 
     render() {
         let { total } = this.state;
+        const { loading } = this.props;
         let showContent = total !== undefined;
         return (
             <F>
                 <Header as="h2" content="Activity" />
                 {showContent && (
-                    <div>
+                    <div style={{ position: "relative" }}>
+                        <Dimmer active={loading} inverted>
+                            <Loader active={loading} size="large" />
+                        </Dimmer>
                         <F>To date, youve roasted </F>
                         <AsNumber type="positive">{total}</AsNumber>
                         <F> pounds of green coffee. Your current bill is </F>
@@ -69,9 +72,10 @@ class Budgeter extends Component {
     }
 }
 
-const { array } = PropTypes;
+const { array, bool } = PropTypes;
 Budgeter.propTypes = {
-    lots: array
+    lots: array,
+    loading: bool
 };
 
 export default Wrapper;
