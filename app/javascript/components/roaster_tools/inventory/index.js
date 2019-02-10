@@ -9,17 +9,20 @@ import OpenContracts from "roaster_tools/openContracts";
 import RecentTransactions from "roaster_tools/recentTransactions";
 
 import { ConfigProvider as UserProvider } from "contexts/user";
+import { ConfigProvider as TrxProvider } from "contexts/transactions";
 import { ConfigProvider as LotsProvider } from "contexts/lots";
 import { ConfigProvider as ProducerProvider } from "contexts/producers";
 /* eslint-enable */
 
 const Wrapper = ({ roaster_profile_id: id, roaster, ...rest }) => (
     <UserProvider value={{ roaster }}>
-        <LotsProvider value={{ id }}>
-            <ProducerProvider value={{ id }}>
-                <Dashboard {...rest} />
-            </ProducerProvider>
-        </LotsProvider>
+        <TrxProvider value={{ id }}>
+            <LotsProvider value={{ id }}>
+                <ProducerProvider value={{ id }}>
+                    <Dashboard {...rest} />
+                </ProducerProvider>
+            </LotsProvider>
+        </TrxProvider>
     </UserProvider>
 );
 const { oneOfType, number, string, object } = PropTypes;
@@ -36,7 +39,7 @@ const Dashboard = () => (
         <Grid doubling columns={2}>
             <Grid.Column width={10}>
                 <Segment>{true && <OpenContracts />}</Segment>
-                <Segment>{false && <RecentTransactions />}</Segment>
+                <Segment>{true && <RecentTransactions />}</Segment>
             </Grid.Column>
             <Grid.Column width={6}>{false && <AddLots />}</Grid.Column>
         </Grid>

@@ -7,22 +7,25 @@ import Table from "shared/table";
 
 import tableDefs from "tableDefinitions/recentTransactions";
 
-import User from "contexts/user";
+import Trx from "contexts/transactions";
 /* eslint-enable */
 
-const Wrapper = props => <User>{user => <RecentTransactions {...props} transactions={user.transactions} />}</User>;
+const Wrapper = props => (
+    <Trx>{trx => <RecentTransactions {...props} transactions={trx.transactions} loading={trx.loading} />}</Trx>
+);
 
-const RecentTransactions = ({ transactions }) => (
+const RecentTransactions = ({ transactions, loading }) => (
     <F>
         <Header as="h2" content="Recent Transactions" />
-        <Table tableDefs={tableDefs} data={transactions} />
+        <Table tableDefs={tableDefs} data={transactions} loading={loading} />
     </F>
 );
 
-const { array } = PropTypes;
+const { array, bool } = PropTypes;
 
 RecentTransactions.propTypes = {
-    transactions: array
+    transactions: array,
+    loading: bool
 };
 
 export default Wrapper;
