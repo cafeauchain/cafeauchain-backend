@@ -8,18 +8,12 @@ import LotSelect from "shared/lots/lotSelect";
 import requester from "utilities/apiUtils/requester";
 import API_URL from "utilities/apiUtils/url";
 
-import User from "contexts/user";
+import Lots from "contexts/lots";
 /* eslint-enable */
 
-const Wrapper = props => {
-    return (
-        <User>
-            {user => {
-                return <AcceptDelivery {...props} id={user.id} />;
-            }}
-        </User>
-    );
-};
+const Wrapper = props => (
+    <Lots>{lots => <AcceptDelivery {...props} id={lots.userId} updateContext={lots.updateContext} />}</Lots>
+);
 
 class AcceptDelivery extends Component {
     constructor(props) {
@@ -56,7 +50,26 @@ class AcceptDelivery extends Component {
             // eslint-disable-next-line
             console.log("there was an error", respJSON.response);
         } else {
-            window.location.href = await respJSON.redirect_url;
+            if (respJSON.redirect) {
+                window.location.href = await respJSON.redirect_url;
+            } else {
+                this.getLotData(id);
+            }
+        }
+    };
+
+    // only called after successful submit
+    getLotData = async id => {
+        const url = `${API_URL}/roasters/${id}/lots`;
+        const { updateContext, closeModal } = this.props;
+        const response = await fetch(url);
+        const { data } = await response.json();
+        if (data instanceof Error) {
+            // eslint-disable-next-line
+            console.log("there was an error", data.response);
+        } else {
+            // TODO Add success/error messaging before closing
+            updateContext({ lots: data }, closeModal());
         }
     };
 
@@ -79,9 +92,11 @@ class AcceptDelivery extends Component {
     }
 }
 
-const { oneOfType, string, number } = PropTypes;
+const { oneOfType, string, number, func } = PropTypes;
 AcceptDelivery.propTypes = {
-    id: oneOfType([number, string])
+    id: oneOfType([number, string]),
+    closeModal: func,
+    updateContext: func
 };
 
 export default Wrapper;
