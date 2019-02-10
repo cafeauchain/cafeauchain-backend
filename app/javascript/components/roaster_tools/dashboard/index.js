@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { Container, Grid, Header, Segment } from "semantic-ui-react";
 
@@ -16,50 +16,47 @@ import { ConfigProvider as ProducerProvider } from "contexts/producers";
 
 import QuickActions from "./quickActions";
 
-class Dashboard extends Component {
-    onClick = (e, user) => {
-        user.updateContext({ display: new Date().toString() });
-    };
+const Wrapper = ({ roaster_profile_id: id, roaster, ...rest }) => (
+    <UserProvider value={{ roaster }}>
+        <LotsProvider value={{ id }}>
+            <ProducerProvider value={{ id }}>
+                <Dashboard {...rest} />
+            </ProducerProvider>
+        </LotsProvider>
+    </UserProvider>
+);
 
-    render = () => {
-        const { roaster } = this.props;
-        const { id } = roaster;
-        return (
-            <UserProvider value={{ roaster }}>
-                <LotsProvider value={{ id }}>
-                    <ProducerProvider value={{ id }}>
-                        <Container style={{ margin: "4em 0" }}>
-                            <Segment>
-                                <Header as="h1" content="Dashboard" />
-                            </Segment>
-                            <Grid doubling>
-                                <Grid.Column width={10}>
-                                    <QuickActions />
-                                    {false && (
-                                        <Segment>
-                                            <BatchLog id={id} />
-                                        </Segment>
-                                    )}
-                                    <Segment>
-                                        <RoastLog />
-                                    </Segment>
-                                </Grid.Column>
-                                <Grid.Column width={6}>
-                                    <Segment>
-                                        <Budgeter />
-                                    </Segment>
-                                </Grid.Column>
-                            </Grid>
-                        </Container>
-                    </ProducerProvider>
-                </LotsProvider>
-            </UserProvider>
-        );
-    };
-}
+const { oneOfType, number, string, object } = PropTypes;
 
-const { object } = PropTypes;
-Dashboard.propTypes = {
+Wrapper.propTypes = {
+    roaster_profile_id: oneOfType([number, string]),
     roaster: object
 };
-export default Dashboard;
+
+const Dashboard = () => (
+    <Container style={{ margin: "4em 0" }}>
+        <Segment>
+            <Header as="h1" content="Dashboard" />
+        </Segment>
+        <Grid doubling>
+            <Grid.Column width={10}>
+                <QuickActions />
+                {false && (
+                    <Segment>
+                        <BatchLog />
+                    </Segment>
+                )}
+                <Segment>
+                    <RoastLog />
+                </Segment>
+            </Grid.Column>
+            <Grid.Column width={6}>
+                <Segment>
+                    <Budgeter />
+                </Segment>
+            </Grid.Column>
+        </Grid>
+    </Container>
+);
+
+export default Wrapper;
