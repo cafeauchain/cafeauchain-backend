@@ -9,9 +9,7 @@ import requester from "utilities/apiUtils/requester";
 import Producers from "contexts/producers";
 /* eslint-enable */
 
-const Wrapper = props => (
-    <Producers>{producers => <ProducerSelect {...props} producers={producers.producers} />}</Producers>
-);
+const Wrapper = props => <Producers>{producers => <ProducerSelect {...props} producers={producers.data} />}</Producers>;
 
 class ProducerSelect extends Component {
     constructor(props) {

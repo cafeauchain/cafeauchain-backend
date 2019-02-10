@@ -8,6 +8,8 @@ import SingleContract from "roaster_tools/inventory/singleContract";
 import OpenContracts from "roaster_tools/openContracts";
 import RecentTransactions from "roaster_tools/recentTransactions";
 
+import API_URL from "utilities/apiUtils/url";
+
 import { ConfigProvider as UserProvider } from "contexts/user";
 import { ConfigProvider as TrxProvider } from "contexts/transactions";
 import { ConfigProvider as LotsProvider } from "contexts/lots";
@@ -16,9 +18,9 @@ import { ConfigProvider as ProducerProvider } from "contexts/producers";
 
 const Wrapper = ({ roaster_profile_id: id, roaster, ...rest }) => (
     <UserProvider value={{ roaster }}>
-        <TrxProvider value={{ id }}>
-            <LotsProvider value={{ id }}>
-                <ProducerProvider value={{ id }}>
+        <TrxProvider value={{ id }} url={`${API_URL}/roasters/${id}/transactions`}>
+            <LotsProvider value={{ id }} url={`${API_URL}/roasters/${id}/lots`}>
+                <ProducerProvider value={{ id }} url={`${API_URL}/producers`}>
                     <Dashboard {...rest} />
                 </ProducerProvider>
             </LotsProvider>

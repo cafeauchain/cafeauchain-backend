@@ -1,3 +1,4 @@
+// TODO Refactor this so I have a single basic context
 import React, { createContext } from "react";
 import PropTypes from "prop-types";
 
@@ -13,7 +14,7 @@ class ConfigProvider extends React.Component {
         /* eslint-disable */
         this.state = {
             userId: props.value.id,
-            lots: [],
+            data: [],
             updateContext: stateObj => this.setState({ loading: true }, this.setState(stateObj)),
             loading: true
         };
@@ -21,8 +22,7 @@ class ConfigProvider extends React.Component {
     }
 
     componentDidMount() {
-        const { userId } = this.state;
-        this.getLots(userId);
+        this.getData();
     }
 
     componentDidUpdate() {
@@ -33,15 +33,11 @@ class ConfigProvider extends React.Component {
         }
     }
 
-    getData = async (url, name) => {
+    getData = async () => {
+        const { url } = this.props;
         const response = await fetch(url);
         const { data } = await response.json();
-        this.setState({ [name]: data });
-    };
-
-    getLots = userId => {
-        const url = `${API_URL}/roasters/${userId}/lots`;
-        this.getData(url, "lots");
+        this.setState({ data });
     };
 
     render() {
@@ -52,10 +48,11 @@ class ConfigProvider extends React.Component {
 
 export { ConfigProvider };
 
-const { node, object } = PropTypes;
+const { node, object, string } = PropTypes;
 ConfigProvider.propTypes = {
     children: node,
-    value: object
+    value: object,
+    url: string
 };
 
 export default Consumer;

@@ -18,8 +18,8 @@ import QuickActions from "./quickActions";
 
 const Wrapper = ({ roaster_profile_id: id, roaster, ...rest }) => (
     <UserProvider value={{ roaster }}>
-        <LotsProvider value={{ id }}>
-            <ProducerProvider value={{ id }}>
+        <LotsProvider value={{ id }} url={`${API_URL}/roasters/${id}/lots`}>
+            <ProducerProvider value={{ id }} url={`${API_URL}/producers`}>
                 <Dashboard {...rest} />
             </ProducerProvider>
         </LotsProvider>

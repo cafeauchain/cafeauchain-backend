@@ -10,7 +10,7 @@ import roasterCostCalc from "utilities/roasterCostCalc";
 import Lots from "contexts/lots";
 /* eslint-enable */
 
-const Wrapper = props => <Lots>{lots => <Budgeter {...props} lots={lots.lots} loading={lots.loading} />}</Lots>;
+const Wrapper = props => <Lots>{lots => <Budgeter {...props} lots={lots.data} loading={lots.loading} />}</Lots>;
 
 class Budgeter extends Component {
     constructor(props) {

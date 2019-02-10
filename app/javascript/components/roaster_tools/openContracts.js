@@ -10,7 +10,7 @@ import tableDefs from "tableDefinitions/openContracts";
 import Lots from "contexts/lots";
 /* eslint-enable */
 
-const Wrapper = props => <Lots>{lots => <OpenContracts {...props} lots={lots.lots} loading={lots.loading} />}</Lots>;
+const Wrapper = props => <Lots>{lots => <OpenContracts {...props} lots={lots.data} loading={lots.loading} />}</Lots>;
 
 const OpenContracts = ({ lots, loading }) => (
     <F>

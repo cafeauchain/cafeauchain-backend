@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import Lots from "contexts/lots";
 /* eslint-enable */
 
-const Wrapper = props => <Lots>{lots => <LotSelect {...props} lots={lots.lots} />}</Lots>;
+const Wrapper = props => <Lots>{lots => <LotSelect {...props} lots={lots.data} />}</Lots>;
 
 class LotSelect extends Component {
     constructor(props) {

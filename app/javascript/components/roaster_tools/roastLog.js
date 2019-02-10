@@ -19,7 +19,7 @@ import User from "contexts/user";
 import Lots from "contexts/lots";
 /* eslint-enable */
 
-const Wrapper = props => <Lots>{lots => <RoastLog {...props} lots={lots.lots} loading={lots.loading} />}</Lots>;
+const Wrapper = props => <Lots>{lots => <RoastLog {...props} lots={lots.data} loading={lots.loading} />}</Lots>;
 
 class RoastLog extends Component {
     constructor(props) {

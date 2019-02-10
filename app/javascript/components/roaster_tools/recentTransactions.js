@@ -11,7 +11,7 @@ import Trx from "contexts/transactions";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Trx>{trx => <RecentTransactions {...props} transactions={trx.transactions} loading={trx.loading} />}</Trx>
+    <Trx>{trx => <RecentTransactions {...props} transactions={trx.data} loading={trx.loading} />}</Trx>
 );
 
 const RecentTransactions = ({ transactions, loading }) => (
