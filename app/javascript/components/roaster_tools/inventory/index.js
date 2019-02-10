@@ -8,44 +8,46 @@ import SingleContract from "roaster_tools/inventory/singleContract";
 import OpenContracts from "roaster_tools/openContracts";
 import RecentTransactions from "roaster_tools/recentTransactions";
 
-import API_URL from "utilities/apiUtils/url";
-
-import { ConfigProvider } from "contexts/user";
+import { ConfigProvider as UserProvider } from "contexts/user";
+import { ConfigProvider as LotsProvider } from "contexts/lots";
+import { ConfigProvider as ProducerProvider } from "contexts/producers";
 /* eslint-enable */
+
+const Wrapper = ({ roaster_profile_id: id, roaster, ...rest }) => (
+    <UserProvider value={{ roaster }}>
+        <LotsProvider value={{ id }}>
+            <ProducerProvider value={{ id }}>
+                <Dashboard {...rest} />
+            </ProducerProvider>
+        </LotsProvider>
+    </UserProvider>
+);
+const { oneOfType, number, string, object } = PropTypes;
+Wrapper.propTypes = {
+    roaster_profile_id: oneOfType([number, string]),
+    roaster: object
+};
 
 class Dashboard extends Component {
     state = {};
     render = () => {
-        const { roaster_profile_id: id } = this.props;
-        const contextValue = { id };
         return (
-            <ConfigProvider value={contextValue}>
+            <div>
                 <Container style={{ margin: "4em 0" }}>
                     <Segment>
                         <Header as="h1" content="Manage Inventory" />
                     </Segment>
                     <Grid doubling columns={2}>
                         <Grid.Column width={10}>
-                            <Segment>
-                                <OpenContracts />
-                            </Segment>
-                            <Segment>
-                                <RecentTransactions id={id} />
-                            </Segment>
+                            <Segment>{true && <OpenContracts />}</Segment>
+                            <Segment>{false && <RecentTransactions />}</Segment>
                         </Grid.Column>
-                        <Grid.Column width={6}>
-                            <SingleContract id={id} />
-                            <AddLots id={id} />
-                        </Grid.Column>
+                        <Grid.Column width={6}>{false && <AddLots />}</Grid.Column>
                     </Grid>
                 </Container>
-            </ConfigProvider>
+            </div>
         );
     };
 }
 
-const { oneOfType, number, string } = PropTypes;
-Dashboard.propTypes = {
-    roaster_profile_id: oneOfType([number, string])
-};
-export default Dashboard;
+export default Wrapper;
