@@ -3,6 +3,7 @@
 # Table name: subscriptions
 #
 #  id                     :bigint(8)        not null, primary key
+#  next_bill_date         :datetime
 #  status                 :integer
 #  trial_end              :datetime
 #  created_at             :datetime         not null

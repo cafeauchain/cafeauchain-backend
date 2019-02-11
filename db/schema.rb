@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_08_015623) do
+ActiveRecord::Schema.define(version: 2019_02_11_015537) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,6 +115,7 @@ ActiveRecord::Schema.define(version: 2019_02_08_015623) do
     t.integer "status"
     t.datetime "contract_open"
     t.datetime "contract_filled"
+    t.string "label"
     t.index ["crop_id"], name: "index_lots_on_crop_id"
     t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"
   end
@@ -187,6 +188,7 @@ ActiveRecord::Schema.define(version: 2019_02_08_015623) do
     t.datetime "updated_at", null: false
     t.string "stripe_subscription_id"
     t.datetime "trial_end"
+    t.datetime "next_bill_date"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
