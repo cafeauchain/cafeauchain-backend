@@ -46,24 +46,24 @@ const Dashboard = () => (
             <Header as="h1" content="Dashboard" />
         </Segment>
         <Grid doubling>
-            <Grid.Column width={10}>
+            <Grid.Column width={10} stretched>
                 <QuickActions />
                 <Segment>
                     <OpenRoasts />
                 </Segment>
-                <Segment>
-                    <OpenContracts />
-                </Segment>
-                <Segment>
-                    <RoastLog />
-                </Segment>
             </Grid.Column>
-            <Grid.Column width={6}>
+            <Grid.Column width={6} stretched>
                 <Segment>
                     <Budgeter />
                 </Segment>
             </Grid.Column>
         </Grid>
+        <Segment>
+            <OpenContracts />
+        </Segment>
+        <Segment>
+            <RoastLog />
+        </Segment>
     </Container>
 );
 

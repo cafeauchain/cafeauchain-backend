@@ -34,3 +34,8 @@
 .ui.header {
     color: $darkgreen;
 }
+
+// Progress bar
+.ui.progress .bar {
+    min-width: 6px;
+}

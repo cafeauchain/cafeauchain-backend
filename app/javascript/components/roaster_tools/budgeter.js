@@ -28,17 +28,17 @@ class Budgeter extends Component {
 
     getColor = pct => {
         let color = "green";
-        if (pct > 0.75) {
+        if (pct > 75) {
             color = "yellow";
         }
-        if (pct > 0.9) {
+        if (pct > 90) {
             color = "red";
         }
         return color;
     };
 
     render() {
-        const { data } = this.props;
+        const { data, loading } = this.props;
         let showContent = false;
         const { attributes } = data;
         let total, period_start, period_end, days_remaining, days_elapsed, dayProgress, roastProgress;
@@ -50,47 +50,46 @@ class Budgeter extends Component {
             period_end = moment(attributes.period_end_date).startOf("day");
             days_remaining = period_end.diff(today, "days");
             days_elapsed = today.diff(period_start, "days");
-            dayProgress = days_elapsed / 30;
-            roastProgress = this.getRemaining(total) / this.getLimit(total);
+            dayProgress = (days_elapsed / 30) * 100;
+            roastProgress = ((this.getLimit(total) - this.getRemaining(total)) / this.getLimit(total)) * 100;
         }
-        const { loading } = this.props;
         return (
             <F>
-                <Header as="h2" content="Activity" />
+                <Header as="h2" content="Billing Activity" />
                 {showContent && (
                     <div style={{ position: "relative" }}>
                         <Dimmer active={loading} inverted>
                             <Loader active={loading} size="large" />
                         </Dimmer>
-                        {true && (
-                            <Progress value={days_elapsed} total={30} color={this.getColor(dayProgress)}>
-                                {days_remaining}
-                                <F> Days Remaining</F>
-                            </Progress>
-                        )}
-                        {true && (
-                            <Progress
-                                value={this.getRemaining(total)}
-                                total={this.getLimit(total)}
-                                color={this.getColor(roastProgress)}
-                            >
-                                {this.getRemaining(total)}
-                                <F> lbs before next charge</F>
-                            </Progress>
-                        )}
-                        <F>To date, youve roasted </F>
-                        <AsNumber type="positive">{total}</AsNumber>
-                        <F> pounds of green coffee. Your current bill is </F>
-                        <Money type="negative">{roasterCostCalc(total)}</Money>
-                        <F>. You can roast another </F>
-                        <AsNumber type="positive">{this.getRemaining(total)}</AsNumber>
-                        <F> pounds before you will be charged another $2. Your period started on </F>
-                        {period_start.format("MMMM D")}
-                        <F> and will end on </F>
-                        {period_end.format("MMMM D")}
-                        <F>. And there are </F>
-                        {days_remaining}
-                        <F> days left in this billing cycle.</F>
+                        <Progress percent={dayProgress} color={this.getColor(dayProgress)}>
+                            {days_remaining}
+                            <F> Days Remaining</F>
+                        </Progress>
+                        <Progress percent={roastProgress} color={this.getColor(roastProgress)}>
+                            {this.getRemaining(total)}
+                            <F> lbs before next charge</F>
+                        </Progress>
+                        <Header as="h3">
+                            <F>Billing: </F>
+                            <Money type="negative">{roasterCostCalc(total)}</Money>
+                            <F> due on </F>
+                            {period_end.format("MMMM D")}
+                        </Header>
+                        <div>
+                            <span>To date, youve roasted </span>
+                            <AsNumber type="positive">{total}</AsNumber>
+                            <F> pounds of green coffee. Your current bill is </F>
+                            <Money type="negative">{roasterCostCalc(total)}</Money>
+                            <F>. You can roast another </F>
+                            <AsNumber type="positive">{this.getRemaining(total)}</AsNumber>
+                            <F> pounds before you will be charged another $2. Your period started on </F>
+                            {period_start.format("MMMM D")}
+                            <F> and will end on </F>
+                            {period_end.format("MMMM D")}
+                            <F> There are </F>
+                            {days_remaining}
+                            <F> days left in this billing cycle.</F>
+                        </div>
                     </div>
                 )}
             </F>
