@@ -3,11 +3,12 @@ Stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
 
 u = User.create!(name: "Cafe au Chain Admin", email: "support@cafeauchain.com", password: 'changeme', password_confirmation: 'changeme', admin: true)
 puts "#{u.name} created."
-p1 = Plan.create!(stripe_plan_id: "plan_E8GqFxcQDJTsvk",
+
+p1 = Plan.create!(stripe_plan_id: "plan_EVlDMgzP0nqinE",
   price_in_cents: 200,
   interval: "monthly",
   name: "Proof of Perk Usage")
-p2 = Plan.create!(stripe_plan_id: "plan_E8GnBNhnJAYQm8",
+p2 = Plan.create!(stripe_plan_id: "plan_EVlCzJj1ZYZnIj",
   price_in_cents: 1999,
   interval: "monthly",
   name: "Proof of Perk Base")
