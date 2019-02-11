@@ -42,7 +42,7 @@ class OpenRoasts extends Component {
         this.setState({
             isOpen: true,
             current: item,
-            details: { ending_amount: Number(attributes.starting_amount) * 0.9 }
+            details: { ending_amount: (Number(attributes.starting_amount) * 0.9).toFixed(2) }
         });
     };
 
@@ -98,7 +98,7 @@ class OpenRoasts extends Component {
     };
 
     renderForm = () => {
-        const { current } = this.state;
+        const { current, details } = this.state;
         const { attributes } = current;
         return (
             <Form onSubmit={this.handleSubmit}>
@@ -113,7 +113,7 @@ class OpenRoasts extends Component {
                     label="Roasted Yield (in lbs)"
                     onChange={this.handleInputChange}
                     type="number"
-                    defaultValue={Number(attributes.starting_amount) * 0.9}
+                    defaultValue={details.ending_amount}
                     step={0.1}
                 />
                 <Button size="small" primary fluid>
