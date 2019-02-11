@@ -22,6 +22,16 @@ module Api::V1
       end
     end
 
+    def update
+      @batch = InventoryServices::FinishBatchRoast.finish(@batch.id, params[:ending_amount])
+      if @batch.errors.full_messages.empty?
+        render json: {"redirect":false,"refresh_parent": true,"redirect_url": manage_inventory_roaster_profile_path(@roaster)}, status: 200
+      else
+        render @batch.errors, status: 422
+      end
+    end
+    
+
     private
 
     def set_roaster
