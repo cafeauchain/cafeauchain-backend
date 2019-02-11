@@ -14,12 +14,18 @@ module StripeServices
       else
         stripe_customer_id = Stripe::Customer.create(description: "Account for #{@user.roaster_profile.name}")['id']
       end
-      stripe_sub = Stripe::Subscription.create(customer: stripe_customer_id, trial_from_plan: true, items: [
-        {plan: @plan.stripe_plan_id}
+      stripe_customer = Stripe::Customer.retrieve(stripe_customer_id)
+      stripe_customer.coupon = 'yzjn1Zzr'
+      stripe_customer.save
+      stripe_sub = Stripe::Subscription.create(customer: stripe_customer_id, items: [
+        {plan: @plan.stripe_plan_id, quantity: 1}
       ])
-      @subscription = @user.create_subscription(stripe_customer_id: stripe_customer_id, stripe_subscription_id: stripe_sub["id"], trial_end: Time.at(stripe_sub["trial_end"]), status: "trial")
+      @subscription = @user.create_subscription(stripe_customer_id: stripe_customer_id, stripe_subscription_id: stripe_sub["id"],
+                                                next_bill_date: (Time.now + 30.days))
       SubscriptionItem.create(subscription: @subscription, plan: @plan, quantity: 1)
+      StripeServices::UpdateQuantifiedSubscription.update(user_id, @subscription.id)
       # SubscriptionMailer.enroll_and_welcome(@user).deliver_now! # Send welcome email
+      return @subscription
     end
     
   end

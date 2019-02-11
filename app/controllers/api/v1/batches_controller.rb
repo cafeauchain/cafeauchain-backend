@@ -16,6 +16,8 @@ module Api::V1
     def create
       @batch = InventoryServices::StartBatchRoast.start(@lot.id, params[:starting_amount])
       if @batch.errors.full_messages.empty?
+        subscription = @roaster.owner.subscription
+        StripeServices::UpdateQuantifiedSubscription.update(@roaster.owner.id, subscription.id)
         render json: {"redirect":false,"refresh_parent": true,"redirect_url": manage_inventory_roaster_profile_path(@roaster)}, status: 200
       else
         render @batch.errors, status: 422
