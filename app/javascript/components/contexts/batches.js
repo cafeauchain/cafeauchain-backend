@@ -15,7 +15,7 @@ class ConfigProvider extends React.Component {
         this.state = {
             userId: props.value.id,
             data: [],
-            updateContext: stateObj => this.setState({ loading: true }, this.setState(stateObj)),
+            updateContext: this.updateContext,
             loading: true
         };
         /* eslint-enable */
@@ -32,6 +32,10 @@ class ConfigProvider extends React.Component {
             setTimeout(() => this.setState({ loading: false }, console.log("updating loader")), 600);
         }
     }
+
+    updateContext = stateObj => {
+        this.setState({ loading: true }, this.setState(stateObj));
+    };
 
     getData = async () => {
         const { url } = this.props;
