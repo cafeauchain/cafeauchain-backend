@@ -1,10 +1,6 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+require 'stripe'
+Stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
+
 u = User.create!(name: "Cafe au Chain Admin", email: "support@cafeauchain.com", password: 'changeme', password_confirmation: 'changeme', admin: true)
 puts "#{u.name} created."
 p1 = Plan.create!(stripe_plan_id: "plan_E8GqFxcQDJTsvk",
@@ -22,6 +18,16 @@ roaster = RoasterProfile.create(name: "1000 Faces Coffee", url: '1000facescoffee
 puts "#{roaster.name} created."
 roaster.users << u2
 roaster.set_owner
+sub = StripeServices::EnrollBaseSubscription.initial_enroll(u2.id)
+token = Stripe::Token.create(
+  card: {
+    number: "4242424242424242",
+    exp_month: 2,
+    exp_year: 2020,
+    cvc: "314",
+  },
+)
+card = StripeServices::CreateCard.call(sub.id, token)
 producer = ProducerProfile.create(name: "Gold Mountain Coffee Growers")
 puts "#{producer.name} created."
 crops = []
