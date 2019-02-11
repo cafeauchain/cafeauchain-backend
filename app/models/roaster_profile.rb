@@ -50,9 +50,7 @@ class RoasterProfile < ApplicationRecord
 
   def amount_roasted_in_period(subscription_id)
     subscription = Subscription.find(subscription_id)
-    if Date.today <= subscription.trial_end && self.batches.pluck(:starting_amount).sum <= 500
-      return false
-    elsif 
+    if Date.today <= subscription.trial_end
       batches = self.batches
     else
       date_range = (subscription.next_bill_date - 30.days)..subscription.next_bill_date
