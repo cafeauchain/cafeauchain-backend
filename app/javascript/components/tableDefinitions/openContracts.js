@@ -5,7 +5,7 @@ const tableDefinition = {
         { name: "crop_name", namespace: "attributes", label: "Crop Name (Harvest Year)", width: 8 },
         { name: "on_hand", namespace: "attributes", formatter: AsNumber, label: "In House" },
         { name: "pounds_of_coffee", namespace: "attributes", formatter: AsNumber, label: "On Contract" },
-        { name: "amount_roasted", namespace: "attributes", formatter: AsNumber, label: "Roasted" },
+        { name: "total_amount_roasted", namespace: "attributes", formatter: AsNumber, label: "Roasted" },
         {
             name: "price_per_pound",
             namespace: "attributes",

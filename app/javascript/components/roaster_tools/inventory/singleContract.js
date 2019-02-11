@@ -80,7 +80,7 @@ class SingleContract extends Component {
             console.log("there was an error", data.response);
         } else {
             // TODO Add success/error messaging before closing
-            updateContext({ lots: data }, closeModal());
+            updateContext({ data }, closeModal());
         }
     };
 

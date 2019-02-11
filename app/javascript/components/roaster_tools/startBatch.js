@@ -10,12 +10,25 @@ import LotSelect from "shared/lots/lotSelect";
 import requester from "utilities/apiUtils/requester";
 import API_URL from "utilities/apiUtils/url";
 
-import User from "contexts/user";
 import Lots from "contexts/lots";
+import Batches from "contexts/batches";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Lots>{lots => <StartBatch {...props} id={lots.userId} updateContext={lots.updateContext} />}</Lots>
+    <Lots>
+        {lots => (
+            <Batches>
+                {batches => (
+                    <StartBatch
+                        {...props}
+                        id={lots.userId}
+                        updateLots={lots.updateContext}
+                        updateBatches={batches.updateContext}
+                    />
+                )}
+            </Batches>
+        )}
+    </Lots>
 );
 class StartBatch extends Component {
     constructor(props) {
@@ -56,23 +69,27 @@ class StartBatch extends Component {
             if (respJSON.redirect) {
                 window.location.href = await respJSON.redirect_url;
             } else {
-                this.getLotData(id);
+                this.getData(id);
             }
         }
     };
 
     // only called after successful submit
-    getLotData = async id => {
-        const url = `${API_URL}/roasters/${id}/lots`;
-        const { updateContext, closeModal } = this.props;
-        const response = await fetch(url);
-        const { data } = await response.json();
-        if (data instanceof Error) {
+    // TODO This feels dumb and I should think of a better solution
+    // Also, I dont think the try/catch will work like I want it to
+    getData = async id => {
+        const lotsUrl = `${API_URL}/roasters/${id}/lots`;
+        const batchesUrl = `${API_URL}/roasters/${id}/batches`;
+        const { updateLots, updateBatches, closeModal } = this.props;
+        try {
+            const lots = await fetch(lotsUrl);
+            const batches = await fetch(batchesUrl);
+            const { data: lotsData } = await lots.json();
+            const { data: batchesData } = await batches.json();
+            updateLots({ data: lotsData }, updateBatches({ data: batchesData }, closeModal()));
+        } catch (e) {
             // eslint-disable-next-line
-            console.log("there was an error", data.response);
-        } else {
-            // TODO Add success/error messaging before closing
-            updateContext({ lots: data }, closeModal());
+            console.log(e);
         }
     };
 
@@ -113,7 +130,8 @@ const { oneOfType, string, number, func } = PropTypes;
 StartBatch.propTypes = {
     id: oneOfType([number, string]),
     closeModal: func,
-    updateContext: func
+    updateLots: func,
+    updateBatches: func
 };
 
 export default Wrapper;

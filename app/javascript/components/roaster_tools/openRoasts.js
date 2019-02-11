@@ -93,7 +93,7 @@ class OpenRoasts extends Component {
             console.log("there was an error", data.response);
         } else {
             // TODO Add success/error messaging before closing
-            updateContext({ lots: data }, this.closeModal());
+            updateContext({ data }, this.closeModal());
         }
     };
 
