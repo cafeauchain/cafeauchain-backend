@@ -1,7 +1,7 @@
 module Api::V1
   class RoasterProfilesController < ApplicationController
-    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :crops, :cards, :set_as_default, :remove_card]
-    before_action :set_roaster, only: [:update, :crops, :cards, :set_as_default, :remove_card]
+    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :crops, :cards, :set_as_default, :remove_card, :subscriptions]
+    before_action :set_roaster, only: [:update, :crops, :cards, :set_as_default, :remove_card, :subscriptions]
 
     def validate_step
       current_step = params[:current_step]
@@ -53,6 +53,11 @@ module Api::V1
     def crops
       @crops = @roaster_profile.crops.includes(:lots)
       render json: @crops.includes(:lots), status: 200
+    end
+
+    def subscription
+      @subscription = @roaster.owner.subscription
+      render json: @subscription.includes(:subscription_items), status: 200
     end
 
     def cards
