@@ -152,18 +152,6 @@ const HomepageLayout = () => (
         <Segment vertical as="section">
             <Features />
         </Segment>
-        {/* Repeating for example of alternating sections */}
-        <Segment vertical as="section">
-            <General />
-        </Segment>
-
-        <Segment vertical as="section">
-            <About />
-        </Segment>
-
-        <Segment vertical as="section">
-            <Features />
-        </Segment>
     </ResponsiveContainer>
 );
 
