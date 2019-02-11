@@ -140,7 +140,7 @@ class FormattedTable extends Component {
 
                             <Table.Body>
                                 {data.map(item => (
-                                    <Table.Row key={item.id} onClick={e => onClick(e, item)}>
+                                    <Table.Row key={item.id} onClick={onClick ? e => onClick(e, item) : null}>
                                         {this.buildTableCells(item)}
                                     </Table.Row>
                                 ))}

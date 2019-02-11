@@ -6,12 +6,15 @@ import { Container, Grid, Header, Segment } from "semantic-ui-react";
 import Budgeter from "roaster_tools/budgeter";
 import RoastLog from "roaster_tools/roastLog";
 import BatchLog from "roaster_tools/batchLog";
+import OpenContracts from "roaster_tools/openContracts";
+import OpenRoasts from "roaster_tools/openRoasts";
 
 import API_URL from "utilities/apiUtils/url";
 
 import { ConfigProvider as UserProvider } from "contexts/user";
 import { ConfigProvider as LotsProvider } from "contexts/lots";
 import { ConfigProvider as ProducerProvider } from "contexts/producers";
+import { ConfigProvider as BatchesProvider } from "contexts/batches";
 /* eslint-enable */
 
 import QuickActions from "./quickActions";
@@ -19,9 +22,11 @@ import QuickActions from "./quickActions";
 const Wrapper = ({ roaster_profile_id: id, roaster, ...rest }) => (
     <UserProvider value={{ roaster }}>
         <LotsProvider value={{ id }} url={`${API_URL}/roasters/${id}/lots`}>
-            <ProducerProvider value={{ id }} url={`${API_URL}/producers`}>
-                <Dashboard {...rest} />
-            </ProducerProvider>
+            <BatchesProvider value={{ id }} url={`${API_URL}/roasters/${id}/batches`}>
+                <ProducerProvider value={{ id }} url={`${API_URL}/producers`}>
+                    <Dashboard {...rest} />
+                </ProducerProvider>
+            </BatchesProvider>
         </LotsProvider>
     </UserProvider>
 );
@@ -46,6 +51,12 @@ const Dashboard = () => (
                         <BatchLog />
                     </Segment>
                 )}
+                <Segment>
+                    <OpenRoasts />
+                </Segment>
+                <Segment>
+                    <OpenContracts />
+                </Segment>
                 <Segment>
                     <RoastLog />
                 </Segment>
