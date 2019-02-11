@@ -17,7 +17,7 @@ module InventoryServices
     end
 
     def lot_creation
-      @lot = @roaster.lots.create(harvest_year: @params[:harvest_year], pounds_of_coffee: @params[:lot_size], price_per_pound: @params[:price_per_pound], crop: @crop)
+      @lot = @roaster.lots.create(label: @params[:label], harvest_year: @params[:harvest_year], pounds_of_coffee: @params[:lot_size], price_per_pound: @params[:price_per_pound], crop: @crop)
     end
 
     def batch_creation

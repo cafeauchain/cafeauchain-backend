@@ -27,7 +27,7 @@
 #
 
 class LotSerializer < ActiveModel::Serializer
-  attributes :id, :crop_name, :pounds_of_coffee, :price_per_pound, :harvest_year, :on_hand, :contract_value, :batches, :total_amount_roasted
+  attributes :id, :label, :crop_name, :pounds_of_coffee, :price_per_pound, :harvest_year, :on_hand, :contract_value, :batches, :total_amount_roasted
 
   belongs_to :crop
   belongs_to :roaster_profile
