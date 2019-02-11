@@ -14,6 +14,7 @@ import { ConfigProvider as UserProvider } from "contexts/user";
 import { ConfigProvider as LotsProvider } from "contexts/lots";
 import { ConfigProvider as ProducerProvider } from "contexts/producers";
 import { ConfigProvider as BatchesProvider } from "contexts/batches";
+import { ConfigProvider as ActivityProvider } from "contexts/activity";
 /* eslint-enable */
 
 import QuickActions from "./quickActions";
@@ -22,9 +23,11 @@ const Wrapper = ({ roaster_profile_id: id, roaster, ...rest }) => (
     <UserProvider value={{ roaster }}>
         <LotsProvider value={{ id }} url={`${API_URL}/roasters/${id}/lots`}>
             <BatchesProvider value={{ id }} url={`${API_URL}/roasters/${id}/batches`}>
-                <ProducerProvider value={{ id }} url={`${API_URL}/producers`}>
-                    <Dashboard {...rest} />
-                </ProducerProvider>
+                <ActivityProvider value={{ id }} url={`${API_URL}/roasters/${id}/subscriptions`}>
+                    <ProducerProvider value={{ id }} url={`${API_URL}/producers`}>
+                        <Dashboard {...rest} />
+                    </ProducerProvider>
+                </ActivityProvider>
             </BatchesProvider>
         </LotsProvider>
     </UserProvider>

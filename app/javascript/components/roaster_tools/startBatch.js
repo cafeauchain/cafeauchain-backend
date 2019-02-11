@@ -12,6 +12,7 @@ import API_URL from "utilities/apiUtils/url";
 
 import Lots from "contexts/lots";
 import Batches from "contexts/batches";
+import Activity from "contexts/activity";
 /* eslint-enable */
 
 const Wrapper = props => (
@@ -19,12 +20,17 @@ const Wrapper = props => (
         {lots => (
             <Batches>
                 {batches => (
-                    <StartBatch
-                        {...props}
-                        id={lots.userId}
-                        updateLots={lots.updateContext}
-                        updateBatches={batches.updateContext}
-                    />
+                    <Activity>
+                        {activity => (
+                            <StartBatch
+                                {...props}
+                                id={lots.userId}
+                                updateLots={lots.updateContext}
+                                updateBatches={batches.updateContext}
+                                updateActivity={activity.updateContext}
+                            />
+                        )}
+                    </Activity>
                 )}
             </Batches>
         )}
@@ -80,13 +86,19 @@ class StartBatch extends Component {
     getData = async id => {
         const lotsUrl = `${API_URL}/roasters/${id}/lots`;
         const batchesUrl = `${API_URL}/roasters/${id}/batches`;
-        const { updateLots, updateBatches, closeModal } = this.props;
+        const activityUrl = `${API_URL}/roasters/${id}/subscriptions`;
+        const { updateLots, updateBatches, updateActivity, closeModal } = this.props;
         try {
             const lots = await fetch(lotsUrl);
             const batches = await fetch(batchesUrl);
+            const activity = await fetch(activityUrl);
             const { data: lotsData } = await lots.json();
             const { data: batchesData } = await batches.json();
-            updateLots({ data: lotsData }, updateBatches({ data: batchesData }, closeModal()));
+            const { data: activityData } = await activity.json();
+            updateLots(
+                { data: lotsData },
+                updateBatches({ data: batchesData }, updateActivity({ data: activityData }, closeModal()))
+            );
         } catch (e) {
             // eslint-disable-next-line
             console.log(e);
@@ -131,7 +143,8 @@ StartBatch.propTypes = {
     id: oneOfType([number, string]),
     closeModal: func,
     updateLots: func,
-    updateBatches: func
+    updateBatches: func,
+    updateActivity: func
 };
 
 export default Wrapper;
