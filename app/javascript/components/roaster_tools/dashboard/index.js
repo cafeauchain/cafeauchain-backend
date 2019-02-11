@@ -5,7 +5,6 @@ import { Container, Grid, Header, Segment } from "semantic-ui-react";
 /* eslint-disable */
 import Budgeter from "roaster_tools/budgeter";
 import RoastLog from "roaster_tools/roastLog";
-import BatchLog from "roaster_tools/batchLog";
 import OpenContracts from "roaster_tools/openContracts";
 import OpenRoasts from "roaster_tools/openRoasts";
 
@@ -46,11 +45,6 @@ const Dashboard = () => (
         <Grid doubling>
             <Grid.Column width={10}>
                 <QuickActions />
-                {false && (
-                    <Segment>
-                        <BatchLog />
-                    </Segment>
-                )}
                 <Segment>
                     <OpenRoasts />
                 </Segment>
