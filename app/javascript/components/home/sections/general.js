@@ -9,17 +9,26 @@ const General = () => {
             <Grid.Row>
                 <Grid.Column width={8}>
                     <Header as="h3" style={{ fontSize: "2em" }}>
-                        We Help Companies and Companions
+                    Tools for the coffee industry.
+                        <br/>
+                    Built for sustainability
                     </Header>
                     <p style={{ fontSize: "1.33em" }}>
-                        We can give your company superpowers to do things that they never thought possible. Let us
-                        delight your customers and empower your needs... through pure data analytics.
+                        You care about sustainability. So do we.
+                    </p>
+                    <p style={{ fontSize: "1.33em" }}>
+                        We’re building tools to help you track economic and 
+                        environmental sustainability through your supply chain. 
                     </p>
                     <Header as="h3" style={{ fontSize: "2em" }}>
-                        We Make Bananas That Can Dance
+                        Manage your business, manage your data
                     </Header>
                     <p style={{ fontSize: "1.33em" }}>
-                        Yes thats right, you thought it was the stuff of dreams, but even bananas can be bioengineered.
+                        No one knows your business better than you. Get to know it better.
+                    </p>
+                    <p style={{ fontSize: "1.33em" }}>
+                    With the Cafe au Chain platform, see your business data in 
+                    the context you need to make better decisions, support your partners, and improve your product. 
                     </p>
                 </Grid.Column>
                 <Grid.Column floated="right" width={6}>
@@ -28,7 +37,7 @@ const General = () => {
             </Grid.Row>
             <Grid.Row>
                 <Grid.Column textAlign="center">
-                    <Button size="huge">Check Them Out</Button>
+                    <Button size="huge">Check Out Our Tools</Button>
                 </Grid.Column>
             </Grid.Row>
         </Grid>
