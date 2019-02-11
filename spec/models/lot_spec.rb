@@ -3,9 +3,13 @@
 # Table name: lots
 #
 #  id                 :bigint(8)        not null, primary key
+#  contract_filled    :datetime
+#  contract_open      :datetime
 #  harvest_year       :string
+#  label              :string
 #  pounds_of_coffee   :float
 #  price_per_pound    :float
+#  status             :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  crop_id            :bigint(8)

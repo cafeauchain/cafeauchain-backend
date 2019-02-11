@@ -3,9 +3,13 @@
 # Table name: lots
 #
 #  id                 :bigint(8)        not null, primary key
+#  contract_filled    :datetime
+#  contract_open      :datetime
 #  harvest_year       :string
+#  label              :string
 #  pounds_of_coffee   :float
 #  price_per_pound    :float
+#  status             :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  crop_id            :bigint(8)
@@ -28,14 +32,19 @@ class Lot < ApplicationRecord
   has_many :batches
   has_many :transactions
 
+  enum status: [:open, :delivered_in_full, :roasted_in_full]
+
   def contract_value
     return self.price_per_pound * self.pounds_of_coffee
   end
 
   def coffee_on_hand
-    roasted = self.batches.pluck(:starting_amount).sum
-    delivered = self.transactions.where(trans_type: :asset_delivery).pluck(:quantity).sum.to_f
+    roasted = self.batches.pluck(:starting_amount).map{|q| q.to_f}.sum
+    delivered = self.transactions.where(trans_type: :asset_transfer).pluck(:quantity).map{|q| q.to_f}.sum
     return (delivered - roasted)
   end
 
+  def amount_roasted
+    roasted = self.batches.pluck(:starting_amount).sum
+  end
 end

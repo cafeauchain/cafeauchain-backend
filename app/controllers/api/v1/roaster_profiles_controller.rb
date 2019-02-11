@@ -1,8 +1,8 @@
 module Api::V1
   class RoasterProfilesController < ApplicationController
-    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :cards, :set_as_default, :remove_card]
-    before_action :set_roaster, only: [:update, :cards, :set_as_default, :remove_card]
-  
+    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :crops, :cards, :set_as_default, :remove_card, :subscriptions]
+    before_action :set_roaster, only: [:update, :crops, :cards, :set_as_default, :remove_card, :subscriptions]
+
     def validate_step
       current_step = params[:current_step]
       @roaster_profile_wizard = wizard_roaster_profile_for_step(current_step)
@@ -43,13 +43,23 @@ module Api::V1
           if !logo.blank?
             ActiveStorageServices::ImageAttachment.new(logo, @roaster_profile.id, "RoasterProfile", "logo").call
           end
-          render json: @roaster_profile, status: 200     
+          render json: @roaster_profile, status: 200
         else
-          render json: @roaster_profile.errors, status: 422   
+          render json: @roaster_profile.errors, status: 422
         end
       end
     end
-    
+
+    def crops
+      @crops = @roaster_profile.crops.includes(:lots)
+      render json: @crops.includes(:lots), status: 200
+    end
+
+    def subscriptions
+      @subscription = @roaster_profile.owner.subscription
+      render json: @subscription, status: 200
+    end
+
     def cards
       StripeServices::CreateCard.call(@roaster_profile.subscription.id, params[:token])
       render json: @roaster_profile.subscription.cards, status: 200
@@ -63,7 +73,7 @@ module Api::V1
         render json: @roaster_profile.subscription.cards, status: 200
       else
         render json: @card.errors, status: 422
-      end 
+      end
     end
 
     def remove_card
@@ -88,26 +98,26 @@ module Api::V1
         @roaster_profile_wizard = wizard_roaster_profile_for_step(action_name)
       end
     end
-  
+
     def wizard_roaster_profile_next_step(step)
       Wizard::RoasterProfile::STEPS[Wizard::RoasterProfile::STEPS.index(step) + 1]
     end
-  
+
     def wizard_roaster_profile_for_step(step)
       raise InvalidStep unless step.in?(Wizard::RoasterProfile::STEPS)
-  
+
       "Wizard::RoasterProfile::#{step.camelize}".constantize.new(session[:roaster_profile_attributes])
     end
 
     def set_roaster
-      @roaster_profile = RoasterProfile.friendly.find(params[:id])
+      @roaster_profile = RoasterProfile.friendly.find(params[:roaster_profile_id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def roaster_profile_params
       params.require(:roaster_profile).permit(:name, :address_1, :address_2, :zip_code, :city, :state, :about, :slug, :url, :twitter, :facebook)
     end
-  
+
     class InvalidStep < StandardError; end
 
   end

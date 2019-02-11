@@ -43,6 +43,8 @@ class User < ApplicationRecord
   has_one :subscription
   has_many :cards, through: :subscription
 
+  validates_confirmation_of :password
+
   def is_owner
     roaster_profile.owner == self
   end

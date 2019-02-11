@@ -26,6 +26,7 @@ gem 'semantic-ui-sass'
 gem 'mini_magick'
 gem 'mini_racer'
 gem 'stripe'
+gem 'groupdate'
 
 gem "kaminari"
 gem "pager_api"

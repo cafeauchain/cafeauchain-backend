@@ -29,6 +29,7 @@ class RoasterProfile < ApplicationRecord
   has_many :transactions
   has_many :lots
   has_many :crops, through: :lots
+  has_many :batches, through: :lots
   has_many :addresses, as: :addressable, dependent: :destroy
 
   belongs_to :owner, class_name: "User", foreign_key: "owner_id", optional: true
@@ -46,6 +47,14 @@ class RoasterProfile < ApplicationRecord
     lot = Lot.find(lot_id)
     bags_remaining = lot.bags - self.bags_delivered(lot_id)
   end
+
+  def amount_roasted_in_period(subscription_id)
+    subscription = Subscription.find(subscription_id)
+    date_range = (subscription.next_bill_date - 30.days)..subscription.next_bill_date
+    batches = self.batches.where(created_at: date_range)
+    pounds_roasted_in_period = batches.pluck(:starting_amount).sum
+  end
+  
 
   def set_owner
     if self.owner.nil?

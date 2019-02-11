@@ -2,12 +2,20 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Container, Button, Form, Header } from "semantic-ui-react";
 
-import Input from "../../shared/input";
+/* eslint-disable */
+import Input from "shared/input";
 
-import humanize from "../../utilities/humanize";
-import underscorer from "../../utilities/underscorer";
-import readCookie from "../../utilities/readCookie";
-import API_URL from "../../utilities/apiUtils/url";
+import humanize from "utilities/humanize";
+import underscorer from "utilities/underscorer";
+import readCookie from "utilities/readCookie";
+import API_URL from "utilities/apiUtils/url";
+
+import Lots from "contexts/lots";
+/* eslint-enable */
+
+const Wrapper = props => (
+    <Lots>{lots => <Matcher {...props} id={lots.userId} updateContext={lots.updateContext} />}</Lots>
+);
 
 class Matcher extends Component {
     constructor(props) {
@@ -70,17 +78,33 @@ class Matcher extends Component {
         if (response.ok) {
             window.location.href = await respJSON.redirect_url;
         } else {
+            if (respJSON.redirect) {
+                window.location.href = await respJSON.redirect_url;
+            } else {
+                this.getLotData(id);
+            }
+        }
+    };
+
+    // only called after successful submit
+    getLotData = async id => {
+        const url = `${API_URL}/roasters/${id}/lots`;
+        const { updateContext } = this.props;
+        const response = await fetch(url);
+        const { data } = await response.json();
+        if (data instanceof Error) {
             // eslint-disable-next-line
-            this.setState({ error: respJSON.error });
-            // eslint-disable-next-line
-            console.log(respJSON);
+            console.log("there was an error", data.response);
+        } else {
+            // TODO Add success/error messaging before closing
+            updateContext({ data });
         }
     };
     render() {
         const { dbKeys, data } = this.props;
         const { disabled, details } = this.state;
         return (
-            <Container text>
+            <Container>
                 <p>
                     Your import was parsed correctly! Now, we need to map the columns in your import to the fields in
                     our database! Please select the header from the dropdown that aligns with our database field.
@@ -95,7 +119,13 @@ class Matcher extends Component {
                                 key={item.name}
                                 inputType="select"
                                 label={(
-                                    <label style={{ width: 160, textAlign: "right", fontWeight: "bold" }}>
+                                    <label
+                                        style={
+                                            {
+                                                /* width: 160, textAlign: "right", fontWeight: "bold" */
+                                            }
+                                        }
+                                    >
                                         {humanize(item.name.replace("key_", ""))}
                                     </label>
                                 )}
@@ -103,7 +133,7 @@ class Matcher extends Component {
                                 onChange={this.handleInputChange}
                                 options={options}
                                 defaultValue={details[item.name]}
-                                inline
+                                inline={false}
                                 fluid={false}
                                 clearable
                                 search
@@ -117,11 +147,12 @@ class Matcher extends Component {
     }
 }
 
-const { array, string, oneOfType, number } = PropTypes;
+const { array, string, oneOfType, number, func } = PropTypes;
 Matcher.propTypes = {
     data: array,
     dbKeys: array,
-    id: oneOfType([string, number])
+    id: oneOfType([string, number]),
+    updateContext: func
 };
 
-export default Matcher;
+export default Wrapper;
