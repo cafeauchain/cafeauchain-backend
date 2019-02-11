@@ -1,5 +1,5 @@
 class SubscriptionSerializer < ActiveModel::Serializer
-  attributes :id, :trial_end, :status, :next_bill_date, :period_start_date, :period_end_date
+  attributes :id, :trial_end, :status, :next_bill_date, :amount_roasted_in_cycle, :period_start_date, :period_end_date
 
   def period_start_date
     if Date.today > object.trial_end
@@ -17,5 +17,8 @@ class SubscriptionSerializer < ActiveModel::Serializer
     end
   end
   
+  def amount_roasted_in_cycle
+    object.user.roaster_profile.amount_roasted_in_period(object.id)
+  end
   
 end
