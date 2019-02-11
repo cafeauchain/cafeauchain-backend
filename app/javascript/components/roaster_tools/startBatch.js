@@ -8,7 +8,8 @@ import Input from "shared/input";
 import LotSelect from "shared/lots/lotSelect";
 
 import requester from "utilities/apiUtils/requester";
-import API_URL from "utilities/apiUtils/url";
+import fetcher from "utilities/apiUtils/fetcher";
+import { roasterUrl as ROASTER_URL } from "utilities/apiUtils/url";
 
 import Lots from "contexts/lots";
 import Batches from "contexts/batches";
@@ -65,7 +66,7 @@ class StartBatch extends Component {
         ev.preventDefault();
         const { lotDetails } = this.state;
         const { id } = this.props;
-        const url = `${API_URL}/roasters/${id}/batches`;
+        const url = `${ROASTER_URL(id)}/batches`;
         let body = { ...lotDetails };
         let respJSON = await requester({ url, body });
         if (respJSON instanceof Error) {
@@ -81,24 +82,19 @@ class StartBatch extends Component {
     };
 
     // only called after successful submit
-    // TODO This feels dumb and I should think of a better solution
-    // Also, I dont think the try/catch will work like I want it to
+    // TODO, I dont think the try/catch will work like I want it to
     getData = async id => {
-        const lotsUrl = `${API_URL}/roasters/${id}/lots`;
-        const batchesUrl = `${API_URL}/roasters/${id}/batches`;
-        const activityUrl = `${API_URL}/roasters/${id}/subscriptions`;
+        const lotsUrl = `${ROASTER_URL(id)}/lots`;
+        const batchesUrl = `${ROASTER_URL(id)}/batches`;
+        const activityUrl = `${ROASTER_URL(id)}/subscriptions`;
         const { updateLots, updateBatches, updateActivity, closeModal } = this.props;
         try {
-            const lots = await fetch(lotsUrl);
-            const batches = await fetch(batchesUrl);
-            const activity = await fetch(activityUrl);
-            const { data: lotsData } = await lots.json();
-            const { data: batchesData } = await batches.json();
-            const { data: activityData } = await activity.json();
-            updateLots(
-                { data: lotsData },
-                updateBatches({ data: batchesData }, updateActivity({ data: activityData }, closeModal()))
-            );
+            const results = await Promise.all([fetcher(lotsUrl), fetcher(batchesUrl), fetcher(activityUrl)]);
+            Promise.all([
+                updateLots({ data: results[0] }),
+                updateBatches({ data: results[1] }),
+                updateActivity({ data: results[2] })
+            ]).then(() => closeModal());
         } catch (e) {
             // eslint-disable-next-line
             console.log(e);
