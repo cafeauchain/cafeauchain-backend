@@ -77,7 +77,7 @@ class OpenRoasts extends Component {
             if (respJSON.redirect) {
                 window.location.href = await respJSON.redirect_url;
             } else {
-                this.getBatchData(id);
+                this.getBatchData(userId);
             }
         }
     };
@@ -117,7 +117,7 @@ class OpenRoasts extends Component {
                     step={0.1}
                 />
                 <Button size="small" primary fluid>
-                    Start a Batch
+                    Finish Batch
                 </Button>
             </Form>
         );
