@@ -61,6 +61,7 @@
 #                                            PATCH  /api/v1/roasters/:roaster_profile_id/transactions/:id(.:format)                          api/v1/transactions#update
 #                                            PUT    /api/v1/roasters/:roaster_profile_id/transactions/:id(.:format)                          api/v1/transactions#update
 #                                            DELETE /api/v1/roasters/:roaster_profile_id/transactions/:id(.:format)                          api/v1/transactions#destroy
+#       api_v1_roaster_profile_subscriptions GET    /api/v1/roasters/:roaster_profile_id/subscriptions(.:format)                             api/v1/roaster_profiles#subscriptions
 #               api_v1_roaster_profile_cards POST   /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#cards
 #                                            DELETE /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#remove_card
 #      api_v1_roaster_profile_set_as_default PUT    /api/v1/roasters/:roaster_profile_id/set_as_default(.:format)                            api/v1/roaster_profiles#set_as_default
@@ -176,6 +177,7 @@ Rails.application.routes.draw do
         get :crops, to: 'roaster_profiles#crops'
         resources :batches
         resources :transactions
+        get :subscriptions
         post :cards
         delete :cards, to: "roaster_profiles#remove_card"
         put :set_as_default
