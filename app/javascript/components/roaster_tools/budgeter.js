@@ -37,11 +37,28 @@ class Budgeter extends Component {
         return color;
     };
 
+    // TODO We can probably remove this once we get stripe set up correctly
+    getAmountDue = (value, period_start, subscription_start) => {
+        let total = roasterCostCalc(value);
+        if (moment(period_start).isSame(moment(subscription_start), "day")) {
+            return value <= 500 ? 0 : total - 19.99;
+        }
+        return total;
+    };
+
     render() {
         const { data, loading } = this.props;
         let showContent = false;
         const { attributes } = data;
-        let total, period_start, period_end, days_remaining, days_elapsed, dayProgress, roastProgress;
+        let total,
+            period_start,
+            period_end,
+            days_remaining,
+            days_elapsed,
+            dayProgress,
+            roastProgress,
+            subscription_start,
+            amount_due;
         const today = moment().startOf("day");
         if (attributes) {
             showContent = true;
@@ -52,6 +69,8 @@ class Budgeter extends Component {
             days_elapsed = today.diff(period_start, "days");
             dayProgress = (days_elapsed / 30) * 100;
             roastProgress = ((this.getLimit(total) - this.getRemaining(total)) / this.getLimit(total)) * 100;
+            subscription_start = attributes.subscription_start;
+            amount_due = this.getAmountDue(total, period_start, subscription_start);
         }
         return (
             <F>
@@ -71,22 +90,23 @@ class Budgeter extends Component {
                         </Progress>
                         <Header as="h3">
                             <F>Billing: </F>
-                            <Money type="negative">{roasterCostCalc(total)}</Money>
+                            <Money type="negative">{amount_due}</Money>
                             <F> due on </F>
                             {period_end.format("MMMM D")}
                         </Header>
                         <div>
-                            <span>To date, youve roasted </span>
+                            {/* eslint-disable-next-line */}
+                            <span>To date, you've roasted </span>
                             <AsNumber type="positive">{total}</AsNumber>
                             <F> pounds of green coffee. Your current bill is </F>
-                            <Money type="negative">{roasterCostCalc(total)}</Money>
-                            <F>. You can roast another </F>
+                            <Money type="negative">{amount_due}</Money>
+                            <F>. You can roast </F>
                             <AsNumber type="positive">{this.getRemaining(total)}</AsNumber>
-                            <F> pounds before you will be charged another $2. Your period started on </F>
+                            <F> more pounds before you will be charged another $2. Your period started on </F>
                             {period_start.format("MMMM D")}
                             <F> and will end on </F>
                             {period_end.format("MMMM D")}
-                            <F> There are </F>
+                            <F>. There are </F>
                             {days_remaining}
                             <F> days left in this billing cycle.</F>
                         </div>
