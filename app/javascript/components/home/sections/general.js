@@ -10,7 +10,7 @@ const General = () => {
                 <Grid.Column width={8}>
                     <Header as="h3" style={{ fontSize: "2em" }}>
                     Tools for the coffee industry.
-                        <br/>
+                        <br />
                     Built for sustainability
                     </Header>
                     <p style={{ fontSize: "1.33em" }}>
