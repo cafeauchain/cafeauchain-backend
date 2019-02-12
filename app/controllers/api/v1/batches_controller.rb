@@ -14,7 +14,7 @@ module Api::V1
     end
 
     def create
-      @batch = InventoryServices::StartBatchRoast.start(@lot.id, params[:starting_amount])
+      @batch = InventoryServices::StartBatchRoast.start(@lot.id, params[:starting_amount], params[:roast_date])
       if @batch.errors.full_messages.empty?
         subscription = @roaster.owner.subscription
         StripeServices::UpdateQuantifiedSubscription.update(@roaster.owner.id, subscription.id)
@@ -32,7 +32,7 @@ module Api::V1
         render @batch.errors, status: 422
       end
     end
-    
+
 
     private
 

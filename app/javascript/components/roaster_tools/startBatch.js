@@ -29,6 +29,7 @@ const Wrapper = props => (
                                 updateLots={lots.updateContext}
                                 updateBatches={batches.updateContext}
                                 updateActivity={activity.updateContext}
+                                activity={activity.data}
                             />
                         )}
                     </Activity>
@@ -43,14 +44,20 @@ class StartBatch extends Component {
         this.state = {
             lotDetails: {
                 starting_amount: "",
-                ending_amount: ""
-                // roast_date: moment().format("YYYY-MM-DD")
+                roast_date: moment().format("YYYY-MM-DD")
             }
         };
     }
 
     parentState = obj => {
-        this.setState(obj);
+        if (obj.lotDetails) {
+            let { lotDetails } = this.state;
+            const { lotDetails: lotDetailsFromChild, ...rest } = obj;
+            lotDetails = { ...lotDetails, ...lotDetailsFromChild };
+            this.setState({ lotDetails, ...rest });
+        } else {
+            this.setState(obj);
+        }
     };
 
     handleInputChange = (event, { value, name, checked }) => {
@@ -65,7 +72,16 @@ class StartBatch extends Component {
     handleSubmit = async ev => {
         ev.preventDefault();
         const { lotDetails } = this.state;
-        const { id } = this.props;
+        const { id, activity } = this.props;
+        const { attributes } = activity;
+        if (moment(attributes.period_start_date).isAfter(lotDetails.roast_date, "day")) {
+            /* eslint-disable */
+            alert(
+                "You are trying to create a roast for a previous billing period. If you need to add a roast from a previous period, please email us at support@cafeauchain.com and we will be happy to help you. Please note that this could incur an additional charge if it pushes you over your usage limits."
+            );
+            /* eslint-enable */
+            return;
+        }
         const url = `${ROASTER_URL(id)}/batches`;
         let body = { ...lotDetails };
         let respJSON = await requester({ url, body });
@@ -106,26 +122,15 @@ class StartBatch extends Component {
         const { lotDetails } = this.state;
         return (
             <Form onSubmit={this.handleSubmit}>
-                {/* TODO Ready for roast date */}
-                {false && (
-                    <Input
-                        name="roast_date"
-                        label="Date"
-                        onChange={this.handleInputChange}
-                        type="date"
-                        defaultValue={moment().format("YYYY-MM-DD")}
-                    />
-                )}
+                <Input
+                    name="roast_date"
+                    label="Date"
+                    onChange={this.handleInputChange}
+                    type="date"
+                    defaultValue={lotDetails.roast_date}
+                />
                 <LotSelect roasterId={id} parentState={this.parentState} fluid />
                 <Input name="starting_amount" label="Amount to be Roasted (in lbs)" onChange={this.handleInputChange} />
-                {false && (
-                    <Input
-                        name="ending_amount"
-                        label="Expected Yield (in lbs)"
-                        onChange={this.handleInputChange}
-                        value={lotDetails.ending_amount}
-                    />
-                )}
                 <Button size="small" primary fluid>
                     Start a Batch
                 </Button>
@@ -134,13 +139,14 @@ class StartBatch extends Component {
     }
 }
 
-const { oneOfType, string, number, func } = PropTypes;
+const { oneOfType, string, number, func, object } = PropTypes;
 StartBatch.propTypes = {
     id: oneOfType([number, string]),
     closeModal: func,
     updateLots: func,
     updateBatches: func,
-    updateActivity: func
+    updateActivity: func,
+    activity: object
 };
 
 export default Wrapper;

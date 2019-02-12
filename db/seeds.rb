@@ -49,6 +49,6 @@ puts "Lot created."
 LedgerServices::AssetTransferTransaction.new(440.0, lot.id, roaster.id).call
 LedgerServices::AssetDeliveryTransaction.new(440.0, lot.id, roaster.id).call
 
-batch = lot.batches.create(starting_amount: 176.0, ending_amount: 158.4)
+batch = lot.batches.create(starting_amount: 176.0, ending_amount: 158.4, roast_date: "2018-12-31", status: 2)
 LedgerServices::RoastTransaction.new(176.0, batch.id, roaster.id).call
-puts "Batch created."   
+puts "Batch created."

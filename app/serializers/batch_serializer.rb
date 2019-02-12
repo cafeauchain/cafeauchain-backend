@@ -4,6 +4,7 @@
 #
 #  id              :bigint(8)        not null, primary key
 #  ending_amount   :float
+#  roast_date      :date
 #  starting_amount :float
 #  status          :integer
 #  created_at      :datetime         not null
@@ -20,7 +21,7 @@
 #
 
 class BatchSerializer < ActiveModel::Serializer
-  attributes :id, :starting_amount, :ending_amount, :crop_name
+  attributes :id, :starting_amount, :ending_amount, :crop_name, :roast_date
 
   belongs_to :lot
 
