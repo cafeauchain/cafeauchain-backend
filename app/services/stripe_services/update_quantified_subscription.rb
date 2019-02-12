@@ -15,14 +15,21 @@ module StripeServices
         if additional_pounds > 0
           quantity = (additional_pounds / 100.0).ceil
           stripe_sub = Stripe::Subscription.retrieve(subscription.stripe_subscription_id)
-          stripe_sub.items = [
-            {plan: plan.stripe_plan_id, quantity: quantity}
-          ]
-          stripe_sub.prorate = false
-          stripe_sub.save
-            # billing_cycle_anchor: subscription.trial_end.to_i,
-            # cancel_at_period_end: true
-          subscription.subscription_items.create(plan: plan, quantity: quantity)
+          sub_items = stripe_sub.items.data.select{ |si| si.plan.id == plan.stripe_plan_id}
+          if sub_items.empty?
+            stripe_sub.items = [
+              {plan: plan.stripe_plan_id, quantity: quantity}
+            ]
+            stripe_sub.prorate = false
+            stripe_sub.save
+            subscription.subscription_items.create(plan: plan, quantity: quantity)
+          else
+            item = sub_items.first
+            item.quantity = quantity
+            item.save
+            subscription.subscription_items.find_by(plan).update(quantity: quantity)
+          end
+          return subscription
         end
       end
     end
