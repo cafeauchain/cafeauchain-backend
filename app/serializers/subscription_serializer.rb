@@ -29,11 +29,11 @@ class SubscriptionSerializer < ActiveModel::Serializer
   end
 
   def period_end_date
-    object.next_bill_date
+    object.next_bill_date.end_of_day - 1.days
   end
-  
+
   def amount_roasted_in_cycle
     object.user.roaster_profile.amount_roasted_in_period(object.id)
   end
-  
+
 end

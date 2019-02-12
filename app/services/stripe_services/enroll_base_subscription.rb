@@ -21,12 +21,12 @@ module StripeServices
         {plan: @plan.stripe_plan_id, quantity: 1}
       ])
       @subscription = @user.create_subscription(stripe_customer_id: stripe_customer_id, stripe_subscription_id: stripe_sub["id"],
-                                                next_bill_date: (Time.now + 30.days))
+                                                next_bill_date: (Time.now.beginning_of_day + 30.days))
       SubscriptionItem.create(subscription: @subscription, plan: @plan, quantity: 1)
       StripeServices::UpdateQuantifiedSubscription.update(user_id, @subscription.id)
       # SubscriptionMailer.enroll_and_welcome(@user).deliver_now! # Send welcome email
       return @subscription
     end
-    
+
   end
 end
