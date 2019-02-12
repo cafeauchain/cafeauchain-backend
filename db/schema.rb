@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_12_020122) do
+ActiveRecord::Schema.define(version: 2019_02_12_164551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -190,6 +190,9 @@ ActiveRecord::Schema.define(version: 2019_02_12_020122) do
     t.string "stripe_subscription_id"
     t.datetime "trial_end"
     t.datetime "next_bill_date"
+    t.datetime "period_start"
+    t.datetime "period_end"
+    t.date "subscription_start"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 

@@ -46,8 +46,8 @@ class Budgeter extends Component {
         if (attributes) {
             showContent = true;
             total = attributes.amount_roasted_in_cycle;
-            period_start = moment(attributes.period_start_date).startOf("day");
-            period_end = moment(attributes.period_end_date).startOf("day");
+            period_start = moment(attributes.period_start).startOf("day");
+            period_end = moment(attributes.period_end).startOf("day");
             days_remaining = period_end.diff(today, "days");
             days_elapsed = today.diff(period_start, "days");
             dayProgress = (days_elapsed / 30) * 100;
