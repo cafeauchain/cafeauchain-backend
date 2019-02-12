@@ -48,51 +48,59 @@ class Budgeter extends Component {
 
     render() {
         const { data, loading } = this.props;
-        let showContent = false;
         const { attributes } = data;
         let total,
+            amountRemaining,
             period_start,
+            period_start_display,
             period_end,
+            period_end_display,
             days_remaining,
             days_elapsed,
             dayProgress,
+            dayColor,
             roastProgress,
+            roastColor,
             subscription_start,
             amount_due;
         const today = moment().startOf("day");
         if (attributes) {
-            showContent = true;
             total = attributes.amount_roasted_in_cycle;
+            amountRemaining = this.getRemaining(total);
             period_start = moment(attributes.period_start).startOf("day");
-            period_end = moment(attributes.period_end).startOf("day");
+            period_end_display = period_start.format("MMMM D");
+            period_end = moment(attributes.period_end).endOf("day");
+            period_end_display = period_end.format("MMMM D");
             days_remaining = period_end.diff(today, "days");
             days_elapsed = today.diff(period_start, "days");
             dayProgress = (days_elapsed / 30) * 100;
+            dayColor = this.getColor(dayProgress);
             roastProgress = ((this.getLimit(total) - this.getRemaining(total)) / this.getLimit(total)) * 100;
+            roastColor = this.getColor(roastProgress);
             subscription_start = attributes.subscription_start;
             amount_due = this.getAmountDue(total, period_start, subscription_start);
         }
         return (
             <F>
                 <Header as="h2" content="Billing Activity" />
-                {showContent && (
-                    <div style={{ position: "relative" }}>
-                        <Dimmer active={loading} inverted>
-                            <Loader active={loading} size="large" />
-                        </Dimmer>
-                        <Progress percent={dayProgress} color={this.getColor(dayProgress)}>
+                <div style={{ position: "relative" }}>
+                    <Dimmer active={loading} inverted>
+                        <Loader active={loading} size="large" />
+                    </Dimmer>
+                    <F>
+                        <Progress percent={dayProgress} color={dayColor}>
                             {days_remaining}
                             <F> Days Remaining</F>
                         </Progress>
-                        <Progress percent={roastProgress} color={this.getColor(roastProgress)}>
-                            {this.getRemaining(total)}
+                        <Progress percent={roastProgress} color={roastColor}>
+                            {amountRemaining}
                             <F> lbs before next charge</F>
                         </Progress>
                         <Header as="h3">
                             <F>Billing: </F>
                             <Money type="negative">{amount_due}</Money>
                             <F> due on </F>
-                            {period_end.format("MMMM D")}
+                            {period_end_display}
                         </Header>
                         <div>
                             {/* eslint-disable-next-line */}
@@ -101,17 +109,17 @@ class Budgeter extends Component {
                             <F> pounds of green coffee. Your current bill is </F>
                             <Money type="negative">{amount_due}</Money>
                             <F>. You can roast </F>
-                            <AsNumber type="positive">{this.getRemaining(total)}</AsNumber>
+                            <AsNumber type="positive">{amountRemaining}</AsNumber>
                             <F> more pounds before you will be charged another $2. Your period started on </F>
-                            {period_start.format("MMMM D")}
+                            {period_start_display}
                             <F> and will end on </F>
-                            {period_end.format("MMMM D")}
+                            {period_end_display}
                             <F>. There are </F>
                             {days_remaining}
                             <F> days left in this billing cycle.</F>
                         </div>
-                    </div>
-                )}
+                    </F>
+                </div>
             </F>
         );
     }
