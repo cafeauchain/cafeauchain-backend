@@ -5,12 +5,12 @@ const Features = () => {
     return (
         <Container text>
             <Header as="h3" style={{ fontSize: "2em" }}>
-                Breaking The Grid, Grabs Your Attention
+                Do Customers Care About Your Coffee&apos;s Sustainability?
             </Header>
             <p style={{ fontSize: "1.33em" }}>
-                Instead of focusing on content creation and hard work, we have learned how to master the art of doing
-                nothing by providing massive amounts of whitespace and generic content that can seem massive, monolithic
-                and worth your attention.
+                All participants in the coffee supply chain care about sustainability - 
+                it&apos;s vital for their livelihood. But do your customers actually care?
+                What drives their decisions to buy from you?
             </p>
             <Button as="a" size="large">
                 Read More
@@ -21,14 +21,14 @@ const Features = () => {
             </Divider>
 
             <Header as="h3" style={{ fontSize: "2em" }}>
-                Did We Tell You About Our Bananas?
+                Coffee Harvesting and the Role of an Aging Farmer Population
             </Header>
             <p style={{ fontSize: "1.33em" }}>
-                Yes I know you probably disregarded the earlier boasts as non-sequitur filler content, but its really
-                true. It took years of gene splicing and combinatory DNA research, but our bananas can really dance.
+                With coffee farmers getting older and shrinking wages, the median age of coffee farmers is increasing 
+                to where there will potentially be a shortage of workers in the next few decades.
             </p>
             <Button as="a" size="large">
-                Im Still Quite Interested
+                Learn More
             </Button>
         </Container>
     );

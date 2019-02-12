@@ -7,21 +7,18 @@ const About = () => {
     return (
         <Grid divided columns="equal" stackable container>
             <Grid.Row textAlign="center">
-                <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
+                <Grid.Column verticalAlign="middle" style={{ paddingBottom: "5em", paddingTop: "5em" }}>
                     <Header as="h3" style={{ fontSize: "2em" }}>
-                        What a Company
-                    </Header>
-                    <p style={{ fontSize: "1.33em" }}>That is what they all say about us</p>
-                </Grid.Column>
-                <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
-                    <Header as="h3" style={{ fontSize: "2em" }}>
-                        I shouldnt have gone with their competitor.
+                        Show Where Your Coffee Comes From
                     </Header>
                     <p style={{ fontSize: "1.33em" }}>
-                        <Image avatar src={img} />
-                        <span>
-                            <b>Nan</b>
-                        </span>
+                        You spend time developing relationships with coffee producers.
+                        Let your customers know more about them.
+                    </p>
+                </Grid.Column>
+                <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
+                    <p style={{ fontSize: "1.33em" }}>
+                        <Image src={img} />
                     </p>
                 </Grid.Column>
             </Grid.Row>
