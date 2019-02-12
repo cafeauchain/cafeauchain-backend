@@ -13,22 +13,19 @@ module StripeServices
         additional_pounds = pounds_roasted_in_period.to_f - base_roasted.to_f
 
         if additional_pounds > 0
-          quantity = (additional_pounds / 100.0).ceil
+          quantity = additional_pounds.to_i
           stripe_sub = Stripe::Subscription.retrieve(subscription.stripe_subscription_id)
           sub_items = stripe_sub.items.data.select{ |si| si.plan.id == plan.stripe_plan_id}
+          sub_item_id = sub_items.first.id
           if sub_items.empty?
             stripe_sub.items = [
-              {plan: plan.stripe_plan_id, quantity: quantity}
+              {plan: plan.stripe_plan_id}
             ]
-            stripe_sub.prorate = false
             stripe_sub.save
-            subscription.subscription_items.create(plan: plan, quantity: quantity)
-          else
-            item = sub_items.first
-            item.quantity = quantity
-            item.save
-            subscription.subscription_items.find_by(plan).update(quantity: quantity)
+            sub_item = stripe_sub.items.data.select{ |si| si.plan.id == plan.stripe_plan_id}
+            sub_item_id = sub_item.first.id
           end
+          Stripe::UsageRecord.create(:quantity => quantity, :timestamp => Time.now.to_time.to_i, :subscription_item => sub_item_id)
           return subscription
         end
       end
