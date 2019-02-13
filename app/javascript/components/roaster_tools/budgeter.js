@@ -68,7 +68,7 @@ class Budgeter extends Component {
             total = attributes.amount_roasted_in_cycle;
             amountRemaining = this.getRemaining(total);
             period_start = moment(attributes.period_start).startOf("day");
-            period_end_display = period_start.format("MMMM D");
+            period_start_display = period_start.format("MMMM D");
             period_end = moment(attributes.period_end).endOf("day");
             period_end_display = period_end.format("MMMM D");
             days_remaining = period_end.diff(today, "days");
