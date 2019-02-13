@@ -31,6 +31,22 @@
 class TransactionSerializer < ActiveModel::Serializer
   attributes :id, :batch_id, :crop, :tx_id, :quantity, :created_at, :trans_type, :roaster_profile_id, :lot_id
 
+  def trans_type
+    trxType = self.object.trans_type
+    case trxType
+    when "roasted"
+      "Batch Started"
+    when "asset_issue"
+      "Crop Created"
+    when "asset_transfer"
+      "Contract Ordered"
+    when "asset_delivery"
+      "Received In House"
+    when "ready_for_sale"
+      "Batch Completed"
+    end
+  end
+
   def crop
     if self.object.crop
       {crop_name: self.object.crop.name, harvest_year: self.object.crop.harvest_season}

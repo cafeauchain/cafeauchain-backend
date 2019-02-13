@@ -86,6 +86,8 @@
 #                                            PUT    /admin/producers/:id(.:format)                                                           admin/producer_profiles#update
 #                                            DELETE /admin/producers/:id(.:format)                                                           admin/producer_profiles#destroy
 #                            admin_dashboard GET    /admin/dashboard(.:format)                                                               admin/dashboard#index
+#                       roaster_profile_lots GET    /roasters/:roaster_profile_id/lots(.:format)                                             lots#index
+#                        roaster_profile_lot GET    /roasters/:roaster_profile_id/lots/:id(.:format)                                         lots#show
 #                  dashboard_roaster_profile GET    /roasters/:id/dashboard(.:format)                                                        roaster_profiles#dashboard
 #        manage_subscription_roaster_profile GET    /roasters/:id/manage_subscription(.:format)                                              roaster_profiles#manage_subscription
 #           manage_inventory_roaster_profile GET    /roasters/:id/manage_inventory(.:format)                                                 roaster_profiles#manage_inventory
@@ -194,6 +196,7 @@ Rails.application.routes.draw do
   end
 
   resources :roaster_profiles, path: "roasters" do
+    resources :lots, only: [:show, :index]
     member do
       get :dashboard
       get :manage_subscription

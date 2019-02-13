@@ -59,6 +59,12 @@ end
 
 class SingleLotSerializer < LotSerializer
   attributes :transactions
+
+  def transactions
+    self.object.transactions.map do |trx|
+      TransactionSerializer.new(trx)
+    end
+  end
 end
 
 class LotsByDateSerializer < LotSerializer
