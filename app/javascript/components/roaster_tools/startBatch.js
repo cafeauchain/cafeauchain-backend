@@ -45,7 +45,8 @@ class StartBatch extends Component {
             lotDetails: {
                 starting_amount: "",
                 roast_date: moment().format("YYYY-MM-DD")
-            }
+            },
+            btnLoading: false
         };
     }
 
@@ -69,8 +70,12 @@ class StartBatch extends Component {
         this.setState({ lotDetails });
     };
 
-    handleSubmit = async ev => {
+    startSubmit = ev => {
         ev.preventDefault();
+        this.setState({ btnLoading: true }, this.handleSubmit);
+    };
+
+    handleSubmit = async () => {
         const { lotDetails } = this.state;
         const { id, activity } = this.props;
         const { attributes } = activity;
@@ -100,7 +105,7 @@ class StartBatch extends Component {
     // only called after successful submit
     // TODO, I dont think the try/catch will work like I want it to
     getData = async id => {
-        const lotsUrl = `${ROASTER_URL(id)}/lots`;
+        const lotsUrl = `${ROASTER_URL(id)}/lots_by_date`;
         const batchesUrl = `${ROASTER_URL(id)}/batches`;
         const activityUrl = `${ROASTER_URL(id)}/subscriptions`;
         const { updateLots, updateBatches, updateActivity, closeModal } = this.props;
@@ -119,9 +124,9 @@ class StartBatch extends Component {
 
     render() {
         const { id } = this.props;
-        const { lotDetails } = this.state;
+        const { lotDetails, btnLoading } = this.state;
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.startSubmit}>
                 <Input
                     name="roast_date"
                     label="Date"
@@ -131,7 +136,7 @@ class StartBatch extends Component {
                 />
                 <LotSelect roasterId={id} parentState={this.parentState} fluid />
                 <Input name="starting_amount" label="Amount to be Roasted (in lbs)" onChange={this.handleInputChange} />
-                <Button size="small" primary fluid>
+                <Button size="small" primary fluid loading={btnLoading}>
                     Start a Batch
                 </Button>
             </Form>
