@@ -47,4 +47,20 @@ class LotSerializer < ActiveModel::Serializer
   def total_amount_roasted
     self.object.amount_roasted
   end
+
+  def transactions
+      self.object.transactions
+  end
+
+  def batches
+    batches = InventoryServices::BatchGrouping.group(self.object.batches.where(roast_date: instance_options[:range]), instance_options[:period])
+  end
+end
+
+class SingleLotSerializer < LotSerializer
+  attributes :transactions
+end
+
+class LotsByDateSerializer < LotSerializer
+  attributes :batches
 end

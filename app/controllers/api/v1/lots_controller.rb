@@ -12,13 +12,14 @@ module Api::V1
       period = params[:period] || :day
       beginning_of_month = Time.current.beginning_of_month
       end_of_month = beginning_of_month.end_of_month
-      range = params[:range] || (beginning_of_month..end_of_month)
+      end_date = params[:end_date] || Date.today.strftime("%F")
+      range = params[:start_date] ? (params[:start_date]..end_date) : (beginning_of_month..end_of_month)
       @lots = @roaster.lots
-      render json: @lots, range: range, period: period, status: 200, each_serializer: LotsbydateSerializer
+      render json: @lots, range: range, period: period, status: 200, each_serializer: LotSerializer::LotsByDateSerializer
     end
 
     def show
-      render json: @lot, status: 200
+      render json: @lot, status: 200, serializer: LotSerializer::SingleLotSerializer
     end
 
     def create
