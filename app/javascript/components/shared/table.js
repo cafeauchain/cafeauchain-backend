@@ -83,17 +83,8 @@ class FormattedTable extends Component {
         const { tableDefs } = this.props;
         return tableDefs.fields.map(field => {
             const { namespace, name, formatter: Formatter, ...rest } = field;
-            let value = item[name];
-            if (namespace) {
-                if (typeof namespace === "string" && namespace.indexOf("/") === -1) {
-                    value = item[namespace][name];
-                } else {
-                    value = namespacer(namespace, item)[name];
-                }
-            }
-
+            let value = namespace ? namespacer(namespace, item)[name] : item[name];
             if (Formatter) value = <Formatter content={value} />;
-
             return (
                 <Table.Cell {...rest} key={name}>
                     {value}
