@@ -122,6 +122,7 @@ class FormattedTable extends Component {
                                             onClick={tableProps.sortable ? this.handleSort(field.name) : null}
                                             key={field.name}
                                             title={field.title}
+                                            textAlign={field.textAlign}
                                         >
                                             {humanize(field.label ? field.label : field.name)}
                                         </Table.HeaderCell>
@@ -131,7 +132,11 @@ class FormattedTable extends Component {
 
                             <Table.Body>
                                 {data.map(item => (
-                                    <Table.Row key={item.id} onClick={onClick ? e => onClick(e, item) : null}>
+                                    <Table.Row
+                                        key={item.id}
+                                        onClick={onClick ? e => onClick(e, item) : null}
+                                        className={onClick ? "row-clickable" : null}
+                                    >
                                         {this.buildTableCells(item)}
                                     </Table.Row>
                                 ))}
