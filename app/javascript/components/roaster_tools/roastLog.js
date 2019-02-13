@@ -4,7 +4,7 @@ import { Header, Button } from "semantic-ui-react";
 import moment from "moment";
 
 /* eslint-disable */
-import tableDefs from "tableDefinitions/roastLog";
+import tableDefs from "defs/tables/roastLog";
 
 import Table from "shared/table";
 import { Money, AsNumber } from "shared/textFormatters";

@@ -5,7 +5,7 @@ import { Header } from "semantic-ui-react";
 /* eslint-disable */
 import Table from "shared/table";
 
-import tableDefs from "tableDefinitions/recentTransactions";
+import tableDefs from "defs/tables/recentTransactions";
 
 import Trx from "contexts/transactions";
 /* eslint-enable */

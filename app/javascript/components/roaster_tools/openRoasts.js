@@ -6,7 +6,7 @@ import { Header, Modal, Button, Form } from "semantic-ui-react";
 import Table from "shared/table";
 import Input from "shared/input";
 
-import tableDefs from "tableDefinitions/openRoasts";
+import tableDefs from "defs/tables/openRoasts";
 
 import requester from "utilities/apiUtils/requester";
 import API_URL from "utilities/apiUtils/url";

@@ -1,4 +1,6 @@
-import { AsNumber, Time } from "../shared/textFormatters";
+/* eslint-disable */
+import { AsNumber, Time } from "shared/textFormatters";
+/* eslint-enable */
 
 const tableDefinition = {
     fields: [

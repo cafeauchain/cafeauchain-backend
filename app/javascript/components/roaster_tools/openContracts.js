@@ -5,7 +5,7 @@ import { Header, Button } from "semantic-ui-react";
 /* eslint-disable */
 import Table from "shared/table";
 
-import tableDefs from "tableDefinitions/openContracts";
+import tableDefs from "defs/tables/openContracts";
 
 import Lots from "contexts/lots";
 /* eslint-enable */
