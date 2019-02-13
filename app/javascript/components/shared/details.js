@@ -4,8 +4,7 @@ import PropTypes from "prop-types";
 /* eslint-disable */
 import Flex from "shared/flex";
 
-import humanize from "utilities/humanize";
-import namespacer from "utilities/fieldNamespacer";
+import { namespacer, humanize } from "utilities";
 /* eslint-disable */
 
 const Details = ({ attributes, leftWidth, fields }) => {

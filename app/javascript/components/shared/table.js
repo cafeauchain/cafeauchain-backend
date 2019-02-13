@@ -5,10 +5,7 @@ import PropTypes from "prop-types";
 import { Pagination, Table, Ref, Loader, Dimmer, Container } from "semantic-ui-react";
 
 /* eslint-disable */
-import humanize from "utilities/humanize";
-import namespacer from "utilities/fieldNamespacer";
-import sortBy from "utilities/sortBy";
-import debounce from "utilities/debounce";
+import { humanize, namespacer, sortBy, debounce } from "utilities";
 /* eslint-enable */
 
 class FormattedTable extends Component {

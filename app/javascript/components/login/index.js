@@ -8,9 +8,7 @@ import messaging from "./messaging";
 
 import Input from "shared/input";
 
-import readCookie from "utilities/readCookie";
-import capitalize from "utilities/capitalize";
-import humanize from "utilities/humanize";
+import { readCookie, capitalize, humanize } from "utilities";
 
 import logo from "images/cac-unofficial-logo.png";
 /* eslint-enable */

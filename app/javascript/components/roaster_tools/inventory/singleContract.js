@@ -8,8 +8,10 @@ import CropSelect from "shared/crops/cropSelect";
 
 import fields from "defs/forms/addSingleContract";
 
-import API_URL from "utilities/apiUtils/url";
-import requester from "utilities/apiUtils/requester";
+// import API_URL from "utilities/apiUtils/url";
+// import requester from "utilities/apiUtils/requester";
+
+import { url as API_URL, requester } from "utilities/apiUtils";
 
 import Lots from "contexts/lots";
 /* eslint-enable */
