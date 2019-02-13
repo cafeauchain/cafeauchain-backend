@@ -4,12 +4,17 @@ module Api::V1
     before_action :set_lot, only: [:show, :update]
 
     def index
+      @lots = @roaster.lots
+      render json: @lots, status: 200
+    end
+
+    def lots_by_date
       period = params[:period] || :day
       beginning_of_month = Time.current.beginning_of_month
       end_of_month = beginning_of_month.end_of_month
       range = params[:range] || (beginning_of_month..end_of_month)
       @lots = @roaster.lots
-      render json: @lots, range: range, period: period, status: 200
+      render json: @lots, range: range, period: period, status: 200, each_serializer: LotsbydateSerializer
     end
 
     def show

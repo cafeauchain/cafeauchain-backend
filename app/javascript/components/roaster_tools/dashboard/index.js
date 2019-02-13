@@ -21,7 +21,7 @@ import QuickActions from "./quickActions";
 
 const Wrapper = ({ roaster_profile_id: id, roaster, ...rest }) => (
     <UserProvider value={{ roaster }}>
-        <LotsProvider value={{ id }} url={`${API_URL}/roasters/${id}/lots`}>
+        <LotsProvider value={{ id }} url={`${API_URL}/roasters/${id}/lots_by_date`}>
             <BatchesProvider value={{ id }} url={`${API_URL}/roasters/${id}/batches`}>
                 <ActivityProvider value={{ id }} url={`${API_URL}/roasters/${id}/subscriptions`}>
                     <ProducerProvider value={{ id }} url={`${API_URL}/producers`}>
