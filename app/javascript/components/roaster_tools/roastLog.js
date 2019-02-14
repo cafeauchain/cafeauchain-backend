@@ -4,16 +4,17 @@ import { Header, Button } from "semantic-ui-react";
 import moment from "moment";
 
 /* eslint-disable */
-import tableDefs from "tableDefinitions/roastLog";
+import tableDefs from "defs/tables/roastLog";
 
 import Table from "shared/table";
 import { Money, AsNumber } from "shared/textFormatters";
 import Flex from "shared/flex";
 
-import getTimePeriod from "utilities/getTimePeriod";
-import abbreviator from "utilities/abbreviator";
-import requester from "utilities/apiUtils/requester";
-import API_URL from "utilities/apiUtils/url";
+import { getTimePeriod, abbreviator } from "utilities";
+// import API_URL from "utilities/apiUtils/url";
+// import requester from "utilities/apiUtils/requester";
+
+import { url as API_URL, requester } from "utilities/apiUtils";
 
 import User from "contexts/user";
 import Lots from "contexts/lots";

@@ -35,6 +35,7 @@
 #                                            PUT    /api/v1/producers/:id(.:format)                                                          api/v1/producer_profiles#update
 #                                            DELETE /api/v1/producers/:id(.:format)                                                          api/v1/producer_profiles#destroy
 #      validate_step_api_v1_roaster_profiles POST   /api/v1/roasters/validate_step(.:format)                                                 api/v1/roaster_profiles#validate_step
+#        api_v1_roaster_profile_lots_by_date GET    /api/v1/roasters/:roaster_profile_id/lots_by_date(.:format)                              api/v1/lots#lots_by_date
 # upload_lot_csv_api_v1_roaster_profile_lots POST   /api/v1/roasters/:roaster_profile_id/lots/upload_lot_csv(.:format)                       api/v1/lots#upload_lot_csv
 #                api_v1_roaster_profile_lots GET    /api/v1/roasters/:roaster_profile_id/lots(.:format)                                      api/v1/lots#index
 #                                            POST   /api/v1/roasters/:roaster_profile_id/lots(.:format)                                      api/v1/lots#create
@@ -85,6 +86,8 @@
 #                                            PUT    /admin/producers/:id(.:format)                                                           admin/producer_profiles#update
 #                                            DELETE /admin/producers/:id(.:format)                                                           admin/producer_profiles#destroy
 #                            admin_dashboard GET    /admin/dashboard(.:format)                                                               admin/dashboard#index
+#                       roaster_profile_lots GET    /roasters/:roaster_profile_id/lots(.:format)                                             lots#index
+#                        roaster_profile_lot GET    /roasters/:roaster_profile_id/lots/:id(.:format)                                         lots#show
 #                  dashboard_roaster_profile GET    /roasters/:id/dashboard(.:format)                                                        roaster_profiles#dashboard
 #        manage_subscription_roaster_profile GET    /roasters/:id/manage_subscription(.:format)                                              roaster_profiles#manage_subscription
 #           manage_inventory_roaster_profile GET    /roasters/:id/manage_inventory(.:format)                                                 roaster_profiles#manage_inventory
@@ -169,6 +172,7 @@ Rails.application.routes.draw do
         collection do
           post :validate_step
         end
+        get :lots_by_date, to: 'lots#lots_by_date'
         resources :lots do
           collection do
             post :upload_lot_csv
@@ -192,6 +196,7 @@ Rails.application.routes.draw do
   end
 
   resources :roaster_profiles, path: "roasters" do
+    resources :lots, only: [:show, :index]
     member do
       get :dashboard
       get :manage_subscription

@@ -4,6 +4,7 @@
 #
 #  id              :bigint(8)        not null, primary key
 #  ending_amount   :float
+#  roast_date      :date
 #  starting_amount :float
 #  status          :integer
 #  created_at      :datetime         not null

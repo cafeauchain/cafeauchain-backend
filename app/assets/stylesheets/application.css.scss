@@ -35,7 +35,7 @@
     position: absolute;
     z-index: -1;
 }
-.login-img-body {
+body {
     background: image-url("bg-1.jpg"),
         linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) no-repeat center center fixed;
     background-blend-mode: overlay;

@@ -5,10 +5,7 @@ import PropTypes from "prop-types";
 import { Pagination, Table, Ref, Loader, Dimmer, Container } from "semantic-ui-react";
 
 /* eslint-disable */
-import humanize from "utilities/humanize";
-import namespacer from "utilities/fieldNamespacer";
-import sortBy from "utilities/sortBy";
-import debounce from "utilities/debounce";
+import { humanize, namespacer, sortBy, debounce } from "utilities";
 /* eslint-enable */
 
 class FormattedTable extends Component {
@@ -83,17 +80,8 @@ class FormattedTable extends Component {
         const { tableDefs } = this.props;
         return tableDefs.fields.map(field => {
             const { namespace, name, formatter: Formatter, ...rest } = field;
-            let value = item[name];
-            if (namespace) {
-                if (typeof namespace === "string" && namespace.indexOf("/") === -1) {
-                    value = item[namespace][name];
-                } else {
-                    value = namespacer(namespace, item)[name];
-                }
-            }
-
+            let value = namespace ? namespacer(namespace, item)[name] : item[name];
             if (Formatter) value = <Formatter content={value} />;
-
             return (
                 <Table.Cell {...rest} key={name}>
                     {value}
@@ -131,6 +119,7 @@ class FormattedTable extends Component {
                                             onClick={tableProps.sortable ? this.handleSort(field.name) : null}
                                             key={field.name}
                                             title={field.title}
+                                            textAlign={field.textAlign}
                                         >
                                             {humanize(field.label ? field.label : field.name)}
                                         </Table.HeaderCell>
@@ -140,7 +129,11 @@ class FormattedTable extends Component {
 
                             <Table.Body>
                                 {data.map(item => (
-                                    <Table.Row key={item.id} onClick={onClick ? e => onClick(e, item) : null}>
+                                    <Table.Row
+                                        key={item.id}
+                                        onClick={onClick ? e => onClick(e, item) : null}
+                                        className={onClick ? "row-clickable" : null}
+                                    >
                                         {this.buildTableCells(item)}
                                     </Table.Row>
                                 ))}

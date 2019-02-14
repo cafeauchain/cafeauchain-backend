@@ -14,17 +14,20 @@ import { ConfigProvider as UserProvider } from "contexts/user";
 import { ConfigProvider as LotsProvider } from "contexts/lots";
 import { ConfigProvider as ProducerProvider } from "contexts/producers";
 import { ConfigProvider as BatchesProvider } from "contexts/batches";
+import { ConfigProvider as ActivityProvider } from "contexts/activity";
 /* eslint-enable */
 
 import QuickActions from "./quickActions";
 
 const Wrapper = ({ roaster_profile_id: id, roaster, ...rest }) => (
     <UserProvider value={{ roaster }}>
-        <LotsProvider value={{ id }} url={`${API_URL}/roasters/${id}/lots`}>
+        <LotsProvider value={{ id }} url={`${API_URL}/roasters/${id}/lots_by_date`}>
             <BatchesProvider value={{ id }} url={`${API_URL}/roasters/${id}/batches`}>
-                <ProducerProvider value={{ id }} url={`${API_URL}/producers`}>
-                    <Dashboard {...rest} />
-                </ProducerProvider>
+                <ActivityProvider value={{ id }} url={`${API_URL}/roasters/${id}/subscriptions`}>
+                    <ProducerProvider value={{ id }} url={`${API_URL}/producers`}>
+                        <Dashboard {...rest} />
+                    </ProducerProvider>
+                </ActivityProvider>
             </BatchesProvider>
         </LotsProvider>
     </UserProvider>
@@ -43,24 +46,24 @@ const Dashboard = () => (
             <Header as="h1" content="Dashboard" />
         </Segment>
         <Grid doubling>
-            <Grid.Column width={10}>
+            <Grid.Column width={10} stretched>
                 <QuickActions />
                 <Segment>
                     <OpenRoasts />
                 </Segment>
-                <Segment>
-                    <OpenContracts />
-                </Segment>
-                <Segment>
-                    <RoastLog />
-                </Segment>
             </Grid.Column>
-            <Grid.Column width={6}>
+            <Grid.Column width={6} stretched>
                 <Segment>
                     <Budgeter />
                 </Segment>
             </Grid.Column>
         </Grid>
+        <Segment>
+            <OpenContracts />
+        </Segment>
+        <Segment>
+            <RoastLog />
+        </Segment>
     </Container>
 );
 

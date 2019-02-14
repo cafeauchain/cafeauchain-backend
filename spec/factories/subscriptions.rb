@@ -4,7 +4,10 @@
 #
 #  id                     :bigint(8)        not null, primary key
 #  next_bill_date         :datetime
+#  period_end             :datetime
+#  period_start           :datetime
 #  status                 :integer
+#  subscription_start     :date
 #  trial_end              :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null

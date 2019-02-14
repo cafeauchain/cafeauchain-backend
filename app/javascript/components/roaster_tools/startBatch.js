@@ -8,10 +8,12 @@ import Input from "shared/input";
 import LotSelect from "shared/lots/lotSelect";
 
 import requester from "utilities/apiUtils/requester";
-import API_URL from "utilities/apiUtils/url";
+import fetcher from "utilities/apiUtils/fetcher";
+import { roasterUrl as ROASTER_URL } from "utilities/apiUtils/url";
 
 import Lots from "contexts/lots";
 import Batches from "contexts/batches";
+import Activity from "contexts/activity";
 /* eslint-enable */
 
 const Wrapper = props => (
@@ -19,12 +21,18 @@ const Wrapper = props => (
         {lots => (
             <Batches>
                 {batches => (
-                    <StartBatch
-                        {...props}
-                        id={lots.userId}
-                        updateLots={lots.updateContext}
-                        updateBatches={batches.updateContext}
-                    />
+                    <Activity>
+                        {activity => (
+                            <StartBatch
+                                {...props}
+                                id={lots.userId}
+                                updateLots={lots.updateContext}
+                                updateBatches={batches.updateContext}
+                                updateActivity={activity.updateContext}
+                                activity={activity.data}
+                            />
+                        )}
+                    </Activity>
                 )}
             </Batches>
         )}
@@ -36,14 +44,21 @@ class StartBatch extends Component {
         this.state = {
             lotDetails: {
                 starting_amount: "",
-                ending_amount: ""
-                // roast_date: moment().format("YYYY-MM-DD")
-            }
+                roast_date: moment().format("YYYY-MM-DD")
+            },
+            btnLoading: false
         };
     }
 
     parentState = obj => {
-        this.setState(obj);
+        if (obj.lotDetails) {
+            let { lotDetails } = this.state;
+            const { lotDetails: lotDetailsFromChild, ...rest } = obj;
+            lotDetails = { ...lotDetails, ...lotDetailsFromChild };
+            this.setState({ lotDetails, ...rest });
+        } else {
+            this.setState(obj);
+        }
     };
 
     handleInputChange = (event, { value, name, checked }) => {
@@ -55,11 +70,24 @@ class StartBatch extends Component {
         this.setState({ lotDetails });
     };
 
-    handleSubmit = async ev => {
+    startSubmit = ev => {
         ev.preventDefault();
+        this.setState({ btnLoading: true }, this.handleSubmit);
+    };
+
+    handleSubmit = async () => {
         const { lotDetails } = this.state;
-        const { id } = this.props;
-        const url = `${API_URL}/roasters/${id}/batches`;
+        const { id, activity } = this.props;
+        const { attributes } = activity;
+        if (moment(attributes.period_start_date).isAfter(lotDetails.roast_date, "day")) {
+            /* eslint-disable */
+            alert(
+                "You are trying to create a roast for a previous billing period. If you need to add a roast from a previous period, please email us at support@cafeauchain.com and we will be happy to help you. Please note that this could incur an additional charge if it pushes you over your usage limits."
+            );
+            /* eslint-enable */
+            return;
+        }
+        const url = `${ROASTER_URL(id)}/batches`;
         let body = { ...lotDetails };
         let respJSON = await requester({ url, body });
         if (respJSON instanceof Error) {
@@ -75,18 +103,19 @@ class StartBatch extends Component {
     };
 
     // only called after successful submit
-    // TODO This feels dumb and I should think of a better solution
-    // Also, I dont think the try/catch will work like I want it to
+    // TODO, I dont think the try/catch will work like I want it to
     getData = async id => {
-        const lotsUrl = `${API_URL}/roasters/${id}/lots`;
-        const batchesUrl = `${API_URL}/roasters/${id}/batches`;
-        const { updateLots, updateBatches, closeModal } = this.props;
+        const lotsUrl = `${ROASTER_URL(id)}/lots_by_date`;
+        const batchesUrl = `${ROASTER_URL(id)}/batches`;
+        const activityUrl = `${ROASTER_URL(id)}/subscriptions`;
+        const { updateLots, updateBatches, updateActivity, closeModal } = this.props;
         try {
-            const lots = await fetch(lotsUrl);
-            const batches = await fetch(batchesUrl);
-            const { data: lotsData } = await lots.json();
-            const { data: batchesData } = await batches.json();
-            updateLots({ data: lotsData }, updateBatches({ data: batchesData }, closeModal()));
+            const results = await Promise.all([fetcher(lotsUrl), fetcher(batchesUrl), fetcher(activityUrl)]);
+            Promise.all([
+                updateLots({ data: results[0] }),
+                updateBatches({ data: results[1] }),
+                updateActivity({ data: results[2] })
+            ]).then(() => closeModal());
         } catch (e) {
             // eslint-disable-next-line
             console.log(e);
@@ -95,30 +124,19 @@ class StartBatch extends Component {
 
     render() {
         const { id } = this.props;
-        const { lotDetails } = this.state;
+        const { lotDetails, btnLoading } = this.state;
         return (
-            <Form onSubmit={this.handleSubmit}>
-                {/* TODO Ready for roast date */}
-                {false && (
-                    <Input
-                        name="roast_date"
-                        label="Date"
-                        onChange={this.handleInputChange}
-                        type="date"
-                        defaultValue={moment().format("YYYY-MM-DD")}
-                    />
-                )}
+            <Form onSubmit={this.startSubmit}>
+                <Input
+                    name="roast_date"
+                    label="Date"
+                    onChange={this.handleInputChange}
+                    type="date"
+                    defaultValue={lotDetails.roast_date}
+                />
                 <LotSelect roasterId={id} parentState={this.parentState} fluid />
                 <Input name="starting_amount" label="Amount to be Roasted (in lbs)" onChange={this.handleInputChange} />
-                {false && (
-                    <Input
-                        name="ending_amount"
-                        label="Expected Yield (in lbs)"
-                        onChange={this.handleInputChange}
-                        value={lotDetails.ending_amount}
-                    />
-                )}
-                <Button size="small" primary fluid>
+                <Button size="small" primary fluid loading={btnLoading}>
                     Start a Batch
                 </Button>
             </Form>
@@ -126,12 +144,14 @@ class StartBatch extends Component {
     }
 }
 
-const { oneOfType, string, number, func } = PropTypes;
+const { oneOfType, string, number, func, object } = PropTypes;
 StartBatch.propTypes = {
     id: oneOfType([number, string]),
     closeModal: func,
     updateLots: func,
-    updateBatches: func
+    updateBatches: func,
+    updateActivity: func,
+    activity: object
 };
 
 export default Wrapper;

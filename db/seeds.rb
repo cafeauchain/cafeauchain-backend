@@ -4,11 +4,11 @@ Stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
 u = User.create!(name: "Cafe au Chain Admin", email: "support@cafeauchain.com", password: 'changeme', password_confirmation: 'changeme', admin: true)
 puts "#{u.name} created."
 
-p1 = Plan.create!(stripe_plan_id: "plan_EVlDMgzP0nqinE",
+p1 = Plan.create!(stripe_plan_id: "plan_EW9GjmwuQpIKq7",
   price_in_cents: 200,
   interval: "monthly",
   name: "Proof of Perk Usage")
-p2 = Plan.create!(stripe_plan_id: "plan_EVlCzJj1ZYZnIj",
+p2 = Plan.create!(stripe_plan_id: "plan_EW5n1MwhCcYy5r",
   price_in_cents: 1999,
   interval: "monthly",
   name: "Proof of Perk Base")
@@ -49,6 +49,6 @@ puts "Lot created."
 LedgerServices::AssetTransferTransaction.new(440.0, lot.id, roaster.id).call
 LedgerServices::AssetDeliveryTransaction.new(440.0, lot.id, roaster.id).call
 
-batch = lot.batches.create(starting_amount: 176.0, ending_amount: 158.4)
+batch = lot.batches.create(starting_amount: 176.0, ending_amount: 158.4, roast_date: "2018-12-31", status: 2)
 LedgerServices::RoastTransaction.new(176.0, batch.id, roaster.id).call
-puts "Batch created."   
+puts "Batch created."

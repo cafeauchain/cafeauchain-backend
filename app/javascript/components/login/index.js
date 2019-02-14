@@ -2,16 +2,16 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Button, Form, Grid, Header, Image, Message, Segment } from "semantic-ui-react";
 
-import fields from "./fields";
+/* eslint-disable */
+import fields from "defs/forms/login";
 import messaging from "./messaging";
 
-import Input from "../shared/input";
+import Input from "shared/input";
 
-import readCookie from "../utilities/readCookie";
-import capitalize from "../utilities/capitalize";
-import humanize from "../utilities/humanize";
-// eslint-disable-next-line
+import { readCookie, capitalize, humanize } from "utilities";
+
 import logo from "images/cac-unofficial-logo.png";
+/* eslint-enable */
 
 class Login extends Component {
     constructor(props) {

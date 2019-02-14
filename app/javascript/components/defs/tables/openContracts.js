@@ -1,4 +1,6 @@
-import { Money, AsNumber } from "../shared/textFormatters";
+/* eslint-disable */
+import { Money, AsNumber } from "shared/textFormatters";
+/* eslint-enable */
 
 const tableDefinition = {
     fields: [

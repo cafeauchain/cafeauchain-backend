@@ -4,7 +4,10 @@
 #
 #  id                     :bigint(8)        not null, primary key
 #  next_bill_date         :datetime
+#  period_end             :datetime
+#  period_start           :datetime
 #  status                 :integer
+#  subscription_start     :date
 #  trial_end              :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
@@ -21,27 +24,22 @@
 #  fk_rails_...  (user_id => users.id)
 #
 
+
+
+
 class SubscriptionSerializer < ActiveModel::Serializer
-  attributes :id, :trial_end, :status, :next_bill_date, :amount_roasted_in_cycle, :period_start_date, :period_end_date
+  attributes :id, :trial_end, :status, :amount_roasted_in_cycle, :next_bill_date, :period_start, :period_end, :subscription_start
 
-  def period_start_date
-    if Date.today > object.trial_end
-      object.next_bill_date - 30.days
-    else
-      object.trial_end - 30.days
-    end
-  end
+  # def period_start_date
+  #   object.next_bill_date
+  # end
+  #
+  # def period_end_date
+  #   object.next_bill_date.end_of_day - 1.days
+  # end
 
-  def period_end_date
-    if Date.today > object.trial_end
-      object.next_bill_date
-    else
-      object.trial_end
-    end
-  end
-  
   def amount_roasted_in_cycle
     object.user.roaster_profile.amount_roasted_in_period(object.id)
   end
-  
+
 end
