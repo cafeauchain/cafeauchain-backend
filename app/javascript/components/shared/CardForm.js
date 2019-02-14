@@ -29,7 +29,7 @@ class CheckoutForm extends Component {
             return;
         }
         this._element.clear();
-        handleSubmit(token);
+        handleSubmit(token, details.setAsDefault);
     };
 
     validateCC = () => {

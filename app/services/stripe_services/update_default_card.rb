@@ -7,6 +7,8 @@ module StripeServices
 
       customer = Stripe::Customer.retrieve(@subscription.stripe_customer_id)
       customer.default_source = stripe_card_id
+      @subscription.cards.where(default: true).each{ |card| card.update(default: false)}
+      @subscription.cards.find_by(stripe_card_id: stripe_card_id).update(default: true)
       if customer.save
         return true
       else

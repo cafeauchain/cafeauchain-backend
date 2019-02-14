@@ -21,13 +21,14 @@ class App extends Component {
             cards,
             roasterId,
             subscription: { data }
-        } = this.props;
+        } = props;
         this.state = {
             cards,
             roasterId,
             subscription: data,
             errors: {}
         };
+        console.log(props.subscription);
     }
 
     setAsDefault = async (ev, cardId) => {
@@ -51,30 +52,26 @@ class App extends Component {
 
     removeCard = async (ev, cardId) => {
         ev.preventDefault();
-        const { roasterId } = this.state;
-        const cookie = decodeURIComponent(readCookie("X-CSRF-Token"));
-        let response = await fetch("/api/v1/roasters/" + roasterId + "/cards", {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": cookie
-            },
-            body: JSON.stringify({ card_id: cardId })
-        });
 
-        if (response.ok) {
-            let cards = await response.json();
-            this.setState({ cards });
+        const { roasterId } = this.state;
+        const url = "/api/v1/roasters/" + roasterId + "/cards";
+        const body = { card_id: cardId };
+        const method = "DELETE";
+
+        let respJSON = await requester({ url, body, method });
+        if (respJSON instanceof Error) {
+            // eslint-disable-next-line
+            console.log("there was an error", respJSON.response);
         } else {
-            const errors = await response.json();
-            await this.setState({ errors });
+            console.log("success", respJSON);
+            this.setState({ cards: respJSON });
         }
     };
 
-    handleSubmit = async token => {
+    handleSubmit = async (token, setAsDefault) => {
         const { roasterId } = this.state;
         const url = "/api/v1/roasters/" + roasterId + "/cards";
-        const body = { token: token.id };
+        const body = { token: token.id, setAsDefault };
 
         let respJSON = await requester({ url, body });
         if (respJSON instanceof Error) {
