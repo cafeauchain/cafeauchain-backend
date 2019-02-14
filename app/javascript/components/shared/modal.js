@@ -13,14 +13,14 @@ class FormattedModal extends Component {
     closeModal = () => this.setState({ isOpen: false });
 
     render() {
-        const { text, title, component, size, centered, icon, ...rest } = this.props;
+        const { text, title, component, size, centered, icon, showBtn, ...rest } = this.props;
         const { isOpen } = this.state;
         const Inner = props => React.cloneElement(component, { ...props, closeModal: this.closeModal });
         return (
             <Modal
                 {...rest}
                 trigger={(
-                    <Button primary onClick={() => this.setState({ isOpen: true })}>
+                    <Button primary onClick={() => this.setState({ isOpen: true })} disabled={!showBtn}>
                         {text}
                     </Button>
                 )}
@@ -46,7 +46,8 @@ FormattedModal.propTypes = {
     component: node,
     size: string,
     centered: bool,
-    icon: string
+    icon: string,
+    showBtn: bool
 };
 FormattedModal.defaultProps = {
     size: "mini",

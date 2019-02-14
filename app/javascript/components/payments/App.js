@@ -30,20 +30,6 @@ class App extends Component {
         };
     }
 
-    // componentDidMount = async () => {
-    //     const { subscription } = this.props;
-    //     let response = await fetch("/api/v1/subscriptions/" + subscription.id, {
-    //         method: "GET",
-    //         headers: {
-    //             "Content-Type": "application/json"
-    //         }
-    //     });
-    //     if (response.ok) {
-    //         let subscription = await response.json();
-    //         this.setState({ subscription });
-    //     }
-    // };
-
     setAsDefault = async (ev, cardId) => {
         ev.preventDefault();
         const { roasterId } = this.state;
@@ -87,19 +73,16 @@ class App extends Component {
 
     handleSubmit = async token => {
         const { roasterId } = this.state;
-        const cookie = decodeURIComponent(readCookie("X-CSRF-Token"));
-        let response = await fetch("/api/v1/roasters/" + roasterId + "/cards", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": cookie
-            },
-            body: JSON.stringify({ token: token.id })
-        });
+        const url = "/api/v1/roasters/" + roasterId + "/cards";
+        const body = { token: token.id };
 
-        if (response.ok) {
-            let cards = await response.json();
-            this.setState({ cards });
+        let respJSON = await requester({ url, body });
+        if (respJSON instanceof Error) {
+            // eslint-disable-next-line
+            console.log("there was an error", respJSON.response);
+        } else {
+            console.log("success", respJSON);
+            this.setState({ cards: respJSON });
         }
     };
 
@@ -145,7 +128,7 @@ class App extends Component {
                 }
             }
         } = this.state;
-        const { stripeApiKey } = this.props;
+        const { stripeApiKey, roaster } = this.props;
 
         return (
             <StripeProvider apiKey={stripeApiKey}>
@@ -183,7 +166,7 @@ class App extends Component {
                     <div>
                         <h2>Manage Payment Methods</h2>
                         <Elements>
-                            <CardForm handleSubmit={this.handleSubmit} />
+                            <CardForm handleSubmit={this.handleSubmit} roaster={roaster} />
                         </Elements>
                     </div>
                     <Divider horizontal>
@@ -205,7 +188,8 @@ App.propTypes = {
     stripeApiKey: string,
     cards: array,
     roasterId: number,
-    subscription: object
+    subscription: object,
+    roaster: object
 };
 
 export default App;
