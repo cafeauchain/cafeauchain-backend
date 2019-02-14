@@ -34,21 +34,22 @@ class RoasterProfilesController < ApplicationController
   end
 
   def dashboard
-    
+
   end
-  
+
   def manage_inventory
-    
+
   end
-  
+
 
   def manage_subscription
-    @subscription = Subscription.includes(:subscription_items).find_by(user: @roaster_profile.owner)
-    @cards = @subscription.cards
+    subscription = Subscription.includes(:subscription_items).find_by(user: @roaster_profile.owner)
+    @subscription = ActiveModel::SerializableResource.new(subscription)
+    @cards = subscription.cards
   end
-  
+
   private
-  
+
   # Use callbacks to share common setup or constraints between actions.
   def set_roaster_profile
     @roaster_profile = RoasterProfile.friendly.find(params[:id])
