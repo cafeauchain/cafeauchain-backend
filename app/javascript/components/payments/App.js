@@ -1,13 +1,25 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import shortid from "shortid";
 import moment from "moment";
 import { Elements, StripeProvider } from "react-stripe-elements";
-import { Container, Divider, Grid, Header, Icon, Message, Segment, Label, List } from "semantic-ui-react";
+import {
+    Container,
+    Divider,
+    Grid,
+    Header,
+    Icon,
+    Message,
+    Segment,
+    Label,
+    List,
+    Dimmer,
+    Loader
+} from "semantic-ui-react";
 
 /* eslint-disable */
 import { readCookie } from "utilities";
 import { url as API_URL, requester, fetcher } from "utilities/apiUtils";
+import { sortBy } from "utilities";
 
 import { Money } from "shared/textFormatters";
 import CardForm from "shared/CardForm";
@@ -23,78 +35,67 @@ class App extends Component {
             subscription: { data }
         } = props;
         this.state = {
-            cards,
+            cards: this.sortCards(cards),
             roasterId,
             subscription: data,
-            errors: {}
+            errors: {},
+            loading: false
         };
-        console.log(props.subscription);
     }
 
-    setAsDefault = async (ev, cardId) => {
-        ev.preventDefault();
-        const { roasterId } = this.state;
-        const cookie = decodeURIComponent(readCookie("X-CSRF-Token"));
-        let response = await fetch("/api/v1/roasters/" + roasterId + "/set_as_default", {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": cookie
-            },
-            body: JSON.stringify({ card_id: cardId })
-        });
-
-        if (response.ok) {
-            let cards = await response.json();
-            this.setState({ cards });
-        }
+    sortCards = cards => {
+        return sortBy({ collection: cards, id: "id", sorts: [{ name: "default", desc: true }] });
     };
 
-    removeCard = async (ev, cardId) => {
-        ev.preventDefault();
+    setAsDefault = async card_id => {
+        this.setState({ loading: true });
+        const { roasterId } = this.state;
+        const url = "/api/v1/roasters/" + roasterId + "/set_as_default";
+        const body = { card_id };
+        const method = "PUT";
 
+        const respJSON = await requester({ url, body, method });
+        this.updateCards(respJSON);
+    };
+
+    removeCard = async card_id => {
+        this.setState({ loading: true });
         const { roasterId } = this.state;
         const url = "/api/v1/roasters/" + roasterId + "/cards";
-        const body = { card_id: cardId };
+        const body = { card_id };
         const method = "DELETE";
 
-        let respJSON = await requester({ url, body, method });
-        if (respJSON instanceof Error) {
-            // eslint-disable-next-line
-            console.log("there was an error", respJSON.response);
-        } else {
-            console.log("success", respJSON);
-            this.setState({ cards: respJSON });
-        }
+        const respJSON = await requester({ url, body, method });
+        this.updateCards(respJSON);
     };
 
     handleSubmit = async (token, setAsDefault) => {
+        this.setState({ loading: true });
         const { roasterId } = this.state;
         const url = "/api/v1/roasters/" + roasterId + "/cards";
         const body = { token: token.id, setAsDefault };
 
-        let respJSON = await requester({ url, body });
-        if (respJSON instanceof Error) {
+        const respJSON = await requester({ url, body });
+        this.updateCards(respJSON);
+    };
+
+    updateCards = data => {
+        if (data instanceof Error) {
             // eslint-disable-next-line
-            console.log("there was an error", respJSON.response);
+            console.log("there was an error", data.response);
+            this.setState({ loading: false });
         } else {
-            console.log("success", respJSON);
-            this.setState({ cards: respJSON });
+            // eslint-disable-next-line
+            console.log("success", data);
+            const cards = this.sortCards(data);
+            this.setState({ cards, loading: false });
         }
     };
 
-    renderCards = () => {
-        const { cards } = this.state;
-        return cards.map(card => {
-            return (
-                <CardView
-                    key={shortid.generate()}
-                    setAsDefault={this.setAsDefault}
-                    removeCard={this.removeCard}
-                    card={card}
-                />
-            );
-        });
+    renderCards = cards => {
+        return cards.map(card => (
+            <CardView key={card.id} setAsDefault={this.setAsDefault} removeCard={this.removeCard} card={card} />
+        ));
     };
 
     renderErrors = () => {
@@ -123,7 +124,9 @@ class App extends Component {
                     next_amount_due,
                     next_bill_date
                 }
-            }
+            },
+            cards,
+            loading
         } = this.state;
         const { stripeApiKey, roaster } = this.props;
 
@@ -173,7 +176,12 @@ class App extends Component {
                         </Header>
                     </Divider>
                     {this.renderErrors()}
-                    <Grid columns={3}>{this.renderCards()}</Grid>
+                    <Grid columns={3} stretched style={{ position: "relative" }}>
+                        <Dimmer active={loading} inverted>
+                            <Loader active={loading} size="large" />
+                        </Dimmer>
+                        {this.renderCards(cards)}
+                    </Grid>
                 </Container>
             </StripeProvider>
         );

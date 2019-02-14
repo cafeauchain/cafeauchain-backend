@@ -20,7 +20,8 @@ module StripeServices
         exp_month: stripe_card[:exp_month],
         exp_year: stripe_card[:exp_year],
         last4: stripe_card[:last4],
-        default: setAsDefault
+        default: setAsDefault,
+        name: stripe_card[:name]
       )
     end
   end

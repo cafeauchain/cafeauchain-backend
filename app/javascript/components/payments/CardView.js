@@ -1,43 +1,59 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {Button, Grid, Card, Icon} from 'semantic-ui-react';
+import React from "react";
+import PropTypes from "prop-types";
+import { Button, Grid, Card, Icon, Label } from "semantic-ui-react";
+
+/* eslint-disable */
+import Flex from "shared/flex";
+/* eslint-enable */
 
 const CardView = props => {
-
-    const { card, setAsDefault, removeCard } = props
-    const exp = [
-        card.exp_month,
-        card.exp_year
-    ].join("/")
-    return(
+    const {
+        card: { brand, name, last4, id, exp_month, exp_year, default: defaultCard },
+        setAsDefault,
+        removeCard
+    } = props;
+    const exp = exp_month + "/" + exp_year;
+    const brandLower = brand ? brand.toLowerCase() : "";
+    const brandUpper = brand ? brand.toUpperCase() : "";
+    const innerSetAsDefault = e => {
+        e.preventDefault();
+        setAsDefault(id);
+    };
+    const innerRemoveCard = e => {
+        e.preventDefault();
+        removeCard(id);
+    };
+    return (
         <Grid.Column>
             <Card>
                 <Card.Content>
                     <Card.Header>
-                        {card.default ? 
-                            null :
-                            (
-                                <Button floated="right" size='tiny' onClick={(e) => setAsDefault(e, card.id)}>
-                                    Set as default
-                                </Button> 
-                            )
-                        }
-                        {exp}
+                        {name}
+                        {defaultCard && <Label color="green" corner="right" icon="asterisk" />}
                     </Card.Header>
-                    {card.default ? <Card.Meta floated="right" content='DEFAULT CARD' /> : null}
+                    <Card.Description>
+                        <Icon name={"cc " + brandLower} size="large" />
+                        {`${brandUpper} ${last4} ${id}`}
+                        <br />
+                        {exp}
+                    </Card.Description>
                 </Card.Content>
-                
-                <Card.Content extra>
-                    <Button floated="right" size='mini' onClick={(e) => removeCard(e, card.id)} negative compact>
-                        Remove card
-                    </Button> 
-                    <Icon name={["cc",card.brand.toLowerCase()].join(" ")} size="large" />
-                    {card.last4}
-                </Card.Content>
+                {!defaultCard && (
+                    <Card.Content extra>
+                        <Flex spacebetween>
+                            <Button size="mini" onClick={innerSetAsDefault}>
+                                Set as default
+                            </Button>
+                            <Button size="mini" onClick={innerRemoveCard} negative>
+                                Remove card
+                            </Button>
+                        </Flex>
+                    </Card.Content>
+                )}
             </Card>
         </Grid.Column>
-    )
-}
+    );
+};
 
 const { func, object } = PropTypes;
 CardView.propTypes = {

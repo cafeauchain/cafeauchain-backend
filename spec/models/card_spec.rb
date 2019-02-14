@@ -8,6 +8,7 @@
 #  exp_month       :integer
 #  exp_year        :integer
 #  last4           :string
+#  name            :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  stripe_card_id  :string
