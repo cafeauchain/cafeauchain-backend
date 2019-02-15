@@ -28,7 +28,7 @@ token = Stripe::Token.create(
     cvc: "314",
   },
 )
-card = StripeServices::CreateCard.call(sub.id, token)
+card = StripeServices::CreateCard.call(sub.id, token, true)
 producer = ProducerProfile.create(name: "Gold Mountain Coffee Growers")
 puts "#{producer.name} created."
 crops = []

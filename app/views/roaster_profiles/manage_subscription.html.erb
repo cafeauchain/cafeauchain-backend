@@ -1,8 +1,9 @@
 <%= react_component("payments/App", props = {
-    stripeApiKey: "pk_test_K6zQIJFbrUdgl3U9MiAJrExo",
+    stripeApiKey: Rails.application.credentials.stripe_api_key,
     cards: @cards,
     roasterId: @roaster_profile.id,
-    subscription: @subscription
+    subscription: @subscription,
+    roaster: @roaster_profile
 }) %>
 <% content_for :body_class, 'login-img-body' %>
 <script src="https://js.stripe.com/v3/"></script>

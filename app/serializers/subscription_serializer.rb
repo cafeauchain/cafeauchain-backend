@@ -25,21 +25,40 @@
 #
 
 
+require 'stripe'
 
 
 class SubscriptionSerializer < ActiveModel::Serializer
-  attributes :id, :trial_end, :status, :amount_roasted_in_cycle, :next_bill_date, :period_start, :period_end, :subscription_start
-
-  # def period_start_date
-  #   object.next_bill_date
-  # end
-  #
-  # def period_end_date
-  #   object.next_bill_date.end_of_day - 1.days
-  # end
+  attributes :id, :trial_end, :status, :amount_roasted_in_cycle, :next_bill_date, :period_start,
+    :period_end, :subscription_start,
+    # :new_start_date, :new_end_date, :new_next_billing_date, :balance,
+    :sub_details, :balance_details, :status, :next_amount_due, :sub_items
 
   def amount_roasted_in_cycle
     object.user.roaster_profile.amount_roasted_in_period(object.id)
+  end
+
+  def balance_details
+    Stripe.api_key = Rails.application.credentials.stripe_api_key
+    Stripe::Invoice.upcoming(customer: object.stripe_customer_id)
+  end
+
+  def next_amount_due
+    balance_details.amount_due
+  end
+
+  def sub_details
+    Stripe.api_key = Rails.application.credentials.stripe_api_key
+    @stripe_customer = Stripe::Customer.retrieve(object.stripe_customer_id)
+    subscriptions = @stripe_customer.subscriptions
+  end
+
+  def status
+    sub_details.data.pluck("status")[0]
+  end
+
+  def sub_items
+    sub_details.data.pluck("items")[0]
   end
 
 end
