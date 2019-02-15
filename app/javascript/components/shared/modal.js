@@ -52,7 +52,8 @@ FormattedModal.propTypes = {
 FormattedModal.defaultProps = {
     size: "mini",
     centered: false,
-    icon: "archive"
+    icon: "archive",
+    showBtn: true
 };
 
 export default FormattedModal;
