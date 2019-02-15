@@ -2,7 +2,7 @@ module StripeServices
   class UpdateQuantifiedSubscription
 
     def self.update(user_id, subscription_id)
-      Stripe.api_key = Rails.application.credentials.stripe_api_key
+      Stripe.api_key = Rails.application.credentials.stripe_secret_key
       plan = Plan.find_by(name: 'Proof of Perk Usage')
       user = User.find(user_id)
       subscription = user.subscription
