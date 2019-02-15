@@ -46,7 +46,7 @@ puts "Crops created."
 lot = roaster.lots.create(harvest_year: "2018", pounds_of_coffee: 1760.0, price_per_pound: 3.26, crop: crops[0])
 LedgerServices::AssetIssueTransaction.new(1760.0, crops[0].id, roaster.id).call
 puts "Lot created."
-LedgerServices::AssetTransferTransaction.new(440.0, lot.id, roaster.id).call
+LedgerServices::AssetTransferTransaction.new(1760.0, lot.id, roaster.id).call
 LedgerServices::AssetDeliveryTransaction.new(440.0, lot.id, roaster.id).call
 
 batch = lot.batches.create(starting_amount: 176.0, ending_amount: 158.4, roast_date: "2018-12-31", status: 2)
