@@ -33,7 +33,7 @@ module Api::V1
 
     def update
       if params[:lotDetails][:accept_delivery].present?
-        LedgerServices::AssetTransferTransaction.new(params[:lotDetails][:quantity], @lot.id, @roaster.id).call
+        LedgerServices::AssetDeliveryTransaction.new(params[:lotDetails][:quantity], @lot.id, @roaster.id).call
       else
         @lot.update(lot_params)
       end
