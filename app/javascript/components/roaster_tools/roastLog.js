@@ -14,14 +14,24 @@ import { getTimePeriod, abbreviator } from "utilities";
 // import API_URL from "utilities/apiUtils/url";
 // import requester from "utilities/apiUtils/requester";
 
-import { url as API_URL, requester } from "utilities/apiUtils";
+import { url as API_URL, requester, roasterUrl, fetcher } from "utilities/apiUtils";
 
 import User from "contexts/user";
 import LotsByPeriod from "contexts/lotsByPeriod";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <LotsByPeriod>{lots => <RoastLog {...props} lots={lots.data} loading={lots.loading} />}</LotsByPeriod>
+    <LotsByPeriod>
+        {lots => (
+            <RoastLog
+                {...props}
+                lots={lots.data}
+                loading={lots.loading}
+                userId={lots.userId}
+                updateContext={lots.updateContext}
+            />
+        )}
+    </LotsByPeriod>
 );
 
 class RoastLog extends Component {
@@ -30,7 +40,8 @@ class RoastLog extends Component {
         this.state = {
             data: [],
             lots: [],
-            month: moment().format("YYYY-MM")
+            month: moment().format("YYYY-MM"),
+            period: "day"
         };
     }
 
@@ -44,21 +55,25 @@ class RoastLog extends Component {
 
     handleLotUpdate = () => {
         const { lots } = this.props;
-        const { month, lots: statelots } = this.state;
-        const dateRange = this.getDateRange(month);
+        const { month, lots: statelots, period } = this.state;
+        const dateRange = this.getDateRange(month, period);
         if (lots.length && statelots !== lots) {
             this.setState({ lots }, this.getData(lots, dateRange));
         }
     };
 
-    getDateRange = month => {
-        const start = moment(month).startOf("month");
-        const end = moment(month).endOf("month");
-        return getTimePeriod(start, end, "day");
+    getDateRange = (month, period) => {
+        let start = moment(month).startOf("month");
+        let end = moment(month).endOf("month");
+        if (period === "week") {
+            start = start.startOf("week");
+            end = end.startOf("week");
+        }
+        return getTimePeriod(start, end, period);
     };
     getData = (lots, dateRange) => {
-        const month = moment(dateRange[0]).format("YYYY-MM-DD");
-        this.setState({ lots, month }, this.transformData(lots, dateRange));
+        const { month } = this.state;
+        this.setState({ month }, this.transformData(lots, dateRange));
     };
 
     transformData = (data, dateRange) => {
@@ -80,22 +95,22 @@ class RoastLog extends Component {
         });
         this.setState({ data: days });
     };
-    updateData = (event, dir) => {
-        const { target } = event;
-        event.preventDefault();
-        target.blur();
-        const { month: statemonth, lots } = this.state;
-        let increment = 1;
-        if (dir === "previous") {
-            increment = -1;
-        }
-        if (dir === "next") {
-            increment = 1;
-        }
-        const month = moment(statemonth).add(increment, "month");
-        const dateRange = this.getDateRange(month);
-        this.getData(lots, dateRange);
-    };
+    // updateData = (event, dir) => {
+    //     const { target } = event;
+    //     event.preventDefault();
+    //     target.blur();
+    //     const { month: statemonth, lots, period } = this.state;
+    //     let increment = 1;
+    //     if (dir === "previous") {
+    //         increment = -1;
+    //     }
+    //     if (dir === "next") {
+    //         increment = 1;
+    //     }
+    //     const month = moment(statemonth).add(increment, "month");
+    //     const dateRange = this.getDateRange(month, period);
+    //     this.getData(lots, dateRange);
+    // };
 
     modifyTableDefs = lots => {
         let { fields, ...rest } = tableDefs;
@@ -115,13 +130,26 @@ class RoastLog extends Component {
         return moment(month).isBefore(moment(), "month");
     };
 
+    updatePeriod = async (e, { period }) => {
+        const { userId, updateContext } = this.props;
+        const url = roasterUrl(userId) + "/lots_by_date?period=" + period;
+        const data = await fetcher(url);
+        await this.setState({ period: period });
+        updateContext({ data });
+    };
+
     render() {
         const { loading } = this.props;
-        const { data, lots, month } = this.state;
+        const { data, lots, month, period } = this.state;
         const modified = this.modifyTableDefs(lots);
         return (
             <F>
                 <Header as="h2" content={"Roast log: " + moment(month).format("MMMM YYYY")} />
+                <Button.Group style={{ marginBottom: 20 }}>
+                    <Button onClick={this.updatePeriod} period="day" content="Day" active={period === "day"} />
+                    <Button onClick={this.updatePeriod} period="week" content="Week" active={period === "week"} />
+                    <Button onClick={this.updatePeriod} period="month" content="Month" active={period === "month"} />
+                </Button.Group>
                 <Table tableDefs={modified} data={data} loading={loading} />
                 <Flex spacebetween style={{ marginTop: 20 }}>
                     <Button primary onClick={e => this.updateData(e, "previous")} content="Previous Month" />
@@ -137,10 +165,12 @@ class RoastLog extends Component {
     }
 }
 
-const { array, bool } = PropTypes;
+const { array, bool, oneOfType, string, number, func } = PropTypes;
 RoastLog.propTypes = {
     lots: array,
-    loading: bool
+    loading: bool,
+    userId: oneOfType([string, number]),
+    updateContext: func
 };
 
 export default Wrapper;
