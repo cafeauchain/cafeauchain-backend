@@ -17,10 +17,12 @@ import { getTimePeriod, abbreviator } from "utilities";
 import { url as API_URL, requester } from "utilities/apiUtils";
 
 import User from "contexts/user";
-import Lots from "contexts/lots";
+import LotsByPeriod from "contexts/lotsByPeriod";
 /* eslint-enable */
 
-const Wrapper = props => <Lots>{lots => <RoastLog {...props} lots={lots.data} loading={lots.loading} />}</Lots>;
+const Wrapper = props => (
+    <LotsByPeriod>{lots => <RoastLog {...props} lots={lots.data} loading={lots.loading} />}</LotsByPeriod>
+);
 
 class RoastLog extends Component {
     constructor(props) {
