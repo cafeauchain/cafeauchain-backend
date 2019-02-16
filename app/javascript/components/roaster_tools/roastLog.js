@@ -131,8 +131,9 @@ class RoastLog extends Component {
         let { fields, ...rest } = tableDefs;
         const exclude = RegExp(/^\([0-9]{4}\)$/);
         let newFields = lots.map(lot => {
-            const { crop_name: title } = lot.attributes;
-            const label = title ? abbreviator(title, exclude, true) : lot.id;
+            let { crop_name, name, label } = lot.attributes;
+            const title = name || crop_name;
+            label = label || abbreviator(title, exclude, true);
             return { name: "lot_" + lot.id, label, formatter: AsNumber, title };
         });
         fields = [...fields, ...newFields];

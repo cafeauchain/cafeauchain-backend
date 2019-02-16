@@ -7,6 +7,7 @@
 #  contract_open      :datetime
 #  harvest_year       :string
 #  label              :string
+#  name               :string
 #  pounds_of_coffee   :float
 #  price_per_pound    :float
 #  status             :integer
@@ -35,7 +36,7 @@ class Lot < ApplicationRecord
   enum status: [:open, :delivered_in_full, :roasted_in_full]
 
   def contract_value
-    return self.price_per_pound * self.pounds_of_coffee
+    return self.price_per_pound.to_f * self.pounds_of_coffee.to_f
   end
 
   def coffee_on_hand

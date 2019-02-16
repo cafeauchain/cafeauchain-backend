@@ -4,7 +4,8 @@ import { Money, AsNumber } from "shared/textFormatters";
 
 const tableDefinition = {
     fields: [
-        { name: "crop_name", namespace: "attributes", label: "Crop Name (Harvest Year)", width: 8 },
+        { name: "name", namespace: "attributes", label: "Lot Name", width: 6 },
+        { name: "crop_name", namespace: "attributes", label: "Crop Name (Harvest Year)", width: 4 },
         { name: "on_hand", namespace: "attributes", formatter: AsNumber, label: "In House" },
         { name: "pounds_of_coffee", namespace: "attributes", formatter: AsNumber, label: "On Contract" },
         { name: "total_amount_roasted", namespace: "attributes", formatter: AsNumber, label: "Roasted" },
