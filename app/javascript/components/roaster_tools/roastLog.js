@@ -11,12 +11,9 @@ import { Money, AsNumber } from "shared/textFormatters";
 import Flex from "shared/flex";
 
 import { getTimePeriod, abbreviator } from "utilities";
-// import API_URL from "utilities/apiUtils/url";
-// import requester from "utilities/apiUtils/requester";
 
 import { url as API_URL, requester, roasterUrl, fetcher } from "utilities/apiUtils";
 
-import User from "contexts/user";
 import LotsByPeriod from "contexts/lotsByPeriod";
 /* eslint-enable */
 
@@ -41,12 +38,17 @@ class RoastLog extends Component {
             data: [],
             lots: [],
             month: moment().format("YYYY-MM"),
-            period: "day"
+            period: "day",
+            earliest: ""
         };
     }
 
     componentDidMount() {
-        this.handleLotUpdate();
+        const { userId } = this.props;
+        const url = roasterUrl(userId) + "/earliest_batch";
+        fetcher(url)
+            .then(res => this.setState({ earliest: res }))
+            .then(() => this.handleLotUpdate);
     }
 
     componentDidUpdate() {
@@ -83,9 +85,6 @@ class RoastLog extends Component {
                 const match = item.attributes.batches[moment(day).format("YYYY-MM-DD")];
                 const amount = match ? match.roasted_on_date : 0;
                 return { ...obj, ["lot_" + item.id]: amount };
-                // const match = item.amounts.find(datematch => moment(datematch.date).isSame(day, "day"));
-                // const amount = match ? match.amount_roasted : 0;
-                // return { ...obj, ["lot_" + item.lot.id]: amount };
             }, {});
             return {
                 date: day.format("MMM DD"),
@@ -99,7 +98,7 @@ class RoastLog extends Component {
         const { target } = event;
         event.preventDefault();
         target.blur();
-        const { month: statemonth, lots, period } = this.state;
+        const { month: statemonth, period } = this.state;
         const { userId, updateContext } = this.props;
         let increment = 1;
         if (dir === "previous") {
@@ -140,9 +139,11 @@ class RoastLog extends Component {
         return { ...rest, fields };
     };
 
-    // eslint-disable-next-line
     checkMonth = (month, dir) => {
-        // TODO When there is real data, decide on a way to disable Previous when there would be no data
+        const { earliest } = this.state;
+        if (dir === "previous") {
+            return moment(month).isAfter(moment(earliest), "month");
+        }
         return moment(month).isBefore(moment(), "month");
     };
 
@@ -168,7 +169,12 @@ class RoastLog extends Component {
                 </Button.Group>
                 <Table tableDefs={modified} data={data} loading={loading} />
                 <Flex spacebetween style={{ marginTop: 20 }}>
-                    <Button primary onClick={e => this.updateData(e, "previous")} content="Previous Month" />
+                    <Button
+                        primary
+                        onClick={e => this.updateData(e, "previous")}
+                        content="Previous Month"
+                        disabled={!this.checkMonth(month, "previous")}
+                    />
                     <Button
                         primary
                         onClick={e => this.updateData(e, "next")}

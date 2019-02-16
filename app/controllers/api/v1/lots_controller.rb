@@ -18,6 +18,11 @@ module Api::V1
       render json: @lots, range: range, period: period, status: 200, each_serializer: LotSerializer::LotsByDateSerializer
     end
 
+    def earliest
+      @earliest = @roaster.batches.order(:roast_date).limit(1).first.roast_date
+      render json: {data: @earliest}, status: 200
+    end
+
     def show
       render json: @lot, status: 200, serializer: LotSerializer::SingleLotSerializer
     end
