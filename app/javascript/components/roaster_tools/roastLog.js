@@ -95,22 +95,38 @@ class RoastLog extends Component {
         });
         this.setState({ data: days });
     };
-    // updateData = (event, dir) => {
-    //     const { target } = event;
-    //     event.preventDefault();
-    //     target.blur();
-    //     const { month: statemonth, lots, period } = this.state;
-    //     let increment = 1;
-    //     if (dir === "previous") {
-    //         increment = -1;
-    //     }
-    //     if (dir === "next") {
-    //         increment = 1;
-    //     }
-    //     const month = moment(statemonth).add(increment, "month");
-    //     const dateRange = this.getDateRange(month, period);
-    //     this.getData(lots, dateRange);
-    // };
+    updateData = async (event, dir) => {
+        const { target } = event;
+        event.preventDefault();
+        target.blur();
+        const { month: statemonth, lots, period } = this.state;
+        const { userId, updateContext } = this.props;
+        let increment = 1;
+        if (dir === "previous") {
+            increment = -1;
+        }
+        if (dir === "next") {
+            increment = 1;
+        }
+        const month = moment(statemonth).add(increment, "month");
+        let startDate =
+            "&start_date=" +
+            month
+                .clone()
+                .startOf("month")
+                .format("YYYY-MM-DD");
+        let endDate =
+            "&end_date=" +
+            month
+                .clone()
+                .endOf("month")
+                .format("YYYY-MM-DD");
+
+        const url = roasterUrl(userId) + "/lots_by_date?period=" + period + startDate + endDate;
+        const data = await fetcher(url);
+        await this.setState({ period, month });
+        updateContext({ data });
+    };
 
     modifyTableDefs = lots => {
         let { fields, ...rest } = tableDefs;
