@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= content_for?(:title) ? yield(:title) : "Cafe au Chain | Know where your coffee comes from" %></title>
     <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Cafe au Chain | Proof of Perk helps roaster track their coffee from distributors through the roasting process, and helps their customers learn where their coffee comes from." %>">
+    <%= favicon_link_tag asset_path('cac-unofficial-logo.png') %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_pack_tag 'application' %>
