@@ -13,9 +13,9 @@ p2 = Plan.create!(stripe_plan_id: "plan_EW5n1MwhCcYy5r",
   interval: "monthly",
   name: "Proof of Perk Base")
 
-u2 = User.create!(name: '1000 Faces User', email: 'jordan@cafeauchain.com', password: 'changeme', password_confirmation: 'changeme', admin: false)
+u2 = User.create!(name: 'Arthur Pendragon', email: 'pendragondevelopment@gmail.com', password: 'changeme', password_confirmation: 'changeme', admin: false)
 puts "#{u2.name} created."
-roaster = RoasterProfile.create(name: "1000 Faces Coffee", url: '1000facescoffee.com', address_1: "510 N Thomas St", zip_code: "30601", city: "Athens", state: "GA", about: "OUR MISSION IS TO CONNECT THE COFFEE CONSUMER AND COFFEE PRODUCER MORE DIRECTLY THROUGH QUALITY, EDUCATION, SERVICE, AND FRIENDLY INTERACTIONS. \n1000 Faces envisions more consumers being mindful about their coffee consumption and through increased demand, spurring more quality coffee production. 1000 Faces is a coffee roaster, merchant of change, and voyager ofthe agrarian spirit. We are a group of folks who are passionate about coffee and passionate about being nice to people. We travel to countries of origin and establish relationships with producers to ensure the integrity of our coffee. Since we opened our doors on day one, we have been working in partnership with the two most important ends of the 1000 Faces spectrum: the grower and the customer. It is this partnership that is at the foundation for real economic sustainability for not just us, but all parties involved. We believe that respect forgeographic origin, direct relationships, and ecological awareness is the basis for creating a more sustainable coffee culture. Building on these principles, from seed to cup, 1000 Faces has set out to bring forth coffees of unsurpassed integrity and quality.")
+roaster = RoasterProfile.create(name: "Pendragon Coffee", url: 'pendragoncoffee.com', address_1: "345 W Hancock Ave", address_2: "Suite 108", zip_code: "30601", city: "Athens", state: "GA", about: "Good coffee, round table.")
 puts "#{roaster.name} created."
 roaster.users << u2
 roaster.set_owner
