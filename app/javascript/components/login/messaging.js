@@ -2,13 +2,13 @@ const messaging = {
     login: {
         heading: "Log in to you account",
         message: "Need an Account?",
-        url: "/users/sign_up",
+        url: "/register",
         linkText: "Sign Up!"
     },
     register: {
         heading: "Create an account",
         message: "Already signed up?",
-        url: "/users/sign_in",
+        url: "/login",
         linkText: "Log In!"
     }
 };

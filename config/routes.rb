@@ -217,6 +217,9 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     get "/logout" => "devise/sessions#destroy"
+    get "/login" => "devise/sessions#create"
+    get "/signup" => "devise/registrations#new"
+    get "/register" => "devise/registrations#new"
   end
 
   root 'high_voltage/pages#show', id: 'home'
