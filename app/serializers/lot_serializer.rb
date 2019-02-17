@@ -7,6 +7,7 @@
 #  contract_open      :datetime
 #  harvest_year       :string
 #  label              :string
+#  name               :string
 #  pounds_of_coffee   :float
 #  price_per_pound    :float
 #  status             :integer
@@ -27,7 +28,7 @@
 #
 
 class LotSerializer < ActiveModel::Serializer
-  attributes :id, :label, :crop_name, :pounds_of_coffee, :price_per_pound, :harvest_year, :on_hand, :contract_value, :total_amount_roasted
+  attributes :id, :label, :crop_name, :name, :pounds_of_coffee, :price_per_pound, :harvest_year, :on_hand, :contract_value, :total_amount_roasted
 
   belongs_to :crop
   # belongs_to :roaster_profile

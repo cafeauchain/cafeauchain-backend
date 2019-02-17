@@ -7,6 +7,7 @@
 #  contract_open      :datetime
 #  harvest_year       :string
 #  label              :string
+#  name               :string
 #  pounds_of_coffee   :float
 #  price_per_pound    :float
 #  status             :integer

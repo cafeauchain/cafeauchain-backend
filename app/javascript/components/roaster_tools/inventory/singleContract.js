@@ -8,9 +8,6 @@ import CropSelect from "shared/crops/cropSelect";
 
 import fields from "defs/forms/addSingleContract";
 
-// import API_URL from "utilities/apiUtils/url";
-// import requester from "utilities/apiUtils/requester";
-
 import { url as API_URL, requester } from "utilities/apiUtils";
 
 import Lots from "contexts/lots";
@@ -120,6 +117,7 @@ class SingleContract extends Component {
                                             labelPosition="right"
                                             placeholder={field.placeholder}
                                             onChange={this.handleInputChange}
+                                            defaultValue={field.defaultValue}
                                         />
                                     </Form.Field>
                                 ))}

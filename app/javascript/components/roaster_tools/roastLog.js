@@ -11,12 +11,9 @@ import { Money, AsNumber } from "shared/textFormatters";
 import Flex from "shared/flex";
 
 import { getTimePeriod, abbreviator } from "utilities";
-// import API_URL from "utilities/apiUtils/url";
-// import requester from "utilities/apiUtils/requester";
 
 import { url as API_URL, requester, roasterUrl, fetcher } from "utilities/apiUtils";
 
-import User from "contexts/user";
 import LotsByPeriod from "contexts/lotsByPeriod";
 /* eslint-enable */
 
@@ -41,12 +38,17 @@ class RoastLog extends Component {
             data: [],
             lots: [],
             month: moment().format("YYYY-MM"),
-            period: "day"
+            period: "day",
+            earliest: ""
         };
     }
 
     componentDidMount() {
-        this.handleLotUpdate();
+        const { userId } = this.props;
+        const url = roasterUrl(userId) + "/earliest_batch";
+        fetcher(url)
+            .then(res => this.setState({ earliest: res }))
+            .then(() => this.handleLotUpdate);
     }
 
     componentDidUpdate() {
@@ -83,9 +85,6 @@ class RoastLog extends Component {
                 const match = item.attributes.batches[moment(day).format("YYYY-MM-DD")];
                 const amount = match ? match.roasted_on_date : 0;
                 return { ...obj, ["lot_" + item.id]: amount };
-                // const match = item.amounts.find(datematch => moment(datematch.date).isSame(day, "day"));
-                // const amount = match ? match.amount_roasted : 0;
-                // return { ...obj, ["lot_" + item.lot.id]: amount };
             }, {});
             return {
                 date: day.format("MMM DD"),
@@ -95,38 +94,57 @@ class RoastLog extends Component {
         });
         this.setState({ data: days });
     };
-    // updateData = (event, dir) => {
-    //     const { target } = event;
-    //     event.preventDefault();
-    //     target.blur();
-    //     const { month: statemonth, lots, period } = this.state;
-    //     let increment = 1;
-    //     if (dir === "previous") {
-    //         increment = -1;
-    //     }
-    //     if (dir === "next") {
-    //         increment = 1;
-    //     }
-    //     const month = moment(statemonth).add(increment, "month");
-    //     const dateRange = this.getDateRange(month, period);
-    //     this.getData(lots, dateRange);
-    // };
+    updateData = async (event, dir) => {
+        const { target } = event;
+        event.preventDefault();
+        target.blur();
+        const { month: statemonth, period } = this.state;
+        const { userId, updateContext } = this.props;
+        let increment = 1;
+        if (dir === "previous") {
+            increment = -1;
+        }
+        if (dir === "next") {
+            increment = 1;
+        }
+        const month = moment(statemonth).add(increment, "month");
+        let startDate =
+            "&start_date=" +
+            month
+                .clone()
+                .startOf("month")
+                .format("YYYY-MM-DD");
+        let endDate =
+            "&end_date=" +
+            month
+                .clone()
+                .endOf("month")
+                .format("YYYY-MM-DD");
+
+        const url = roasterUrl(userId) + "/lots_by_date?period=" + period + startDate + endDate;
+        const data = await fetcher(url);
+        await this.setState({ period, month });
+        updateContext({ data });
+    };
 
     modifyTableDefs = lots => {
         let { fields, ...rest } = tableDefs;
         const exclude = RegExp(/^\([0-9]{4}\)$/);
         let newFields = lots.map(lot => {
-            const { crop_name: title } = lot.attributes;
-            const label = title ? abbreviator(title, exclude, true) : lot.id;
+            let { crop_name, name, label } = lot.attributes;
+            const title = name || crop_name;
+            label = label || abbreviator(title, exclude, true);
             return { name: "lot_" + lot.id, label, formatter: AsNumber, title };
         });
         fields = [...fields, ...newFields];
         return { ...rest, fields };
     };
 
-    // eslint-disable-next-line
     checkMonth = (month, dir) => {
-        // TODO When there is real data, decide on a way to disable Previous when there would be no data
+        const { earliest } = this.state;
+        if (dir === "previous") {
+            return moment(month).isAfter(moment(earliest), "month");
+        }
         return moment(month).isBefore(moment(), "month");
     };
 
@@ -152,7 +170,12 @@ class RoastLog extends Component {
                 </Button.Group>
                 <Table tableDefs={modified} data={data} loading={loading} />
                 <Flex spacebetween style={{ marginTop: 20 }}>
-                    <Button primary onClick={e => this.updateData(e, "previous")} content="Previous Month" />
+                    <Button
+                        primary
+                        onClick={e => this.updateData(e, "previous")}
+                        content="Previous Month"
+                        disabled={!this.checkMonth(month, "previous")}
+                    />
                     <Button
                         primary
                         onClick={e => this.updateData(e, "next")}

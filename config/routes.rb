@@ -36,6 +36,7 @@
 #                                            DELETE /api/v1/producers/:id(.:format)                                                          api/v1/producer_profiles#destroy
 #      validate_step_api_v1_roaster_profiles POST   /api/v1/roasters/validate_step(.:format)                                                 api/v1/roaster_profiles#validate_step
 #        api_v1_roaster_profile_lots_by_date GET    /api/v1/roasters/:roaster_profile_id/lots_by_date(.:format)                              api/v1/lots#lots_by_date
+#      api_v1_roaster_profile_earliest_batch GET    /api/v1/roasters/:roaster_profile_id/earliest_batch(.:format)                            api/v1/lots#earliest
 # upload_lot_csv_api_v1_roaster_profile_lots POST   /api/v1/roasters/:roaster_profile_id/lots/upload_lot_csv(.:format)                       api/v1/lots#upload_lot_csv
 #                api_v1_roaster_profile_lots GET    /api/v1/roasters/:roaster_profile_id/lots(.:format)                                      api/v1/lots#index
 #                                            POST   /api/v1/roasters/:roaster_profile_id/lots(.:format)                                      api/v1/lots#create
@@ -173,6 +174,7 @@ Rails.application.routes.draw do
           post :validate_step
         end
         get :lots_by_date, to: 'lots#lots_by_date'
+        get :earliest_batch, to: 'lots#earliest'
         resources :lots do
           collection do
             post :upload_lot_csv
