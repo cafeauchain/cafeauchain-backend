@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { Image, List, Message } from "semantic-ui-react";
+import { Message } from "semantic-ui-react";
 
 /* eslint-disable */
 import { humanize } from "utilities";
+
 import IconHeader from "shared/IconHeader";
+import Details from "shared/details";
+import { AsImage } from "shared/textFormatters";
 /* eslint-enable */
 
 import WizardWrapper from "../formWrapper";
@@ -13,25 +16,19 @@ import WizardWrapper from "../formWrapper";
 class Confirmation extends Component {
     state = {};
 
-    renderProfileItems = () => {
-        const { values } = this.props;
-        return Object.keys(values).map(key => {
-            return (
-                <List.Item key={key}>
-                    <List.Header>{humanize(key)}</List.Header>
-                    <List.Content>
-                        {key === "logo" ? <Image src={values[key]} size="small" /> : values[key]}
-                    </List.Content>
-                </List.Item>
-            );
-        });
+    confirmFields = values => {
+        return Object.keys(values).reduce((arr, item) => {
+            if (!values[item]) return arr;
+            const formatter = item === "logo" ? props => AsImage({ ...props, size: "small" }) : "";
+            return [...arr, { name: item, key: item, formatter }];
+        }, []);
     };
 
     render() {
         const trialEnd = moment()
             .add(30, "days")
             .format("dddd, MMM Do YYYY");
-        const { ...rest } = this.props;
+        const { values, ...rest } = this.props;
         return (
             <WizardWrapper {...rest}>
                 <Message info>
@@ -51,7 +48,12 @@ class Confirmation extends Component {
                         </Message.Item>
                     </Message.List>
                 </Message>
-                <List>{this.renderProfileItems()}</List>
+                <Details
+                    attributes={values}
+                    fields={this.confirmFields(values)}
+                    leftStyles={{ width: 100, margin: "10px 0", fontWeight: "bold" }}
+                    rightStyles={{ margin: "10px 0" }}
+                />
             </WizardWrapper>
         );
     }
