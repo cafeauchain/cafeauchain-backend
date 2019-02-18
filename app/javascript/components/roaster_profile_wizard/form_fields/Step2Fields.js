@@ -11,15 +11,9 @@ import { usStates } from "utilities";
 import WizardWrapper from "../formWrapper";
 
 class Step2Fields extends Component {
-    state = {};
-
     renderInputs = props => {
         const { handleChange, values } = this.props;
-        return (
-            <Form.Field>
-                <Input {...props} onChange={handleChange} defaultValue={values[props.name]} autoComplete="off" />
-            </Form.Field>
-        );
+        return <Input {...props} onChange={handleChange} defaultValue={values[props.name]} autoComplete="off" />;
     };
 
     searchFunc = (collection, val) => {
@@ -31,7 +25,7 @@ class Step2Fields extends Component {
     };
 
     render() {
-        const { ...rest } = this.props;
+        const { values, handleChange, ...rest } = this.props;
         const Inner = this.renderInputs;
         return (
             <WizardWrapper {...rest}>

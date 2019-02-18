@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
@@ -12,11 +11,7 @@ import WizardWrapper from "../formWrapper";
 class Step1Fields extends Component {
     renderInputs = props => {
         const { handleChange, values } = this.props;
-        return (
-            <Form.Field>
-                <Input {...props} onChange={handleChange} defaultValue={values[props.name]} autoComplete="off" />
-            </Form.Field>
-        );
+        return <Input {...props} onChange={handleChange} defaultValue={values[props.name]} autoComplete="off" />;
     };
 
     render() {
