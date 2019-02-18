@@ -1,83 +1,49 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types';
-import { Button, Form, Grid, Icon, Input } from 'semantic-ui-react'
-import IconHeader from '../../shared/IconHeader';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Form, Input } from "semantic-ui-react";
+
+/* eslint-disable */
+/* eslint-enable */
+
+import WizardWrapper from "../formWrapper";
 
 class Step3Fields extends Component {
-    state = {}
-
-    saveAndContinue = (e) => {
-        const { nextStep } = this.props
-
-        e.preventDefault()
-        nextStep()
-    }
-
-    goBack = (e) => {
-        const { previousStep } = this.props
-        
-        e.preventDefault()
-        previousStep()
-    }
+    state = {};
 
     render() {
-        const {values, renderErrors, handleChange} = this.props
+        const { values, handleChange, ...rest } = this.props;
         return (
-            <Grid centered>
-                <Grid.Column width={12}>
-                    <IconHeader iconName='coffee' header="Step 3: Website & Social" />
-                    <Form>
-                        {renderErrors()}
-                        <Form.Group widths="equal">
-                            <Form.Field>
-                                <label htmlFor="form-input-url">What is your website address?</label>
-                                <Input 
-                                    id="form-input-url" 
-                                    label='http://' 
-                                    placeholder='URL' 
-                                    onChange={handleChange('url')} 
-                                    defaultValue={values.url}
-                                />
-                            </Form.Field>       
-                            <Form.Field 
-                                control={Input} 
-                                label='What is your Twitter handle?' 
-                                placeholder='Twitter' 
-                                onChange={handleChange('twitter')} 
-                                defaultValue={values.twitter} 
-                            />
-                            <Form.Field 
-                                control={Input} 
-                                label='What is your Facebook link?' 
-                                placeholder='Facebook' 
-                                onChange={handleChange('facebook')} 
-                                defaultValue={values.facebook}    
-                            />
-                        </Form.Group>
-                        <Button 
-                            type='submit' 
-                            onClick={this.goBack} 
-                            className="ui left floated" 
-                            icon 
-                            labelPosition='left'
-                        >
-                            Previous Step
-                            <Icon name='left arrow' />
-                        </Button>
-                        <Button 
-                            type='submit' 
-                            onClick={this.saveAndContinue} 
-                            className="ui primary right floated" 
-                            icon 
-                            labelPosition='right'
-                        >
-                            Next Step
-                            <Icon name='right arrow' />
-                        </Button>
-                    </Form>
-                </Grid.Column>
-            </Grid>
-        )
+            <WizardWrapper {...rest}>
+                <Form.Group widths="equal">
+                    <Form.Field>
+                        <label>What is your website address?</label>
+                        <Input
+                            name="url"
+                            label="http://"
+                            placeholder="URL"
+                            onChange={handleChange}
+                            defaultValue={values.url}
+                        />
+                    </Form.Field>
+                    <Form.Field
+                        control={Input}
+                        name="twitter"
+                        label="What is your Twitter handle?"
+                        placeholder="Twitter"
+                        onChange={handleChange}
+                        defaultValue={values.twitter}
+                    />
+                    <Form.Field
+                        control={Input}
+                        name="facebook"
+                        label="What is your Facebook link?"
+                        placeholder="Facebook"
+                        onChange={handleChange}
+                        defaultValue={values.facebook}
+                    />
+                </Form.Group>
+            </WizardWrapper>
+        );
     }
 }
 

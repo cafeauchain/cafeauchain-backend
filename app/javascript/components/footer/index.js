@@ -21,7 +21,7 @@ const Footer = () => {
                                 <List.Item as="a" href="/contact">
                                     Contact
                                 </List.Item>
-                                <List.Item as="a" href="/users/sign_in">
+                                <List.Item as="a" href="/login">
                                     Login
                                 </List.Item>
                             </List>
