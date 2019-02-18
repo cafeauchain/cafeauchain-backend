@@ -19,7 +19,11 @@ module Api::V1
     end
 
     def earliest
-      @earliest = @roaster.batches.order(:roast_date).limit(1).first.roast_date
+      if @roaster.batches.nil?
+        @earliest = @roaster.batches.order(:roast_date).limit(1).first.roast_date
+      else
+        @earliest = @roaster.created_at.to_date
+      end
       render json: {data: @earliest}, status: 200
     end
 
