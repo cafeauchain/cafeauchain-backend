@@ -39,7 +39,7 @@ const Hero = ({ mobile }) => {
                 Proof of Perk provides a set of blockchain-backed roaster tools to help bring transparency to the
                 specitiality coffee supply chain.
             </p>
-            <Button positive size="huge">
+            <Button positive size="huge" as="a" href="/register">
                 Get Started
                 <Icon name="right arrow" />
             </Button>

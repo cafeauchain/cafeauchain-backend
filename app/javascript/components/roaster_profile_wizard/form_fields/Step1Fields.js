@@ -1,17 +1,18 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
-import {
-    Button,
-    Form,
-    Input,
-    Image,
-    Icon,
-    Grid,
-    Segment,
-    Header,
-    TextArea
-} from "semantic-ui-react";
-import IconHeader from "../../shared/IconHeader";
+import PropTypes from "prop-types";
+import { Form, Image, Icon, Segment, Header } from "semantic-ui-react";
+
+/* eslint-disable */
+import Input from "shared/input";
+import ImageUpload from "shared/ImageUpload";
+/* eslint-enable */
+
+import WizardWrapper from "../formWrapper";
+
+const fields = [
+    { name: "name", label: "What is the name of your roaster?", placeholder: "Roaster Name" },
+    { name: "about", label: "About", placeholder: "Tell us more about your roaster...", inputType: "textarea" }
+];
 
 class Step1Fields extends Component {
     state = {
@@ -31,11 +32,11 @@ class Step1Fields extends Component {
 
     uploadFile = event => {
         let { files } = this.state;
-        const { setLogo } = this.props
+        const { handleChange } = this.props;
         files.splice(0, 1, event.target.files[0]);
         this.setState({ files });
         this.getBase64(event.target.files[0], result => {
-            setLogo(result);
+            handleChange(event, { name: "logo", value: result });
         });
     };
 
@@ -44,94 +45,60 @@ class Step1Fields extends Component {
         return tempFileUrl;
     };
 
-    saveAndContinue = e => {
-        const { nextStep } = this.props
-        e.preventDefault();
-        nextStep();
-    };
-
     render() {
-        const { values, renderErrors, handleChange } = this.props;
+        const { values, handleChange, ...rest } = this.props;
         return (
-            <Grid centered>
-                <Grid.Column width={12}>
-                    <IconHeader
-                        iconName="coffee"
-                        header="Create your roaster's profile"
-                    />
-                    <Form>
-                        {renderErrors()}
-                        <Form.Field
-                            control={Input}
-                            label="What is the name of your roaster?"
-                            placeholder="Roaster name"
-                            onChange={handleChange("name")}
-                            defaultValue={values.name}
+            <WizardWrapper {...rest}>
+                {fields.map(item => (
+                    <Form.Field key={item.name}>
+                        <Input
+                            label={item.label}
+                            placeholder={item.placeholder}
+                            name={item.name}
+                            defaultValue={values[item.name]}
+                            onChange={handleChange}
+                            inputType={item.inputType}
                         />
-                        <Form.Field
-                            control={TextArea}
-                            label="About"
-                            placeholder="Tell us more about your roaster..."
-                            onChange={handleChange("about")}
-                            defaultValue={values.about}
-                        />
-                        {values.logo.length == 0 ? (
-                            <Segment placeholder>
-                                <Form.Field>
-                                    <Header icon>
-                                        <Icon name="image outline" />
-                                        No logo added
-                                    </Header>
-                                    <input
-                                        type="file"
-                                        onChange={event => this.uploadFile(event)}
-                                        className="input-file"
-                                        id="logoFileInput"
-                                    />
-                                    <label
-                                        htmlFor="logoFileInput"
-                                        className="ui huge green button"
-                                    >
-                                        <i className="ui upload icon" />
-                                        Upload Logo
-                                    </label>
-                                </Form.Field>
-                            </Segment>
-                        ) : (
-                            <Segment textAlign="center">
-                                <Image
-                                    src={values.logo}
-                                    size="medium"
-                                    rounded
-                                    centered
-                                    spaced
-                                />
-                            </Segment>
-                        )}
-                        <Button
-                            type="submit"
-                            onClick={this.saveAndContinue}
-                            className="ui primary right floated"
-                            icon
-                            labelPosition="right"
-                        >
-                            Next Step
-                            <Icon name="right arrow" />
-                        </Button>
-                    </Form>
-                </Grid.Column>
-            </Grid>
+                    </Form.Field>
+                ))}
+                {!values.logo && (
+                    <Segment placeholder textAlign="center">
+                        <Form.Field>
+                            <Header icon>
+                                <Icon name="image outline" />
+                                No logo added
+                            </Header>
+                            <input
+                                type="file"
+                                onChange={this.uploadFile}
+                                className="input-file"
+                                id="logoFileInput"
+                                name="logo"
+                            />
+                            <label htmlFor="logoFileInput" className="ui huge green button">
+                                <i className="ui upload icon" />
+                                Upload Logo
+                            </label>
+                        </Form.Field>
+                    </Segment>
+                )}
+                {values.logo && (
+                    <Segment textAlign="center">
+                        <Image src={values.logo} size="medium" rounded centered spaced />
+                    </Segment>
+                )}
+            </WizardWrapper>
         );
     }
 }
 
-const { func, object } = PropTypes;
+const { func, object, string } = PropTypes;
 Step1Fields.propTypes = {
-    setLogo: func,
-    renderErrors: func,
     handleChange: func,
-    nextStep: func,
-    values: object
+    values: object,
+    renderErrors: func,
+    nextFunc: func,
+    header: string
 };
 
 export default Step1Fields;
