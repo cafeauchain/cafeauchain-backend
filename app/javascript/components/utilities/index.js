@@ -4,6 +4,7 @@ import csvToJSON from "./csvToJSON";
 import debounce from "./debounce";
 import namespacer from "./fieldNamespacer";
 import fileReader from "./fileReader";
+import fileToImage from "./fileToImage";
 import getTextFromChildren from "./getTextFromChildren";
 import getTimePeriod from "./getTimePeriod";
 import humanize from "./humanize";
@@ -23,6 +24,7 @@ export {
     debounce,
     namespacer,
     fileReader,
+    fileToImage,
     getTextFromChildren,
     getTimePeriod,
     humanize,
