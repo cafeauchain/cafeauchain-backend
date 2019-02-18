@@ -1,100 +1,75 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import shortid from 'shortid';
-import moment from 'moment';
-import { Button, Form, Grid, Icon, Image, List, Message } from "semantic-ui-react";
-import humanize from "../../utilities/humanize";
-import IconHeader from "../../shared/IconHeader";
+import moment from "moment";
+import { Button, Form, Image, List, Message, Container } from "semantic-ui-react";
+
+/* eslint-disable */
+import { humanize } from "utilities";
+import IconHeader from "shared/IconHeader";
+/* eslint-enable */
 
 class Confirmation extends Component {
     state = {};
 
-    saveAndContinue = e => {
-        const { submitProfile } = this.props
-
-        e.preventDefault();
-        submitProfile();
-    };
-
-    goBack = e => {
-        const { previousStep } = this.props
-
-        e.preventDefault();
-        previousStep();
-    };
-
     renderProfileItems = () => {
         const { values } = this.props;
-        return Object.keys(values).map((key) => {
-            switch (key){
-            case "logo":
-                return (
-                    <List.Item key={shortid.generate()}>
-                        <Image src={values[key]} size="small" />
-                        <List.Content>
-                            <List.Header>{humanize(key)}</List.Header>
-                        </List.Content>
-                    </List.Item>
-                );
-            default:
-                return (
-                    <List.Item key={shortid.generate()}>
-                        <List.Header>{humanize(key)}</List.Header>
-                        {values[key]}
-                    </List.Item>
-                );
-            }
-        })
-    }
+        return Object.keys(values).map(key => {
+            return (
+                <List.Item key={key}>
+                    <List.Header>{humanize(key)}</List.Header>
+                    <List.Content>
+                        {key === "logo" ? <Image src={values[key]} size="small" /> : values[key]}
+                    </List.Content>
+                </List.Item>
+            );
+        });
+    };
 
     render() {
-        const trialEnd = moment().add('days', 30).format("dddd, MMM Do YYYY")
+        const trialEnd = moment()
+            .add("days", 30)
+            .format("dddd, MMM Do YYYY");
+        const { previousStep, submitProfile } = this.props;
         return (
-            <Grid centered>
-                <Grid.Column width={12}>
-                    <Form>
-                        <IconHeader iconName="coffee" header="Confirm your profile info" />
-                        <Message info>
-                            <Message.Header>Complete your registration</Message.Header>
-                            <Message.List>
-                                <Message.Item>
-                                    Start your free 30-day trial, ending&nbsp;
-                                    {trialEnd}
-                                </Message.Item>
-                                <Message.Item>
-                                    During your trial, you can track up to 1000lbs of green coffee through the roasting process
-                                </Message.Item>
-                                <Message.Item>
-                                    We don‘t need a credit card for your trial, but we recommend you add one so you don‘t experience an interruption
-                                </Message.Item>
-                            </Message.List>
-                        </Message>
-                        <List>
-                            {this.renderProfileItems()}
-                        </List>
-                        <Button
-                            type="submit"
-                            onClick={this.goBack}
-                            className="ui left floated"
-                            icon
-                            labelPosition="left"
-                        >
-                            Previous Step
-                            <Icon name="left arrow" />
-                        </Button>
-                        <Button
-                            type="submit"
-                            onClick={this.saveAndContinue}
-                            className="ui primary right floated"
-                            icon
-                            labelPosition="right"
-                        >
-                            Complete Registration
-                            <Icon name="right arrow" />
-                        </Button>
-                    </Form>
-                </Grid.Column>
-            </Grid>
+            <Container text>
+                <Form style={{ margin: "4em 0" }}>
+                    <IconHeader iconName="coffee" header="Confirm your profile info" />
+                    <Message info>
+                        <Message.Header>Complete your registration</Message.Header>
+                        <Message.List>
+                            <Message.Item>
+                                Start your free 30-day trial, ending&nbsp;
+                                {trialEnd}
+                            </Message.Item>
+                            <Message.Item>
+                                During your trial, you can track up to 500 lbs of green coffee through the roasting
+                                process for free
+                            </Message.Item>
+                            <Message.Item>
+                                We don‘t need a credit card for your trial, but we recommend you add one so you don‘t
+                                experience an interruption
+                            </Message.Item>
+                        </Message.List>
+                    </Message>
+                    <List>{this.renderProfileItems()}</List>
+                    <Button
+                        type="button"
+                        onClick={previousStep}
+                        icon="left arrow"
+                        labelPosition="left"
+                        content="Previous Step"
+                    />
+                    <Button
+                        type="submit"
+                        onClick={submitProfile}
+                        primary
+                        floated="right"
+                        icon="right arrow"
+                        labelPosition="right"
+                        content="Complete Registration"
+                    />
+                </Form>
+            </Container>
         );
     }
 }
