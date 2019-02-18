@@ -12,6 +12,8 @@ import Step2Fields from "./form_fields/Step2Fields";
 import Step3Fields from "./form_fields/Step3Fields";
 import Confirmation from "./form_fields/Confirmation";
 
+import WizardWrapper from "./formWrapper";
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -124,50 +126,43 @@ class App extends Component {
         }
     };
 
+    getWizardSettings = step => {
+        let settings = {
+            prevFunc: this.previousStep,
+            nextFunc: this.nextStep
+        };
+        switch (step) {
+        case "step1":
+            settings.prevFunc = null;
+            settings.headerText = "Create your roaster's profile";
+            break;
+        case "step2":
+            settings.headerText = "Step 2: Location";
+            break;
+        case "step3":
+            settings.headerText = "Step 3: Website & Social";
+            break;
+        case "step4":
+            settings.nextFunc = this.submitProfile;
+            settings.headerText = "Confirm your profile info";
+            settings.nextText = "Complete Registration";
+            break;
+        }
+        return settings;
+    };
+
     render() {
         // registerServiceWorker();
         const { current_step: step, roaster_profile: profile } = this.state;
+        const settings = this.getWizardSettings(step);
         return (
             <Container className="form roaster-wizard">
-                {step === "step1" && (
-                    <Step1Fields
-                        handleChange={this.handleChange}
-                        values={profile}
-                        header="Create your roaster's profile"
-                        nextFunc={this.nextStep}
-                        renderErrors={this.renderErrors}
-                    />
-                )}
-                {step === "step2" && (
-                    <Step2Fields
-                        handleChange={this.handleChange}
-                        values={profile}
-                        header="Step 2: Location"
-                        nextFunc={this.nextStep}
-                        prevFunc={this.previousStep}
-                        renderErrors={this.renderErrors}
-                    />
-                )}
-                {step === "step3" && (
-                    <Step3Fields
-                        handleChange={this.handleChange}
-                        values={profile}
-                        header="Step 3: Website & Social"
-                        nextFunc={this.nextStep}
-                        prevFunc={this.previousStep}
-                        renderErrors={this.renderErrors}
-                    />
-                )}
-                {step === "step4" && (
-                    <Confirmation
-                        values={profile}
-                        header="Confirm your profile info"
-                        nextFunc={this.submitProfile}
-                        prevFunc={this.previousStep}
-                        renderErrors={this.renderErrors}
-                        nextText="Complete Registration"
-                    />
-                )}
+                <WizardWrapper renderErrors={this.renderErrors} {...settings}>
+                    {step === "step1" && <Step1Fields handleChange={this.handleChange} values={profile} />}
+                    {step === "step2" && <Step2Fields handleChange={this.handleChange} values={profile} />}
+                    {step === "step3" && <Step3Fields handleChange={this.handleChange} values={profile} />}
+                    {step === "step4" && <Confirmation values={profile} />}
+                </WizardWrapper>
             </Container>
         );
     }

@@ -6,8 +6,6 @@ import { Form } from "semantic-ui-react";
 import Input from "shared/input";
 /* eslint-enable */
 
-import WizardWrapper from "../formWrapper";
-
 class Step3Fields extends Component {
     renderInputs = props => {
         const { handleChange, values } = this.props;
@@ -15,29 +13,21 @@ class Step3Fields extends Component {
     };
 
     render() {
-        const { values, handleChange, ...rest } = this.props;
         const Inner = this.renderInputs;
         return (
-            <WizardWrapper {...rest}>
-                <Form.Group widths="equal">
-                    <Inner name="url" inputLabel="http://" placeholder="URL" label="What is your website address?" />
-                    <Inner name="twitter" label="What is your Twitter handle?" placeholder="Twitter" />
-                    <Inner name="facebook" label="What is your Facebook link?" placeholder="Facebook" />
-                </Form.Group>
-            </WizardWrapper>
+            <Form.Group widths="equal">
+                <Inner name="url" inputLabel="http://" placeholder="URL" label="What is your website address?" />
+                <Inner name="twitter" label="What is your Twitter handle?" placeholder="Twitter" />
+                <Inner name="facebook" label="What is your Facebook link?" placeholder="Facebook" />
+            </Form.Group>
         );
     }
 }
 
-const { func, object, string } = PropTypes;
-
+const { func, object } = PropTypes;
 Step3Fields.propTypes = {
-    renderErrors: func,
     handleChange: func,
-    nextStep: func,
-    previousStep: func,
-    values: object,
-    fieldLabel: string
+    values: object
 };
 
 export default Step3Fields;
