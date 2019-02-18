@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Button, Container, Form } from "semantic-ui-react";
+import { Form } from "semantic-ui-react";
 
 /* eslint-disable */
-import IconHeader from "shared/IconHeader";
 import Input from "shared/input";
 
 import { usStates } from "utilities";
 /* eslint-enable */
+
+import WizardWrapper from "../formWrapper";
 
 class Step2Fields extends Component {
     state = {};
@@ -30,58 +31,39 @@ class Step2Fields extends Component {
     };
 
     render() {
-        const { renderErrors, nextStep, previousStep } = this.props;
+        const { ...rest } = this.props;
         const Inner = this.renderInputs;
         return (
-            <Container text>
-                <IconHeader iconName="coffee" header="Step 2: Location" />
-                <Form style={{ margin: "4em 0" }}>
-                    {renderErrors()}
-                    <Form.Group widths="equal">
-                        <Inner name="address_1" label="Address" placeholder="Address" />
-                        <Inner name="address_2" label="Suite, PO Box, etc" placeholder="Suite, PO Box, etc" />
-                    </Form.Group>
-                    <Form.Group widths="equal">
-                        <Inner name="city" label="City" placeholder="City" />
-                        <Inner
-                            name="state"
-                            label="State"
-                            placeholder="State"
-                            inputType="select"
-                            options={usStates}
-                            search={this.searchFunc}
-                        />
-                        <Inner name="zip_code" label="Zip Code" placeholder="Zip Code" />
-                    </Form.Group>
-                    <Button
-                        type="submit"
-                        onClick={previousStep}
-                        icon="left arrow"
-                        labelPosition="left"
-                        content="Previous Step"
+            <WizardWrapper {...rest}>
+                <Form.Group widths="equal">
+                    <Inner name="address_1" label="Address" placeholder="Address" />
+                    <Inner name="address_2" label="Suite, PO Box, etc" placeholder="Suite, PO Box, etc" />
+                </Form.Group>
+                <Form.Group widths="equal">
+                    <Inner name="city" label="City" placeholder="City" />
+                    <Inner
+                        name="state"
+                        label="State"
+                        placeholder="State"
+                        inputType="select"
+                        options={usStates}
+                        search={this.searchFunc}
                     />
-                    <Button
-                        primary
-                        onClick={nextStep}
-                        floated="right"
-                        icon="right arrow"
-                        labelPosition="right"
-                        content="Next Step"
-                    />
-                </Form>
-            </Container>
+                    <Inner name="zip_code" label="Zip Code" placeholder="Zip Code" />
+                </Form.Group>
+            </WizardWrapper>
         );
     }
 }
 
-const { func, object } = PropTypes;
+const { func, object, string } = PropTypes;
 Step2Fields.propTypes = {
     renderErrors: func,
     handleChange: func,
-    handleState: func,
-    nextStep: func,
-    previousStep: func,
-    values: object
+    nextFunc: func,
+    prevFunc: func,
+    values: object,
+    header: string
 };
 
 export default Step2Fields;

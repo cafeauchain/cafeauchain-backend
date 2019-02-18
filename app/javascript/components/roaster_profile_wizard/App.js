@@ -18,6 +18,7 @@ class App extends Component {
         const localStorageState = localStorage.getItem("state");
         if (localStorageState) {
             this.state = JSON.parse(localStorageState);
+            this.state.errors = {};
         } else {
             this.state = {
                 current_step: "step1",
@@ -131,17 +132,19 @@ class App extends Component {
                 {step === "step1" && (
                     <Step1Fields
                         handleChange={this.handleChange}
-                        nextStep={this.nextStep}
                         values={profile}
+                        header="Create your roaster's profile"
+                        nextFunc={this.nextStep}
                         renderErrors={this.renderErrors}
                     />
                 )}
                 {step === "step2" && (
                     <Step2Fields
                         handleChange={this.handleChange}
-                        nextStep={this.nextStep}
-                        previousStep={this.previousStep}
                         values={profile}
+                        header="Step 2: Location"
+                        nextFunc={this.nextStep}
+                        prevFunc={this.previousStep}
                         renderErrors={this.renderErrors}
                     />
                 )}
@@ -149,16 +152,20 @@ class App extends Component {
                     <Step3Fields
                         handleChange={this.handleChange}
                         values={profile}
-                        nextStep={this.nextStep}
-                        previousStep={this.previousStep}
+                        header="Step 3: Website & Social"
+                        nextFunc={this.nextStep}
+                        prevFunc={this.previousStep}
                         renderErrors={this.renderErrors}
                     />
                 )}
                 {step === "step4" && (
                     <Confirmation
                         values={profile}
-                        previousStep={this.previousStep}
-                        submitProfile={this.submitProfile}
+                        header="Confirm your profile info"
+                        nextFunc={this.submitProfile}
+                        prevFunc={this.previousStep}
+                        renderErrors={this.renderErrors}
+                        nextText="Complete Registration"
                     />
                 )}
             </Container>
