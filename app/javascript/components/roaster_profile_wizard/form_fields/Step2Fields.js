@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
 import { Form } from "semantic-ui-react";
 
@@ -7,8 +7,6 @@ import Input from "shared/input";
 
 import { usStates } from "utilities";
 /* eslint-enable */
-
-import WizardWrapper from "../formWrapper";
 
 class Step2Fields extends Component {
     renderInputs = props => {
@@ -25,10 +23,9 @@ class Step2Fields extends Component {
     };
 
     render() {
-        const { values, handleChange, ...rest } = this.props;
         const Inner = this.renderInputs;
         return (
-            <WizardWrapper {...rest}>
+            <F>
                 <Form.Group widths="equal">
                     <Inner name="address_1" label="Address" placeholder="Address" />
                     <Inner name="address_2" label="Suite, PO Box, etc" placeholder="Suite, PO Box, etc" />
@@ -45,19 +42,15 @@ class Step2Fields extends Component {
                     />
                     <Inner name="zip_code" label="Zip Code" placeholder="Zip Code" />
                 </Form.Group>
-            </WizardWrapper>
+            </F>
         );
     }
 }
 
-const { func, object, string } = PropTypes;
+const { func, object } = PropTypes;
 Step2Fields.propTypes = {
-    renderErrors: func,
     handleChange: func,
-    nextFunc: func,
-    prevFunc: func,
-    values: object,
-    header: string
+    values: object
 };
 
 export default Step2Fields;

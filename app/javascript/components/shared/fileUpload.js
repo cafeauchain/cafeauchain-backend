@@ -14,7 +14,6 @@ class FileInput extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            image: "",
             loading: false
         };
     }
@@ -22,20 +21,20 @@ class FileInput extends Component {
     uploadFile = async event => {
         const { handleChange, name, fileType } = this.props;
         const file = event.target.files[0];
+        let value;
         if (fileType === "image") {
-            const value = await fileToImage(file);
-            this.setState({ loading: true }, this.fakeLoader(value));
-            handleChange(event, { name, value });
+            value = await fileToImage(file);
         }
         if (fileType === "csv") {
-            const value = await fileReader(file);
-            this.setState({ loading: true }, this.fakeLoader());
-            handleChange(event, { name, value });
+            value = await fileReader(file);
         }
+        this.setState({ loading: true });
+        await handleChange(event, { name, value });
+        this.clearLoader();
     };
 
-    fakeLoader = image => {
-        setTimeout(() => this.setState({ loading: false, image }), 400);
+    clearLoader = () => {
+        setTimeout(() => this.setState({ loading: false }), 400);
     };
 
     render() {
@@ -47,9 +46,10 @@ class FileInput extends Component {
             id = defaults.id,
             accept = defaults.accept,
             uploadText = defaults.uploadText,
-            changeText = defaults.changeText
+            changeText = defaults.changeText,
+            image
         } = this.props;
-        const { image, loading } = this.state;
+        const { loading } = this.state;
         return (
             <Segment placeholder>
                 <Dimmer inverted active={loading}>
@@ -94,7 +94,8 @@ FileInput.propTypes = {
     accept: string,
     uploadText: string,
     fileType: string,
-    changeText: string
+    changeText: string,
+    image: string
 };
 
 export default FileInput;

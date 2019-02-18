@@ -7,11 +7,11 @@ import IconHeader from "shared/IconHeader";
 /* eslint-enable */
 
 const WizardWrapper = props => {
-    const { prevFunc, prevText, nextFunc, nextText, renderErrors, children, header } = props;
+    const { prevFunc, prevText, nextFunc, nextText, renderErrors, children, headerText, loading } = props;
     return (
         <Container text>
             <Form style={{ margin: "4em 0" }}>
-                <IconHeader iconName="coffee" header={header} />
+                <IconHeader iconName="coffee" header={headerText} />
                 {renderErrors()}
                 {children}
                 {prevFunc && (
@@ -32,6 +32,7 @@ const WizardWrapper = props => {
                         icon="right arrow"
                         labelPosition="right"
                         content={nextText}
+                        loading={loading}
                     />
                 )}
             </Form>
@@ -46,7 +47,7 @@ WizardWrapper.propTypes = {
     nextText: string,
     nextFunc: func,
     children: node,
-    header: string,
+    headerText: string,
     renderErrors: func
 };
 WizardWrapper.defaultProps = {

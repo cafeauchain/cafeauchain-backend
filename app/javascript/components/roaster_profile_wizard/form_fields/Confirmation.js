@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { Message } from "semantic-ui-react";
@@ -11,11 +11,7 @@ import Details from "shared/details";
 import { AsImage } from "shared/textFormatters";
 /* eslint-enable */
 
-import WizardWrapper from "../formWrapper";
-
 class Confirmation extends Component {
-    state = {};
-
     confirmFields = values => {
         return Object.keys(values).reduce((arr, item) => {
             if (!values[item]) return arr;
@@ -28,9 +24,9 @@ class Confirmation extends Component {
         const trialEnd = moment()
             .add(30, "days")
             .format("dddd, MMM Do YYYY");
-        const { values, ...rest } = this.props;
+        const { values } = this.props;
         return (
-            <WizardWrapper {...rest}>
+            <F>
                 <Message info>
                     <Message.Header>Complete your registration</Message.Header>
                     <Message.List>
@@ -54,15 +50,13 @@ class Confirmation extends Component {
                     leftStyles={{ width: 100, margin: "10px 0", fontWeight: "bold" }}
                     rightStyles={{ margin: "10px 0" }}
                 />
-            </WizardWrapper>
+            </F>
         );
     }
 }
 
-const { func, object } = PropTypes;
+const { object } = PropTypes;
 Confirmation.propTypes = {
-    submitProfile: func,
-    previousStep: func,
     values: object
 };
 
