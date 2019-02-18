@@ -1,6 +1,6 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Form, Label } from "semantic-ui-react";
+import { Form, Label, Input as SUInput } from "semantic-ui-react";
 
 import underscorer from "../utilities/underscorer";
 import getText from "../utilities/getTextFromChildren";
@@ -11,6 +11,7 @@ const Input = props => {
         placeholder = label.props ? getText(label.props.children) : label,
         name = underscorer(label.props ? getText(label.props.children) : label),
         onChange,
+        inputLabel,
         labelPosition = "left",
         autoComplete = "off",
         fluid = true,
@@ -23,16 +24,19 @@ const Input = props => {
     return (
         <React.Fragment>
             {inputType === "input" && (
-                <Form.Input
-                    {...rest}
-                    label={label}
-                    placeholder={placeholder}
-                    name={name}
-                    onChange={onChange}
-                    labelPosition={labelPosition}
-                    autoComplete={autoComplete}
-                    fluid={fluid}
-                />
+                <Form.Field>
+                    <label>{label}</label>
+                    <SUInput
+                        {...rest}
+                        label={inputLabel}
+                        placeholder={placeholder}
+                        name={name}
+                        onChange={onChange}
+                        labelPosition={labelPosition}
+                        autoComplete={autoComplete}
+                        fluid={fluid}
+                    />
+                </Form.Field>
             )}
 
             {inputType === "textarea" && (
@@ -78,6 +82,7 @@ const Input = props => {
 const { string, func, bool, array, oneOfType, object } = PropTypes;
 Input.propTypes = {
     label: oneOfType([string, object]).isRequired,
+    inputLabel: string,
     placeholder: string,
     name: string,
     onChange: func,
