@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
 import { Form, Button } from "semantic-ui-react";
 import moment from "moment";
@@ -6,10 +6,11 @@ import moment from "moment";
 /* eslint-disable */
 import Input from "shared/input";
 import LotSelect from "shared/lots/lotSelect";
+import ErrorHandler from "shared/errorHandler";
 
-import requester from "utilities/apiUtils/requester";
-import fetcher from "utilities/apiUtils/fetcher";
-import { roasterUrl as ROASTER_URL } from "utilities/apiUtils/url";
+import { noEmpties } from "utilities";
+
+import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
 
 import Lots from "contexts/lots";
 import Batches from "contexts/batches";
@@ -30,6 +31,7 @@ const Wrapper = props => (
                                 updateBatches={batches.updateContext}
                                 updateActivity={activity.updateContext}
                                 activity={activity.data}
+                                lotData={lots.data[0]}
                             />
                         )}
                     </Activity>
@@ -46,7 +48,8 @@ class StartBatch extends Component {
                 starting_amount: "",
                 roast_date: moment().format("YYYY-MM-DD")
             },
-            btnLoading: false
+            btnLoading: false,
+            errors: []
         };
     }
 
@@ -67,7 +70,7 @@ class StartBatch extends Component {
         if (name === "") return;
         const val = value || checked;
         lotDetails[name] = val;
-        this.setState({ lotDetails });
+        this.setState({ lotDetails, errors: [] });
     };
 
     startSubmit = ev => {
@@ -81,18 +84,17 @@ class StartBatch extends Component {
         const { attributes } = activity;
         if (moment(attributes.period_start_date).isAfter(lotDetails.roast_date, "day")) {
             /* eslint-disable */
-            alert(
-                "You are trying to create a roast for a previous billing period. If you need to add a roast from a previous period, please email us at support@cafeauchain.com and we will be happy to help you. Please note that this could incur an additional charge if it pushes you over your usage limits."
-            );
+            const message =
+                "You are trying to create a roast for a previous billing period. If you need to add a roast from a previous period, please email us at support@cafeauchain.com and we will be happy to help you. Please note that this could incur an additional charge if it pushes you over your usage limits.";
             /* eslint-enable */
+            this.setState({ errors: [message], btnLoading: false });
             return;
         }
         const url = `${ROASTER_URL(id)}/batches`;
         let body = { ...lotDetails };
         let respJSON = await requester({ url, body });
         if (respJSON instanceof Error) {
-            // eslint-disable-next-line
-            console.log("there was an error", respJSON.response);
+            this.setState({ errors: respJSON.response.data, btnLoading: false });
         } else {
             if (respJSON.redirect) {
                 window.location.href = await respJSON.redirect_url;
@@ -123,10 +125,22 @@ class StartBatch extends Component {
     };
 
     render() {
-        const { id } = this.props;
-        const { lotDetails, btnLoading } = this.state;
+        const {
+            id,
+            lotData: {
+                attributes: { on_hand }
+            }
+        } = this.props;
+        const { lotDetails, btnLoading, errors } = this.state;
+        const btnActive = noEmpties(lotDetails);
         return (
             <Form onSubmit={this.startSubmit}>
+                <ErrorHandler errors={errors} />
+                <p>
+                    <strong>Amount on hand: </strong>
+                    {on_hand}
+                    <F> lbs</F>
+                </p>
                 <Input
                     name="roast_date"
                     label="Date"
@@ -135,8 +149,13 @@ class StartBatch extends Component {
                     defaultValue={lotDetails.roast_date}
                 />
                 <LotSelect roasterId={id} parentState={this.parentState} fluid />
-                <Input name="starting_amount" label="Amount to be Roasted (in lbs)" onChange={this.handleInputChange} />
-                <Button size="small" primary fluid loading={btnLoading}>
+                <Input
+                    name="starting_amount"
+                    label="Amount to be Roasted (in lbs)"
+                    onChange={this.handleInputChange}
+                    type="number"
+                />
+                <Button size="small" primary fluid loading={btnLoading} disabled={!btnActive}>
                     Start a Batch
                 </Button>
             </Form>
@@ -151,7 +170,8 @@ StartBatch.propTypes = {
     updateLots: func,
     updateBatches: func,
     updateActivity: func,
-    activity: object
+    activity: object,
+    lotData: object
 };
 
 export default Wrapper;
