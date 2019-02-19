@@ -8,6 +8,8 @@ import RoastLog from "roaster_tools/roastLog";
 import OpenContracts from "roaster_tools/openContracts";
 import OpenRoasts from "roaster_tools/openRoasts";
 
+import Messager from "shared/messager";
+
 import API_URL from "utilities/apiUtils/url";
 
 import { ConfigProvider as UserProvider } from "contexts/user";
@@ -22,7 +24,7 @@ import QuickActions from "./quickActions";
 
 const Wrapper = ({ roaster_profile_id: id, roaster, ...rest }) => (
     <UserProvider value={{ roaster }}>
-        <LotsProvider value={{ id }} url={`${API_URL}/roasters/${id}/lots_by_date`}>
+        <LotsProvider value={{ id }} url={`${API_URL}/roasters/${id}/lots`}>
             <LotsByPeriodProvider value={{ id }} url={`${API_URL}/roasters/${id}/lots_by_date`}>
                 <BatchesProvider value={{ id }} url={`${API_URL}/roasters/${id}/batches`}>
                     <ActivityProvider value={{ id }} url={`${API_URL}/roasters/${id}/subscriptions`}>
@@ -48,6 +50,7 @@ const Dashboard = () => (
         <Segment>
             <Header as="h1" content="Dashboard" />
         </Segment>
+        <Messager />
         <Grid doubling>
             <Grid.Column width={10} stretched>
                 <QuickActions />
