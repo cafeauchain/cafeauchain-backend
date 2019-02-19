@@ -45,6 +45,11 @@ class Lot < ApplicationRecord
     return (delivered - roasted)
   end
 
+  def coffee_in_warehouse
+    delivered = self.transactions.where(trans_type: :asset_delivery).pluck(:quantity).map{|q| q.to_f}.sum
+    return (self.pounds_of_coffee.to_f - delivered)
+  end
+
   def amount_roasted
     roasted = self.batches.pluck(:starting_amount).sum
   end
