@@ -10,25 +10,22 @@ import Lots from "contexts/lots";
 const Wrapper = props => <Lots>{lots => <Notifier {...props} lots={lots.data} />}</Lots>;
 
 class Notifier extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-
-    checkQuantities = () => {
-        const { lots } = this.props;
+    checkQuantities = lots => {
         return lots.reduce((notifications, lot) => {
             const {
                 id,
                 attributes: { name, in_warehouse, low_on_hand, low_remaining, on_hand }
             } = lot;
+            const msgBuilder = (title, name, low_alert, amount) => {
+                return `Your ${title} Inventory is low for ${name}.
+                Your alert level is set to ${low_alert} lbs and your actual level is ${amount} lbs`;
+            };
             // TODO Refactor this
             if (low_on_hand && low_on_hand >= on_hand) {
                 notifications.push({
                     id: id + "on_hand",
                     // eslint-disable-next-line
-                    message: `Your On Hand Inventory is low for ${name}. Your alert level is set to ${low_on_hand} lbs and your actual level is ${on_hand} lbs`,
-                    dismissed: false,
+                    message: msgBuilder("On Hand", name, low_on_hand, on_hand),
                     type: "negative"
                 });
             }
@@ -36,8 +33,7 @@ class Notifier extends Component {
                 notifications.push({
                     id: id + "in_warehouse",
                     // eslint-disable-next-line
-                    message: `Your Warehouse Inventory is low for ${name}. Your alert level is set to ${low_remaining} lbs and your actual level is ${in_warehouse} lbs`,
-                    dismissed: false,
+                    message: msgBuilder("Warehouse", name, low_remaining, in_warehouse),
                     type: "negative"
                 });
             }
@@ -46,7 +42,8 @@ class Notifier extends Component {
     };
 
     render() {
-        const notifications = this.checkQuantities();
+        const { lots } = this.props;
+        const notifications = this.checkQuantities(lots);
         if (!notifications.length) return null;
         return <Messager header="Inventory Alerts" messages={notifications} />;
     }

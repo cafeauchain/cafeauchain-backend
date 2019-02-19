@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_16_204901) do
+ActiveRecord::Schema.define(version: 2019_02_18_221401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,6 +119,8 @@ ActiveRecord::Schema.define(version: 2019_02_16_204901) do
     t.datetime "contract_filled"
     t.string "label"
     t.string "name"
+    t.integer "low_on_hand"
+    t.integer "low_remaining"
     t.index ["crop_id"], name: "index_lots_on_crop_id"
     t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"
   end
