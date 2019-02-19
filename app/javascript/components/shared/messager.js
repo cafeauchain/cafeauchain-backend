@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Segment, Message } from "semantic-ui-react";
+import { Segment, Message, Header } from "semantic-ui-react";
 
 class Messager extends Component {
     constructor(props) {
@@ -20,18 +20,22 @@ class Messager extends Component {
 
     render() {
         const { messages } = this.state;
+        const { header } = this.props;
         const messageCount = messages.filter(message => !message.dismissed).length;
         if (!messageCount) return null;
         return (
             <Segment>
+                {header && <Header as="h2" content={header} />}
                 {messages.reduce((msgs, message) => {
                     if (message.dismissed) return msgs;
+                    const typeProp = message.type ? { [message.type]: true } : null;
                     return [
                         ...msgs,
                         <Message
                             key={message.id}
                             onDismiss={e => this.handleDismiss(e, message.id)}
                             content={message.message}
+                            {...typeProp}
                         />
                     ];
                 }, [])}
@@ -40,9 +44,10 @@ class Messager extends Component {
     }
 }
 
-const { array } = PropTypes;
+const { array, string } = PropTypes;
 Messager.propTypes = {
-    messages: array
+    messages: array,
+    header: string
 };
 
 Messager.defaultProps = {
