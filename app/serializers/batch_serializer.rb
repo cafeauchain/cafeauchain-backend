@@ -7,6 +7,7 @@
 #  roast_date      :date
 #  starting_amount :float
 #  status          :integer
+#  target_weight   :float
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  lot_id          :bigint(8)
