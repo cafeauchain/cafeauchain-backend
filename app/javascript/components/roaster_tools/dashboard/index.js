@@ -9,38 +9,21 @@ import OpenContracts from "roaster_tools/openContracts";
 import OpenRoasts from "roaster_tools/openRoasts";
 import Notifier from "roaster_tools/notifier";
 
-import API_URL from "utilities/apiUtils/url";
-
-import { ConfigProvider as UserProvider } from "contexts/user";
-import { ConfigProvider as LotsProvider } from "contexts/lots";
-import { ConfigProvider as LotsByPeriodProvider } from "contexts/lotsByPeriod";
-import { ConfigProvider as ProducerProvider } from "contexts/producers";
-import { ConfigProvider as BatchesProvider } from "contexts/batches";
-import { ConfigProvider as ActivityProvider } from "contexts/activity";
+import Context from "contexts/index";
 /* eslint-enable */
 
 import QuickActions from "./quickActions";
 
-const Wrapper = ({ roaster_profile_id: id, roaster, ...rest }) => (
-    <UserProvider value={{ roaster }}>
-        <LotsProvider value={{ id }} url={`${API_URL}/roasters/${id}/lots`}>
-            <LotsByPeriodProvider value={{ id }} url={`${API_URL}/roasters/${id}/lots_by_date`}>
-                <BatchesProvider value={{ id }} url={`${API_URL}/roasters/${id}/batches`}>
-                    <ActivityProvider value={{ id }} url={`${API_URL}/roasters/${id}/subscriptions`}>
-                        <ProducerProvider value={{ id }} url={`${API_URL}/producers`}>
-                            <Dashboard {...rest} />
-                        </ProducerProvider>
-                    </ActivityProvider>
-                </BatchesProvider>
-            </LotsByPeriodProvider>
-        </LotsProvider>
-    </UserProvider>
-);
+const Wrapper = ({ roaster, ...rest }) => {
+    return (
+        <Context roaster={roaster} transactions batches activity roasted lots log producers>
+            <Dashboard {...rest} />
+        </Context>
+    );
+};
 
-const { oneOfType, number, string, object } = PropTypes;
-
+const { object } = PropTypes;
 Wrapper.propTypes = {
-    roaster_profile_id: oneOfType([number, string]),
     roaster: object
 };
 
