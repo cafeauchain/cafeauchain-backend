@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_20_220210) do
+ActiveRecord::Schema.define(version: 2019_02_20_220958) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -295,6 +295,16 @@ ActiveRecord::Schema.define(version: 2019_02_20_220210) do
     t.index ["roaster_profile_id"], name: "index_wallets_on_roaster_profile_id"
   end
 
+  create_table "wholesale_profiles", force: :cascade do |t|
+    t.text "terms"
+    t.bigint "roaster_profile_id"
+    t.bigint "customer_profile_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_profile_id"], name: "index_wholesale_profiles_on_customer_profile_id"
+    t.index ["roaster_profile_id"], name: "index_wholesale_profiles_on_roaster_profile_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "batches", "lots"
   add_foreign_key "cards", "subscriptions"
@@ -317,4 +327,6 @@ ActiveRecord::Schema.define(version: 2019_02_20_220210) do
   add_foreign_key "users", "roaster_profiles"
   add_foreign_key "wallets", "producer_profiles"
   add_foreign_key "wallets", "roaster_profiles"
+  add_foreign_key "wholesale_profiles", "customer_profiles"
+  add_foreign_key "wholesale_profiles", "roaster_profiles"
 end
