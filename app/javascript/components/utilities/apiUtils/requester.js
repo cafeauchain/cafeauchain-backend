@@ -17,7 +17,7 @@ const requester = async ({ url, body, headers, method = "POST" }) => {
             return responseJson;
         } else {
             var error = new Error(response.statusText || response.status);
-            error.response = response;
+            error.response = await response.json();
             throw error;
         }
     } catch (e) {
