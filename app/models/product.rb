@@ -12,4 +12,11 @@
 #
 
 class Product < ApplicationRecord
+  extend FriendlyId
+  friendly_id :title, use: [:slugged, :finders]
+
+  has_many_attached :product_images
+
+  has_many :product_inventory_items
+  has_many :inventory_items, through: :product_inventory_items
 end
