@@ -65,6 +65,14 @@
 #                                            DELETE /api/v1/roasters/:roaster_profile_id/transactions/:id(.:format)                          api/v1/transactions#destroy
 #       api_v1_roaster_profile_subscriptions GET    /api/v1/roasters/:roaster_profile_id/subscriptions(.:format)                             api/v1/roaster_profiles#subscriptions
 #               api_v1_roaster_profile_cards POST   /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#cards
+#     api_v1_roaster_profile_inventory_items GET    /api/v1/roasters/:roaster_profile_id/inventory_items(.:format)                           api/v1/inventory_items#index
+#                                            POST   /api/v1/roasters/:roaster_profile_id/inventory_items(.:format)                           api/v1/inventory_items#create
+#  new_api_v1_roaster_profile_inventory_item GET    /api/v1/roasters/:roaster_profile_id/inventory_items/new(.:format)                       api/v1/inventory_items#new
+# edit_api_v1_roaster_profile_inventory_item GET    /api/v1/roasters/:roaster_profile_id/inventory_items/:id/edit(.:format)                  api/v1/inventory_items#edit
+#      api_v1_roaster_profile_inventory_item GET    /api/v1/roasters/:roaster_profile_id/inventory_items/:id(.:format)                       api/v1/inventory_items#show
+#                                            PATCH  /api/v1/roasters/:roaster_profile_id/inventory_items/:id(.:format)                       api/v1/inventory_items#update
+#                                            PUT    /api/v1/roasters/:roaster_profile_id/inventory_items/:id(.:format)                       api/v1/inventory_items#update
+#                                            DELETE /api/v1/roasters/:roaster_profile_id/inventory_items/:id(.:format)                       api/v1/inventory_items#destroy
 #                                            DELETE /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#remove_card
 #      api_v1_roaster_profile_set_as_default PUT    /api/v1/roasters/:roaster_profile_id/set_as_default(.:format)                            api/v1/roaster_profiles#set_as_default
 #                    api_v1_roaster_profiles POST   /api/v1/roasters(.:format)                                                               api/v1/roaster_profiles#create
@@ -93,6 +101,7 @@
 #        manage_subscription_roaster_profile GET    /roasters/:id/manage_subscription(.:format)                                              roaster_profiles#manage_subscription
 #           manage_inventory_roaster_profile GET    /roasters/:id/manage_inventory(.:format)                                                 roaster_profiles#manage_inventory
 #                                roast_index GET    /roasters/:id/roast(.:format)                                                            roast#index
+#                  wholesale_roaster_profile GET    /roasters/:id/wholesale(.:format)                                                        roaster_profiles#wholesale
 #                           roaster_profiles GET    /roasters(.:format)                                                                      roaster_profiles#index
 #                                            POST   /roasters(.:format)                                                                      roaster_profiles#create
 #                        new_roaster_profile GET    /roasters/new(.:format)                                                                  roaster_profiles#new
@@ -142,6 +151,9 @@
 #                                            DELETE /users(.:format)                                                                         users/registrations#destroy
 #                                            POST   /users(.:format)                                                                         users/registrations#create
 #                                     logout GET    /logout(.:format)                                                                        devise/sessions#destroy
+#                                      login GET    /login(.:format)                                                                         devise/sessions#create
+#                                     signup GET    /signup(.:format)                                                                        devise/registrations#new
+#                                   register GET    /register(.:format)                                                                      devise/registrations#new
 #                                       root GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
 #                                       home GET    /home(.:format)                                                                          redirect(301, /)
 #                                            GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
@@ -185,6 +197,7 @@ Rails.application.routes.draw do
         resources :transactions
         get :subscriptions
         post :cards
+        resources :inventory_items
         delete :cards, to: "roaster_profiles#remove_card"
         put :set_as_default
       end
@@ -204,6 +217,7 @@ Rails.application.routes.draw do
       get :manage_subscription
       get :manage_inventory
       resources :roast, only: [:index]
+      get :wholesale
     end
   end
 

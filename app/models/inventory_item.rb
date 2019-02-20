@@ -24,4 +24,8 @@
 class InventoryItem < ApplicationRecord
   belongs_to :product
   belongs_to :lot
+
+  def lot_name
+    lot.name
+  end
 end
