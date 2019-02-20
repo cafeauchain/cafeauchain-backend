@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_19_203826) do
+ActiveRecord::Schema.define(version: 2019_02_20_213619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 2019_02_19_203826) do
     t.datetime "updated_at", null: false
     t.integer "status"
     t.date "roast_date"
+    t.float "target_weight"
     t.index ["lot_id"], name: "index_batches_on_lot_id"
   end
 
@@ -107,14 +108,12 @@ ActiveRecord::Schema.define(version: 2019_02_19_203826) do
   end
 
   create_table "inventory_items", force: :cascade do |t|
-    t.bigint "product_id"
     t.float "quantity"
     t.float "par_level"
     t.bigint "lot_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["lot_id"], name: "index_inventory_items_on_lot_id"
-    t.index ["product_id"], name: "index_inventory_items_on_product_id"
   end
 
   create_table "lots", force: :cascade do |t|
@@ -156,6 +155,16 @@ ActiveRecord::Schema.define(version: 2019_02_19_203826) do
     t.string "longitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "product_inventory_items", force: :cascade do |t|
+    t.bigint "product_id"
+    t.bigint "inventory_item_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.float "percentage_of_product"
+    t.index ["inventory_item_id"], name: "index_product_inventory_items_on_inventory_item_id"
+    t.index ["product_id"], name: "index_product_inventory_items_on_product_id"
   end
 
   create_table "product_variants", force: :cascade do |t|
@@ -283,9 +292,10 @@ ActiveRecord::Schema.define(version: 2019_02_19_203826) do
   add_foreign_key "cards", "subscriptions"
   add_foreign_key "crops", "producer_profiles"
   add_foreign_key "inventory_items", "lots"
-  add_foreign_key "inventory_items", "products"
   add_foreign_key "lots", "crops"
   add_foreign_key "lots", "roaster_profiles"
+  add_foreign_key "product_inventory_items", "inventory_items"
+  add_foreign_key "product_inventory_items", "products"
   add_foreign_key "product_variants", "products"
   add_foreign_key "subscription_charges", "subscriptions"
   add_foreign_key "subscription_items", "plans"
