@@ -12,6 +12,7 @@ import { noEmpties } from "utilities";
 
 import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
 
+import Log from "contexts/lotsByPeriod";
 import Lots from "contexts/lots";
 import Batches from "contexts/batches";
 import Activity from "contexts/activity";
@@ -24,15 +25,20 @@ const Wrapper = props => (
                 {batches => (
                     <Activity>
                         {activity => (
-                            <StartBatch
-                                {...props}
-                                id={lots.userId}
-                                updateLots={lots.updateContext}
-                                updateBatches={batches.updateContext}
-                                updateActivity={activity.updateContext}
-                                activity={activity.data}
-                                lotData={lots.data[0]}
-                            />
+                            <Log>
+                                {log => (
+                                    <StartBatch
+                                        {...props}
+                                        id={lots.userId}
+                                        updateLots={lots.updateContext}
+                                        updateBatches={batches.updateContext}
+                                        updateActivity={activity.updateContext}
+                                        activity={activity.data}
+                                        updateLog={log.updateContext}
+                                        lotData={lots.data}
+                                    />
+                                )}
+                            </Log>
                         )}
                     </Activity>
                 )}
@@ -107,16 +113,23 @@ class StartBatch extends Component {
     // only called after successful submit
     // TODO, I dont think the try/catch will work like I want it to
     getData = async id => {
-        const lotsUrl = `${ROASTER_URL(id)}/lots_by_date`;
+        const lotsUrl = `${ROASTER_URL(id)}/lots`;
         const batchesUrl = `${ROASTER_URL(id)}/batches`;
         const activityUrl = `${ROASTER_URL(id)}/subscriptions`;
-        const { updateLots, updateBatches, updateActivity, closeModal } = this.props;
+        const logUrl = `${ROASTER_URL(id)}/lots_by_date`;
+        const { updateLots, updateBatches, updateActivity, updateLog, closeModal } = this.props;
         try {
-            const results = await Promise.all([fetcher(lotsUrl), fetcher(batchesUrl), fetcher(activityUrl)]);
+            const results = await Promise.all([
+                fetcher(lotsUrl),
+                fetcher(batchesUrl),
+                fetcher(activityUrl),
+                fetcher(logUrl)
+            ]);
             Promise.all([
                 updateLots({ data: results[0] }),
                 updateBatches({ data: results[1] }),
-                updateActivity({ data: results[2] })
+                updateActivity({ data: results[2] }),
+                updateLog({ data: results[3] })
             ]).then(() => closeModal());
         } catch (e) {
             // eslint-disable-next-line
@@ -125,13 +138,13 @@ class StartBatch extends Component {
     };
 
     render() {
-        const {
-            id,
-            lotData: {
-                attributes: { on_hand }
-            }
-        } = this.props;
+        const { id, lotData } = this.props;
         const { lotDetails, btnLoading, errors } = this.state;
+        let on_hand = "?";
+        if (lotDetails.lot_id) {
+            const lot = lotData.find(lot => lot.id === lotDetails.lot_id);
+            on_hand = lot.attributes.on_hand;
+        }
         const btnActive = noEmpties(lotDetails);
         return (
             <Form onSubmit={this.startSubmit}>
@@ -163,7 +176,7 @@ class StartBatch extends Component {
     }
 }
 
-const { oneOfType, string, number, func, object } = PropTypes;
+const { oneOfType, string, number, func, object, array } = PropTypes;
 StartBatch.propTypes = {
     id: oneOfType([number, string]),
     closeModal: func,
@@ -171,7 +184,8 @@ StartBatch.propTypes = {
     updateBatches: func,
     updateActivity: func,
     activity: object,
-    lotData: object
+    lotData: array,
+    updateLog: func
 };
 
 export default Wrapper;
