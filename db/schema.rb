@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_20_220958) do
+ActiveRecord::Schema.define(version: 2019_02_20_223908) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -139,6 +139,14 @@ ActiveRecord::Schema.define(version: 2019_02_20_220958) do
     t.integer "low_remaining"
     t.index ["crop_id"], name: "index_lots_on_crop_id"
     t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "wholesale_profile_id"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["wholesale_profile_id"], name: "index_orders_on_wholesale_profile_id"
   end
 
   create_table "plans", force: :cascade do |t|
@@ -312,6 +320,7 @@ ActiveRecord::Schema.define(version: 2019_02_20_220958) do
   add_foreign_key "inventory_items", "lots"
   add_foreign_key "lots", "crops"
   add_foreign_key "lots", "roaster_profiles"
+  add_foreign_key "orders", "wholesale_profiles"
   add_foreign_key "product_inventory_items", "inventory_items"
   add_foreign_key "product_inventory_items", "products"
   add_foreign_key "product_variants", "products"
