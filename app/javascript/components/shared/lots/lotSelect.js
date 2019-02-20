@@ -16,9 +16,18 @@ class LotSelect extends Component {
             selected: {}
         };
     }
+
+    // TODO Revisit how I'm doing this
     componentDidMount() {
         const { lots } = this.props;
         this.getLots(lots);
+    }
+    componentDidUpdate(props) {
+        const { lots: oldLots } = props;
+        const { lots } = this.props;
+        if (lots && oldLots !== lots) {
+            this.getLots(lots);
+        }
     }
 
     buildLot = data => {
