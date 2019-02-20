@@ -7,8 +7,6 @@ import Budgeter from "roaster_tools/budgeter";
 import RoastLog from "roaster_tools/roastLog";
 import OpenContracts from "roaster_tools/openContracts";
 import OpenRoasts from "roaster_tools/openRoasts";
-
-import Messager from "shared/messager";
 import Notifier from "roaster_tools/notifier";
 
 import API_URL from "utilities/apiUtils/url";
@@ -51,7 +49,6 @@ const Dashboard = () => (
         <Segment>
             <Header as="h1" content="Dashboard" />
         </Segment>
-        <Messager />
         <Notifier />
         <Grid doubling>
             <Grid.Column width={10} stretched>
