@@ -12,8 +12,6 @@
 #
 
 class Product < ApplicationRecord
-<<<<<<< HEAD
-=======
   extend FriendlyId
   friendly_id :title, use: [:slugged, :finders]
 
@@ -21,5 +19,4 @@ class Product < ApplicationRecord
 
   has_many :product_inventory_items
   has_many :inventory_items, through: :product_inventory_items
->>>>>>> jb/wholesale-bootstrap
 end
