@@ -7,6 +7,7 @@
 #  roast_date      :date
 #  starting_amount :float
 #  status          :integer
+#  target_weight   :float
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  lot_id          :bigint(8)
@@ -26,7 +27,7 @@ class Batch < ApplicationRecord
 
   belongs_to :lot
 
-  enum status: [:roast_in_progress, :roast_completed, :bagged_for_sale]
+  enum status: [:in_queue, :roast_in_progress, :roast_completed, :bagged_for_sale]
 
   def batch_cost # starting weight
     starting_amount * lot.price_per_pound
