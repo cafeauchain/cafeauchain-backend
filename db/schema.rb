@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_20_213619) do
+ActiveRecord::Schema.define(version: 2019_02_20_220210) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,6 +93,12 @@ ActiveRecord::Schema.define(version: 2019_02_20_213619) do
     t.string "altitude"
     t.string "process"
     t.index ["producer_profile_id"], name: "index_crops_on_producer_profile_id"
+  end
+
+  create_table "customer_profiles", force: :cascade do |t|
+    t.integer "owner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -272,6 +278,8 @@ ActiveRecord::Schema.define(version: 2019_02_20_213619) do
     t.string "slug"
     t.bigint "roaster_profile_id"
     t.boolean "admin"
+    t.bigint "customer_profile_id"
+    t.index ["customer_profile_id"], name: "index_users_on_customer_profile_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["roaster_profile_id"], name: "index_users_on_roaster_profile_id"
@@ -305,6 +313,7 @@ ActiveRecord::Schema.define(version: 2019_02_20_213619) do
   add_foreign_key "transactions", "crops"
   add_foreign_key "transactions", "lots"
   add_foreign_key "transactions", "roaster_profiles"
+  add_foreign_key "users", "customer_profiles"
   add_foreign_key "users", "roaster_profiles"
   add_foreign_key "wallets", "producer_profiles"
   add_foreign_key "wallets", "roaster_profiles"
