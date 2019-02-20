@@ -21,15 +21,10 @@
 #
 
 class Batch < ApplicationRecord
+  include ActiveModel::Validations
+  validates_with BatchCheckAmountAvailableValidator
+
   belongs_to :lot
-
-  validate :check_amount_available
-
-  def check_amount_available
-    if starting_amount.to_f > lot.coffee_on_hand.to_f
-      errors.add(:starting_amount, "can't be more than coffee on hand")
-    end
-  end
 
   enum status: [:roast_in_progress, :roast_completed, :bagged_for_sale]
 
