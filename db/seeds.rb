@@ -43,7 +43,7 @@ crop_data.each do |crop|
   crops << producer.crops.create(name: crop[0], country: crop[1], region: crop[2], altitude: crop[3], process: crop[4], varietal: crop[5])
 end
 puts "Crops created."
-lot = roaster.lots.create(harvest_year: "2018", pounds_of_coffee: 1760.0, price_per_pound: 3.26, crop: crops[0])
+lot = roaster.lots.create(harvest_year: "2018", pounds_of_coffee: 1760.0, price_per_pound: 3.26, crop: crops[0], name: "Finca Idealista", label: "FIRN2018", low_on_hand: 50, low_remaining: 250)
 LedgerServices::AssetIssueTransaction.new(1760.0, crops[0].id, roaster.id).call
 puts "Lot created."
 LedgerServices::AssetTransferTransaction.new(1760.0, lot.id, roaster.id).call
