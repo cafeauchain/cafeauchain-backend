@@ -130,6 +130,8 @@ ActiveRecord::Schema.define(version: 2019_02_19_203826) do
     t.datetime "contract_filled"
     t.string "label"
     t.string "name"
+    t.integer "low_on_hand"
+    t.integer "low_remaining"
     t.index ["crop_id"], name: "index_lots_on_crop_id"
     t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"
   end

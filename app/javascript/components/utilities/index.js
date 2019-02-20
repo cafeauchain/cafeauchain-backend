@@ -8,6 +8,7 @@ import fileToImage from "./fileToImage";
 import getTextFromChildren from "./getTextFromChildren";
 import getTimePeriod from "./getTimePeriod";
 import humanize from "./humanize";
+import noEmpties from "./noEmpties";
 import params from "./params";
 import readCookie from "./readCookie";
 import registerServiceWorker from "./registerServiceWorker";
@@ -28,6 +29,7 @@ export {
     getTextFromChildren,
     getTimePeriod,
     humanize,
+    noEmpties,
     params,
     readCookie,
     registerServiceWorker,
