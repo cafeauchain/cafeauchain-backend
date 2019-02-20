@@ -22,4 +22,8 @@ class InventoryItem < ApplicationRecord
   has_many :product_inventory_items
   has_many :products, through: :product_inventory_items
   belongs_to :lot
+
+  def lot_name
+    lot.name
+  end
 end
