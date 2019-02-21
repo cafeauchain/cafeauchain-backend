@@ -4,13 +4,10 @@ import { AsNumber } from "shared/textFormatters";
 
 const tableDefinition = {
     fields: [
-        {
-            name: "crop_name",
-            namespace: "attributes",
-            label: "Crop Name (Harvest Year)",
-            width: 8
-        },
-        { name: "starting_amount", namespace: "attributes", formatter: AsNumber, label: "Green Weight" }
+        { name: "inventory_item_name", namespace: "attributes", label: "Roast Profile" },
+        { name: "lot_label", namespace: "attributes" },
+        { name: "starting_amount", namespace: "attributes", formatter: AsNumber, label: "Green Wt" },
+        { name: "roast_date", namespace: "attributes" }
     ],
     props: {
         celled: true,
