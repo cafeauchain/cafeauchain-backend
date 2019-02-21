@@ -27,7 +27,7 @@ module Api::V1
     def update
       if params[:finish_batch].present?
         @batch = InventoryServices::FinishBatchRoast.finish(@batch.id, params[:ending_amount], params[:starting_amount], params[:inventory_item_id])
-        @inventory_item = InventoryServices::AddRoastToInventory.call(@batch.lot_id, params[:ending_amount])
+        @inventory_item = InventoryServices::AddRoastToInventory.call(params[:inventory_item_id], params[:ending_amount])
         if @inventory_item.errors.full_messages.empty?
           if @batch.errors.full_messages.empty?
             render json: {
