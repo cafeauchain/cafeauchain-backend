@@ -22,7 +22,12 @@
 class InventoryItem < ApplicationRecord
   has_many :product_inventory_items
   has_many :products, through: :product_inventory_items
+  has_many :batches
+  
   belongs_to :lot
+
+  # You can achieve this with
+  # delegate :name, :lot
 
   def lot_name
     lot.name
