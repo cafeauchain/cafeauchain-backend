@@ -2,15 +2,16 @@
 #
 # Table name: batches
 #
-#  id              :bigint(8)        not null, primary key
-#  ending_amount   :float
-#  roast_date      :date
-#  starting_amount :float
-#  status          :integer
-#  target_weight   :float
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  lot_id          :bigint(8)
+#  id                :bigint(8)        not null, primary key
+#  ending_amount     :float
+#  roast_date        :date
+#  starting_amount   :float
+#  status            :integer
+#  target_weight     :float
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  inventory_item_id :integer
+#  lot_id            :bigint(8)
 #
 # Indexes
 #
@@ -26,6 +27,7 @@ class Batch < ApplicationRecord
   validates_with BatchCheckAmountAvailableValidator
 
   belongs_to :lot
+  belongs_to :inventory_item
 
   enum status: [:in_queue, :roast_in_progress, :roast_completed, :bagged_for_sale]
 
