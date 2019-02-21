@@ -50,7 +50,8 @@ class OpenRoasts extends Component {
             current: item,
             details: {
                 ending_amount: (Number(attributes.starting_amount) * 0.9).toFixed(2),
-                starting_amount: Number(attributes.starting_amount)
+                starting_amount: attributes.starting_amount,
+                inventory_item_id: attributes.inventory_item_id
             }
         });
     };
@@ -116,7 +117,7 @@ class OpenRoasts extends Component {
 
     buildInventoryOptions = (inventory, lot_id) => {
         return inventory.reduce((options, { id, attributes }) => {
-            if (Number(lot_id) === Number(attributes.lot_id)) {
+            if (lot_id.toString() === attributes.lot_id.toString()) {
                 return [
                     ...options,
                     {
@@ -144,7 +145,7 @@ class OpenRoasts extends Component {
                         name="inventory_item_id"
                         label="Roast Profile"
                         onChange={this.handleInputChange}
-                        defaultValue={details.inventory_item_id}
+                        defaultValue={details.inventory_item_id.toString()}
                         options={this.buildInventoryOptions(inventory, attributes.lot_id)}
                     />
 
