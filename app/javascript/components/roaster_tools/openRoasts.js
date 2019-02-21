@@ -64,7 +64,8 @@ class OpenRoasts extends Component {
         this.setState({ details });
     };
 
-    handleUpdate = async (ev, isFinished) => {
+    handleSubmit = async (ev, isFinished) => {
+        console.log(isFinished);
         ev.preventDefault();
         const { details, current } = this.state;
         const { id, attributes } = current;
@@ -94,7 +95,8 @@ class OpenRoasts extends Component {
         }
     };
 
-    handleSubmit = ev => this.handleUpdate(ev, true);
+    handleFinish = ev => this.handleSubmit(ev, true);
+    handleUpdate = ev => this.handleSubmit(ev, false);
 
     // only called after successful submit
     getBatchData = async id => {
@@ -135,7 +137,7 @@ class OpenRoasts extends Component {
         const { inventory } = this.props;
         const { attributes } = current;
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
                 <F>
                     <Input
                         inputType="select"
@@ -165,7 +167,7 @@ class OpenRoasts extends Component {
                     />
                     <Flex spacebetween>
                         <Button onClick={this.handleUpdate}>Update Batch</Button>
-                        <Button primary onClick={this.handleSubmit}>
+                        <Button primary onClick={this.handleFinish}>
                             Finish Batch
                         </Button>
                     </Flex>
