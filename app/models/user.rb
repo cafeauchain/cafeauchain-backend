@@ -18,16 +18,19 @@
 #  slug                   :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  customer_profile_id    :bigint(8)
 #  roaster_profile_id     :bigint(8)
 #
 # Indexes
 #
+#  index_users_on_customer_profile_id   (customer_profile_id)
 #  index_users_on_email                 (email) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_roaster_profile_id    (roaster_profile_id)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (customer_profile_id => customer_profiles.id)
 #  fk_rails_...  (roaster_profile_id => roaster_profiles.id)
 #
 

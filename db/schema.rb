@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_20_213619) do
+ActiveRecord::Schema.define(version: 2019_02_20_223908) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,6 +95,12 @@ ActiveRecord::Schema.define(version: 2019_02_20_213619) do
     t.index ["producer_profile_id"], name: "index_crops_on_producer_profile_id"
   end
 
+  create_table "customer_profiles", force: :cascade do |t|
+    t.integer "owner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string "slug", null: false
     t.integer "sluggable_id", null: false
@@ -133,6 +139,14 @@ ActiveRecord::Schema.define(version: 2019_02_20_213619) do
     t.integer "low_remaining"
     t.index ["crop_id"], name: "index_lots_on_crop_id"
     t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "wholesale_profile_id"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["wholesale_profile_id"], name: "index_orders_on_wholesale_profile_id"
   end
 
   create_table "plans", force: :cascade do |t|
@@ -272,6 +286,8 @@ ActiveRecord::Schema.define(version: 2019_02_20_213619) do
     t.string "slug"
     t.bigint "roaster_profile_id"
     t.boolean "admin"
+    t.bigint "customer_profile_id"
+    t.index ["customer_profile_id"], name: "index_users_on_customer_profile_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["roaster_profile_id"], name: "index_users_on_roaster_profile_id"
@@ -287,6 +303,16 @@ ActiveRecord::Schema.define(version: 2019_02_20_213619) do
     t.index ["roaster_profile_id"], name: "index_wallets_on_roaster_profile_id"
   end
 
+  create_table "wholesale_profiles", force: :cascade do |t|
+    t.text "terms"
+    t.bigint "roaster_profile_id"
+    t.bigint "customer_profile_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_profile_id"], name: "index_wholesale_profiles_on_customer_profile_id"
+    t.index ["roaster_profile_id"], name: "index_wholesale_profiles_on_roaster_profile_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "batches", "lots"
   add_foreign_key "cards", "subscriptions"
@@ -294,6 +320,7 @@ ActiveRecord::Schema.define(version: 2019_02_20_213619) do
   add_foreign_key "inventory_items", "lots"
   add_foreign_key "lots", "crops"
   add_foreign_key "lots", "roaster_profiles"
+  add_foreign_key "orders", "wholesale_profiles"
   add_foreign_key "product_inventory_items", "inventory_items"
   add_foreign_key "product_inventory_items", "products"
   add_foreign_key "product_variants", "products"
@@ -305,7 +332,10 @@ ActiveRecord::Schema.define(version: 2019_02_20_213619) do
   add_foreign_key "transactions", "crops"
   add_foreign_key "transactions", "lots"
   add_foreign_key "transactions", "roaster_profiles"
+  add_foreign_key "users", "customer_profiles"
   add_foreign_key "users", "roaster_profiles"
   add_foreign_key "wallets", "producer_profiles"
   add_foreign_key "wallets", "roaster_profiles"
+  add_foreign_key "wholesale_profiles", "customer_profiles"
+  add_foreign_key "wholesale_profiles", "roaster_profiles"
 end
