@@ -23,10 +23,23 @@
 #
 
 class BatchSerializer < ActiveModel::Serializer
-  attributes :id, :starting_amount, :ending_amount, :crop_name, :roast_date, :inventory_item_id
+  attributes :id, :starting_amount, :ending_amount, :lot_name, :lot_label, :roast_date, :inventory_item_id, :inventory_item_name, :crop_name
 
-  belongs_to :lot
-  belongs_to :inventory_item
+  def inventory_item_name
+    if self.object.inventory_item.present?
+      self.object.inventory_item.name
+    else
+      "Not Found"
+    end
+  end
+
+  def lot_name
+    self.object.lot.name
+  end
+
+  def lot_label
+    self.object.lot.label
+  end
 
   def crop_name
     self.object.lot.crop.name + " (" + self.object.lot.harvest_year + ")"
