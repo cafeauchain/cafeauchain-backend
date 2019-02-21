@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_21_013211) do
+ActiveRecord::Schema.define(version: 2019_02_21_030414) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 2019_02_21_013211) do
     t.integer "status"
     t.date "roast_date"
     t.float "target_weight"
+    t.integer "inventory_item_id"
     t.index ["lot_id"], name: "index_batches_on_lot_id"
   end
 

@@ -20,5 +20,5 @@
 #
 
 class InventoryItemSerializer < ActiveModel::Serializer
-  attributes :id, :lot_name, :quantity, :par_level, :name
+  attributes :id, :lot_name, :quantity, :par_level, :name, :lot_id
 end
