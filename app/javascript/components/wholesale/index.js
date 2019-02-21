@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Container, Header, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
-import StartBatch from "roaster_tools/startBatch";
+import CreateInventory from "wholesale/createInventory";
 import Inventory from "wholesale/inventory";
 
 import Context from "contexts/index";
@@ -28,7 +28,7 @@ const Dashboard = () => (
         <Segment>
             <Header as="h1" content="Manage Wholesale" />
         </Segment>
-        <Segment>{true && <StartBatch />}</Segment>
+        <Segment>{true && <CreateInventory />}</Segment>
         <Segment>{true && <Inventory />}</Segment>
     </Container>
 );
