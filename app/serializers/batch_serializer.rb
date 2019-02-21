@@ -23,7 +23,7 @@
 #
 
 class BatchSerializer < ActiveModel::Serializer
-  attributes :id, :starting_amount, :ending_amount, :lot_name, :lot_label, :roast_date, :inventory_item_id, :inventory_item_name, :crop_name
+  attributes :id, :starting_amount, :ending_amount, :lot_name, :lot_label, :roast_date, :inventory_item_id, :inventory_item_name, :crop_name, :lot_id
 
   def inventory_item_name
     if self.object.inventory_item.present?
@@ -35,6 +35,10 @@ class BatchSerializer < ActiveModel::Serializer
 
   def lot_name
     self.object.lot.name
+  end
+
+  def lot_id
+    self.object.lot.id
   end
 
   def lot_label
