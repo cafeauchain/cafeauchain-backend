@@ -22,7 +22,7 @@ const Inventory = ({ data, loading, userId }) => {
         console.log(item);
         alert("This should take you to more info about the roasted inventory levels.");
     };
-    const limit = 5;
+    const limit = 25;
     const limitData = () => data.slice(0, limit);
     return (
         <F>
