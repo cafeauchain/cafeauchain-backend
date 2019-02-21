@@ -3,6 +3,7 @@
 # Table name: inventory_items
 #
 #  id         :bigint(8)        not null, primary key
+#  name       :string
 #  par_level  :float
 #  quantity   :float
 #  created_at :datetime         not null
@@ -19,5 +20,5 @@
 #
 
 class InventoryItemSerializer < ActiveModel::Serializer
-  attributes :id, :lot_name, :quantity, :par_level
+  attributes :id, :lot_name, :quantity, :par_level, :name
 end

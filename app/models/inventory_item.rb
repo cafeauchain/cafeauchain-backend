@@ -3,6 +3,7 @@
 # Table name: inventory_items
 #
 #  id         :bigint(8)        not null, primary key
+#  name       :string
 #  par_level  :float
 #  quantity   :float
 #  created_at :datetime         not null

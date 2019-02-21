@@ -4,7 +4,8 @@ import { Money, AsNumber } from "shared/textFormatters";
 
 const tableDefinition = {
     fields: [
-        { name: "lot_name", namespace: "attributes", label: "Lot Name" },
+        { name: "name", namespace: "attributes" },
+        { name: "lot_name", namespace: "attributes" },
         {
             name: "quantity",
             namespace: "attributes",
