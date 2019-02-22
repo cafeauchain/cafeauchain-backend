@@ -12,7 +12,7 @@ import tableDefs from "defs/tables/openRoasts";
 import { url as API_URL, requester } from "utilities/apiUtils";
 
 import Batches from "contexts/batches";
-import Inventory from "contexts/roasted";
+import Inventory from "contexts/inventory";
 /* eslint-enable */
 
 const Wrapper = props => (

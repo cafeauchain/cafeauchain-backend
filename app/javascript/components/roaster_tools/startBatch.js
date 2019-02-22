@@ -16,7 +16,7 @@ import Log from "contexts/lotsByPeriod";
 import Lots from "contexts/lots";
 import Batches from "contexts/batches";
 import Activity from "contexts/activity";
-import Inventory from "contexts/roasted";
+import Inventory from "contexts/inventory";
 /* eslint-enable */
 
 const Wrapper = props => (

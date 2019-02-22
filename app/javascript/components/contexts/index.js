@@ -6,7 +6,7 @@ import { ConfigProvider as UserProvider } from "contexts/user";
 import { ConfigProvider as TrxProvider } from "contexts/transactions";
 import { ConfigProvider as LotsProvider } from "contexts/lots";
 import { ConfigProvider as ProducerProvider } from "contexts/producers";
-import { ConfigProvider as RoastedProvider } from "contexts/roasted";
+import { ConfigProvider as InventoryProvider } from "contexts/inventory";
 import { ConfigProvider as LogProvider } from "contexts/lotsByPeriod";
 import { ConfigProvider as BatchesProvider } from "contexts/batches";
 import { ConfigProvider as ActivityProvider } from "contexts/activity";
@@ -19,7 +19,7 @@ const Context = ({ roaster, children, ...bools }) => {
             <TrxProvider value={{ id: roaster.id, name: "transactions", requests }}>
                 <LotsProvider value={{ id: roaster.id, name: "lots", requests }}>
                     <ProducerProvider value={{ id: roaster.id, name: "producers", requests }}>
-                        <RoastedProvider value={{ id: roaster.id, name: "roasted", requests }}>
+                        <InventoryProvider value={{ id: roaster.id, name: "inventory", requests }}>
                             <LogProvider value={{ id: roaster.id, name: "log", requests }}>
                                 <BatchesProvider value={{ id: roaster.id, name: "batches", requests }}>
                                     <ActivityProvider value={{ id: roaster.id, name: "activity", requests }}>
@@ -27,7 +27,7 @@ const Context = ({ roaster, children, ...bools }) => {
                                     </ActivityProvider>
                                 </BatchesProvider>
                             </LogProvider>
-                        </RoastedProvider>
+                        </InventoryProvider>
                     </ProducerProvider>
                 </LotsProvider>
             </TrxProvider>
