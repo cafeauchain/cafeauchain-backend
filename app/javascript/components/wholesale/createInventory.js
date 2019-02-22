@@ -1,6 +1,6 @@
 import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Form, Button } from "semantic-ui-react";
+import { Form, Button, Header } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
@@ -11,7 +11,7 @@ import { noEmpties } from "utilities";
 import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
 
 import Lots from "contexts/lots";
-import Inventory from "contexts/roasted";
+import Inventory from "contexts/inventory";
 /* eslint-enable */
 
 const Wrapper = props => (
@@ -112,32 +112,35 @@ class CreateInventory extends Component {
         const isLotSelected = details.lot_id;
         const btnActive = noEmpties(details);
         return (
-            <Form onSubmit={this.startSubmit}>
-                <ErrorHandler errors={errors} />
-                <Input
-                    inputType="select"
-                    options={lotOptions}
-                    onChange={this.handleInputChange}
-                    name="lot_id"
-                    label="Choose Lot"
-                />
-                {isLotSelected && (
-                    <F>
-                        <Input name="name" label="Roast Profile" onChange={this.handleInputChange} />
-                        <Input name="par_level" label="Par Level" onChange={this.handleInputChange} />
-                        <Input
-                            name="quantity"
-                            label="Starting Quantity"
-                            onChange={this.handleInputChange}
-                            defaultValue={0}
-                        />
+            <F>
+                <Header as="h2" content="Add Inventory Item" />
+                <Form onSubmit={this.startSubmit}>
+                    <ErrorHandler errors={errors} />
+                    <Input
+                        inputType="select"
+                        options={lotOptions}
+                        onChange={this.handleInputChange}
+                        name="lot_id"
+                        label="Choose Lot"
+                    />
+                    {isLotSelected && (
+                        <F>
+                            <Input name="name" label="Roast Profile" onChange={this.handleInputChange} />
+                            <Input name="par_level" label="Par Level" onChange={this.handleInputChange} />
+                            <Input
+                                name="quantity"
+                                label="Starting Quantity"
+                                onChange={this.handleInputChange}
+                                defaultValue={0}
+                            />
 
-                        <Button size="small" primary fluid loading={btnLoading} disabled={!btnActive}>
-                            Create Inventory Item
-                        </Button>
-                    </F>
-                )}
-            </Form>
+                            <Button size="small" primary fluid loading={btnLoading} disabled={!btnActive}>
+                                Create Inventory Item
+                            </Button>
+                        </F>
+                    )}
+                </Form>
+            </F>
         );
     }
 }

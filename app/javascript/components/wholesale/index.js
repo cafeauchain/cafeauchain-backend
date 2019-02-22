@@ -11,7 +11,7 @@ import Context from "contexts/index";
 
 const Wrapper = ({ roaster, ...rest }) => {
     return (
-        <Context roaster={roaster} batches roasted lots>
+        <Context roaster={roaster} batches inventory lots>
             <Dashboard {...rest} />
         </Context>
     );

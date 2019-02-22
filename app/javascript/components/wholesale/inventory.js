@@ -7,16 +7,18 @@ import Table from "shared/table";
 
 import tableDefs from "defs/tables/roastedInventory";
 
-import Roasted from "contexts/roasted";
+import Inventory from "contexts/inventory";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Roasted>
-        {roasted => <Inventory {...props} data={roasted.data} loading={roasted.loading} userId={roasted.userId} />}
-    </Roasted>
+    <Inventory>
+        {inventory => (
+            <RoastedInventory {...props} data={inventory.data} loading={inventory.loading} userId={inventory.userId} />
+        )}
+    </Inventory>
 );
 
-const Inventory = ({ data, loading, userId }) => {
+const RoastedInventory = ({ data, loading, userId }) => {
     const onClick = (e, item) => {
         // eslint-disable-next-line
         console.log(item);
@@ -41,7 +43,7 @@ const Inventory = ({ data, loading, userId }) => {
 };
 
 const { array, bool, oneOfType, string, number } = PropTypes;
-Inventory.propTypes = {
+RoastedInventory.propTypes = {
     data: array,
     loading: bool,
     userId: oneOfType([string, number])

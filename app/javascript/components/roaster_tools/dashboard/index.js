@@ -16,7 +16,7 @@ import QuickActions from "./quickActions";
 
 const Wrapper = ({ roaster, ...rest }) => {
     return (
-        <Context roaster={roaster} transactions batches activity roasted lots log producers>
+        <Context roaster={roaster} transactions batches activity inventory lots log producers>
             <Dashboard {...rest} />
         </Context>
     );
