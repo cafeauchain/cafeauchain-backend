@@ -7,7 +7,7 @@ import Budgeter from "roaster_tools/budgeter";
 import RoastLog from "roaster_tools/roastLog";
 import OpenContracts from "roaster_tools/openContracts";
 import OpenRoasts from "roaster_tools/openRoasts";
-import Notifier from "roaster_tools/notifier";
+import Notifier from "roaster_tools/dashboard/notifier";
 
 import Context from "contexts/index";
 /* eslint-enable */
@@ -16,7 +16,7 @@ import QuickActions from "./quickActions";
 
 const Wrapper = ({ roaster, ...rest }) => {
     return (
-        <Context roaster={roaster} transactions batches activity roasted lots log producers>
+        <Context roaster={roaster} transactions batches activity inventory lots log producers>
             <Dashboard {...rest} />
         </Context>
     );

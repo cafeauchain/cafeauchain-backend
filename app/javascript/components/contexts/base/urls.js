@@ -7,7 +7,7 @@ const urls = id => ({
     log: `${ROASTER_URL(id)}/lots_by_date`,
     lots: `${ROASTER_URL(id)}/lots`,
     producers: `${API_URL}/producers`,
-    roasted: `${ROASTER_URL(id)}/inventory_items`,
+    inventory: `${ROASTER_URL(id)}/inventory_items`,
     transactions: `${ROASTER_URL(id)}/transactions`
 });
 

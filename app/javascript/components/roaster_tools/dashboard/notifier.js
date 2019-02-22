@@ -1,8 +1,10 @@
-import React, { Component } from "react";
+import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
 
 /* eslint-disable */
 import Messager from "shared/messager";
+
+import { callMeDanger } from "utilities";
 
 import Lots from "contexts/lots";
 /* eslint-enable */
@@ -16,15 +18,14 @@ class Notifier extends Component {
                 id,
                 attributes: { name, in_warehouse, low_on_hand, low_remaining, on_hand }
             } = lot;
-            const msgBuilder = (title, name, low_alert, amount) => {
-                return `Your ${title} Inventory is low for ${name}.
-                Your alert level is set to ${low_alert} lbs and your actual level is ${amount} lbs`;
-            };
+            const msgBuilder = (title, name, low_alert, amount) =>
+                callMeDanger(`Your ${title} inventory is low for <strong>${name}</strong>.
+                 Your par level is <strong>${low_alert}</strong> but
+                 your actual level is <strong>${amount}</strong> lbs.`);
             // TODO Refactor this
             if (low_on_hand && low_on_hand >= on_hand) {
                 notifications.push({
                     id: id + "on_hand",
-                    // eslint-disable-next-line
                     message: msgBuilder("On Hand", name, low_on_hand, on_hand),
                     type: "negative"
                 });
@@ -32,7 +33,6 @@ class Notifier extends Component {
             if (low_remaining && low_remaining >= in_warehouse) {
                 notifications.push({
                     id: id + "in_warehouse",
-                    // eslint-disable-next-line
                     message: msgBuilder("Warehouse", name, low_remaining, in_warehouse),
                     type: "negative"
                 });

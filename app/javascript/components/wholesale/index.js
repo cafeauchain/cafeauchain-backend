@@ -5,13 +5,14 @@ import { Container, Header, Segment } from "semantic-ui-react";
 /* eslint-disable */
 import CreateInventory from "wholesale/createInventory";
 import Inventory from "wholesale/inventory";
+import Notifier from "wholesale/notifier";
 
 import Context from "contexts/index";
 /* eslint-enable */
 
 const Wrapper = ({ roaster, ...rest }) => {
     return (
-        <Context roaster={roaster} batches roasted lots>
+        <Context roaster={roaster} batches inventory lots>
             <Dashboard {...rest} />
         </Context>
     );
@@ -28,6 +29,7 @@ const Dashboard = () => (
         <Segment>
             <Header as="h1" content="Manage Wholesale" />
         </Segment>
+        <Notifier />
         <Segment>{true && <CreateInventory />}</Segment>
         <Segment>{true && <Inventory />}</Segment>
     </Container>
