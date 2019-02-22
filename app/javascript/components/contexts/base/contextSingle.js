@@ -5,10 +5,6 @@ import PropTypes from "prop-types";
 // eslint-disable-next-line
 import urls from "contexts/base/urls";
 
-const PassThru = ({ children, value }) => {
-    return React.cloneElement(children, { value });
-};
-
 class ContextHandler extends React.Component {
     constructor(props) {
         super(props);
@@ -51,7 +47,7 @@ class ContextHandler extends React.Component {
 
     render() {
         const { children } = this.props;
-        return <PassThru value={{ ...this.state }}>{children}</PassThru>;
+        return React.cloneElement(children, { value: { ...this.state } });
     }
 }
 
