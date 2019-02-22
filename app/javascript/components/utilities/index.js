@@ -1,5 +1,6 @@
 import abbreviator from "./abbreviator";
 import capitalize from "./capitalize";
+import callMeDanger from "./callMeDanger";
 import csvToJSON from "./csvToJSON";
 import debounce from "./debounce";
 import namespacer from "./fieldNamespacer";
@@ -21,6 +22,7 @@ import usStates from "./usStates";
 export {
     abbreviator,
     capitalize,
+    callMeDanger,
     csvToJSON,
     debounce,
     namespacer,

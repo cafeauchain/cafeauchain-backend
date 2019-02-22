@@ -1,8 +1,10 @@
-import React, { Component, Fragment as F } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 /* eslint-disable */
 import Messager from "shared/messager";
+
+import { callMeDanger } from "utilities";
 
 import Inventory from "contexts/inventory";
 /* eslint-enable */
@@ -16,22 +18,11 @@ class Notifier extends Component {
                 id,
                 attributes: { lot_name, name, quantity, par_level }
             } = item;
-            const msgBuilder = (name, par_level, quantity) => {
-                name = <strong>{name}</strong>;
-                par_level = <strong>{par_level}</strong>;
-                quantity = <strong>{quantity}</strong>;
-                return (
-                    <F>
-                        <F>Your inventory is low for </F>
-                        {name}
-                        <F>. Your par level is set to </F>
-                        {par_level}
-                        <F> lbs but your actual level is </F>
-                        {quantity}
-                        <F> lbs.</F>
-                    </F>
-                );
-            };
+            const msgBuilder = (name, par_level, quantity) =>
+                callMeDanger(`Your inventory is low for <strong>${name}</strong>.
+                 Your par level is <strong>${par_level}</strong> but
+                 your actual level is <strong>${quantity}</strong> lbs.`);
+
             // TODO Refactor this
             if (par_level && par_level >= quantity) {
                 notifications.push({
