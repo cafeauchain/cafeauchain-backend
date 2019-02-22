@@ -66,7 +66,6 @@ class OpenRoasts extends Component {
     };
 
     handleSubmit = async (ev, isFinished) => {
-        console.log(isFinished);
         ev.preventDefault();
         const { details, current } = this.state;
         const { id, attributes } = current;

@@ -5,6 +5,7 @@ import { Container, Header, Segment } from "semantic-ui-react";
 /* eslint-disable */
 import CreateInventory from "wholesale/createInventory";
 import Inventory from "wholesale/inventory";
+import Notifier from "wholesale/notifier";
 
 import Context from "contexts/index";
 /* eslint-enable */
@@ -28,6 +29,7 @@ const Dashboard = () => (
         <Segment>
             <Header as="h1" content="Manage Wholesale" />
         </Segment>
+        <Notifier />
         <Segment>{true && <CreateInventory />}</Segment>
         <Segment>{true && <Inventory />}</Segment>
     </Container>
