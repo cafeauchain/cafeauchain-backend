@@ -7,7 +7,7 @@ import Budgeter from "roaster_tools/budgeter";
 import RoastLog from "roaster_tools/roastLog";
 import OpenContracts from "roaster_tools/openContracts";
 import OpenRoasts from "roaster_tools/openRoasts";
-import Notifier from "roaster_tools/notifier";
+import Notifier from "roaster_tools/dashboard/notifier";
 
 import Context from "contexts/index";
 /* eslint-enable */

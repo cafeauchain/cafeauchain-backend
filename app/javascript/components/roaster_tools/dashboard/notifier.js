@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
 
 /* eslint-disable */
@@ -17,14 +17,28 @@ class Notifier extends Component {
                 attributes: { name, in_warehouse, low_on_hand, low_remaining, on_hand }
             } = lot;
             const msgBuilder = (title, name, low_alert, amount) => {
-                return `Your ${title} Inventory is low for ${name}.
-                Your alert level is set to ${low_alert} lbs and your actual level is ${amount} lbs`;
+                title = <strong>{title}</strong>;
+                name = <strong>{name}</strong>;
+                low_alert = <strong>{low_alert}</strong>;
+                amount = <strong>{amount}</strong>;
+                return (
+                    <F>
+                        <F>Your </F>
+                        {title}
+                        <F> Inventory is low for </F>
+                        {name}
+                        <F>. Your par level is set to </F>
+                        {low_alert}
+                        <F> lbs but your actual level is </F>
+                        {amount}
+                        <F> lbs.</F>
+                    </F>
+                );
             };
             // TODO Refactor this
             if (low_on_hand && low_on_hand >= on_hand) {
                 notifications.push({
                     id: id + "on_hand",
-                    // eslint-disable-next-line
                     message: msgBuilder("On Hand", name, low_on_hand, on_hand),
                     type: "negative"
                 });
@@ -32,7 +46,6 @@ class Notifier extends Component {
             if (low_remaining && low_remaining >= in_warehouse) {
                 notifications.push({
                     id: id + "in_warehouse",
-                    // eslint-disable-next-line
                     message: msgBuilder("Warehouse", name, low_remaining, in_warehouse),
                     type: "negative"
                 });
