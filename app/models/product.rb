@@ -15,6 +15,8 @@ class Product < ApplicationRecord
   extend FriendlyId
   friendly_id :title, use: [:slugged, :finders]
 
+  acts_as_taggable_on :categories
+
   has_many_attached :product_images
 
   has_many :product_inventory_items

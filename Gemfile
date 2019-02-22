@@ -32,6 +32,7 @@ gem "kaminari"
 gem "pager_api"
 gem 'active_model_serializers', '~> 0.10.0'
 gem "sentry-raven"
+gem 'acts-as-taggable-on', '~> 6.0'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
