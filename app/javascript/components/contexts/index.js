@@ -10,6 +10,7 @@ import { ConfigProvider as InventoryProvider } from "contexts/inventory";
 import { ConfigProvider as LogProvider } from "contexts/lotsByPeriod";
 import { ConfigProvider as BatchesProvider } from "contexts/batches";
 import { ConfigProvider as ActivityProvider } from "contexts/activity";
+import { ConfigProvider as ProductsProvider } from "contexts/products";
 /* eslint-enable */
 
 const Context = ({ roaster, children, ...bools }) => {
@@ -23,7 +24,9 @@ const Context = ({ roaster, children, ...bools }) => {
                             <LogProvider value={{ id: roaster.id, name: "log", requests }}>
                                 <BatchesProvider value={{ id: roaster.id, name: "batches", requests }}>
                                     <ActivityProvider value={{ id: roaster.id, name: "activity", requests }}>
-                                        {children}
+                                        <ProductsProvider value={{ id: roaster.id, name: "products", requests }}>
+                                            {children}
+                                        </ProductsProvider>
                                     </ActivityProvider>
                                 </BatchesProvider>
                             </LogProvider>

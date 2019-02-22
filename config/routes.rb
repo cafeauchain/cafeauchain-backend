@@ -73,6 +73,14 @@
 #                                            PATCH  /api/v1/roasters/:roaster_profile_id/inventory_items/:id(.:format)                       api/v1/inventory_items#update
 #                                            PUT    /api/v1/roasters/:roaster_profile_id/inventory_items/:id(.:format)                       api/v1/inventory_items#update
 #                                            DELETE /api/v1/roasters/:roaster_profile_id/inventory_items/:id(.:format)                       api/v1/inventory_items#destroy
+#            api_v1_roaster_profile_products GET    /api/v1/roasters/:roaster_profile_id/products(.:format)                                  api/v1/products#index
+#                                            POST   /api/v1/roasters/:roaster_profile_id/products(.:format)                                  api/v1/products#create
+#         new_api_v1_roaster_profile_product GET    /api/v1/roasters/:roaster_profile_id/products/new(.:format)                              api/v1/products#new
+#        edit_api_v1_roaster_profile_product GET    /api/v1/roasters/:roaster_profile_id/products/:id/edit(.:format)                         api/v1/products#edit
+#             api_v1_roaster_profile_product GET    /api/v1/roasters/:roaster_profile_id/products/:id(.:format)                              api/v1/products#show
+#                                            PATCH  /api/v1/roasters/:roaster_profile_id/products/:id(.:format)                              api/v1/products#update
+#                                            PUT    /api/v1/roasters/:roaster_profile_id/products/:id(.:format)                              api/v1/products#update
+#                                            DELETE /api/v1/roasters/:roaster_profile_id/products/:id(.:format)                              api/v1/products#destroy
 #                                            DELETE /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#remove_card
 #      api_v1_roaster_profile_set_as_default PUT    /api/v1/roasters/:roaster_profile_id/set_as_default(.:format)                            api/v1/roaster_profiles#set_as_default
 #                    api_v1_roaster_profiles POST   /api/v1/roasters(.:format)                                                               api/v1/roaster_profiles#create
@@ -197,7 +205,7 @@ Rails.application.routes.draw do
         resources :transactions
         get :subscriptions
         post :cards
-        resources :inventory_items
+        resources :inventory_items, :products
         delete :cards, to: "roaster_profiles#remove_card"
         put :set_as_default
       end
