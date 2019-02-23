@@ -24,6 +24,7 @@ const Wrapper = props => (
                 updateContext={ctx.updateContext}
                 inventory={ctx.inventory}
                 userId={ctx.userId}
+                getCtxData={ctx.getData}
             />
         )}
     </Context>
@@ -35,6 +36,12 @@ class OpenRoasts extends Component {
         current: {},
         details: {}
     };
+
+    componentDidMount() {
+        const { batches, inventory, getCtxData } = this.props;
+        if (batches === undefined) getCtxData("batches");
+        if (inventory === undefined) getCtxData("inventory");
+    }
 
     closeModal = () => this.setState({ isOpen: false, current: {}, details: {} });
 
@@ -129,7 +136,8 @@ class OpenRoasts extends Component {
 
     renderForm = () => {
         const { current, details } = this.state;
-        const { inventory } = this.props;
+        let { inventory } = this.props;
+        if (inventory === undefined) inventory = [];
         const { attributes } = current;
         return (
             <Form>
@@ -172,7 +180,9 @@ class OpenRoasts extends Component {
     };
 
     render() {
-        const { batches, loading } = this.props;
+        const { loading } = this.props;
+        let { batches } = this.props;
+        if (batches === undefined) batches = [];
         const { isOpen, current } = this.state;
         const { attributes } = current;
         const title = attributes ? attributes.crop_name : "";
@@ -198,7 +208,8 @@ OpenRoasts.propTypes = {
     loading: bool,
     updateContext: func,
     userId: oneOfType([string, number]),
-    inventory: array
+    inventory: array,
+    getCtxData: func
 };
 
 export default Wrapper;

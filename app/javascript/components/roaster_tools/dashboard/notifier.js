@@ -9,9 +9,15 @@ import { callMeDanger } from "utilities";
 import Context from "contexts/main";
 /* eslint-enable */
 
-const Wrapper = props => <Context>{ctx => <Notifier {...props} lots={ctx.lots} />}</Context>;
+const Wrapper = props => <Context>{ctx => <Notifier {...props} lots={ctx.lots} getCtxData={ctx.getData} />}</Context>;
 
 class Notifier extends Component {
+    componentDidMount() {
+        const { lots, getCtxData } = this.props;
+        if (lots === undefined) {
+            getCtxData("lots");
+        }
+    }
     checkQuantities = lots => {
         return lots.reduce((notifications, lot) => {
             const {
@@ -42,16 +48,18 @@ class Notifier extends Component {
     };
 
     render() {
-        const { lots } = this.props;
+        let { lots } = this.props;
+        if (lots === undefined) lots = [];
         const notifications = this.checkQuantities(lots);
         if (!notifications.length) return null;
         return <Messager header="Inventory Alerts" messages={notifications} />;
     }
 }
 
-const { array } = PropTypes;
+const { array, func } = PropTypes;
 Notifier.propTypes = {
-    lots: array
+    lots: array,
+    getCtxData: func
 };
 
 export default Wrapper;
