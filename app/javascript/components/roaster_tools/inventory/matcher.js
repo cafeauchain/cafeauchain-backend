@@ -10,7 +10,7 @@ import underscorer from "utilities/underscorer";
 import readCookie from "utilities/readCookie";
 import API_URL from "utilities/apiUtils/url";
 
-import Context from "contextsv2/main";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => (

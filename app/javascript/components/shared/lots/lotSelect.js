@@ -3,7 +3,7 @@ import { Form } from "semantic-ui-react";
 import PropTypes from "prop-types";
 
 /* eslint-disable */
-import Context from "contextsv2/main";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => <Context>{ctx => <LotSelect {...props} lots={ctx.lots} />}</Context>;

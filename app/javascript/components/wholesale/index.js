@@ -9,7 +9,7 @@ import Notifier from "wholesale/notifier";
 import CreateProduct from "wholesale/createProduct";
 import ProductInventory from "wholesale/productInventory";
 
-import Context from "contextsv2/index";
+import Context from "contexts/index";
 /* eslint-enable */
 
 const Wrapper = ({ roaster, ...rest }) => {

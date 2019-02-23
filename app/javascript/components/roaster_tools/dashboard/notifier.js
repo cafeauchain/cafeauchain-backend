@@ -6,7 +6,7 @@ import Messager from "shared/messager";
 
 import { callMeDanger } from "utilities";
 
-import Context from "contextsv2/main";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => <Context>{ctx => <Notifier {...props} lots={ctx.lots} />}</Context>;
