@@ -14,21 +14,21 @@ import { getTimePeriod, abbreviator } from "utilities";
 
 import { url as API_URL, requester, roasterUrl, fetcher } from "utilities/apiUtils";
 
-import LotsByPeriod from "contexts/lotsByPeriod";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <LotsByPeriod>
-        {lots => (
+    <Context>
+        {ctx => (
             <RoastLog
                 {...props}
-                lots={lots.data}
-                loading={lots.loading}
-                userId={lots.userId}
-                updateContext={lots.updateContext}
+                lots={ctx.log}
+                loading={ctx.loading}
+                userId={ctx.userId}
+                updateContext={ctx.updateContext}
             />
         )}
-    </LotsByPeriod>
+    </Context>
 );
 
 class RoastLog extends Component {

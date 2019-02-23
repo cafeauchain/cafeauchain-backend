@@ -10,11 +10,11 @@ import fields from "defs/forms/addSingleContract";
 
 import { url as API_URL, requester } from "utilities/apiUtils";
 
-import Lots from "contexts/lots";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Lots>{lots => <SingleContract {...props} id={lots.userId} updateContext={lots.updateContext} />}</Lots>
+    <Context>{ctx => <SingleContract {...props} id={ctx.userId} updateContext={ctx.updateContext} />}</Context>
 );
 
 class SingleContract extends Component {
@@ -70,7 +70,8 @@ class SingleContract extends Component {
             console.log("there was an error", data.response);
         } else {
             // TODO Add success/error messaging before closing
-            updateContext({ data }, closeModal());
+            await updateContext({ lots: data });
+            closeModal();
         }
     };
 

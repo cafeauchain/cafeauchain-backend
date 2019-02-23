@@ -11,27 +11,22 @@ import tableDefs from "defs/tables/openRoasts";
 
 import { url as API_URL, requester } from "utilities/apiUtils";
 
-import Batches from "contexts/batches";
-import Inventory from "contexts/inventory";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Batches>
-        {batches => (
-            <Inventory>
-                {inventory => (
-                    <OpenRoasts
-                        {...props}
-                        batches={batches.data}
-                        loading={batches.loading}
-                        updateContext={batches.updateContext}
-                        inventory={inventory.data}
-                        userId={batches.userId}
-                    />
-                )}
-            </Inventory>
+    <Context>
+        {ctx => (
+            <OpenRoasts
+                {...props}
+                batches={ctx.batches}
+                loading={ctx.loading}
+                updateContext={ctx.updateContext}
+                inventory={ctx.inventory}
+                userId={ctx.userId}
+            />
         )}
-    </Batches>
+    </Context>
 );
 
 class OpenRoasts extends Component {
@@ -109,7 +104,7 @@ class OpenRoasts extends Component {
             console.log("there was an error", data.response);
         } else {
             // TODO Add success/error messaging before closing
-            await updateContext({ data });
+            await updateContext({ batches: data });
             this.closeModal();
         }
     };

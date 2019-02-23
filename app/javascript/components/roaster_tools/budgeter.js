@@ -8,12 +8,10 @@ import { Money, AsNumber } from "shared/textFormatters";
 
 import roasterCostCalc from "utilities/roasterCostCalc";
 
-import Activity from "contexts/activity";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
-const Wrapper = props => (
-    <Activity>{activity => <Budgeter {...props} data={activity.data} loading={activity.loading} />}</Activity>
-);
+const Wrapper = props => <Context>{ctx => <Budgeter {...props} data={ctx.activity} loading={ctx.loading} />}</Context>;
 
 class Budgeter extends Component {
     getRemaining = value => {

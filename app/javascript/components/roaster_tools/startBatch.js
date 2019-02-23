@@ -12,45 +12,22 @@ import { noEmpties } from "utilities";
 
 import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
 
-import Log from "contexts/lotsByPeriod";
-import Lots from "contexts/lots";
-import Batches from "contexts/batches";
-import Activity from "contexts/activity";
-import Inventory from "contexts/inventory";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Lots>
-        {lots => (
-            <Batches>
-                {batches => (
-                    <Activity>
-                        {activity => (
-                            <Log>
-                                {log => (
-                                    <Inventory>
-                                        {inventory => (
-                                            <StartBatch
-                                                {...props}
-                                                id={lots.userId}
-                                                updateLots={lots.updateContext}
-                                                updateBatches={batches.updateContext}
-                                                updateActivity={activity.updateContext}
-                                                lotData={lots.data}
-                                                activity={activity.data}
-                                                updateLog={log.updateContext}
-                                                inventory={inventory.data}
-                                            />
-                                        )}
-                                    </Inventory>
-                                )}
-                            </Log>
-                        )}
-                    </Activity>
-                )}
-            </Batches>
+    <Context>
+        {ctx => (
+            <StartBatch
+                {...props}
+                id={ctx.userId}
+                updateContext={ctx.updateContext}
+                lotData={ctx.lots}
+                activity={ctx.activity}
+                inventory={ctx.inventory}
+            />
         )}
-    </Lots>
+    </Context>
 );
 class StartBatch extends Component {
     constructor(props) {
@@ -121,24 +98,19 @@ class StartBatch extends Component {
     // only called after successful submit
     // TODO, I dont think the try/catch will work like I want it to
     getData = async id => {
-        const lotsUrl = `${ROASTER_URL(id)}/lots`;
-        const batchesUrl = `${ROASTER_URL(id)}/batches`;
-        const activityUrl = `${ROASTER_URL(id)}/subscriptions`;
-        const logUrl = `${ROASTER_URL(id)}/lots_by_date`;
-        const { updateLots, updateBatches, updateActivity, updateLog, closeModal } = this.props;
+        const baseUrl = ROASTER_URL(id);
+        const requests = [
+            { name: "lots", url: `${baseUrl}/lots` },
+            { name: "batches", url: `${baseUrl}/batches` },
+            { name: "activity", url: `${baseUrl}/subscriptions` },
+            { name: "log", url: `${baseUrl}/lots_by_date` }
+        ];
+        const { updateContext, closeModal } = this.props;
         try {
-            const results = await Promise.all([
-                fetcher(lotsUrl),
-                fetcher(batchesUrl),
-                fetcher(activityUrl),
-                fetcher(logUrl)
-            ]);
-            Promise.all([
-                updateLots({ data: results[0] }),
-                updateBatches({ data: results[1] }),
-                updateActivity({ data: results[2] }),
-                updateLog({ data: results[3] })
-            ]).then(() => closeModal());
+            const results = await Promise.all(requests.map(request => fetcher(request.url)));
+            Promise.all(results.map((result, idx) => updateContext({ [requests[idx].name]: result }))).then(() =>
+                closeModal()
+            );
         } catch (e) {
             // eslint-disable-next-line
             console.log(e);
@@ -211,12 +183,9 @@ const { oneOfType, string, number, func, object, array } = PropTypes;
 StartBatch.propTypes = {
     id: oneOfType([number, string]),
     closeModal: func,
-    updateLots: func,
-    updateBatches: func,
-    updateActivity: func,
+    updateContext: func,
     activity: object,
     lotData: array,
-    updateLog: func,
     inventory: array
 };
 

@@ -1,4 +1,4 @@
-import React, { Component, Fragment as F } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 /* eslint-disable */
@@ -6,10 +6,10 @@ import Messager from "shared/messager";
 
 import { callMeDanger } from "utilities";
 
-import Lots from "contexts/lots";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
-const Wrapper = props => <Lots>{lots => <Notifier {...props} lots={lots.data} />}</Lots>;
+const Wrapper = props => <Context>{ctx => <Notifier {...props} lots={ctx.lots} />}</Context>;
 
 class Notifier extends Component {
     checkQuantities = lots => {
