@@ -10,7 +10,6 @@ import { noEmpties } from "utilities";
 
 import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
 
-import Lots from "contexts/lots";
 import Context from "contextsv2/main";
 /* eslint-enable */
 
