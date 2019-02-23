@@ -9,12 +9,12 @@ import Notifier from "wholesale/notifier";
 import CreateProduct from "wholesale/createProduct";
 import ProductInventory from "wholesale/productInventory";
 
-import Context from "contexts/index";
+import Context from "contextsv2/index";
 /* eslint-enable */
 
 const Wrapper = ({ roaster, ...rest }) => {
     return (
-        <Context roaster={roaster} batches inventory lots products>
+        <Context roaster={roaster} requests={["batches", "inventory", "lots", "products", { name: "activity" }]}>
             <Dashboard {...rest} />
         </Context>
     );

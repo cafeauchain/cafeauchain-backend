@@ -6,10 +6,10 @@ import Messager from "shared/messager";
 
 import { callMeDanger } from "utilities";
 
-import Inventory from "contexts/inventory";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
-const Wrapper = props => <Inventory>{inventory => <Notifier {...props} inventory={inventory.data} />}</Inventory>;
+const Wrapper = props => <Context>{ctx => <Notifier {...props} inventory={ctx.inventory} />}</Context>;
 
 class Notifier extends Component {
     checkQuantities = inventory => {

@@ -10,20 +10,20 @@ import { noEmpties } from "utilities";
 
 import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
 
-import Inventory from "contexts/inventory";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Inventory>
-        {inventory => (
+    <Context>
+        {ctx => (
             <CreateProduct
                 {...props}
-                id={inventory.userId}
-                updateInventory={inventory.updateContext}
-                inventoryData={inventory.data}
+                id={ctx.userId}
+                updateInventory={ctx.updateContext}
+                inventoryData={ctx.inventory}
             />
         )}
-    </Inventory>
+    </Context>
 );
 
 const defaultDetails = {
