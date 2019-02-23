@@ -11,24 +11,13 @@ import { noEmpties } from "utilities";
 import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
 
 import Lots from "contexts/lots";
-import Inventory from "contexts/inventory";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Lots>
-        {lots => (
-            <Inventory>
-                {inventory => (
-                    <CreateInventory
-                        {...props}
-                        id={lots.userId}
-                        updateInventory={inventory.updateContext}
-                        lotData={lots.data}
-                    />
-                )}
-            </Inventory>
-        )}
-    </Lots>
+    <Context>
+        {ctx => <CreateInventory {...props} id={ctx.userId} updateInventory={ctx.updateContext} lotData={ctx.lots} />}
+    </Context>
 );
 
 const defaultDetails = {
@@ -86,7 +75,7 @@ class CreateInventory extends Component {
         const { updateInventory, closeModal } = this.props;
         try {
             const results = await Promise.all([fetcher(inventoryUrl)]);
-            Promise.all([updateInventory({ data: results[0] })]).then(() => {
+            Promise.all([updateInventory({ inventory: results[0] })]).then(() => {
                 if (closeModal) {
                     closeModal();
                 } else {

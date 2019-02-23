@@ -7,15 +7,13 @@ import Table from "shared/table";
 
 import tableDefs from "defs/tables/products";
 
-import Products from "contexts/products";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Products>
-        {products => (
-            <ProductInventory {...props} data={products.data} loading={products.loading} userId={products.userId} />
-        )}
-    </Products>
+    <Context>
+        {ctx => <ProductInventory {...props} data={ctx.products} loading={ctx.loading} userId={ctx.userId} />}
+    </Context>
 );
 
 const ProductInventory = ({ data, loading, userId }) => {
