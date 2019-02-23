@@ -11,10 +11,10 @@ module InventoryService
     #   "composition":
     #     [{"inventory_item_id":"12","pct":"25"},{"inventory_item_id":"3","pct":"50"},{"inventory_item_id":"11","pct":"25"}],
     #   "variants":
-    #     [{"size": "12oz", "bean_type": "whole_bean"},{"size": "12oz", "bean_type": "ground"},{"size": "5lb", "bean_type": "whole_bean"}]
+    #     [{"size": "12oz", "bean_type": "whole_bean", price_in_cents: 1499},{"size": "12oz", "bean_type": "ground", price_in_cents: 1499},{"size": "5lb", "bean_type": "whole_bean", price_in_cents: 6099}]
     # }
     ############################
-    
+
     def initialize(params)
       @product_params = params
       @composition_array = params[:composition]
@@ -31,7 +31,7 @@ module InventoryService
           ProductInventoryItem.create(inventory_item_id: component[:inventory_item_id], product: @product, percentage_of_product: component[:pct])
         end
         @variants.each do |variant|
-          @variant = ProductVariant.create(product: @product, price: variant[:price])
+          @variant = ProductVariant.create(product: @product, price_in_cents: variant[:price])
           if !variant[:size].nil?
             @variant.update(custom_options: {size: variant[:size]})
           end
