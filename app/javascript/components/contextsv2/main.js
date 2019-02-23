@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const { Provider, Consumer } = createContext();
 
 // eslint-disable-next-line
-import urls from "contexts/base/urls";
+import urls from "contextsv2/urls";
 
 class ConfigProvider extends React.Component {
     constructor(props) {
