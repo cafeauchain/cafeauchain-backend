@@ -7,11 +7,11 @@ import Table from "shared/table";
 
 import tableDefs from "defs/tables/openContracts";
 
-import Lots from "contexts/lots";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Lots>{lots => <OpenContracts {...props} lots={lots.data} loading={lots.loading} userId={lots.userId} />}</Lots>
+    <Context>{ctx => <OpenContracts {...props} lots={ctx.lots} loading={ctx.loading} userId={ctx.userId} />}</Context>
 );
 
 const OpenContracts = ({ lots, loading, userId }) => {
