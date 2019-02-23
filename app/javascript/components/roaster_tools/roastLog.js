@@ -22,10 +22,11 @@ const Wrapper = props => (
         {ctx => (
             <RoastLog
                 {...props}
-                lots={ctx.log}
+                log={ctx.log}
                 loading={ctx.loading}
                 userId={ctx.userId}
                 updateContext={ctx.updateContext}
+                getCtxData={ctx.getData}
             />
         )}
     </Context>
@@ -35,8 +36,6 @@ class RoastLog extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [],
-            lots: [],
             month: moment().format("YYYY-MM"),
             period: "day",
             earliest: ""
@@ -44,25 +43,11 @@ class RoastLog extends Component {
     }
 
     componentDidMount() {
-        const { userId } = this.props;
+        const { userId, log, getCtxData } = this.props;
         const url = roasterUrl(userId) + "/earliest_batch";
-        fetcher(url)
-            .then(res => this.setState({ earliest: res }))
-            .then(() => this.handleLotUpdate);
+        if (log === undefined) getCtxData("log");
+        fetcher(url).then(res => this.setState({ earliest: res }));
     }
-
-    componentDidUpdate() {
-        this.handleLotUpdate();
-    }
-
-    handleLotUpdate = () => {
-        const { lots } = this.props;
-        const { month, lots: statelots, period } = this.state;
-        const dateRange = this.getDateRange(month, period);
-        if (lots.length && statelots !== lots) {
-            this.setState({ lots }, this.getData(lots, dateRange));
-        }
-    };
 
     getDateRange = (month, period) => {
         let start = moment(month).startOf("month");
@@ -73,14 +58,10 @@ class RoastLog extends Component {
         }
         return getTimePeriod(start, end, period);
     };
-    getData = (lots, dateRange) => {
-        const { month } = this.state;
-        this.setState({ month }, this.transformData(lots, dateRange));
-    };
 
     transformData = (data, dateRange) => {
         // This is the transformer to create dates and add data to each row
-        const days = dateRange.map(day => {
+        return dateRange.map(day => {
             const amounts = data.reduce((obj, item) => {
                 const match = item.attributes.batches[moment(day).format("YYYY-MM-DD")];
                 const amount = match ? match.roasted_on_date : 0;
@@ -92,8 +73,8 @@ class RoastLog extends Component {
                 id: day.format("MMM DD")
             };
         });
-        this.setState({ data: days });
     };
+
     updateData = async (event, dir) => {
         const { target } = event;
         event.preventDefault();
@@ -101,12 +82,8 @@ class RoastLog extends Component {
         const { month: statemonth, period } = this.state;
         const { userId, updateContext } = this.props;
         let increment = 1;
-        if (dir === "previous") {
-            increment = -1;
-        }
-        if (dir === "next") {
-            increment = 1;
-        }
+        if (dir === "previous") increment = -1;
+        if (dir === "next") increment = 1;
         const month = moment(statemonth).add(increment, "month");
         let startDate =
             "&start_date=" +
@@ -124,13 +101,13 @@ class RoastLog extends Component {
         const url = roasterUrl(userId) + "/lots_by_date?period=" + period + startDate + endDate;
         const data = await fetcher(url);
         await this.setState({ period, month });
-        updateContext({ data });
+        updateContext({ log: data });
     };
 
-    modifyTableDefs = lots => {
+    modifyTableDefs = log => {
         let { fields, ...rest } = tableDefs;
         const exclude = RegExp(/^\([0-9]{4}\)$/);
-        let newFields = lots.map(lot => {
+        let newFields = log.map(lot => {
             let { crop_name, name, label } = lot.attributes;
             const title = name || crop_name;
             label = label || abbreviator(title, exclude, true);
@@ -153,13 +130,16 @@ class RoastLog extends Component {
         const url = roasterUrl(userId) + "/lots_by_date?period=" + period;
         const data = await fetcher(url);
         await this.setState({ period: period });
-        updateContext({ data });
+        updateContext({ log: data });
     };
 
     render() {
-        const { loading } = this.props;
-        const { data, lots, month, period } = this.state;
-        const modified = this.modifyTableDefs(lots);
+        let { loading, log } = this.props;
+        if (log === undefined) log = [];
+        const { month, period } = this.state;
+        const dateRange = this.getDateRange(month, period);
+        const data = this.transformData(log, dateRange);
+        const modified = this.modifyTableDefs(log);
         return (
             <F>
                 <Header as="h2" content={"Roast log: " + moment(month).format("MMMM YYYY")} />
@@ -190,10 +170,11 @@ class RoastLog extends Component {
 
 const { array, bool, oneOfType, string, number, func } = PropTypes;
 RoastLog.propTypes = {
-    lots: array,
+    log: array,
     loading: bool,
     userId: oneOfType([string, number]),
-    updateContext: func
+    updateContext: func,
+    getCtxData: func
 };
 
 export default Wrapper;

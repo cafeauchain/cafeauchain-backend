@@ -23,8 +23,8 @@ const Wrapper = props => (
                 id={ctx.userId}
                 updateContext={ctx.updateContext}
                 lotData={ctx.lots}
-                activity={ctx.activity}
                 inventory={ctx.inventory}
+                getCtxData={ctx.getData}
             />
         )}
     </Context>
@@ -40,6 +40,15 @@ class StartBatch extends Component {
             btnLoading: false,
             errors: []
         };
+    }
+    componentDidMount() {
+        const { lotData, inventory, getCtxData } = this.props;
+        if (lotData === undefined) {
+            getCtxData("lots");
+        }
+        if (inventory === undefined) {
+            getCtxData("inventory");
+        }
     }
 
     parentState = obj => {
@@ -126,8 +135,14 @@ class StartBatch extends Component {
         }, []);
     };
 
+    buildLotOptions = lots =>
+        lots.map(({ id, attributes: { name } }) => ({ value: id, text: name, key: id, id, name }));
+
     render() {
-        const { id, lotData, inventory } = this.props;
+        let { id, lotData, inventory } = this.props;
+        if (lotData === undefined) lotData = [];
+        if (inventory === undefined) inventory = [];
+        const lotOptions = this.buildLotOptions(lotData);
         const { lotDetails, btnLoading, errors } = this.state;
         const isLotSelected = lotDetails.lot_id;
         let on_hand = "?";
@@ -148,7 +163,13 @@ class StartBatch extends Component {
                     type="date"
                     defaultValue={lotDetails.roast_date}
                 />
-                <LotSelect roasterId={id} parentState={this.parentState} fluid />
+                <Input
+                    inputType="select"
+                    options={lotOptions}
+                    onChange={this.handleInputChange}
+                    name="lot_id"
+                    label="Choose Lot"
+                />
                 {isLotSelected && (
                     <F>
                         <p>
@@ -184,9 +205,9 @@ StartBatch.propTypes = {
     id: oneOfType([number, string]),
     closeModal: func,
     updateContext: func,
-    activity: object,
     lotData: array,
-    inventory: array
+    inventory: array,
+    getCtxData: func
 };
 
 export default Wrapper;

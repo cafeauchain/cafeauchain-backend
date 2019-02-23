@@ -9,19 +9,32 @@ import requester from "utilities/apiUtils/requester";
 import Context from "contexts/main";
 /* eslint-enable */
 
-const Wrapper = props => <Context>{ctx => <ProducerSelect {...props} producers={ctx.producers} />}</Context>;
+const Wrapper = props => (
+    <Context>
+        {ctx => (
+            <ProducerSelect
+                {...props}
+                producers={ctx.producers}
+                getCtxData={ctx.getData}
+                updateContext={ctx.updateContext}
+            />
+        )}
+    </Context>
+);
 
 class ProducerSelect extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            producers: [],
             selected: {}
         };
     }
 
     componentDidMount() {
-        this.getProducers();
+        const { producers, getCtxData } = this.props;
+        if (producers === undefined) {
+            getCtxData("producers");
+        }
     }
 
     buildProducer = data => {
@@ -38,9 +51,8 @@ class ProducerSelect extends Component {
     };
 
     addProducer = async (event, { value }) => {
-        const { parentState } = this.props;
-        let { producers } = this.state;
-        producers = [...producers];
+        const { parentState, updateContext } = this.props;
+        let { producers } = this.props;
         const url = `${API_URL}/producers`;
         const body = { producer_profile: { name: value } };
         const responseJson = await requester({ url, body });
@@ -50,22 +62,15 @@ class ProducerSelect extends Component {
         } else {
             const { data } = responseJson;
             const producer = this.buildProducer(data);
-            producers = [producer, ...producers];
-            // TODO probably need to have something in here to update Producer context
-            await this.setState({ producers, selected: producer });
+            await updateContext({ producers: [data, ...producers] });
+            await this.setState({ selected: producer });
             parentState({ producerId: producer.slug });
         }
     };
 
-    getProducers = () => {
-        const { producers: data } = this.props;
-        const producers = data.map(this.buildProducer);
-        this.setState({ producers });
-    };
-
     getProducer = id => {
-        const { producers } = this.state;
-        return producers.find(producer => producer.slug === id);
+        const { producers } = this.props;
+        return producers.find(({ attributes: { slug } }) => slug === id);
     };
 
     onSelect = (event, { value }) => {
@@ -80,7 +85,10 @@ class ProducerSelect extends Component {
     };
 
     render = () => {
-        const { producers, selected } = this.state;
+        const { selected } = this.state;
+        let { producers } = this.props;
+        if (producers === undefined) producers = [];
+        const producerOptions = producers.map(this.buildProducer);
         const value = selected ? selected.value : undefined;
 
         return (
@@ -92,7 +100,7 @@ class ProducerSelect extends Component {
                 deburr
                 allowAdditions
                 value={value}
-                options={producers}
+                options={producerOptions}
                 onChange={this.onSelect}
                 onAddItem={this.addProducer}
             />
@@ -103,7 +111,9 @@ class ProducerSelect extends Component {
 const { func, array } = PropTypes;
 ProducerSelect.propTypes = {
     parentState: func,
-    producers: array
+    producers: array,
+    getCtxData: func,
+    updateContext: func
 };
 
 export default Wrapper;
