@@ -7,11 +7,11 @@ import Table from "shared/table";
 
 import tableDefs from "defs/tables/recentTransactions";
 
-import Trx from "contexts/transactions";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Trx>{trx => <RecentTransactions {...props} transactions={trx.data} loading={trx.loading} />}</Trx>
+    <Context>{ctx => <RecentTransactions {...props} transactions={ctx.transactions} loading={ctx.loading} />}</Context>
 );
 
 const RecentTransactions = ({ transactions, loading }) => (

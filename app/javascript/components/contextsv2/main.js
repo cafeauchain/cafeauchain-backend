@@ -17,8 +17,6 @@ class ConfigProvider extends React.Component {
         }, {});
         this.state = {
             userId: props.id,
-            // Remove this eventually
-            data: [],
             updateContext: this.updateContext,
             loading: true,
             ...datasets

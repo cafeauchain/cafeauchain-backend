@@ -8,12 +8,12 @@ import SingleContract from "roaster_tools/inventory/singleContract";
 import OpenContracts from "roaster_tools/openContracts";
 import RecentTransactions from "roaster_tools/recentTransactions";
 
-import Context from "contexts/index";
+import Context from "contextsv2/index";
 /* eslint-enable */
 
 const Wrapper = ({ roaster, ...rest }) => {
     return (
-        <Context roaster={roaster} transactions lots>
+        <Context roaster={roaster} requests={["transactions", "lots"]}>
             <Dashboard {...rest} />
         </Context>
     );
