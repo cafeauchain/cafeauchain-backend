@@ -15,7 +15,15 @@ import Context from "contexts/main";
 
 const Wrapper = props => (
     <Context>
-        {ctx => <CreateInventory {...props} id={ctx.userId} updateInventory={ctx.updateContext} lotData={ctx.lots} />}
+        {ctx => (
+            <CreateInventory
+                {...props}
+                id={ctx.userId}
+                updateInventory={ctx.updateContext}
+                lotData={ctx.lots}
+                getCtxData={ctx.getData}
+            />
+        )}
     </Context>
 );
 
@@ -33,6 +41,13 @@ class CreateInventory extends Component {
             btnLoading: false,
             errors: []
         };
+    }
+
+    componentDidMount() {
+        const { lotData, getCtxData } = this.props;
+        if (lotData === undefined) {
+            getCtxData("lots");
+        }
     }
 
     handleInputChange = (event, { value, name, checked }) => {
@@ -94,7 +109,8 @@ class CreateInventory extends Component {
         lots.map(({ id, attributes: { name } }) => ({ value: id, text: name, key: id, id, name }));
 
     render() {
-        const { lotData } = this.props;
+        let { lotData } = this.props;
+        if (lotData === undefined) lotData = [];
         const lotOptions = this.buildLotOptions(lotData);
         const { details, btnLoading, errors } = this.state;
         const isLotSelected = details.lot_id;
@@ -138,7 +154,8 @@ CreateInventory.propTypes = {
     id: oneOfType([number, string]),
     closeModal: func,
     updateInventory: func,
-    lotData: array
+    lotData: array,
+    getCtxData: func
 };
 
 export default Wrapper;
