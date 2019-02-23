@@ -10,7 +10,7 @@ import fields from "defs/forms/addSingleContract";
 
 import { url as API_URL, requester } from "utilities/apiUtils";
 
-import Context from "contextsv2/main";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => (

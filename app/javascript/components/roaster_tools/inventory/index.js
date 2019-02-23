@@ -8,7 +8,7 @@ import SingleContract from "roaster_tools/inventory/singleContract";
 import OpenContracts from "roaster_tools/openContracts";
 import RecentTransactions from "roaster_tools/recentTransactions";
 
-import Context from "contextsv2/index";
+import Context from "contexts/index";
 /* eslint-enable */
 
 const Wrapper = ({ roaster, ...rest }) => {

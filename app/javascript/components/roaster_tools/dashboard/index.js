@@ -9,7 +9,7 @@ import OpenContracts from "roaster_tools/openContracts";
 import OpenRoasts from "roaster_tools/openRoasts";
 import Notifier from "roaster_tools/dashboard/notifier";
 
-import Context from "contextsv2/index";
+import Context from "contexts/index";
 /* eslint-enable */
 
 import QuickActions from "./quickActions";

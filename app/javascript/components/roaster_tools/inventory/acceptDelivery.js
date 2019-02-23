@@ -8,7 +8,7 @@ import LotSelect from "shared/lots/lotSelect";
 import requester from "utilities/apiUtils/requester";
 import API_URL from "utilities/apiUtils/url";
 
-import Context from "contextsv2/main";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => (

@@ -8,7 +8,7 @@ import { Money, AsNumber } from "shared/textFormatters";
 
 import roasterCostCalc from "utilities/roasterCostCalc";
 
-import Context from "contextsv2/main";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => <Context>{ctx => <Budgeter {...props} data={ctx.activity} loading={ctx.loading} />}</Context>;

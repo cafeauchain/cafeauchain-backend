@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import API_URL from "utilities/apiUtils/url";
 import requester from "utilities/apiUtils/requester";
 
-import Context from "contextsv2/main";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => <Context>{ctx => <ProducerSelect {...props} producers={ctx.producers} />}</Context>;

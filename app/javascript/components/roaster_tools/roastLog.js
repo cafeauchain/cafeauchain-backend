@@ -14,7 +14,7 @@ import { getTimePeriod, abbreviator } from "utilities";
 
 import { url as API_URL, requester, roasterUrl, fetcher } from "utilities/apiUtils";
 
-import Context from "contextsv2/main";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => (

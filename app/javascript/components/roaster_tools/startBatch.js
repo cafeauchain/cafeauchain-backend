@@ -12,7 +12,7 @@ import { noEmpties } from "utilities";
 
 import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
 
-import Context from "contextsv2/main";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => (

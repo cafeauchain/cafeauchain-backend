@@ -7,7 +7,7 @@ import Table from "shared/table";
 
 import tableDefs from "defs/tables/roastedInventory";
 
-import Context from "contextsv2/main";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => (
