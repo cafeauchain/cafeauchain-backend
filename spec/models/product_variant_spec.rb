@@ -4,6 +4,7 @@
 #
 #  id             :bigint(8)        not null, primary key
 #  custom_options :jsonb
+#  price_in_cents :integer
 #  quantity       :integer
 #  variant_title  :string
 #  created_at     :datetime         not null
