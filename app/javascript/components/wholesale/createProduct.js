@@ -19,8 +19,9 @@ const Wrapper = props => (
             <CreateProduct
                 {...props}
                 id={ctx.userId}
-                updateInventory={ctx.updateContext}
+                updateContext={ctx.updateContext}
                 inventoryData={ctx.inventory}
+                getCtxData={ctx.getData}
             />
         )}
     </Context>
@@ -41,6 +42,13 @@ class CreateProduct extends Component {
             btnLoading: false,
             errors: []
         };
+    }
+
+    componentDidMount() {
+        const { inventoryData, getCtxData } = this.props;
+        if (inventoryData === undefined) {
+            getCtxData("inventory");
+        }
     }
 
     handleInputChange = (event, { value, name, checked, object, index }) => {
@@ -99,7 +107,8 @@ class CreateProduct extends Component {
         this.setState({ details });
     };
     render() {
-        const { inventoryData } = this.props;
+        let { inventoryData } = this.props;
+        if (inventoryData === undefined) inventoryData = [];
         const inventoryOptions = this.buildInventoryOptions(inventoryData);
         const { details, btnLoading, errors } = this.state;
         const { composition } = details;
@@ -164,10 +173,11 @@ class CreateProduct extends Component {
     }
 }
 
-const { oneOfType, string, number, array } = PropTypes;
+const { oneOfType, string, number, array, func } = PropTypes;
 CreateProduct.propTypes = {
     id: oneOfType([number, string]),
-    inventoryData: array
+    inventoryData: array,
+    getCtxData: func
 };
 
 export default Wrapper;
