@@ -14,7 +14,7 @@ import Context from "contextsv2/index";
 
 const Wrapper = ({ roaster, ...rest }) => {
     return (
-        <Context roaster={roaster} requests={["batches", "inventory", "lots", "products", { name: "activity" }]}>
+        <Context roaster={roaster} requests={["inventory", "lots", "products"]}>
             <Dashboard {...rest} />
         </Context>
     );
