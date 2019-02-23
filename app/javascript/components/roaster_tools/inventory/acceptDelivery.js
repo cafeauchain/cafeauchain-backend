@@ -8,11 +8,11 @@ import LotSelect from "shared/lots/lotSelect";
 import requester from "utilities/apiUtils/requester";
 import API_URL from "utilities/apiUtils/url";
 
-import Lots from "contexts/lots";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Lots>{lots => <AcceptDelivery {...props} id={lots.userId} updateContext={lots.updateContext} />}</Lots>
+    <Context>{ctx => <AcceptDelivery {...props} id={ctx.userId} updateContext={ctx.updateContext} />}</Context>
 );
 
 class AcceptDelivery extends Component {
@@ -69,7 +69,8 @@ class AcceptDelivery extends Component {
             console.log("there was an error", data.response);
         } else {
             // TODO Add success/error messaging before closing
-            updateContext({ data }, closeModal());
+            await updateContext({ lots: data });
+            closeModal();
         }
     };
 

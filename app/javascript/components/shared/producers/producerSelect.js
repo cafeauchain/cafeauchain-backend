@@ -6,10 +6,10 @@ import PropTypes from "prop-types";
 import API_URL from "utilities/apiUtils/url";
 import requester from "utilities/apiUtils/requester";
 
-import Producers from "contexts/producers";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
-const Wrapper = props => <Producers>{producers => <ProducerSelect {...props} producers={producers.data} />}</Producers>;
+const Wrapper = props => <Context>{ctx => <ProducerSelect {...props} producers={ctx.producers} />}</Context>;
 
 class ProducerSelect extends Component {
     constructor(props) {
@@ -52,7 +52,8 @@ class ProducerSelect extends Component {
             const producer = this.buildProducer(data);
             producers = [producer, ...producers];
             // TODO probably need to have something in here to update Producer context
-            this.setState({ producers, selected: producer }, parentState({ producerId: producer.slug }));
+            await this.setState({ producers, selected: producer });
+            parentState({ producerId: producer.slug });
         }
     };
 

@@ -3,10 +3,10 @@ import { Form } from "semantic-ui-react";
 import PropTypes from "prop-types";
 
 /* eslint-disable */
-import Lots from "contexts/lots";
+import Context from "contextsv2/main";
 /* eslint-enable */
 
-const Wrapper = props => <Lots>{lots => <LotSelect {...props} lots={lots.data} />}</Lots>;
+const Wrapper = props => <Context>{ctx => <LotSelect {...props} lots={ctx.lots} />}</Context>;
 
 class LotSelect extends Component {
     constructor(props) {
