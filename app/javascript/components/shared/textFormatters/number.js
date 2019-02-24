@@ -5,9 +5,10 @@ import commafy from "commafy";
 import "./styles.scss";
 
 const Comma = props => {
-    let { content, children, className = "", type, decimals, money } = props;
+    let { content, children, className = "", type, decimals, money, asCents } = props;
     if (children) content = children;
     let value = Number(content);
+    if (asCents) value = value / 100;
     if (type && type !== "neutral") {
         let direction = "positive";
         if ((type === "positive" && value < 0) || (type === "negative" && value > 0)) {
@@ -30,7 +31,8 @@ Comma.propTypes = {
     className: string,
     type: string,
     decimals: number,
-    money: bool
+    money: bool,
+    asCents: bool
 };
 
 export default Comma;

@@ -1,9 +1,17 @@
 /* eslint-disable */
-import { Money, AsNumber } from "shared/textFormatters";
+import { Money, AsNumber, Truncate } from "shared/textFormatters";
 /* eslint-enable */
 
 const tableDefinition = {
-    fields: [{ name: "title", namespace: "attributes" }, { name: "description", namespace: "attributes" }],
+    fields: [
+        { name: "title", namespace: "attributes" },
+        {
+            name: "description",
+            namespace: "attributes",
+            formatter: Truncate,
+            style: { maxWidth: 200, display: "block" }
+        }
+    ],
     props: {
         celled: true,
         striped: true,
