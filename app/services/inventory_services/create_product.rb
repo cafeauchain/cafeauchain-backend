@@ -15,15 +15,16 @@ module InventoryServices
     # }
     ############################
 
-    def initialize(params)
+    def initialize(roaster_id, params)
       @product_params = params
       @composition_array = @product_params[:composition]
       @categories_array = @product_params[:categories]
       @variants = @product_params[:variants]
+      @roaster = RoasterProfile.find(roaster_id)
     end
 
     def call
-      @product = Product.new(title: @product_params[:name], description: @product_params[:description], status: @product_params[:status])
+      @product = @roaster.products.new(title: @product_params[:name], description: @product_params[:description], status: @product_params[:status])
       @product.category_list = @categories_array
       if @product.save
         # @product.product_images.attach(@params[:product_images])
