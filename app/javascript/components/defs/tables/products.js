@@ -11,7 +11,12 @@ const tableDefinition = {
             formatter: props => Truncate({ ...props, style: { maxWidth: 400 } }),
             width: 6
         },
-        { name: "composition", namespace: "attributes", formatter: ArrayToString }
+        {
+            name: "composition",
+            namespace: "attributes",
+            formatter: props =>
+                ArrayToString({ ...props, keys: ["name", "pct"], output: array => array.join(": ") + "%" })
+        }
     ],
     props: {
         celled: true,
