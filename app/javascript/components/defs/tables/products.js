@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Money, AsNumber, Truncate } from "shared/textFormatters";
+import { Money, AsNumber, Truncate, ArrayToString, LongText } from "shared/textFormatters";
 /* eslint-enable */
 
 const tableDefinition = {
@@ -8,9 +8,10 @@ const tableDefinition = {
         {
             name: "description",
             namespace: "attributes",
-            formatter: Truncate,
-            style: { maxWidth: 200, display: "block" }
-        }
+            formatter: props => Truncate({ ...props, style: { maxWidth: 400 } }),
+            width: 6
+        },
+        { name: "composition", namespace: "attributes", formatter: ArrayToString }
     ],
     props: {
         celled: true,

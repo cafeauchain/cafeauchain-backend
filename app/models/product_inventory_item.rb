@@ -23,4 +23,8 @@
 class ProductInventoryItem < ApplicationRecord
   belongs_to :product
   belongs_to :inventory_item
+
+  def product_name
+    inventory_item.name
+  end
 end
