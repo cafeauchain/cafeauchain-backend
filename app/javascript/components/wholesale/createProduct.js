@@ -32,7 +32,8 @@ const defaultDetails = {
     description: "",
     categories: [],
     product_images: [],
-    composition: [{ inventory_item_id: undefined, pct: undefined }]
+    composition: [{ inventory_item_id: null, pct: null }],
+    variants: [{ size: null, price_in_cents: null }]
 };
 class CreateProduct extends Component {
     constructor(props) {
@@ -71,7 +72,7 @@ class CreateProduct extends Component {
 
     handleSubmit = async () => {
         const { details } = this.state;
-        const { id } = this.props;
+        const { id, getCtxData } = this.props;
         const url = `${ROASTER_URL(id)}/products`;
         let body = { ...details };
         let respJSON = await requester({ url, body });
@@ -81,12 +82,10 @@ class CreateProduct extends Component {
             if (respJSON.redirect) {
                 window.location.href = await respJSON.redirect_url;
             } else {
-                // eslint-disable-next-line
-                // this.getData(id);
-                // eslint-disable-next-line
-                console.log("successful submit. now what?");
-                // eslint-disable-next-line
-                console.log(respJSON);
+                await this.setState({ btnLoading: false });
+                getCtxData("products");
+                getCtxData("variants");
+                getCtxData("inventory");
             }
         }
     };
@@ -100,24 +99,97 @@ class CreateProduct extends Component {
             name
         }));
 
+    renderComposition = (composition, inventoryOptions) => {
+        return composition.map((item, idx) => {
+            return (
+                // eslint-disable-next-line
+                <F key={idx}>
+                    <Header as="h4" content={"Inventory Item " + (idx + 1)} />
+                    <Input
+                        inputType="select"
+                        options={inventoryOptions}
+                        onChange={this.handleInputChange}
+                        name="inventory_item_id"
+                        object="composition"
+                        index={idx}
+                        label="Choose Inventory Item"
+                    />
+                    <Input
+                        name="pct"
+                        object="composition"
+                        index={idx}
+                        type="number"
+                        min="0"
+                        max="100"
+                        label="Composition %"
+                        onChange={this.handleInputChange}
+                    />
+                </F>
+            );
+        });
+    };
+
     addInventoryItem = () => {
         let { details } = this.state;
         const comp = { inventory_item_id: null, pct: null };
         details.composition = [...details.composition, comp];
         this.setState({ details });
     };
+
+    renderVariants = variants => {
+        return variants.map((item, idx) => {
+            return (
+                // eslint-disable-next-line
+                <F key={idx}>
+                    <Header as="h4" content={"Variant " + (idx + 1)} />
+                    <Input
+                        onChange={this.handleInputChange}
+                        name="size"
+                        object="variants"
+                        index={idx}
+                        type="number"
+                        label="Size (in ounces)"
+                        step={0.1}
+                    />
+                    <Input
+                        name="price_in_cents"
+                        object="variants"
+                        index={idx}
+                        type="number"
+                        label="Price"
+                        onChange={this.handleInputChange}
+                        step={0.01}
+                    />
+                </F>
+            );
+        });
+    };
+
+    addVariant = () => {
+        let { details } = this.state;
+        const variant = { size: null, price_in_cents: null };
+        details.variants = [...details.variants, variant];
+        this.setState({ details });
+    };
+
+    validateInputs = ({ composition, variants, ...rest }) => {
+        const compEmpties = composition.filter(item => noEmpties(item));
+        const compTotal = composition.reduce((total, item) => {
+            return total + Number(item.pct);
+        }, 0);
+
+        const varEmpties = variants.filter(item => noEmpties(item));
+
+        return noEmpties(rest) && compEmpties.length && compTotal === 100 && varEmpties.length;
+    };
+
     render() {
         let { inventoryData } = this.props;
         if (inventoryData === undefined) inventoryData = [];
         const inventoryOptions = this.buildInventoryOptions(inventoryData);
         const { details, btnLoading, errors } = this.state;
-        const { composition } = details;
-
-        const compEmpties = composition.filter(item => noEmpties(item));
-        const compTotal = composition.reduce((total, item) => {
-            return total + Number(item.pct);
-        }, 0);
-        const btnActive = noEmpties(details) && compEmpties && compTotal === 100;
+        const { composition, variants } = details;
+        const btnActive = this.validateInputs(details);
         return (
             <F>
                 <Header as="h2" content="Create Product" />
@@ -131,39 +203,13 @@ class CreateProduct extends Component {
                         onChange={this.handleInputChange}
                     />
                     <Segment style={{ background: "#dedede" }}>
-                        {composition.map((item, idx) => {
-                            return (
-                                // eslint-disable-next-line
-                                <F key={idx}>
-                                    <Header as="h4" content={"Inventory Item " + (idx + 1)} />
-                                    <Input
-                                        inputType="select"
-                                        options={inventoryOptions}
-                                        onChange={this.handleInputChange}
-                                        name="inventory_item_id"
-                                        object="composition"
-                                        index={idx}
-                                        label="Choose Inventory Item"
-                                    />
-                                    <Input
-                                        name="pct"
-                                        object="composition"
-                                        index={idx}
-                                        type="number"
-                                        min="0"
-                                        max="100"
-                                        label="Composition %"
-                                        onChange={this.handleInputChange}
-                                    />
-                                </F>
-                            );
-                        })}
+                        {this.renderComposition(composition, inventoryOptions)}
+                        <Button type="button" color="blue" content="Add Product" onClick={this.addInventoryItem} />
                     </Segment>
-
-                    <Button type="button" content="Add Product" onClick={this.addInventoryItem} />
-                    <br />
-                    <br />
-
+                    <Segment style={{ background: "#dedede" }}>
+                        {this.renderVariants(variants)}
+                        <Button type="button" color="blue" content="Add Variant" onClick={this.addVariant} />
+                    </Segment>
                     <Button primary fluid loading={btnLoading} disabled={!btnActive}>
                         Create Product
                     </Button>

@@ -8,6 +8,7 @@ import RoastedInventory from "wholesale/inventory";
 import Notifier from "wholesale/notifier";
 import CreateProduct from "wholesale/createProduct";
 import ProductInventory from "wholesale/productInventory";
+import VariantInventory from "wholesale/variantsTable";
 
 import Context from "contexts/index";
 /* eslint-enable */
@@ -34,6 +35,7 @@ const Dashboard = () => (
         {true && <Notifier />}
         <Segment>{true && <CreateProduct />}</Segment>
         <Segment>{true && <ProductInventory />}</Segment>
+        <Segment>{true && <VariantInventory />}</Segment>
         <Segment>{true && <CreateInventory />}</Segment>
         <Segment>{true && <RoastedInventory />}</Segment>
     </Container>

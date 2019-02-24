@@ -22,5 +22,9 @@
 
 class ProductVariant < ApplicationRecord
   belongs_to :product
-  
+
+  def product_title
+    product.title
+  end
+
 end
