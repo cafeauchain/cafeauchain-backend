@@ -1,4 +1,4 @@
-module InventoryService
+module InventoryServices
   class CreateProduct
 
     ###########################
@@ -17,27 +17,23 @@ module InventoryService
 
     def initialize(params)
       @product_params = params
-      @composition_array = params[:composition]
-      @categories_array = params[:categories]
-      @variants = params[:variants]
+      @composition_array = @product_params[:composition]
+      @categories_array = @product_params[:categories]
+      @variants = @product_params[:variants]
     end
 
     def call
-      @product = Product.new(title: @params[:name], description: @params[:description], status: @params[:status])
+      @product = Product.new(title: @product_params[:name], description: @product_params[:description], status: @product_params[:status])
       @product.category_list = @categories_array
       if @product.save
-        @product.product_images.attach(@params[:product_images])
+        # @product.product_images.attach(@params[:product_images])
         @composition_array.each do |component|
           ProductInventoryItem.create(inventory_item_id: component[:inventory_item_id], product: @product, percentage_of_product: component[:pct])
         end
         @variants.each do |variant|
-          @variant = ProductVariant.create(product: @product, price_in_cents: variant[:price])
-          if !variant[:size].nil?
-            @variant.update(custom_options: {size: variant[:size]})
-          end
-          if !variant[:bean_type].nil?
-            @variant.update(custom_options: {bean_type: variant[:bean_type]})
-          end
+          @variant = ProductVariant.new(product: @product, price_in_cents: variant[:price_in_cents])
+          @variant.custom_options = variant.except(:price_in_cents)
+          @variant.save
         end
       end
       return @product
