@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import { Container, Header, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
-import CreateInventory from "wholesale/createInventory";
+import CreateInventory from "wholesale/actions/createInventory";
 import RoastedInventory from "wholesale/inventory";
 import Notifier from "wholesale/notifier";
-import CreateProduct from "wholesale/createProduct";
+import CreateProduct from "wholesale/actions/createProduct";
 import ProductInventory from "wholesale/productInventory";
 import VariantInventory from "wholesale/variantsTable";
 
