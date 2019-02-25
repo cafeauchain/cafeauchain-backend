@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_24_024637) do
+ActiveRecord::Schema.define(version: 2019_02_25_005730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "uuid-ossp"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -61,8 +62,7 @@ ActiveRecord::Schema.define(version: 2019_02_24_024637) do
     t.index ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable_type_and_addressable_id"
   end
 
-  create_table "batches", force: :cascade do |t|
-    t.bigint "lot_id"
+  create_table "batches", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.float "starting_amount"
     t.float "ending_amount"
     t.datetime "created_at", null: false
@@ -70,7 +70,10 @@ ActiveRecord::Schema.define(version: 2019_02_24_024637) do
     t.integer "status"
     t.date "roast_date"
     t.float "target_weight"
-    t.integer "inventory_item_id"
+    t.uuid "lot_id"
+    t.uuid "inventory_item_id"
+    t.index ["created_at"], name: "index_batches_on_created_at"
+    t.index ["inventory_item_id"], name: "index_batches_on_inventory_item_id"
     t.index ["lot_id"], name: "index_batches_on_lot_id"
   end
 
@@ -120,17 +123,18 @@ ActiveRecord::Schema.define(version: 2019_02_24_024637) do
     t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
   end
 
-  create_table "inventory_items", force: :cascade do |t|
+  create_table "inventory_items", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.float "quantity"
     t.float "par_level"
-    t.bigint "lot_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.uuid "lot_id"
+    t.index ["created_at"], name: "index_inventory_items_on_created_at"
     t.index ["lot_id"], name: "index_inventory_items_on_lot_id"
   end
 
-  create_table "lots", force: :cascade do |t|
+  create_table "lots", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.bigint "crop_id"
     t.bigint "roaster_profile_id"
     t.float "price_per_pound"
@@ -145,6 +149,7 @@ ActiveRecord::Schema.define(version: 2019_02_24_024637) do
     t.string "name"
     t.integer "low_on_hand"
     t.integer "low_remaining"
+    t.index ["created_at"], name: "index_lots_on_created_at"
     t.index ["crop_id"], name: "index_lots_on_crop_id"
     t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"
   end
@@ -179,28 +184,30 @@ ActiveRecord::Schema.define(version: 2019_02_24_024637) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "product_inventory_items", force: :cascade do |t|
-    t.bigint "product_id"
-    t.bigint "inventory_item_id"
+  create_table "product_inventory_items", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.float "percentage_of_product"
+    t.uuid "product_id"
+    t.uuid "inventory_item_id"
+    t.index ["created_at"], name: "index_product_inventory_items_on_created_at"
     t.index ["inventory_item_id"], name: "index_product_inventory_items_on_inventory_item_id"
     t.index ["product_id"], name: "index_product_inventory_items_on_product_id"
   end
 
-  create_table "product_variants", force: :cascade do |t|
-    t.bigint "product_id"
+  create_table "product_variants", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.integer "quantity"
     t.string "variant_title"
     t.jsonb "custom_options"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "price_in_cents"
+    t.uuid "product_id"
+    t.index ["created_at"], name: "index_product_variants_on_created_at"
     t.index ["product_id"], name: "index_product_variants_on_product_id"
   end
 
-  create_table "products", force: :cascade do |t|
+  create_table "products", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.integer "status"
     t.string "title"
     t.text "description"
@@ -208,6 +215,7 @@ ActiveRecord::Schema.define(version: 2019_02_24_024637) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "roaster_profile_id"
+    t.index ["created_at"], name: "index_products_on_created_at"
     t.index ["roaster_profile_id"], name: "index_products_on_roaster_profile_id"
   end
 
@@ -229,13 +237,14 @@ ActiveRecord::Schema.define(version: 2019_02_24_024637) do
     t.integer "owner_id"
   end
 
-  create_table "subscription_charges", force: :cascade do |t|
+  create_table "subscription_charges", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.bigint "subscription_id"
     t.string "stripe_charge_id"
     t.text "description"
     t.integer "amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_subscription_charges_on_created_at"
     t.index ["subscription_id"], name: "index_subscription_charges_on_subscription_id"
   end
 
@@ -289,7 +298,7 @@ ActiveRecord::Schema.define(version: 2019_02_24_024637) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
-  create_table "transactions", force: :cascade do |t|
+  create_table "transactions", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.bigint "crop_id"
     t.string "tx_id"
     t.string "quantity"
@@ -297,9 +306,10 @@ ActiveRecord::Schema.define(version: 2019_02_24_024637) do
     t.datetime "updated_at", null: false
     t.integer "trans_type", default: 0
     t.bigint "roaster_profile_id"
-    t.bigint "lot_id"
-    t.bigint "batch_id"
+    t.uuid "lot_id"
+    t.uuid "batch_id"
     t.index ["batch_id"], name: "index_transactions_on_batch_id"
+    t.index ["created_at"], name: "index_transactions_on_created_at"
     t.index ["crop_id"], name: "index_transactions_on_crop_id"
     t.index ["lot_id"], name: "index_transactions_on_lot_id"
     t.index ["roaster_profile_id"], name: "index_transactions_on_roaster_profile_id"
@@ -350,24 +360,17 @@ ActiveRecord::Schema.define(version: 2019_02_24_024637) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "batches", "lots"
   add_foreign_key "cards", "subscriptions"
   add_foreign_key "crops", "producer_profiles"
-  add_foreign_key "inventory_items", "lots"
   add_foreign_key "lots", "crops"
   add_foreign_key "lots", "roaster_profiles"
   add_foreign_key "orders", "wholesale_profiles"
-  add_foreign_key "product_inventory_items", "inventory_items"
-  add_foreign_key "product_inventory_items", "products"
-  add_foreign_key "product_variants", "products"
   add_foreign_key "products", "roaster_profiles"
   add_foreign_key "subscription_charges", "subscriptions"
   add_foreign_key "subscription_items", "plans"
   add_foreign_key "subscription_items", "subscriptions"
   add_foreign_key "subscriptions", "users"
-  add_foreign_key "transactions", "batches"
   add_foreign_key "transactions", "crops"
-  add_foreign_key "transactions", "lots"
   add_foreign_key "transactions", "roaster_profiles"
   add_foreign_key "users", "customer_profiles"
   add_foreign_key "users", "roaster_profiles"

@@ -2,7 +2,7 @@
 #
 # Table name: lots
 #
-#  id                 :bigint(8)        not null, primary key
+#  id                 :uuid             not null, primary key
 #  contract_filled    :datetime
 #  contract_open      :datetime
 #  harvest_year       :string
@@ -20,6 +20,7 @@
 #
 # Indexes
 #
+#  index_lots_on_created_at          (created_at)
 #  index_lots_on_crop_id             (crop_id)
 #  index_lots_on_roaster_profile_id  (roaster_profile_id)
 #
