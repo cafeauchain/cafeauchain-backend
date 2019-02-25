@@ -22,12 +22,20 @@ class Cart < ApplicationRecord
   accepts_nested_attributes_for :cart_items, reject_if: ->(attributes){ attributes['quantity'].blank? }, allow_destroy: true
 
   def add_to_cart(product_variant_id, quantity)
-    
+      current_item = cart_items.find_by(product_variant_id: product_variant_id)
+      if current_item && current_item.quantity != quantity.to_i
+        current_item.update(quantity: quantity.to_i)
+      else
+        new_item = cart_items.create(product_variant_id: product_variant_id,
+          quantity: quantity.to_i,
+          cart_id: self.id)
+        return new_item
+      end
+    end
   end
 
   def convert_to_order
     
   end
-  
   
 end
