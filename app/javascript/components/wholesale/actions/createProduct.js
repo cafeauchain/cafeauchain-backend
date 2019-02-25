@@ -1,6 +1,6 @@
 import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Form, Button, Header, Segment } from "semantic-ui-react";
+import { Form, Button, Segment } from "semantic-ui-react";
 import shortid from "shortid";
 
 /* eslint-disable */
@@ -9,11 +9,11 @@ import ErrorHandler from "shared/errorHandler";
 import Flex from "shared/flex";
 
 import Variants from "wholesale/partials/variants";
+import Composition from "wholesale/partials/composition";
 
 import fields from "defs/forms/createProduct";
 
 import { noEmpties } from "utilities";
-
 import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
 
 import Context from "contexts/main";
@@ -116,46 +116,17 @@ class CreateProduct extends Component {
             name
         }));
 
-    renderComposition = (composition, inventoryOptions) => {
-        return composition.map((item, idx) => {
-            return (
-                <div key={item.id} flex="50" style={{ padding: 10, flexGrow: 0 }}>
-                    <Header as="h4" content={"Inventory Item " + (idx + 1)} />
-                    {fields.composition.map(({ name, label, inputType, ...rest }) => (
-                        <Input
-                            key={name}
-                            name={name}
-                            label={label}
-                            inputType={inputType}
-                            options={inputType === "select" ? inventoryOptions : null}
-                            object="composition"
-                            index={idx}
-                            onChange={this.handleInputChange}
-                            defaultValue={item[name]}
-                            {...rest}
-                        />
-                    ))}
-                    {composition.length > 1 && (
-                        <Button
-                            compact
-                            size="mini"
-                            color="red"
-                            content="Remove"
-                            type="button"
-                            onClick={this.onRemove}
-                            remover="composition"
-                            idx={idx}
-                        />
-                    )}
-                </div>
-            );
-        });
-    };
-
     addInventoryItem = () => {
         let { details } = this.state;
         const comp = { inventory_item_id: null, pct: null, id: shortid.generate() };
         details.composition = [...details.composition, comp];
+        this.setState({ details });
+    };
+
+    addVariant = () => {
+        let { details } = this.state;
+        const variant = { size: null, price_in_cents: null, id: shortid.generate() };
+        details.variants = [...details.variants, variant];
         this.setState({ details });
     };
 
@@ -165,13 +136,6 @@ class CreateProduct extends Component {
         let arr = [...details[remover]];
         arr.splice(idx, 1);
         details[remover] = arr;
-        this.setState({ details });
-    };
-
-    addVariant = () => {
-        let { details } = this.state;
-        const variant = { size: null, price_in_cents: null, id: shortid.generate() };
-        details.variants = [...details.variants, variant];
         this.setState({ details });
     };
 
@@ -230,9 +194,13 @@ class CreateProduct extends Component {
                         </Segment>
                     )}
                     <Segment style={{ background: "#dedede" }}>
-                        <Flex wrap style={{ margin: "0 -10px" }}>
-                            {this.renderComposition(composition, inventoryOptions)}
-                        </Flex>
+                        <Composition
+                            composition={composition}
+                            fields={fields.composition}
+                            inventoryOptions={inventoryOptions}
+                            handleChange={this.handleInputChange}
+                            onRemove={this.onRemove}
+                        />
                         <Button type="button" color="blue" content="Add Product" onClick={this.addInventoryItem} />
                     </Segment>
                     <Button primary fluid loading={btnLoading} disabled={!btnActive}>
