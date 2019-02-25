@@ -50,7 +50,7 @@ LedgerServices::AssetTransferTransaction.new(1760.0, lot.id, roaster.id).call
 LedgerServices::AssetDeliveryTransaction.new(440.0, lot.id, roaster.id).call
 
 inventory_item = lot.inventory_items.create(name: 'City Roast', quantity: 0.0, par_level: 100.0)
-product = roaster.products.create(title: 'Finca Idealista City', status: 'live', description: "This is the best coffee you've ever had.")
+product = roaster.products.create(title: 'Finca Idealista City', status: 'live', description: "This is the best coffee you've ever had.", product_options: {sizes: ["12oz", "1lb", "5lbs"], bean_type: ["whole bean", "ground"]})
 product_variant = product.product_variants.create(price_in_cents: 1499, quantity: 0, variant_title: '12oz Whole Bean', custom_options: {size: '12', bean_type: 'whole bean'})
 ProductInventoryItem.create(product: product, inventory_item: inventory_item, percentage_of_product: 100.0)
 puts "Product created."
