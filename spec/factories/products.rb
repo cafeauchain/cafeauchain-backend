@@ -4,6 +4,7 @@
 #
 #  id                 :uuid             not null, primary key
 #  description        :text
+#  product_options    :jsonb
 #  slug               :string
 #  status             :integer
 #  title              :string
