@@ -45,6 +45,7 @@ group :development do
   gem 'spring-commands-rspec'
   gem 'annotate'
   gem "binding_of_caller"
+  gem 'hirb'
 end
 
 group :development, :test do
