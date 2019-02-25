@@ -4,25 +4,26 @@ import { Button } from "semantic-ui-react";
 
 /* eslint-disable */
 import { noEmpties } from "utilities";
+import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 
 import Context from "contexts/main";
 /* eslint-enable */
 
+const compositionDefault = () => ({ inventory_item_id: "", pct: "", id: shortid.generate() });
+const variantsDefault = () => ({ size: "", price_in_cents: "", id: shortid.generate() });
 const defaultDetails = {
     name: "",
     description: "",
     categories: [],
     product_images: [],
-    composition: [{ inventory_item_id: null, pct: null, id: shortid.generate() }],
-    variants: [{ size: null, price_in_cents: null, id: shortid.generate() }]
+    composition: [compositionDefault()],
+    variants: [variantsDefault()]
 };
 
-function withSubscription(WrappedComponent, passedProps) {
-    // ...and returns another component...
-    return class withSubscripton extends React.Component {
+function withProductForm(WrappedComponent) {
+    class WithProductForm extends React.Component {
         constructor(props) {
             super(props);
-            console.log(props, passedProps);
             const details = defaultDetails;
             this.state = {
                 details,
@@ -31,14 +32,6 @@ function withSubscription(WrappedComponent, passedProps) {
             };
         }
 
-        componentDidMount() {
-            // ... that takes care of the subscription...
-            // DataSource.addChangeListener(this.handleChange);
-        }
-
-        componentWillUnmount() {
-            // DataSource.removeChangeListener(this.handleChange);
-        }
         buildDetailsFromItem = ({ attributes }) => {
             return {
                 name: attributes.title,
@@ -61,35 +54,7 @@ function withSubscription(WrappedComponent, passedProps) {
             } else {
                 details[name] = val;
             }
-            console.log(details);
             this.setState({ details, errors: [] });
-        };
-
-        startSubmit = ev => {
-            ev.preventDefault();
-            this.setState({ btnLoading: true }, this.handleSubmit);
-        };
-
-        handleSubmit = async () => {
-            const { details } = this.state;
-            const { id, getCtxData, item } = this.props;
-            const method = item ? "PUT" : "POST";
-            const product_id_url = item ? "/" + item.id : "";
-            const url = `${ROASTER_URL(id)}/products${product_id_url}`;
-            let body = { ...details };
-            let respJSON = await requester({ url, body, method });
-            if (respJSON instanceof Error) {
-                this.setState({ errors: respJSON.response.data, btnLoading: false });
-            } else {
-                if (respJSON.redirect) {
-                    window.location.href = await respJSON.redirect_url;
-                } else {
-                    await this.setState({ btnLoading: false });
-                    getCtxData("products");
-                    getCtxData("variants");
-                    getCtxData("inventory");
-                }
-            }
         };
 
         buildInventoryOptions = inventory =>
@@ -103,14 +68,14 @@ function withSubscription(WrappedComponent, passedProps) {
 
         addInventoryItem = () => {
             let { details } = this.state;
-            const comp = { inventory_item_id: null, pct: null, id: shortid.generate() };
+            const comp = compositionDefault();
             details.composition = [...details.composition, comp];
             this.setState({ details });
         };
 
         addVariant = () => {
             let { details } = this.state;
-            const variant = { size: null, price_in_cents: null, id: shortid.generate() };
+            const variant = variantsDefault();
             details.variants = [...details.variants, variant];
             this.setState({ details });
         };
@@ -157,9 +122,15 @@ function withSubscription(WrappedComponent, passedProps) {
             );
         };
 
+        resetForm = () => {
+            let defaults = { ...defaultDetails };
+            defaults.composition = [compositionDefault()];
+            defaults.variants = [variantsDefault()];
+            this.setState({ details: defaults });
+        };
+
         render() {
-            // ... and renders the wrapped component with the fresh data!
-            // Notice that we pass through any additional props
+            const { updateContext, getData: getCtxData } = this.context;
             const funcs = {
                 handleInputChange: this.handleInputChange,
                 validateInputs: this.validateInputs,
@@ -167,11 +138,23 @@ function withSubscription(WrappedComponent, passedProps) {
                 addVariant: this.addVariant,
                 addInventoryItem: this.addInventoryItem,
                 buildInventoryOptions: this.buildInventoryOptions,
-                startSubmit: this.startSubmit
+                resetForm: this.resetForm
             };
-            return <WrappedComponent {...this.props} funcs={funcs} {...this.state} />;
+
+            return (
+                <WrappedComponent
+                    {...this.props}
+                    funcs={funcs}
+                    {...this.state}
+                    updateContext={updateContext}
+                    getCtxData={getCtxData}
+                />
+            );
         }
-    };
+    }
+    WithProductForm.contextType = Context;
+
+    return WithProductForm;
 }
 
-export default withSubscription;
+export default withProductForm;

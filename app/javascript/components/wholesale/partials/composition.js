@@ -22,7 +22,7 @@ const Composition = ({ composition, fields, inventoryOptions, handleChange, btn:
                         object="composition"
                         index={idx}
                         onChange={handleChange}
-                        defaultValue={item[name]}
+                        value={item[name]}
                         {...rest}
                     />
                 ))}
