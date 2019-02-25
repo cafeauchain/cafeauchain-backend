@@ -63,7 +63,11 @@ class CreateProduct extends Component {
         return {
             name: attributes.title,
             description: attributes.description,
-            composition: attributes.composition.map(comp => ({ inventory_item_id: comp.id.toString(), pct: comp.pct }))
+            composition: attributes.composition.map(comp => ({
+                inventory_item_id: comp.inventory_item_id,
+                pct: comp.pct,
+                id: comp.id
+            }))
         };
     };
 
