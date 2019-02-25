@@ -130,6 +130,10 @@ class CreateProduct extends Component {
         this.setState({ details });
     };
 
+    removeButton = btnProps => (
+        <Button compact size="mini" color="red" content="Remove" type="button" onClick={this.onRemove} {...btnProps} />
+    );
+
     onRemove = (e, { idx, remover }) => {
         e.preventDefault();
         const { details } = this.state;
@@ -188,7 +192,7 @@ class CreateProduct extends Component {
                                 variants={variants}
                                 fields={fields.variants}
                                 handleChange={this.handleInputChange}
-                                onRemove={this.onRemove}
+                                btn={this.removeButton}
                             />
                             <Button type="button" color="blue" content="Add Variant" onClick={this.addVariant} />
                         </Segment>
@@ -199,7 +203,7 @@ class CreateProduct extends Component {
                             fields={fields.composition}
                             inventoryOptions={inventoryOptions}
                             handleChange={this.handleInputChange}
-                            onRemove={this.onRemove}
+                            btn={this.removeButton}
                         />
                         <Button type="button" color="blue" content="Add Product" onClick={this.addInventoryItem} />
                     </Segment>

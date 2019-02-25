@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Header, Button } from "semantic-ui-react";
+import { Header } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
 import Flex from "shared/flex";
 /* eslint-enable */
 
-const Composition = ({ composition, fields, inventoryOptions, handleChange, onRemove }) => (
+const Composition = ({ composition, fields, inventoryOptions, handleChange, btn: RemoveButton }) => (
     <Flex wrap style={{ margin: "0 -10px" }}>
         {composition.map((item, idx) => (
             <div key={item.id} flex="50" style={{ padding: 10, flexGrow: 0 }}>
@@ -26,18 +26,7 @@ const Composition = ({ composition, fields, inventoryOptions, handleChange, onRe
                         {...rest}
                     />
                 ))}
-                {composition.length > 1 && (
-                    <Button
-                        compact
-                        size="mini"
-                        color="red"
-                        content="Remove"
-                        type="button"
-                        onClick={onRemove}
-                        remover="composition"
-                        idx={idx}
-                    />
-                )}
+                {composition.length > 1 && <RemoveButton idx={idx} remover="composition" />}
             </div>
         ))}
     </Flex>
@@ -49,7 +38,7 @@ Composition.propTypes = {
     fields: array,
     inventoryOptions: array,
     handleChange: func,
-    onRemove: func
+    btn: func
 };
 
 export default Composition;
