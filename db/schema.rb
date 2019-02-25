@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_25_155215) do
+ActiveRecord::Schema.define(version: 2019_02_25_164305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -168,6 +168,16 @@ ActiveRecord::Schema.define(version: 2019_02_25_155215) do
     t.index ["created_at"], name: "index_lots_on_created_at"
     t.index ["crop_id"], name: "index_lots_on_crop_id"
     t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"
+  end
+
+  create_table "order_items", id: :uuid, default: nil, force: :cascade do |t|
+    t.uuid "product_variant_id"
+    t.integer "quantity"
+    t.float "line_item_cost"
+    t.bigint "order_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_items_on_order_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -384,6 +394,7 @@ ActiveRecord::Schema.define(version: 2019_02_25_155215) do
   add_foreign_key "crops", "producer_profiles"
   add_foreign_key "lots", "crops"
   add_foreign_key "lots", "roaster_profiles"
+  add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "wholesale_profiles"
   add_foreign_key "products", "roaster_profiles"
   add_foreign_key "subscription_charges", "subscriptions"
