@@ -2,7 +2,7 @@
 #
 # Table name: subscription_charges
 #
-#  id               :bigint(8)        not null, primary key
+#  id               :uuid             not null, primary key
 #  amount           :integer
 #  description      :text
 #  created_at       :datetime         not null
@@ -12,6 +12,7 @@
 #
 # Indexes
 #
+#  index_subscription_charges_on_created_at       (created_at)
 #  index_subscription_charges_on_subscription_id  (subscription_id)
 #
 # Foreign Keys

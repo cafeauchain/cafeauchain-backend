@@ -2,7 +2,7 @@
 #
 # Table name: products
 #
-#  id                 :bigint(8)        not null, primary key
+#  id                 :uuid             not null, primary key
 #  description        :text
 #  slug               :string
 #  status             :integer
@@ -13,6 +13,7 @@
 #
 # Indexes
 #
+#  index_products_on_created_at          (created_at)
 #  index_products_on_roaster_profile_id  (roaster_profile_id)
 #
 # Foreign Keys
