@@ -26,8 +26,8 @@ class ProductSerializer < ActiveModel::Serializer
   attributes :id, :title, :description, :slug, :composition
 
   def composition
-    self.object.product_inventory_items.map do |itm|
-      { name: itm.product_name, pct: itm.percentage_of_product, id: itm.inventory_item.id }
+    self.object.product_inventory_items.map do |item|
+      { name: item.product_name, pct: item.percentage_of_product, inventory_item_id: item.inventory_item.id, id: item.id }
     end
   end
 end
