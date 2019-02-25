@@ -5,7 +5,6 @@ import { Form, Button, Segment } from "semantic-ui-react";
 /* eslint-disable */
 import Input from "shared/input";
 import ErrorHandler from "shared/errorHandler";
-import Flex from "shared/flex";
 
 import withProductForm from "wholesale/actions/productHOC";
 
@@ -14,50 +13,71 @@ import Composition from "wholesale/partials/composition";
 
 import fields from "defs/forms/createProduct";
 
-import { noEmpties } from "utilities";
+import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 
 import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Context>
-        {ctx => (
-            <CreateProduct
-                {...props}
-                id={ctx.userId}
-                updateContext={ctx.updateContext}
-                inventoryData={ctx.inventory}
-                getCtxData={ctx.getData}
-            />
-        )}
-    </Context>
+    <Context>{ctx => <CreateProduct {...props} userId={ctx.userId} inventory={ctx.inventory} />}</Context>
 );
+
 class CreateProduct extends Component {
+    state = {
+        btnLoading: false,
+        errors: []
+    };
     componentDidMount() {
-        const { inventoryData, getCtxData } = this.props;
-        if (inventoryData === undefined) {
+        const { inventory, getCtxData } = this.props;
+        if (inventory === undefined) {
             getCtxData("inventory");
         }
     }
 
+    handleSubmit = async ev => {
+        ev.preventDefault();
+        await this.setState({ btnLoading: true });
+        const {
+            details,
+            userId,
+            getCtxData,
+            funcs: { resetForm }
+        } = this.props;
+        const url = `${ROASTER_URL(userId)}/products`;
+        let body = { ...details };
+        let respJSON = await requester({ url, body });
+        if (respJSON instanceof Error) {
+            this.setState({ errors: respJSON.response.data, btnLoading: false });
+        } else {
+            if (respJSON.redirect) {
+                window.location.href = await respJSON.redirect_url;
+            } else {
+                await this.setState({ btnLoading: false });
+                await resetForm();
+                getCtxData("products");
+                getCtxData("variants");
+                getCtxData("inventory");
+            }
+        }
+    };
+
     render() {
-        let { inventoryData, funcs, details, btnLoading, errors } = this.props;
+        const { inventory = [], funcs, details } = this.props;
+        const { btnLoading, errors } = this.state;
         const {
             handleInputChange,
             validateInputs,
             removeButton,
             addVariant,
             addInventoryItem,
-            buildInventoryOptions,
-            startSubmit
+            buildInventoryOptions
         } = funcs;
-        if (inventoryData === undefined) inventoryData = [];
-        const inventoryOptions = buildInventoryOptions(inventoryData);
+        const inventoryOptions = buildInventoryOptions(inventory);
         const { composition, variants } = details;
         const btnActive = validateInputs(details);
         return (
             <F>
-                <Form onSubmit={startSubmit}>
+                <Form>
                     <ErrorHandler errors={errors} />
                     {fields.base.map(({ name, label, inputType }) => (
                         <Input
@@ -66,52 +86,49 @@ class CreateProduct extends Component {
                             label={label}
                             inputType={inputType}
                             onChange={handleInputChange}
-                            defaultValue={details[name]}
+                            value={details[name]}
                         />
                     ))}
-
-                    {true && variants && (
-                        <Segment style={{ background: "#dedede" }}>
-                            <Variants
-                                variants={variants}
-                                fields={fields.variants}
-                                handleChange={handleInputChange}
-                                btn={removeButton}
-                            />
-                            <Button type="button" color="blue" content="Add Variant" onClick={addVariant} />
-                        </Segment>
-                    )}
-                    {true && (
-                        <Segment style={{ background: "#dedede" }}>
-                            <Composition
-                                composition={composition}
-                                fields={fields.composition}
-                                inventoryOptions={inventoryOptions}
-                                handleChange={handleInputChange}
-                                btn={removeButton}
-                            />
-                            <Button type="button" color="blue" content="Add Product" onClick={addInventoryItem} />
-                        </Segment>
-                    )}
-                    {true && (
-                        <Button primary fluid loading={btnLoading} disabled={!btnActive}>
-                            Create Product
-                        </Button>
-                    )}
+                    <Segment style={{ background: "#dedede" }}>
+                        <Variants
+                            variants={variants}
+                            fields={fields.variants}
+                            handleChange={handleInputChange}
+                            btn={removeButton}
+                        />
+                        <Button type="button" color="blue" content="Add Variant" onClick={addVariant} />
+                    </Segment>
+                    <Segment style={{ background: "#dedede" }}>
+                        <Composition
+                            composition={composition}
+                            fields={fields.composition}
+                            inventoryOptions={inventoryOptions}
+                            handleChange={handleInputChange}
+                            btn={removeButton}
+                        />
+                        <Button type="button" color="blue" content="Add Product" onClick={addInventoryItem} />
+                    </Segment>
+                    <Button
+                        primary
+                        fluid
+                        loading={btnLoading}
+                        disabled={!btnActive}
+                        onClick={this.handleSubmit}
+                        content="Create Product"
+                    />
                 </Form>
             </F>
         );
     }
 }
 
-const { array, func, object, bool } = PropTypes;
+const { array, object, func, string, number, oneOfType } = PropTypes;
 CreateProduct.propTypes = {
-    inventoryData: array,
-    getCtxData: func,
+    userId: oneOfType([string, number]),
+    inventory: array,
     details: object,
-    btnLoading: bool,
-    errors: array,
-    funcs: object
+    funcs: object,
+    getCtxData: func
 };
 
-export default withProductForm(Wrapper, { message: "this is the create component", something: Wrapper });
+export default withProductForm(Wrapper);

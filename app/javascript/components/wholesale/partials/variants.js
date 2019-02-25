@@ -21,7 +21,7 @@ const Variant = ({ variants, fields, handleChange, btn: RemoveButton }) => (
                         object="variants"
                         index={idx}
                         onChange={handleChange}
-                        defaultValue={item[name]}
+                        value={item[name]}
                         {...rest}
                     />
                 ))}
