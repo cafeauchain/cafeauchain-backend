@@ -8,6 +8,8 @@ import Input from "shared/input";
 import ErrorHandler from "shared/errorHandler";
 import Flex from "shared/flex";
 
+import Variants from "wholesale/partials/variants";
+
 import fields from "defs/forms/createProduct";
 
 import { noEmpties } from "utilities";
@@ -166,41 +168,6 @@ class CreateProduct extends Component {
         this.setState({ details });
     };
 
-    renderVariants = variants => {
-        return variants.map((item, idx) => {
-            return (
-                <div key={item.id} flex="50" style={{ padding: 10, flexGrow: 0 }}>
-                    <Header as="h4" content={"Variant " + (idx + 1)} />
-                    {fields.variants.map(({ name, label, ...rest }) => (
-                        <Input
-                            key={name}
-                            name={name}
-                            label={label}
-                            type="number"
-                            object="variants"
-                            index={idx}
-                            onChange={this.handleInputChange}
-                            defaultValue={item[name]}
-                            {...rest}
-                        />
-                    ))}
-                    {variants.length > 1 && (
-                        <Button
-                            compact
-                            size="mini"
-                            color="red"
-                            content="Remove"
-                            type="button"
-                            onClick={this.onRemove}
-                            remover="variants"
-                            idx={idx}
-                        />
-                    )}
-                </div>
-            );
-        });
-    };
-
     addVariant = () => {
         let { details } = this.state;
         const variant = { size: null, price_in_cents: null, id: shortid.generate() };
@@ -250,20 +217,24 @@ class CreateProduct extends Component {
                             defaultValue={details[name]}
                         />
                     ))}
+
+                    {variants && (
+                        <Segment style={{ background: "#dedede" }}>
+                            <Variants
+                                variants={variants}
+                                fields={fields.variants}
+                                handleChange={this.handleInputChange}
+                                onRemove={this.onRemove}
+                            />
+                            <Button type="button" color="blue" content="Add Variant" onClick={this.addVariant} />
+                        </Segment>
+                    )}
                     <Segment style={{ background: "#dedede" }}>
                         <Flex wrap style={{ margin: "0 -10px" }}>
                             {this.renderComposition(composition, inventoryOptions)}
                         </Flex>
                         <Button type="button" color="blue" content="Add Product" onClick={this.addInventoryItem} />
                     </Segment>
-                    {variants && (
-                        <Segment style={{ background: "#dedede" }}>
-                            <Flex wrap style={{ margin: "0 -10px" }}>
-                                {this.renderVariants(variants)}
-                            </Flex>
-                            <Button type="button" color="blue" content="Add Variant" onClick={this.addVariant} />
-                        </Segment>
-                    )}
                     <Button primary fluid loading={btnLoading} disabled={!btnActive}>
                         Create Product
                     </Button>
