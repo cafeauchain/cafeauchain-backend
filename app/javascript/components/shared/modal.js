@@ -31,7 +31,7 @@ class FormattedModal extends Component {
                 onClose={this.closeModal}
             >
                 <Header icon={icon} content={title} />
-                <Modal.Content>
+                <Modal.Content scrolling>
                     <Inner />
                 </Modal.Content>
             </Modal>
