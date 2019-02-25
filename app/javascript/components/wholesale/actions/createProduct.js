@@ -7,6 +7,8 @@ import Input from "shared/input";
 import ErrorHandler from "shared/errorHandler";
 import Flex from "shared/flex";
 
+import fields from "defs/forms/createProduct";
+
 import { noEmpties } from "utilities";
 
 import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
@@ -112,33 +114,25 @@ class CreateProduct extends Component {
         }));
 
     renderComposition = (composition, inventoryOptions) => {
-        const { item: details } = this.props;
         return composition.map((item, idx) => {
             return (
                 // eslint-disable-next-line
                 <div key={idx} flex="50" style={{ padding: 10, flexGrow: 0 }}>
                     <Header as="h4" content={"Inventory Item " + (idx + 1)} />
-                    <Input
-                        inputType="select"
-                        options={inventoryOptions}
-                        onChange={this.handleInputChange}
-                        name="inventory_item_id"
-                        object="composition"
-                        index={idx}
-                        label="Choose Inventory Item"
-                        defaultValue={details ? item.inventory_item_id.toString() : null}
-                    />
-                    <Input
-                        name="pct"
-                        object="composition"
-                        index={idx}
-                        type="number"
-                        min="0"
-                        max="100"
-                        label="Composition %"
-                        onChange={this.handleInputChange}
-                        defaultValue={item.pct}
-                    />
+                    {fields.composition.map(({ name, label, inputType, ...rest }) => (
+                        <Input
+                            key={name}
+                            name={name}
+                            label={label}
+                            inputType={inputType}
+                            options={inputType === "select" ? inventoryOptions : null}
+                            object="composition"
+                            index={idx}
+                            onChange={this.handleInputChange}
+                            defaultValue={item[name]}
+                            {...rest}
+                        />
+                    ))}
                 </div>
             );
         });
@@ -157,24 +151,19 @@ class CreateProduct extends Component {
                 // eslint-disable-next-line
                 <div key={idx} flex="50" style={{ padding: 10, flexGrow: 0 }}>
                     <Header as="h4" content={"Variant " + (idx + 1)} />
-                    <Input
-                        onChange={this.handleInputChange}
-                        name="size"
-                        object="variants"
-                        index={idx}
-                        type="number"
-                        label="Size (in ounces)"
-                        step={0.1}
-                    />
-                    <Input
-                        name="price_in_cents"
-                        object="variants"
-                        index={idx}
-                        type="number"
-                        label="Price"
-                        onChange={this.handleInputChange}
-                        step={0.01}
-                    />
+                    {fields.variants.map(({ name, label, ...rest }) => (
+                        <Input
+                            key={name}
+                            name={name}
+                            label={label}
+                            type="number"
+                            object="variants"
+                            index={idx}
+                            onChange={this.handleInputChange}
+                            defaultValue={item[name]}
+                            {...rest}
+                        />
+                    ))}
                 </div>
             );
         });
@@ -219,19 +208,16 @@ class CreateProduct extends Component {
             <F>
                 <Form onSubmit={this.startSubmit}>
                     <ErrorHandler errors={errors} />
-                    <Input
-                        name="name"
-                        label="Product Name"
-                        onChange={this.handleInputChange}
-                        defaultValue={details.name}
-                    />
-                    <Input
-                        inputType="textarea"
-                        name="description"
-                        label="Product Description"
-                        onChange={this.handleInputChange}
-                        defaultValue={details.description}
-                    />
+                    {fields.base.map(({ name, label, inputType }) => (
+                        <Input
+                            key={name}
+                            name={name}
+                            label={label}
+                            inputType={inputType}
+                            onChange={this.handleInputChange}
+                            defaultValue={details[name]}
+                        />
+                    ))}
                     <Segment style={{ background: "#dedede" }}>
                         <Flex wrap style={{ margin: "0 -10px" }}>
                             {this.renderComposition(composition, inventoryOptions)}
