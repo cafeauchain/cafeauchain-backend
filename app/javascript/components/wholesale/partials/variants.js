@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Header, Button } from "semantic-ui-react";
+import { Header } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
 import Flex from "shared/flex";
 /* eslint-enable */
 
-const Variant = ({ variants, fields, handleChange, onRemove }) => (
+const Variant = ({ variants, fields, handleChange, btn: RemoveButton }) => (
     <Flex wrap style={{ margin: "0 -10px" }}>
         {variants.map((item, idx) => (
             <div key={item.id} flex="50" style={{ padding: 10, flexGrow: 0 }}>
@@ -25,18 +25,7 @@ const Variant = ({ variants, fields, handleChange, onRemove }) => (
                         {...rest}
                     />
                 ))}
-                {variants.length > 1 && (
-                    <Button
-                        compact
-                        size="mini"
-                        color="red"
-                        content="Remove"
-                        type="button"
-                        onClick={onRemove}
-                        remover="variants"
-                        idx={idx}
-                    />
-                )}
+                {variants.length > 1 && <RemoveButton idx={idx} remover="variants" />}
             </div>
         ))}
     </Flex>
@@ -47,7 +36,7 @@ Variant.propTypes = {
     variants: array,
     fields: array,
     handleChange: func,
-    onRemove: func
+    btn: func
 };
 
 export default Variant;
