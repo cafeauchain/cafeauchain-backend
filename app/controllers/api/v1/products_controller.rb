@@ -16,14 +16,14 @@ class Api::V1::ProductsController < ApplicationController
     end
   end
 
-  # def update
-  #   @product = InventoryServices::UpdateProduct.new(@product.id, params).call
-  #   if @product.errors.full_messages.empty?
-  #     render json: {"redirect":false, data: @product}, status: 200
-  #   else
-  #     render json: { data: @product.errors.full_messages }, status: 422
-  #   end
-  # end
+  def update
+    @product = InventoryServices::UpdateProduct.call(@product.id, params)
+    if @product.errors.full_messages.empty?
+      render json: {"redirect":false, data: @product}, status: 200
+    else
+      render json: { data: @product.errors.full_messages }, status: 422
+    end
+  end
 
   def variants
     @variants = ProductVariant.all
