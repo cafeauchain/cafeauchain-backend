@@ -3,7 +3,7 @@ import { Segment, Header } from "semantic-ui-react";
 
 /* eslint-disable */
 import CreateInventory from "wholesale/actions/createInventory";
-import CreateProduct from "wholesale/actions/createProduct";
+import CreateProduct from "wholesale/actions/create";
 
 import Flex from "shared/flex";
 import Modal from "shared/modal";

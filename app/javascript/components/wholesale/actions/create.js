@@ -1,6 +1,6 @@
 import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Form, Button, Segment } from "semantic-ui-react";
+import { Form, Button, Segment, Dimmer, Header, Icon } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
@@ -25,7 +25,8 @@ const Wrapper = props => (
 class CreateProduct extends Component {
     state = {
         btnLoading: false,
-        errors: []
+        errors: [],
+        success: ""
     };
     componentDidMount() {
         const { inventory, getCtxData } = this.props;
@@ -41,7 +42,8 @@ class CreateProduct extends Component {
             details,
             userId,
             getCtxData,
-            funcs: { resetForm }
+            funcs: { resetForm },
+            closeModal
         } = this.props;
         const url = `${ROASTER_URL(userId)}/products`;
         let body = { ...details };
@@ -52,18 +54,22 @@ class CreateProduct extends Component {
             if (respJSON.redirect) {
                 window.location.href = await respJSON.redirect_url;
             } else {
-                await this.setState({ btnLoading: false });
+                const success = details.name + " was created successfully!";
+                await this.setState({ btnLoading: false, success });
                 await resetForm();
                 getCtxData("products");
                 getCtxData("variants");
                 getCtxData("inventory");
+                if (closeModal) {
+                    setTimeout(closeModal, 900);
+                }
             }
         }
     };
 
     render() {
         const { inventory = [], funcs, details } = this.props;
-        const { btnLoading, errors } = this.state;
+        const { btnLoading, errors, success } = this.state;
         const {
             handleInputChange,
             validateInputs,
@@ -116,6 +122,14 @@ class CreateProduct extends Component {
                         onClick={this.handleSubmit}
                         content="Create Product"
                     />
+                    {success && (
+                        <Dimmer active inverted>
+                            <Header as="h2" icon className="primary-text">
+                                <Icon name="check" />
+                                {success}
+                            </Header>
+                        </Dimmer>
+                    )}
                 </Form>
             </F>
         );
@@ -128,7 +142,8 @@ CreateProduct.propTypes = {
     inventory: array,
     details: object,
     funcs: object,
-    getCtxData: func
+    getCtxData: func,
+    closeModal: func
 };
 
 export default withProductForm(Wrapper);
