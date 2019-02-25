@@ -3,10 +3,9 @@ import PropTypes from "prop-types";
 import { Container, Header, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
-import CreateInventory from "wholesale/actions/createInventory";
+import QuickActions from "wholesale/quickActions";
 import RoastedInventory from "wholesale/inventory";
 import Notifier from "wholesale/notifier";
-import CreateProduct from "wholesale/actions/createProduct";
 import ProductInventory from "wholesale/productInventory";
 import VariantInventory from "wholesale/variantsTable";
 
@@ -33,10 +32,9 @@ const Dashboard = () => (
             <Header as="h1" content="Manage Wholesale" />
         </Segment>
         {true && <Notifier />}
-        <Segment>{true && <CreateProduct />}</Segment>
+        <Segment>{true && <QuickActions />}</Segment>
         <Segment>{true && <ProductInventory />}</Segment>
         <Segment>{true && <VariantInventory />}</Segment>
-        <Segment>{true && <CreateInventory />}</Segment>
         <Segment>{true && <RoastedInventory />}</Segment>
     </Container>
 );

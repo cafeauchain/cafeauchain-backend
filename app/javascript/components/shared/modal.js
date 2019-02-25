@@ -50,7 +50,7 @@ FormattedModal.propTypes = {
     showBtn: bool
 };
 FormattedModal.defaultProps = {
-    size: "mini",
+    size: "small",
     centered: false,
     icon: "archive",
     showBtn: true
