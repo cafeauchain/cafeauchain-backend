@@ -35,6 +35,8 @@ class Lot < ApplicationRecord
   belongs_to :roaster_profile
   has_many :batches
   has_many :transactions
+  has_many :inventory_items
+  has_many :products, through: :inventory_items
 
   enum status: [:open, :delivered_in_full, :roasted_in_full]
 
