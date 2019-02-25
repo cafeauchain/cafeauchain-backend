@@ -5,6 +5,7 @@ import { Form, Button, Header, Segment } from "semantic-ui-react";
 /* eslint-disable */
 import Input from "shared/input";
 import ErrorHandler from "shared/errorHandler";
+import Flex from "shared/flex";
 
 import { noEmpties } from "utilities";
 
@@ -115,7 +116,7 @@ class CreateProduct extends Component {
         return composition.map((item, idx) => {
             return (
                 // eslint-disable-next-line
-                <F key={idx}>
+                <div key={idx} flex="50" style={{ padding: 10, flexGrow: 0 }}>
                     <Header as="h4" content={"Inventory Item " + (idx + 1)} />
                     <Input
                         inputType="select"
@@ -138,7 +139,7 @@ class CreateProduct extends Component {
                         onChange={this.handleInputChange}
                         defaultValue={item.pct}
                     />
-                </F>
+                </div>
             );
         });
     };
@@ -154,7 +155,7 @@ class CreateProduct extends Component {
         return variants.map((item, idx) => {
             return (
                 // eslint-disable-next-line
-                <F key={idx}>
+                <div key={idx} flex="50" style={{ padding: 10, flexGrow: 0 }}>
                     <Header as="h4" content={"Variant " + (idx + 1)} />
                     <Input
                         onChange={this.handleInputChange}
@@ -174,7 +175,7 @@ class CreateProduct extends Component {
                         onChange={this.handleInputChange}
                         step={0.01}
                     />
-                </F>
+                </div>
             );
         });
     };
@@ -216,7 +217,6 @@ class CreateProduct extends Component {
         const btnActive = this.validateInputs(details, item);
         return (
             <F>
-                {!item && <Header as="h2" content="Create Product" />}
                 <Form onSubmit={this.startSubmit}>
                     <ErrorHandler errors={errors} />
                     <Input
@@ -233,12 +233,16 @@ class CreateProduct extends Component {
                         defaultValue={details.description}
                     />
                     <Segment style={{ background: "#dedede" }}>
-                        {this.renderComposition(composition, inventoryOptions)}
+                        <Flex wrap style={{ margin: "0 -10px" }}>
+                            {this.renderComposition(composition, inventoryOptions)}
+                        </Flex>
                         <Button type="button" color="blue" content="Add Product" onClick={this.addInventoryItem} />
                     </Segment>
                     {variants && (
                         <Segment style={{ background: "#dedede" }}>
-                            {this.renderVariants(variants)}
+                            <Flex wrap style={{ margin: "0 -10px" }}>
+                                {this.renderVariants(variants)}
+                            </Flex>
                             <Button type="button" color="blue" content="Add Variant" onClick={this.addVariant} />
                         </Segment>
                     )}
