@@ -28,7 +28,10 @@ class Product < ApplicationRecord
   acts_as_taggable_on :categories
 
   has_many_attached :product_images
+  has_many :product_variants
 
   has_many :product_inventory_items
   has_many :inventory_items, through: :product_inventory_items
+
+  enum status: [:draft, :out_of_season, :live, :coming_soon]
 end
