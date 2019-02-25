@@ -19,4 +19,7 @@
 
 class Order < ApplicationRecord
   belongs_to :wholesale_profile
+  has_many :order_items
+
+  enum status: [:draft, :processing, :awaiting_payment, :fulfilled, :complete]
 end
