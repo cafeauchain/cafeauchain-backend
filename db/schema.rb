@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_25_005730) do
+ActiveRecord::Schema.define(version: 2019_02_25_155215) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,6 +89,22 @@ ActiveRecord::Schema.define(version: 2019_02_25_005730) do
     t.string "stripe_card_id"
     t.string "name"
     t.index ["subscription_id"], name: "index_cards_on_subscription_id"
+  end
+
+  create_table "cart_items", force: :cascade do |t|
+    t.bigint "cart_id"
+    t.uuid "product_variant_id"
+    t.integer "quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cart_id"], name: "index_cart_items_on_cart_id"
+  end
+
+  create_table "carts", force: :cascade do |t|
+    t.bigint "wholesale_profile_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["wholesale_profile_id"], name: "index_carts_on_wholesale_profile_id"
   end
 
   create_table "crops", force: :cascade do |t|
@@ -190,6 +206,7 @@ ActiveRecord::Schema.define(version: 2019_02_25_005730) do
     t.float "percentage_of_product"
     t.uuid "product_id"
     t.uuid "inventory_item_id"
+    t.boolean "inactive", default: false
     t.index ["created_at"], name: "index_product_inventory_items_on_created_at"
     t.index ["inventory_item_id"], name: "index_product_inventory_items_on_inventory_item_id"
     t.index ["product_id"], name: "index_product_inventory_items_on_product_id"
@@ -215,6 +232,7 @@ ActiveRecord::Schema.define(version: 2019_02_25_005730) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "roaster_profile_id"
+    t.jsonb "product_options"
     t.index ["created_at"], name: "index_products_on_created_at"
     t.index ["roaster_profile_id"], name: "index_products_on_roaster_profile_id"
   end
@@ -361,6 +379,8 @@ ActiveRecord::Schema.define(version: 2019_02_25_005730) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cards", "subscriptions"
+  add_foreign_key "cart_items", "carts"
+  add_foreign_key "carts", "wholesale_profiles"
   add_foreign_key "crops", "producer_profiles"
   add_foreign_key "lots", "crops"
   add_foreign_key "lots", "roaster_profiles"

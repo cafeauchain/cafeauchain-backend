@@ -3,6 +3,7 @@
 # Table name: product_inventory_items
 #
 #  id                    :uuid             not null, primary key
+#  inactive              :boolean          default(FALSE)
 #  percentage_of_product :float
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
