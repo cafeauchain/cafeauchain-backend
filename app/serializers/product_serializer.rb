@@ -25,7 +25,7 @@ class ProductSerializer < ActiveModel::Serializer
 
   def composition
     self.object.product_inventory_items.map do |itm|
-      { name: itm.product_name, pct: itm.percentage_of_product, id: itm.id }
+      { name: itm.product_name, pct: itm.percentage_of_product, id: itm.inventory_item.id }
     end
   end
 end

@@ -38,8 +38,9 @@ const defaultDetails = {
 class CreateProduct extends Component {
     constructor(props) {
         super(props);
+        const details = props.item ? this.buildDetailsFromItem(props.item) : defaultDetails;
         this.state = {
-            details: defaultDetails,
+            details,
             btnLoading: false,
             errors: []
         };
@@ -51,6 +52,14 @@ class CreateProduct extends Component {
             getCtxData("inventory");
         }
     }
+
+    buildDetailsFromItem = ({ attributes }) => {
+        return {
+            name: attributes.title,
+            description: attributes.description,
+            composition: attributes.composition.map(comp => ({ inventory_item_id: comp.id.toString(), pct: comp.pct }))
+        };
+    };
 
     handleInputChange = (event, { value, name, checked, object, index }) => {
         let { details } = this.state;
@@ -72,10 +81,12 @@ class CreateProduct extends Component {
 
     handleSubmit = async () => {
         const { details } = this.state;
-        const { id, getCtxData } = this.props;
-        const url = `${ROASTER_URL(id)}/products`;
+        const { id, getCtxData, item } = this.props;
+        const method = item ? "PUT" : "POST";
+        const product_id_url = item ? "/" + item.id : "";
+        const url = `${ROASTER_URL(id)}/products${product_id_url}`;
         let body = { ...details };
-        let respJSON = await requester({ url, body });
+        let respJSON = await requester({ url, body, method });
         if (respJSON instanceof Error) {
             this.setState({ errors: respJSON.response.data, btnLoading: false });
         } else {
@@ -100,6 +111,7 @@ class CreateProduct extends Component {
         }));
 
     renderComposition = (composition, inventoryOptions) => {
+        const { item: details } = this.props;
         return composition.map((item, idx) => {
             return (
                 // eslint-disable-next-line
@@ -113,6 +125,7 @@ class CreateProduct extends Component {
                         object="composition"
                         index={idx}
                         label="Choose Inventory Item"
+                        defaultValue={details ? item.inventory_item_id.toString() : null}
                     />
                     <Input
                         name="pct"
@@ -123,6 +136,7 @@ class CreateProduct extends Component {
                         max="100"
                         label="Composition %"
                         onChange={this.handleInputChange}
+                        defaultValue={item.pct}
                     />
                 </F>
             );
@@ -172,44 +186,62 @@ class CreateProduct extends Component {
         this.setState({ details });
     };
 
-    validateInputs = ({ composition, variants, ...rest }) => {
+    validateInputs = (details, item) => {
+        const { composition, variants, ...rest } = details;
+        const itemDetail = item ? this.buildDetailsFromItem(item) : {};
         const compEmpties = composition.filter(item => noEmpties(item));
         const compTotal = composition.reduce((total, item) => {
             return total + Number(item.pct);
         }, 0);
 
-        const varEmpties = variants.filter(item => noEmpties(item));
-
-        return noEmpties(rest) && compEmpties.length && compTotal === 100 && varEmpties.length;
+        const varEmpties = variants ? variants.filter(item => noEmpties(item)) : [true];
+        // TODO I hate doing this. Figure out why they are evaluating to not equal
+        let jsonitem = JSON.stringify(itemDetail);
+        let jsondetails = JSON.stringify(details);
+        return (
+            noEmpties(rest) &&
+            compEmpties.length > 0 &&
+            compTotal === 100 &&
+            varEmpties.length > 0 &&
+            jsonitem !== jsondetails
+        );
     };
 
     render() {
-        let { inventoryData } = this.props;
+        let { inventoryData, item } = this.props;
         if (inventoryData === undefined) inventoryData = [];
         const inventoryOptions = this.buildInventoryOptions(inventoryData);
         const { details, btnLoading, errors } = this.state;
         const { composition, variants } = details;
-        const btnActive = this.validateInputs(details);
+        const btnActive = this.validateInputs(details, item);
         return (
             <F>
-                <Header as="h2" content="Create Product" />
+                {!item && <Header as="h2" content="Create Product" />}
                 <Form onSubmit={this.startSubmit}>
                     <ErrorHandler errors={errors} />
-                    <Input name="name" label="Product Name" onChange={this.handleInputChange} />
+                    <Input
+                        name="name"
+                        label="Product Name"
+                        onChange={this.handleInputChange}
+                        defaultValue={details.name}
+                    />
                     <Input
                         inputType="textarea"
                         name="description"
                         label="Product Description"
                         onChange={this.handleInputChange}
+                        defaultValue={details.description}
                     />
                     <Segment style={{ background: "#dedede" }}>
                         {this.renderComposition(composition, inventoryOptions)}
                         <Button type="button" color="blue" content="Add Product" onClick={this.addInventoryItem} />
                     </Segment>
-                    <Segment style={{ background: "#dedede" }}>
-                        {this.renderVariants(variants)}
-                        <Button type="button" color="blue" content="Add Variant" onClick={this.addVariant} />
-                    </Segment>
+                    {variants && (
+                        <Segment style={{ background: "#dedede" }}>
+                            {this.renderVariants(variants)}
+                            <Button type="button" color="blue" content="Add Variant" onClick={this.addVariant} />
+                        </Segment>
+                    )}
                     <Button primary fluid loading={btnLoading} disabled={!btnActive}>
                         Create Product
                     </Button>
@@ -219,11 +251,12 @@ class CreateProduct extends Component {
     }
 }
 
-const { oneOfType, string, number, array, func } = PropTypes;
+const { oneOfType, string, number, array, func, object } = PropTypes;
 CreateProduct.propTypes = {
     id: oneOfType([number, string]),
     inventoryData: array,
-    getCtxData: func
+    getCtxData: func,
+    item: object
 };
 
 export default Wrapper;
