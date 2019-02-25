@@ -7,6 +7,8 @@ import Table from "shared/table";
 
 import tableDefs from "defs/tables/products";
 
+import EditProductModal from "wholesale/actions/editProductModal";
+
 import Context from "contexts/main";
 /* eslint-enable */
 
@@ -25,27 +27,37 @@ const Wrapper = props => (
 );
 
 class ProductInventory extends React.Component {
+    state = {
+        isOpen: false,
+        current: {}
+    };
     componentDidMount() {
         const { data, getCtxData } = this.props;
         if (data === undefined) {
             getCtxData("products");
         }
     }
+
+    onClick = (e, item) => {
+        this.setState({
+            isOpen: true,
+            current: item
+        });
+    };
+    closeModal = () => this.setState({ isOpen: false, current: {} });
+
     render() {
         let { data } = this.props;
         if (data === undefined) data = [];
         const { loading, userId } = this.props;
-        const onClick = (e, item) => {
-            // eslint-disable-next-line
-            console.log(item);
-            alert("This should take you to more info about the roasted inventory levels.");
-        };
+        const { isOpen, current } = this.state;
         const limit = 25;
         const limitData = () => data.slice(0, limit);
         return (
             <F>
+                {isOpen && <EditProductModal isOpen={isOpen} closeModal={this.closeModal} item={current} />}
                 <Header as="h2" content="Products" />
-                <Table tableDefs={tableDefs} data={limitData()} loading={loading} onClick={onClick} />
+                <Table tableDefs={tableDefs} data={limitData()} loading={loading} onClick={this.onClick} />
                 {data.length > limit && (
                     <F>
                         <br />
