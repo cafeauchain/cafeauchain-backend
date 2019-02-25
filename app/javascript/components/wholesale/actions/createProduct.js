@@ -1,6 +1,7 @@
 import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
 import { Form, Button, Header, Segment } from "semantic-ui-react";
+import shortid from "shortid";
 
 /* eslint-disable */
 import Input from "shared/input";
@@ -35,8 +36,8 @@ const defaultDetails = {
     description: "",
     categories: [],
     product_images: [],
-    composition: [{ inventory_item_id: null, pct: null }],
-    variants: [{ size: null, price_in_cents: null }]
+    composition: [{ inventory_item_id: null, pct: null, id: shortid.generate() }],
+    variants: [{ size: null, price_in_cents: null, id: shortid.generate() }]
 };
 class CreateProduct extends Component {
     constructor(props) {
@@ -116,8 +117,7 @@ class CreateProduct extends Component {
     renderComposition = (composition, inventoryOptions) => {
         return composition.map((item, idx) => {
             return (
-                // eslint-disable-next-line
-                <div key={idx} flex="50" style={{ padding: 10, flexGrow: 0 }}>
+                <div key={item.id} flex="50" style={{ padding: 10, flexGrow: 0 }}>
                     <Header as="h4" content={"Inventory Item " + (idx + 1)} />
                     {fields.composition.map(({ name, label, inputType, ...rest }) => (
                         <Input
@@ -133,6 +133,18 @@ class CreateProduct extends Component {
                             {...rest}
                         />
                     ))}
+                    {composition.length > 1 && (
+                        <Button
+                            compact
+                            size="mini"
+                            color="red"
+                            content="Remove"
+                            type="button"
+                            onClick={this.onRemove}
+                            remover="composition"
+                            idx={idx}
+                        />
+                    )}
                 </div>
             );
         });
@@ -140,16 +152,24 @@ class CreateProduct extends Component {
 
     addInventoryItem = () => {
         let { details } = this.state;
-        const comp = { inventory_item_id: null, pct: null };
+        const comp = { inventory_item_id: null, pct: null, id: shortid.generate() };
         details.composition = [...details.composition, comp];
+        this.setState({ details });
+    };
+
+    onRemove = (e, { idx, remover }) => {
+        e.preventDefault();
+        const { details } = this.state;
+        let arr = [...details[remover]];
+        arr.splice(idx, 1);
+        details[remover] = arr;
         this.setState({ details });
     };
 
     renderVariants = variants => {
         return variants.map((item, idx) => {
             return (
-                // eslint-disable-next-line
-                <div key={idx} flex="50" style={{ padding: 10, flexGrow: 0 }}>
+                <div key={item.id} flex="50" style={{ padding: 10, flexGrow: 0 }}>
                     <Header as="h4" content={"Variant " + (idx + 1)} />
                     {fields.variants.map(({ name, label, ...rest }) => (
                         <Input
@@ -164,6 +184,18 @@ class CreateProduct extends Component {
                             {...rest}
                         />
                     ))}
+                    {variants.length > 1 && (
+                        <Button
+                            compact
+                            size="mini"
+                            color="red"
+                            content="Remove"
+                            type="button"
+                            onClick={this.onRemove}
+                            remover="variants"
+                            idx={idx}
+                        />
+                    )}
                 </div>
             );
         });
@@ -171,7 +203,7 @@ class CreateProduct extends Component {
 
     addVariant = () => {
         let { details } = this.state;
-        const variant = { size: null, price_in_cents: null };
+        const variant = { size: null, price_in_cents: null, id: shortid.generate() };
         details.variants = [...details.variants, variant];
         this.setState({ details });
     };
