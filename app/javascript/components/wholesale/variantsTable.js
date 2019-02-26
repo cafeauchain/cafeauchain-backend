@@ -31,21 +31,15 @@ class VariantsTable extends React.Component {
             getCtxData("variants");
         }
     }
+
     render() {
-        const { loading, userId } = this.props;
-        let { data } = this.props;
-        if (data === undefined) data = [];
-        const onClick = (e, item) => {
-            // eslint-disable-next-line
-            console.log(item);
-            alert("This should take you to more info about the roasted inventory levels.");
-        };
+        const { loading, userId, data = [] } = this.props;
         const limit = 25;
         const limitData = () => data.slice(0, limit);
         return (
             <F>
                 <Header as="h2" content="Product Pricing" />
-                <Table tableDefs={tableDefs} data={limitData()} loading={loading} onClick={onClick} />
+                <Table tableDefs={tableDefs} data={limitData()} loading={loading} />
                 {data.length > limit && (
                     <F>
                         <br />
