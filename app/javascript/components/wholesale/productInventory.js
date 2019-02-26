@@ -8,22 +8,14 @@ import Modal from "shared/modal";
 
 import tableDefs from "defs/tables/products";
 
-import CreateProduct from "wholesale/actions/create";
+import EditProduct from "wholesale/actions/editProduct";
 
 import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => (
     <Context>
-        {ctx => (
-            <ProductInventory
-                {...props}
-                data={ctx.products}
-                loading={ctx.loading}
-                userId={ctx.userId}
-                getCtxData={ctx.getData}
-            />
-        )}
+        {ctx => <ProductInventory {...props} data={ctx.products} loading={ctx.loading} getCtxData={ctx.getData} />}
     </Context>
 );
 
@@ -39,55 +31,39 @@ class ProductInventory extends React.Component {
         }
     }
 
-    onClick = (e, item) => {
+    onClick = (e, current) => {
         this.setState({
             isOpen: true,
-            current: item
+            current
         });
     };
     closeModal = () => this.setState({ isOpen: false, current: {} });
 
     render() {
-        let { data } = this.props;
-        if (data === undefined) data = [];
-        const { loading, userId } = this.props;
+        const { data = [], loading } = this.props;
         const { isOpen, current } = this.state;
-        const limit = 25;
-        const limitData = () => data.slice(0, limit);
         return (
-            // TODO This is a proof of concept for Modals.
-            // I need to use the EditProduct component and pass in the current item.
-            // (Once its built)
-            // I can also delete the editProductModal component and the createProduct component
             <F>
                 {isOpen && (
                     <Modal
-                        title="A Modal Title"
+                        title={"Update " + current.attributes.title}
+                        icon="edit"
                         isOpen={isOpen}
                         closeModal={this.closeModal}
-                        component={<CreateProduct />}
+                        component={<EditProduct current={current} />}
                     />
                 )}
                 <Header as="h2" content="Products" />
-                <Table tableDefs={tableDefs} data={limitData()} loading={loading} onClick={this.onClick} />
-                {data.length > limit && (
-                    <F>
-                        <br />
-                        <div style={{ textAlign: "right" }}>
-                            <Button as="a" href={`/roasters/${userId}/lots`} content="View All Lots" />
-                        </div>
-                    </F>
-                )}
+                <Table tableDefs={tableDefs} data={data} loading={loading} onClick={this.onClick} />
             </F>
         );
     }
 }
 
-const { array, bool, oneOfType, string, number, func } = PropTypes;
+const { array, bool, func } = PropTypes;
 ProductInventory.propTypes = {
     data: array,
     loading: bool,
-    userId: oneOfType([string, number]),
     getCtxData: func
 };
 
