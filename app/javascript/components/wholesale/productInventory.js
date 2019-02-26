@@ -1,6 +1,6 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Header, Button } from "semantic-ui-react";
+import { Header } from "semantic-ui-react";
 
 /* eslint-disable */
 import Table from "shared/table";
