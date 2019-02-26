@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import shortid from "shortid";
 import { Button } from "semantic-ui-react";
 
@@ -24,7 +25,8 @@ function withProductForm(WrappedComponent) {
     class WithProductForm extends React.Component {
         constructor(props) {
             super(props);
-            const details = defaultDetails;
+            const { current } = props;
+            const details = current ? this.buildDetailsFromItem(current) : defaultDetails;
             this.state = {
                 details,
                 btnLoading: false,
@@ -88,6 +90,7 @@ function withProductForm(WrappedComponent) {
                 content="Remove"
                 type="button"
                 onClick={this.onRemove}
+                tabIndex={-1}
                 {...btnProps}
             />
         );
@@ -153,6 +156,11 @@ function withProductForm(WrappedComponent) {
         }
     }
     WithProductForm.contextType = Context;
+
+    const { object } = PropTypes;
+    WithProductForm.propTypes = {
+        current: object
+    };
 
     return WithProductForm;
 }
