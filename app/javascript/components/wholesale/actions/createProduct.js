@@ -1,231 +1,142 @@
-import React, { Component, Fragment as F } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Form, Button, Segment } from "semantic-ui-react";
-import shortid from "shortid";
 
 /* eslint-disable */
 import Input from "shared/input";
 import ErrorHandler from "shared/errorHandler";
-import Flex from "shared/flex";
+
+import withProductForm from "wholesale/actions/productHOC";
 
 import Variants from "wholesale/partials/variants";
 import Composition from "wholesale/partials/composition";
 
 import fields from "defs/forms/createProduct";
 
-import { noEmpties } from "utilities";
-import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
+import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 
 import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Context>
-        {ctx => (
-            <CreateProduct
-                {...props}
-                id={ctx.userId}
-                updateContext={ctx.updateContext}
-                inventoryData={ctx.inventory}
-                getCtxData={ctx.getData}
-            />
-        )}
-    </Context>
+    <Context>{ctx => <CreateProduct {...props} userId={ctx.userId} inventory={ctx.inventory} />}</Context>
 );
 
-const defaultDetails = {
-    name: "",
-    description: "",
-    categories: [],
-    product_images: [],
-    composition: [{ inventory_item_id: null, pct: null, id: shortid.generate() }],
-    variants: [{ size: null, price_in_cents: null, id: shortid.generate() }]
-};
 class CreateProduct extends Component {
-    constructor(props) {
-        super(props);
-        const details = props.item ? this.buildDetailsFromItem(props.item) : defaultDetails;
-        this.state = {
-            details,
-            btnLoading: false,
-            errors: []
-        };
-    }
-
+    state = {
+        btnLoading: false,
+        errors: []
+    };
     componentDidMount() {
-        const { inventoryData, getCtxData } = this.props;
-        if (inventoryData === undefined) {
+        const { inventory, getCtxData } = this.props;
+        if (inventory === undefined) {
             getCtxData("inventory");
         }
     }
 
-    buildDetailsFromItem = ({ attributes }) => {
-        return {
-            name: attributes.title,
-            description: attributes.description,
-            composition: attributes.composition.map(comp => ({
-                inventory_item_id: comp.inventory_item_id,
-                pct: comp.pct,
-                id: comp.id
-            }))
-        };
-    };
-
-    handleInputChange = (event, { value, name, checked, object, index }) => {
-        let { details } = this.state;
-        details = { ...details };
-        if (name === "") return;
-        const val = value || checked;
-        if (object && index !== undefined) {
-            details[object][index][name] = val;
-        } else {
-            details[name] = val;
-        }
-        this.setState({ details, errors: [] });
-    };
-
-    startSubmit = ev => {
+    handleSubmit = async ev => {
         ev.preventDefault();
-        this.setState({ btnLoading: true }, this.handleSubmit);
-    };
-
-    handleSubmit = async () => {
-        const { details } = this.state;
-        const { id, getCtxData, item } = this.props;
-        const method = item ? "PUT" : "POST";
-        const product_id_url = item ? "/" + item.id : "";
-        const url = `${ROASTER_URL(id)}/products${product_id_url}`;
-        let body = { ...details };
-        let respJSON = await requester({ url, body, method });
+        await this.setState({ btnLoading: true });
+        const {
+            details,
+            userId,
+            getCtxData,
+            funcs: { resetForm },
+            closeModal,
+            successClose
+        } = this.props;
+        const url = `${ROASTER_URL(userId)}/products`;
+        const body = { ...details };
+        const respJSON = await requester({ url, body });
         if (respJSON instanceof Error) {
             this.setState({ errors: respJSON.response.data, btnLoading: false });
         } else {
             if (respJSON.redirect) {
                 window.location.href = await respJSON.redirect_url;
             } else {
+                const success = details.name + " was created successfully!";
                 await this.setState({ btnLoading: false });
+                await resetForm();
                 getCtxData("products");
                 getCtxData("variants");
                 getCtxData("inventory");
+                if (successClose) {
+                    successClose(success);
+                } else if (closeModal) {
+                    setTimeout(closeModal, 900);
+                }
             }
         }
     };
 
-    buildInventoryOptions = inventory =>
-        inventory.map(({ id, attributes: { name, lot_name } }) => ({
-            value: id,
-            text: name + " (" + lot_name + ")",
-            key: id,
-            id,
-            name
-        }));
-
-    addInventoryItem = () => {
-        let { details } = this.state;
-        const comp = { inventory_item_id: null, pct: null, id: shortid.generate() };
-        details.composition = [...details.composition, comp];
-        this.setState({ details });
-    };
-
-    addVariant = () => {
-        let { details } = this.state;
-        const variant = { size: null, price_in_cents: null, id: shortid.generate() };
-        details.variants = [...details.variants, variant];
-        this.setState({ details });
-    };
-
-    removeButton = btnProps => (
-        <Button compact size="mini" color="red" content="Remove" type="button" onClick={this.onRemove} {...btnProps} />
-    );
-
-    onRemove = (e, { idx, remover }) => {
-        e.preventDefault();
-        const { details } = this.state;
-        let arr = [...details[remover]];
-        arr.splice(idx, 1);
-        details[remover] = arr;
-        this.setState({ details });
-    };
-
-    validateInputs = (details, item) => {
-        const { composition, variants, ...rest } = details;
-        const itemDetail = item ? this.buildDetailsFromItem(item) : {};
-        const compEmpties = composition.filter(item => noEmpties(item));
-        const compTotal = composition.reduce((total, item) => {
-            return total + Number(item.pct);
-        }, 0);
-
-        const varEmpties = variants ? variants.filter(item => noEmpties(item)) : [true];
-        // TODO I hate doing this. Figure out why they are evaluating to not equal
-        let jsonitem = JSON.stringify(itemDetail);
-        let jsondetails = JSON.stringify(details);
-        return (
-            noEmpties(rest) &&
-            compEmpties.length > 0 &&
-            compTotal === 100 &&
-            varEmpties.length > 0 &&
-            jsonitem !== jsondetails
-        );
-    };
-
     render() {
-        let { inventoryData, item } = this.props;
-        if (inventoryData === undefined) inventoryData = [];
-        const inventoryOptions = this.buildInventoryOptions(inventoryData);
-        const { details, btnLoading, errors } = this.state;
+        const { inventory = [], funcs, details } = this.props;
+        const { btnLoading, errors } = this.state;
+        const {
+            handleInputChange,
+            validateInputs,
+            removeButton,
+            addVariant,
+            addInventoryItem,
+            buildInventoryOptions
+        } = funcs;
+        const inventoryOptions = buildInventoryOptions(inventory);
         const { composition, variants } = details;
-        const btnActive = this.validateInputs(details, item);
+        const btnActive = validateInputs(details);
         return (
-            <F>
-                <Form onSubmit={this.startSubmit}>
-                    <ErrorHandler errors={errors} />
-                    {fields.base.map(({ name, label, inputType }) => (
-                        <Input
-                            key={name}
-                            name={name}
-                            label={label}
-                            inputType={inputType}
-                            onChange={this.handleInputChange}
-                            defaultValue={details[name]}
-                        />
-                    ))}
-
-                    {variants && (
-                        <Segment style={{ background: "#dedede" }}>
-                            <Variants
-                                variants={variants}
-                                fields={fields.variants}
-                                handleChange={this.handleInputChange}
-                                btn={this.removeButton}
-                            />
-                            <Button type="button" color="blue" content="Add Variant" onClick={this.addVariant} />
-                        </Segment>
-                    )}
-                    <Segment style={{ background: "#dedede" }}>
-                        <Composition
-                            composition={composition}
-                            fields={fields.composition}
-                            inventoryOptions={inventoryOptions}
-                            handleChange={this.handleInputChange}
-                            btn={this.removeButton}
-                        />
-                        <Button type="button" color="blue" content="Add Product" onClick={this.addInventoryItem} />
-                    </Segment>
-                    <Button primary fluid loading={btnLoading} disabled={!btnActive}>
-                        Create Product
-                    </Button>
-                </Form>
-            </F>
+            <Form>
+                <ErrorHandler errors={errors} />
+                {fields.base.map(({ name, label, inputType }) => (
+                    <Input
+                        key={name}
+                        name={name}
+                        label={label}
+                        inputType={inputType}
+                        onChange={handleInputChange}
+                        value={details[name]}
+                    />
+                ))}
+                <Segment style={{ background: "#dedede" }}>
+                    <Variants
+                        variants={variants}
+                        fields={fields.variants}
+                        handleChange={handleInputChange}
+                        btn={removeButton}
+                    />
+                    <Button type="button" color="blue" content="Add Variant" onClick={addVariant} />
+                </Segment>
+                <Segment style={{ background: "#dedede" }}>
+                    <Composition
+                        composition={composition}
+                        fields={fields.composition}
+                        inventoryOptions={inventoryOptions}
+                        handleChange={handleInputChange}
+                        btn={removeButton}
+                    />
+                    <Button type="button" color="blue" content="Add Product" onClick={addInventoryItem} />
+                </Segment>
+                <Button
+                    primary
+                    fluid
+                    loading={btnLoading}
+                    disabled={!btnActive}
+                    onClick={this.handleSubmit}
+                    content="Create Product"
+                />
+            </Form>
         );
     }
 }
 
-const { oneOfType, string, number, array, func, object } = PropTypes;
+const { array, object, func, string, number, oneOfType } = PropTypes;
 CreateProduct.propTypes = {
-    id: oneOfType([number, string]),
-    inventoryData: array,
+    userId: oneOfType([string, number]),
+    inventory: array,
+    details: object,
+    funcs: object,
     getCtxData: func,
-    item: object
+    closeModal: func,
+    successClose: func
 };
 
-export default Wrapper;
+export default withProductForm(Wrapper);
