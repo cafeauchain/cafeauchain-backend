@@ -60,10 +60,14 @@ class FormattedTable extends Component {
 
     handleSort = clickedColumn => () => {
         const { column, data, direction } = this.state;
+        const {
+            tableDefs: { fields }
+        } = this.props;
+        const item = fields.find(field => field.name === clickedColumn);
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
-                data: sortBy({ collection: data, id: clickedColumn }),
+                data: sortBy({ collection: data, id: clickedColumn, namespace: item.namespace }),
                 direction: "ascending"
             });
 

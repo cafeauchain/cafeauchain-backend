@@ -1,15 +1,20 @@
-const sortBy = ({ collection, id, sorts = [] }) => {
+// eslint-disable-next-line
+import { namespacer } from "utilities";
+
+const sortBy = ({ collection, id, sorts = [], namespace }) => {
     /*  The sorts param allows you to define the multiple sorting fields and the direction
         It is an array of objects structured like this:
             [{ name: "PrimarySort", desc: true }, { name: "SecondarySort" }]
 
         The id param is a fallback for ties. Or if the sorts is left blank, its the default
     */
+    const getValue = (item, field) => (namespace ? namespacer(namespace, item)[field] : item[field]);
 
     const checkForNumber = field => {
-        const firstWithValue = collection.find(
-            item => !(item[field] === undefined || item[field] === null || item[field] === "")
-        );
+        const firstWithValue = collection.find(item => {
+            const val = getValue(item, field);
+            return !(val === undefined || val === null || val === "");
+        });
         if (!firstWithValue) return false;
         const value = firstWithValue[field];
         const numRegEx = RegExp("^[0-9.,$]+$");
@@ -19,8 +24,8 @@ const sortBy = ({ collection, id, sorts = [] }) => {
     if (!sorts.length) {
         const isNumber = checkForNumber(id);
         return collection.sort((a, b) => {
-            const aid = a[id];
-            const bid = b[id];
+            const aid = getValue(a, id);
+            const bid = getValue(b, id);
             if (isNumber) {
                 return aid - bid;
             }
@@ -35,12 +40,12 @@ const sortBy = ({ collection, id, sorts = [] }) => {
     }
 
     return collection.sort((a, b) => {
-        let sortsLength = sorts.length;
+        const sortsLength = sorts.length;
         let ret = 0;
         for (let i = 0; i < sortsLength; i++) {
-            let item = sorts[i];
-            let aVal = a[item.name];
-            let bVal = b[item.name];
+            const item = sorts[i];
+            const aVal = getValue(a, item.name);
+            const bVal = getValue(b, item.name);
             const isNumber = checkForNumber(item.name);
             if (isNumber) {
                 ret = item.desc ? bVal - aVal : aVal - bVal;
@@ -54,10 +59,12 @@ const sortBy = ({ collection, id, sorts = [] }) => {
                 break;
             } else {
                 if (sorts[sortsLength - 1].name !== id) {
-                    if (a[id] < b[id]) {
+                    const aid = getValue(a, id);
+                    const bid = getValue(b, id);
+                    if (aid < bid) {
                         ret = 1;
                         break;
-                    } else if (a[id] > b[id]) {
+                    } else if (aid > bid) {
                         ret = -1;
                         break;
                     }
