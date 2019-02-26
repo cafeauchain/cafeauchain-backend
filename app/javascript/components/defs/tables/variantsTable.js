@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { Money, AsNumber, Truncate, Weights } from "shared/textFormatters";
+import isEditable from "shared/textFormatters/isEditable";
 /* eslint-enable */
 
 const tableDefinition = {
@@ -9,7 +10,7 @@ const tableDefinition = {
         {
             name: "price_in_cents",
             namespace: "attributes",
-            formatter: props => Money({ ...props, asCents: true }),
+            formatter: isEditable(props => Money({ ...props, asCents: true })),
             label: "Price"
         }
     ],
@@ -17,7 +18,8 @@ const tableDefinition = {
         celled: true,
         striped: true,
         selectable: true,
-        singleLine: true
+        singleLine: true,
+        sortable: true
     }
 };
 
