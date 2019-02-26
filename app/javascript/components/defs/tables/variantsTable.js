@@ -3,6 +3,13 @@ import { Money, AsNumber, Truncate, Weights } from "shared/textFormatters";
 import isEditable from "shared/textFormatters/isEditable";
 /* eslint-enable */
 
+const onSubmit = {
+    url: "/products/",
+    method: "PUT",
+    onSuccess: { requests: ["variants", "products"] },
+    onError: []
+};
+
 const tableDefinition = {
     fields: [
         { name: "product_title", namespace: "attributes" },
@@ -10,7 +17,7 @@ const tableDefinition = {
         {
             name: "price_in_cents",
             namespace: "attributes",
-            formatter: isEditable(props => Money({ ...props, asCents: true })),
+            formatter: isEditable(props => Money({ ...props, asCents: true }), onSubmit),
             label: "Price"
         }
     ],

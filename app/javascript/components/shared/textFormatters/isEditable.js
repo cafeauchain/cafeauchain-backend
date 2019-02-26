@@ -4,11 +4,14 @@ import { Button, Icon, Loader, Dimmer } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
+import ErrorHandler from "shared/errorHandler";
+
 import Context from "contexts/main";
-import urls from "contexts/urls";
+
+import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 /* eslint-enable */
 
-function isEditable(WrappedComponent) {
+function isEditable(WrappedComponent, onSubmit) {
     class Editable extends Component {
         constructor(props) {
             super(props);
@@ -21,7 +24,8 @@ function isEditable(WrappedComponent) {
                 isLoading: false,
                 details: {
                     [name]: content
-                }
+                },
+                errors: []
             };
         }
         resetState = () => {
@@ -29,7 +33,7 @@ function isEditable(WrappedComponent) {
                 content,
                 item: { name }
             } = this.props;
-            this.setState({ isEditing: false, isLoading: false, details: { [name]: content } });
+            this.setState({ isEditing: false, isLoading: false, details: { [name]: content }, errors: [] });
         };
 
         onClick = e => {
@@ -38,7 +42,7 @@ function isEditable(WrappedComponent) {
                 item: { name }
             } = this.props;
             e.preventDefault();
-            this.setState({ isEditing: true, isLoading: false, details: { [name]: content } });
+            this.setState({ isEditing: true, isLoading: false, details: { [name]: content }, errors: [] });
         };
 
         handleInputChange = (event, { value, name, checked }) => {
@@ -47,7 +51,7 @@ function isEditable(WrappedComponent) {
             if (name === "") return;
             const val = value || checked;
             details[name] = val;
-            this.setState({ details });
+            this.setState({ details, errors: [] });
         };
         submit = async e => {
             e.preventDefault();
@@ -57,27 +61,33 @@ function isEditable(WrappedComponent) {
                 item: { id }
             } = this.props;
             const { userId, getData: getCtxData } = this.context;
-            // TODO This is the only thing that is not dynamic.
-            // Perhaps I need to move the entire submit fuction to whereever isEditable is called
-            // and/or pass that info
-            // Maybe something like onSubmit: {url, method, onSuccess: func(s), onError: func(s) }
-            const url = urls(userId)["products"] + "/" + id;
-            const method = "PUT";
+            const url = ROASTER_URL(userId) + onSubmit.url + id;
+            const method = onSubmit.method || "PUT";
             const body = { ...details };
             // eslint-disable-next-line
-            console.log(url, method, body);
-
+            // console.log(url, method, body);
             const afterSuccess = async () => {
                 await this.resetState();
-                getCtxData("variants");
+                const { requests = [] } = onSubmit.onSuccess;
+                requests.map(request => getCtxData(request));
             };
-
-            setTimeout(afterSuccess, 600);
+            const response = await requester({ url, body, method });
+            if (response instanceof Error) {
+                const { response: errResponse } = response;
+                const errors = errResponse ? errResponse.data : ["Something went wrong"];
+                this.setState({ errors, isLoading: false });
+            } else {
+                if (response.redirect) {
+                    window.location.href = await response.redirect_url;
+                } else {
+                    setTimeout(afterSuccess, 600);
+                }
+            }
         };
 
         render() {
             const { editable, item, content, ...rest } = this.props;
-            const { isEditing, isLoading } = this.state;
+            const { isEditing, isLoading, errors } = this.state;
             if (isEditing) {
                 return (
                     <F>
@@ -89,6 +99,7 @@ function isEditable(WrappedComponent) {
                             type="number"
                             onChange={this.handleInputChange}
                             defaultValue={content}
+                            error={errors.length > 0}
                         >
                             <Dimmer active={isLoading} inverted content={<Loader />} />
                             <input />
@@ -111,6 +122,9 @@ function isEditable(WrappedComponent) {
                                 onClick={this.resetState}
                             />
                         </Input>
+                        {errors.length > 0 && (
+                            <ErrorHandler errors={errors} size="mini" style={{ padding: "2px 10px", marginTop: 4 }} />
+                        )}
                     </F>
                 );
             }
