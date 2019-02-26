@@ -4,10 +4,11 @@ import { Header, Button } from "semantic-ui-react";
 
 /* eslint-disable */
 import Table from "shared/table";
+import Modal from "shared/modal";
 
 import tableDefs from "defs/tables/products";
 
-import EditProductModal from "wholesale/actions/editProductModal";
+import CreateProduct from "wholesale/actions/create";
 
 import Context from "contexts/main";
 /* eslint-enable */
@@ -54,8 +55,19 @@ class ProductInventory extends React.Component {
         const limit = 25;
         const limitData = () => data.slice(0, limit);
         return (
+            // TODO This is a proof of concept for Modals.
+            // I need to use the EditProduct component and pass in the current item.
+            // (Once its built)
+            // I can also delete the editProductModal component and the createProduct component
             <F>
-                {isOpen && <EditProductModal isOpen={isOpen} closeModal={this.closeModal} item={current} />}
+                {isOpen && (
+                    <Modal
+                        title="A Modal Title"
+                        isOpen={isOpen}
+                        closeModal={this.closeModal}
+                        component={<CreateProduct />}
+                    />
+                )}
                 <Header as="h2" content="Products" />
                 <Table tableDefs={tableDefs} data={limitData()} loading={loading} onClick={this.onClick} />
                 {data.length > limit && (
