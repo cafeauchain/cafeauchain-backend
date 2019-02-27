@@ -18,8 +18,8 @@ const Variant = ({ variants, fields, handleChange, btn: RemoveButton }) => (
                         name={name}
                         label={label}
                         type="number"
-                        object="variants"
-                        index={idx}
+                        data-object="variants"
+                        data-itemid={item.id}
                         onChange={handleChange}
                         value={item[name]}
                         {...rest}
