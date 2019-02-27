@@ -8,7 +8,7 @@ import ErrorHandler from "shared/errorHandler";
 
 import withProductForm from "wholesale/actions/productHOC";
 
-import Composition from "wholesale/partials/composition";
+import Composition from "wholesale/partials/compositionTable";
 
 import fields from "defs/forms/createProduct";
 

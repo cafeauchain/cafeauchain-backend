@@ -8,8 +8,7 @@ import ErrorHandler from "shared/errorHandler";
 
 import withProductForm from "wholesale/actions/productHOC";
 
-import Variants from "wholesale/partials/variants";
-import Composition from "wholesale/partials/composition";
+import Variants from "wholesale/partials/variantsTable";
 import CompositionTable from "wholesale/partials/compositionTable";
 
 import fields from "defs/forms/createProduct";
@@ -109,7 +108,7 @@ class CreateProduct extends Component {
                     <Button type="button" color="blue" content="Add Product" onClick={addInventoryItem} />
                 </Segment>
 
-                <Segment style={{ background: "#dedede" }}>
+                <Segment style={{ background: "#efefef" }}>
                     <Variants
                         variants={variants}
                         fields={fields.variants}
