@@ -61,7 +61,7 @@ const FormattedModal = props => {
     return (
         <Modal {...rest} closeIcon size={size} centered={centered} open={isOpen} onClose={closeModal}>
             <Header icon={icon} content={title} />
-            <Modal.Content scrolling>
+            <Modal.Content scrolling style={{ minHeight: "50vw" }}>
                 <Inner />
                 {success && (
                     <Dimmer active inverted>
