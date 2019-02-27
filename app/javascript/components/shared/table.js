@@ -88,7 +88,7 @@ class FormattedTable extends Component {
             const itemDetails = { id: item.id, type: item.type, name };
             let extras = {};
             if (inputExtras) {
-                extras = { ...inputExtras, name, placeholder: humanize(name), value, isNew: item.isNew };
+                extras = { ...inputExtras, name, placeholder: humanize(name), value: value || "", isNew: item.isNew };
             }
             if (Formatter) value = <Formatter content={value} item={itemDetails} {...extras} />;
             return (
