@@ -81,12 +81,16 @@ class FormattedTable extends Component {
     };
 
     buildTableCells = item => {
-        const { tableDefs } = this.props;
+        const { tableDefs, inputExtras } = this.props;
         return tableDefs.fields.map(field => {
             const { namespace, name, formatter: Formatter, ...rest } = field;
             let value = namespace ? namespacer(namespace, item)[name] : item[name];
-            let itemDetails = { id: item.id, type: item.type, name };
-            if (Formatter) value = <Formatter content={value} item={itemDetails} />;
+            const itemDetails = { id: item.id, type: item.type, name };
+            let extras = {};
+            if (inputExtras) {
+                extras = { ...inputExtras, name, placeholder: humanize(name), value, isNew: item.isNew };
+            }
+            if (Formatter) value = <Formatter content={value} item={itemDetails} {...extras} />;
             return (
                 <Table.Cell {...rest} key={name}>
                     {value}
@@ -138,6 +142,7 @@ class FormattedTable extends Component {
                                         key={item.id}
                                         onClick={onClick ? e => onClick(e, item) : null}
                                         className={onClick ? "row-clickable" : null}
+                                        verticalAlign={tableDefs.props.verticalAlign}
                                     >
                                         {this.buildTableCells(item)}
                                     </Table.Row>
@@ -175,7 +180,8 @@ FormattedTable.propTypes = {
     onClick: func,
     pagination: object,
     tableDefs: object.isRequired,
-    loading: bool
+    loading: bool,
+    inputExtras: object
 };
 
 export default FormattedTable;
