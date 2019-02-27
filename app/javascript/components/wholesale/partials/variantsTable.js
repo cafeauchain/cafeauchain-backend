@@ -11,19 +11,19 @@ import Table from "shared/table";
 const Variants = ({ variants, fields, handleChange, btn: RemoveButton }) => (
     <Container style={{ marginBottom: 10 }}>
         <Header as="h3" content="Product Sizes" style={{ marginBottom: 10 }} />
-        <Flex style={{ margin: "0 -10px" }}>
-            <div flex="50" style={{ padding: "0 10px" }}>
+        <Flex spacing="10">
+            <div flex="50">
                 <strong>Size (in ounces)</strong>
             </div>
-            <div flex="50" style={{ padding: "0 10px" }}>
+            <div flex="50">
                 <strong>Price</strong>
             </div>
         </Flex>
         {variants.map((item, idx) => (
             <F key={item.id}>
-                <Flex style={{ margin: "0 -10px" }}>
+                <Flex spacing="10">
                     {fields.map(({ name, label, inputType, ...rest }, fieldIdx) => (
-                        <div key={name} flex={fieldIdx === 0 ? "50" : "50"} style={{ padding: 10 }}>
+                        <div key={name} flex={fieldIdx === 0 ? "50" : "50"}>
                             <Input
                                 key={name}
                                 name={name}
