@@ -11,8 +11,9 @@ module InventoryServices
     #   "composition":
     #     [{"inventory_item_id":"12","pct":"25"},{"inventory_item_id":"3","pct":"50"},{"inventory_item_id":"11","pct":"25"}],
     #   "variants":
-    #     [{"size": "12oz", "bean_type": "whole_bean", price_in_cents: 1499},{"size": "12oz", "bean_type": "ground", price_in_cents: 1499},{"size": "5lb", "bean_type": "whole_bean", price_in_cents: 6099}]
+    #     [{"size": "12oz", "bean_type": "whole_bean", price_in_dollars: "14.99"},{"size": "12oz", "bean_type": "ground", price_in_dollars: "15.00"},{"size": "5lb", "bean_type": "whole_bean", price_in_dollars: "60.99"}]
     # }
+    # price_in_dollars gets converted to price_in_cents and that is how it is stored
     ############################
 
     def initialize(roaster_id, params)
@@ -32,8 +33,8 @@ module InventoryServices
           ProductInventoryItem.create(inventory_item_id: component[:inventory_item_id], product: @product, percentage_of_product: component[:pct])
         end
         @variants.each do |variant|
-          @variant = ProductVariant.new(product: @product, price_in_cents: variant[:price_in_cents])
-          @variant.custom_options = variant.except(:price_in_cents)
+          @variant = ProductVariant.new(product: @product, price_in_cents: (variant[:price_in_dollars].to_f * 100).to_i )
+          @variant.custom_options = variant.except(:price_in_dollars, :id, :price_in_cents)
           @variant.save
         end
       end
