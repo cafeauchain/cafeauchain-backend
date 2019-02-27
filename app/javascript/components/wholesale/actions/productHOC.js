@@ -11,7 +11,7 @@ import Context from "contexts/main";
 /* eslint-enable */
 
 const compositionDefault = () => ({ inventory_item_id: "", pct: "", id: shortid.generate() });
-const variantsDefault = () => ({ size: "", price_in_cents: "", id: shortid.generate() });
+const variantsDefault = () => ({ size: "", price_in_dollars: "", id: shortid.generate() });
 const defaultDetails = {
     name: "",
     description: "",
@@ -46,13 +46,14 @@ function withProductForm(WrappedComponent) {
             };
         };
 
-        handleInputChange = (event, { value, name, checked, object, index }) => {
+        handleInputChange = (event, { value, name, checked, ...rest }) => {
             let { details } = this.state;
             details = { ...details };
             if (name === "") return;
             const val = value || checked;
-            if (object && index !== undefined) {
-                details[object][index][name] = val;
+            if (rest["data-object"] && rest["data-itemid"]) {
+                let temp = details[rest["data-object"]].find(({ id }) => id === rest["data-itemid"]);
+                temp[name] = val;
             } else {
                 details[name] = val;
             }
