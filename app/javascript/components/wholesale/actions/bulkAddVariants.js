@@ -17,7 +17,7 @@ import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 import Context from "contexts/main";
 /* eslint-enable */
 
-const variantsDefault = () => ({ size: "", price_in_cents: "", id: shortid.generate(), isNew: true });
+const variantsDefault = () => ({ size: "", price_in_dollars: "", id: shortid.generate(), isNew: true });
 
 const Wrapper = props => (
     <Context>
@@ -77,7 +77,7 @@ class CreateProduct extends Component {
                     {
                         id: id,
                         size: attributes.bag_size,
-                        price_in_cents: attributes.price_in_cents,
+                        price_in_dollars: attributes.price_in_dollars,
                         isNew: false
                     }
                 ];

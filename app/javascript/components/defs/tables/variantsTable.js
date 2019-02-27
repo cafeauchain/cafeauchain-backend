@@ -15,9 +15,9 @@ const tableDefinition = {
         { name: "product_title", namespace: "attributes" },
         { name: "bag_size", namespace: "attributes", formatter: Weights },
         {
-            name: "price_in_cents",
+            name: "price_in_dollars",
             namespace: "attributes",
-            formatter: isEditable(props => Money({ ...props, asCents: true }), onSubmit),
+            formatter: isEditable(props => Money({ ...props }), onSubmit),
             label: "Price"
         }
     ],
