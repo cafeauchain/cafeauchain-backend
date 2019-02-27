@@ -8,30 +8,29 @@ import Flex from "shared/flex";
 import Table from "shared/table";
 /* eslint-enable */
 
-const Composition = ({ composition, fields, inventoryOptions, handleChange, btn: RemoveButton }) => (
+const Variants = ({ variants, fields, handleChange, btn: RemoveButton }) => (
     <Container style={{ marginBottom: 10 }}>
-        <Header as="h3" content="Product Composition" style={{ marginBottom: 10 }} />
+        <Header as="h3" content="Product Sizes" style={{ marginBottom: 10 }} />
         <Flex style={{ margin: "0 -10px" }}>
-            <div flex="66" style={{ padding: "0 10px" }}>
-                <strong>Choose Inventory Item</strong>
+            <div flex="50" style={{ padding: "0 10px" }}>
+                <strong>Size (in ounces)</strong>
             </div>
-            <div flex="33" style={{ padding: "0 10px" }}>
-                <strong>Composition %</strong>
+            <div flex="50" style={{ padding: "0 10px" }}>
+                <strong>Price</strong>
             </div>
         </Flex>
-        {composition.map((item, idx) => (
+        {variants.map((item, idx) => (
             <F key={item.id}>
                 <Flex style={{ margin: "0 -10px" }}>
                     {fields.map(({ name, label, inputType, ...rest }, fieldIdx) => (
-                        <div key={name} flex={fieldIdx === 0 ? "66" : "33"} style={{ padding: 10 }}>
+                        <div key={name} flex={fieldIdx === 0 ? "50" : "50"} style={{ padding: 10 }}>
                             <Input
                                 key={name}
                                 name={name}
                                 label=""
                                 placeholder={label}
-                                inputType={inputType}
-                                options={inputType === "select" ? inventoryOptions : null}
-                                data-object="composition"
+                                type="number"
+                                data-object="variants"
                                 data-itemid={item.id}
                                 onChange={handleChange}
                                 value={item[name]}
@@ -40,19 +39,18 @@ const Composition = ({ composition, fields, inventoryOptions, handleChange, btn:
                         </div>
                     ))}
                 </Flex>
-                {composition.length > 1 && <RemoveButton idx={idx} remover="composition" />}
+                {variants.length > 1 && <RemoveButton idx={idx} remover="variants" />}
             </F>
         ))}
     </Container>
 );
 
 const { array, func } = PropTypes;
-Composition.propTypes = {
-    composition: array,
+Variants.propTypes = {
+    variants: array,
     fields: array,
-    inventoryOptions: array,
     handleChange: func,
     btn: func
 };
 
-export default Composition;
+export default Variants;
