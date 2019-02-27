@@ -34,7 +34,7 @@ const tableDefs = {
             formatter: ConditionalInput
         },
         {
-            name: "price_in_cents",
+            name: "price_in_dollars",
             label: "Price",
             formatter: FormattedInput
         }

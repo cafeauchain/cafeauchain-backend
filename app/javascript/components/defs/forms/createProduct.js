@@ -9,7 +9,7 @@ const fields = {
     ],
     variants: [
         { name: "size", label: "Size (in ounces)", step: 0.1 },
-        { name: "price_in_cents", label: "Price", step: 0.01 }
+        { name: "price_in_dollars", label: "Price", step: 0.01 }
     ]
 };
 

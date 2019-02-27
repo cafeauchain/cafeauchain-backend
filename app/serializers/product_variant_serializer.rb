@@ -18,7 +18,11 @@
 #
 
 class ProductVariantSerializer < ActiveModel::Serializer
-  attributes :id, :product_id, :quantity, :variant_title, :bag_size, :price_in_cents, :product_title
+  attributes :id, :product_id, :quantity, :variant_title, :bag_size, :price_in_cents, :price_in_dollars, :product_title
+
+  def price_in_dollars
+    '%.2f' % (self.object.price_in_cents.to_i/100.0)
+  end
 
   def bag_size
     if self.object.custom_options["size"].present?
