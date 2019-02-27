@@ -11,13 +11,12 @@ class Flex extends Component {
             return arr;
         }, []);
     };
-    flexChildren = children => {
+    flexChildren = (children, spacing) => {
         return React.Children.map(children, child => {
             const { className: kidClasses = "", flex, ...rest } = child.props;
             let flexString = "";
-            if (flex) {
-                flexString = " flex-child__" + flex;
-            }
+            if (flex) flexString = " flex-child__" + flex;
+            if (spacing) rest.style = { ...rest.style, padding: spacing + "px" };
             let newKid = React.cloneElement(child, { ...rest, className: kidClasses + flexString });
             return newKid;
         });
@@ -25,21 +24,20 @@ class Flex extends Component {
     buildFlexClasses = (className = "") => {
         let classes = "flex-parent";
         let extras = this.transformBoolsToStrings();
-        if (extras.length) {
-            classes = extras.join(" ");
-        }
+        if (extras.length) classes = extras.join(" ");
         classes += " " + className;
         return classes;
     };
     render() {
-        const { className, children, as = "div", style } = this.props;
+        const { className, children, as = "div", spacing, ...rest } = this.props;
         let classes = this.buildFlexClasses(className);
-        let modified = this.flexChildren(children);
-        return React.createElement(as, { style, className: classes }, [modified]);
+        if (spacing) rest.style = { ...rest.style, margin: `0 -${spacing}px` };
+        let modified = this.flexChildren(children, spacing);
+        return React.createElement(as, { ...rest, className: classes }, [modified]);
     }
 }
 
-const { string, node, bool, object } = PropTypes;
+const { string, node, bool, object, oneOfType, number } = PropTypes;
 Flex.propTypes = {
     className: string,
     children: node,
@@ -52,7 +50,8 @@ Flex.propTypes = {
     centercross: bool,
     spacebetween: bool,
     spacearound: bool,
-    flexend: bool
+    flexend: bool,
+    spacing: oneOfType([string, number])
 };
 
 export default Flex;

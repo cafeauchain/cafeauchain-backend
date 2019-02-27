@@ -11,19 +11,19 @@ import Table from "shared/table";
 const Composition = ({ composition, fields, inventoryOptions, handleChange, btn: RemoveButton }) => (
     <Container style={{ marginBottom: 10 }}>
         <Header as="h3" content="Product Composition" style={{ marginBottom: 10 }} />
-        <Flex style={{ margin: "0 -10px" }}>
-            <div flex="66" style={{ padding: "0 10px" }}>
+        <Flex spacing="10">
+            <div flex="66">
                 <strong>Choose Inventory Item</strong>
             </div>
-            <div flex="33" style={{ padding: "0 10px" }}>
+            <div flex="33">
                 <strong>Composition %</strong>
             </div>
         </Flex>
         {composition.map((item, idx) => (
             <F key={item.id}>
-                <Flex style={{ margin: "0 -10px" }}>
+                <Flex spacing="10">
                     {fields.map(({ name, label, inputType, ...rest }, fieldIdx) => (
-                        <div key={name} flex={fieldIdx === 0 ? "66" : "33"} style={{ padding: 10 }}>
+                        <div key={name} flex={fieldIdx === 0 ? "66" : "33"}>
                             <Input
                                 key={name}
                                 name={name}
