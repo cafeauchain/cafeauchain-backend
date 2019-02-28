@@ -1,6 +1,12 @@
+import React from "react";
+import { Image } from "semantic-ui-react";
 /* eslint-disable */
 import { Money, AsNumber, Truncate, ArrayToString, LongText } from "shared/textFormatters";
 /* eslint-enable */
+
+const Images = ({ content, ...rest }) => {
+    return content.map(url => <Image size="mini" src={url} key={url} {...rest} inline />);
+};
 
 const tableDefinition = {
     fields: [
@@ -16,6 +22,12 @@ const tableDefinition = {
             namespace: "attributes",
             formatter: props =>
                 ArrayToString({ ...props, keys: ["name", "pct"], output: array => array.join(": ") + "%" })
+        },
+        {
+            name: "product_image_urls",
+            namespace: "attributes",
+            formatter: Images,
+            label: "Images"
         }
     ],
     props: {

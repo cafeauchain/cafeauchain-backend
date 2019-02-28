@@ -21,7 +21,7 @@ class ProductVariant < ApplicationRecord
   belongs_to :product
 
   def product_title
-    product.title
+    product.present? ? product.title : "Cant find it"
   end
 
 end

@@ -17,7 +17,7 @@ const tableDefinition = {
         {
             name: "price_in_dollars",
             namespace: "attributes",
-            formatter: isEditable(props => Money({ ...props }), onSubmit),
+            formatter: isEditable(Money, onSubmit),
             label: "Price"
         }
     ],

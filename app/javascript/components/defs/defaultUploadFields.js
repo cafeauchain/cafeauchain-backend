@@ -18,6 +18,14 @@ const getDefaults = fileType => {
             uploadText: "Upload File",
             changeText: "Change File"
         };
+    default:
+        return {
+            headerIcon: "file outline",
+            headerText: "No files added",
+            id: "fileUploadInput",
+            uploadText: "Upload File",
+            changeText: "Change File"
+        };
     }
 };
 
