@@ -28,7 +28,6 @@ module InventoryServices
       @product = @roaster.products.new(title: @product_params[:name], description: @product_params[:description], status: @product_params[:status])
       @product.category_list = @categories_array
       if @product.save
-        # @product.product_images.attach(@params[:product_images])
         @composition_array.each do |component|
           ProductInventoryItem.create(inventory_item_id: component[:inventory_item_id], product: @product, percentage_of_product: component[:pct])
         end

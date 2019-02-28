@@ -5,6 +5,7 @@ import { Form, Button, Segment } from "semantic-ui-react";
 /* eslint-disable */
 import Input from "shared/input";
 import ErrorHandler from "shared/errorHandler";
+import FileUpload from "shared/fileUpload";
 
 import withProductForm from "wholesale/actions/productHOC";
 
@@ -51,6 +52,13 @@ class CreateProduct extends Component {
         if (respJSON instanceof Error) {
             this.setState({ errors: respJSON.response.data, btnLoading: false });
         } else {
+            const hasAttachments = details.hasOwnProperty("product_images") && details.product_images.length > 0;
+            if (hasAttachments) {
+                let formData = new FormData();
+                details.product_images.forEach(file => formData.append("product_images[]", file));
+                const { id: productId } = respJSON.data;
+                await requester({ url: url + "/" + productId + "/add_images", body: formData, noContentType: true });
+            }
             if (respJSON.redirect) {
                 window.location.href = await respJSON.redirect_url;
             } else {
@@ -96,6 +104,15 @@ class CreateProduct extends Component {
                         value={details[name]}
                     />
                 ))}
+                <FileUpload
+                    fileType="file"
+                    label="Upload Product Images"
+                    id="product_images"
+                    name="product_images"
+                    handleChange={handleInputChange}
+                    multiple
+                    files={details["product_images"]}
+                />
 
                 <Segment>
                     <CompositionTable

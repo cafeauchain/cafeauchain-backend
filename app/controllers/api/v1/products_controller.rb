@@ -1,6 +1,6 @@
 class Api::V1::ProductsController < ApplicationController
   before_action :set_roaster
-  before_action :set_product, only: [:update]
+  before_action :set_product, only: [:update, :add_images]
 
   def index
     @products = Product.all
@@ -28,6 +28,10 @@ class Api::V1::ProductsController < ApplicationController
   def variants
     @variants = ProductVariant.all
     render json: @variants, status: 200
+  end
+
+  def add_images
+    params[:product_images].each {|pi| @product.product_images.attach(pi) }
   end
 
   private

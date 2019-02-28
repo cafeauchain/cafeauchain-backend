@@ -23,6 +23,7 @@
 #
 
 class Product < ApplicationRecord
+  include Rails.application.routes.url_helpers
   extend FriendlyId
   friendly_id :title, use: [:slugged, :finders]
 
@@ -46,5 +47,11 @@ class Product < ApplicationRecord
     end
     return !changed_inventory_items.empty?
   end
-  
+
+  def product_image_urls
+    urls = []
+    product_images.each{ |pi| urls << url_for(pi) }
+    return urls
+  end
+
 end

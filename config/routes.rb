@@ -71,6 +71,7 @@
 #                                            PATCH  /api/v1/roasters/:roaster_profile_id/inventory_items/:id(.:format)                       api/v1/inventory_items#update
 #                                            PUT    /api/v1/roasters/:roaster_profile_id/inventory_items/:id(.:format)                       api/v1/inventory_items#update
 #                                            DELETE /api/v1/roasters/:roaster_profile_id/inventory_items/:id(.:format)                       api/v1/inventory_items#destroy
+#  add_images_api_v1_roaster_profile_product POST   /api/v1/roasters/:roaster_profile_id/products/:id/add_images(.:format)                   api/v1/products#add_images
 #            api_v1_roaster_profile_products GET    /api/v1/roasters/:roaster_profile_id/products(.:format)                                  api/v1/products#index
 #                                            POST   /api/v1/roasters/:roaster_profile_id/products(.:format)                                  api/v1/products#create
 #         new_api_v1_roaster_profile_product GET    /api/v1/roasters/:roaster_profile_id/products/new(.:format)                              api/v1/products#new
@@ -202,7 +203,12 @@ Rails.application.routes.draw do
           end
         end
         get :crops, to: 'roaster_profiles#crops'
-        resources :batches, :transactions, :inventory_items, :products
+        resources :batches, :transactions, :inventory_items
+        resources :products do
+          member do
+            post :add_images
+          end
+        end
         get :variants, to: 'products#variants'
         get :subscriptions
         post :cards
