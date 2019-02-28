@@ -10,7 +10,7 @@ import Table from "shared/table";
 
 import tableDefs from "defs/forms/addVariants";
 
-import Variants from "wholesale/partials/variants";
+// import Variants from "wholesale/partials/variants";
 
 import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 
