@@ -12,6 +12,7 @@
 #  name       :string
 #  slug       :string
 #  state      :string
+#  subdomain  :string
 #  twitter    :string
 #  url        :string
 #  zip_code   :string

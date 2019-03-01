@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_01_010022) do
+ActiveRecord::Schema.define(version: 2019_03_01_142455) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -276,6 +276,7 @@ ActiveRecord::Schema.define(version: 2019_03_01_010022) do
     t.text "about"
     t.string "address_2"
     t.integer "owner_id"
+    t.string "subdomain"
   end
 
   create_table "subscription_charges", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
