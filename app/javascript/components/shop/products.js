@@ -32,6 +32,15 @@ const Wrapper = props => (
 );
 
 class Products extends React.Component {
+    static propTypes = () => {
+        const { array, func } = PropTypes;
+        return {
+            products: array,
+            variants: array,
+            getCtxData: func
+        };
+    };
+
     componentDidMount() {
         const { products, variants, getCtxData } = this.props;
         if (products === undefined) getCtxData("inventory");
@@ -93,12 +102,5 @@ class Products extends React.Component {
         );
     }
 }
-
-const { array, func } = PropTypes;
-Products.propTypes = {
-    products: array,
-    variants: array,
-    getCtxData: func
-};
 
 export default Wrapper;
