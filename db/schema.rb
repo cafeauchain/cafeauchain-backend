@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_25_171909) do
+ActiveRecord::Schema.define(version: 2019_03_01_010022) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -380,6 +380,15 @@ ActiveRecord::Schema.define(version: 2019_02_25_171909) do
     t.index ["roaster_profile_id"], name: "index_users_on_roaster_profile_id"
   end
 
+  create_table "variant_options", force: :cascade do |t|
+    t.bigint "roaster_profile_id"
+    t.string "title"
+    t.string "options", array: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["roaster_profile_id"], name: "index_variant_options_on_roaster_profile_id"
+  end
+
   create_table "wallets", force: :cascade do |t|
     t.bigint "producer_profile_id"
     t.bigint "roaster_profile_id"
@@ -419,6 +428,7 @@ ActiveRecord::Schema.define(version: 2019_02_25_171909) do
   add_foreign_key "transactions", "roaster_profiles"
   add_foreign_key "users", "customer_profiles"
   add_foreign_key "users", "roaster_profiles"
+  add_foreign_key "variant_options", "roaster_profiles"
   add_foreign_key "wallets", "producer_profiles"
   add_foreign_key "wallets", "roaster_profiles"
   add_foreign_key "wholesale_profiles", "customer_profiles"
