@@ -16,6 +16,7 @@ import registerServiceWorker from "./registerServiceWorker";
 import roasterCostCalc from "./roasterCostCalc";
 import slugify from "./slugify";
 import sortBy from "./sortBy";
+import truncate from "./truncate";
 import underscorer from "./underscorer";
 import usStates from "./usStates";
 
@@ -38,6 +39,7 @@ export {
     roasterCostCalc,
     slugify,
     sortBy,
+    truncate,
     underscorer,
     usStates
 };
