@@ -112,6 +112,7 @@
 #           manage_inventory_roaster_profile GET    /roasters/:id/manage_inventory(.:format)                                                 roaster_profiles#manage_inventory
 #                                roast_index GET    /roasters/:id/roast(.:format)                                                            roast#index
 #                  wholesale_roaster_profile GET    /roasters/:id/wholesale(.:format)                                                        roaster_profiles#wholesale
+#                       shop_roaster_profile GET    /roasters/:id/shop(.:format)                                                             roaster_profiles#shop
 #                           roaster_profiles GET    /roasters(.:format)                                                                      roaster_profiles#index
 #                                            POST   /roasters(.:format)                                                                      roaster_profiles#create
 #                        new_roaster_profile GET    /roasters/new(.:format)                                                                  roaster_profiles#new
@@ -232,6 +233,9 @@ Rails.application.routes.draw do
       get :manage_inventory
       resources :roast, only: [:index]
       get :wholesale
+      get :shop do
+        resources :products
+      end
     end
   end
 

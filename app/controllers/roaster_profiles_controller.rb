@@ -1,6 +1,6 @@
 class RoasterProfilesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_roaster_profile, only: [:show, :edit, :update, :destroy, :dashboard, :manage_subscription, :manage_inventory, :wholesale]
+  before_action :set_roaster_profile, except: [:index, :new]
   layout "devise"
 
   # GET /roaster_profiles
@@ -49,6 +49,11 @@ class RoasterProfilesController < ApplicationController
   end
 
   def wholesale
+  end
+
+  def shop
+    @user = current_user
+    @products = ActiveModel::SerializableResource.new(@roaster_profile.products, each_serializer: ProductSerializer)
   end
 
   private
