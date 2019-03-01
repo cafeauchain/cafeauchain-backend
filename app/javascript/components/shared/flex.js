@@ -2,15 +2,18 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 class Flex extends Component {
-    transformBoolsToStrings = () => {
-        const { ...rest } = this.props;
-        return Object.keys(rest).reduce((arr, key) => {
-            if (rest[key] === true) {
-                arr = [...arr, "flex-parent__" + key.toLowerCase()];
-            }
-            return arr;
-        }, []);
-    };
+    transformBoolsToStrings = rest =>
+        Object.keys(rest).reduce(
+            (obj, key) => {
+                if (rest[key] === true) {
+                    obj.bools = [...obj.bools, "flex-parent__" + key.toLowerCase()];
+                } else if (rest[key] !== false) {
+                    obj.props = [...obj.props, { [key]: rest[key] }];
+                }
+                return obj;
+            },
+            { bools: [], props: [] }
+        );
     flexChildren = (children, spacing) => {
         return React.Children.map(children, child => {
             const { className: kidClasses = "", flex, ...rest } = child.props;
@@ -21,19 +24,19 @@ class Flex extends Component {
             return newKid;
         });
     };
-    buildFlexClasses = (className = "") => {
+    buildFlexClasses = (className = "", bools) => {
         let classes = "flex-parent";
-        let extras = this.transformBoolsToStrings();
-        if (extras.length) classes = extras.join(" ");
+        if (bools.length) classes = bools.join(" ");
         classes += " " + className;
         return classes;
     };
     render() {
         const { className, children, as = "div", spacing, ...rest } = this.props;
-        let classes = this.buildFlexClasses(className);
-        if (spacing) rest.style = { ...rest.style, margin: `0 -${spacing}px` };
-        let modified = this.flexChildren(children, spacing);
-        return React.createElement(as, { ...rest, className: classes }, [modified]);
+        const filterProps = this.transformBoolsToStrings(rest);
+        const classes = this.buildFlexClasses(className, filterProps.bools);
+        if (spacing) filterProps.props.style = { ...filterProps.props.style, margin: `0 -${spacing}px` };
+        const modified = this.flexChildren(children, spacing);
+        return React.createElement(as, { ...filterProps.props, className: classes }, [modified]);
     }
 }
 
