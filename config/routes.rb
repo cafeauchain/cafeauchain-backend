@@ -254,6 +254,11 @@ Rails.application.routes.draw do
     get "/register" => "devise/registrations#new"
   end
 
-  root 'high_voltage/pages#show', id: 'home'
+  constraints(SubdomainRoutes) do 
+    root 'high_voltage/pages#show', id: 'home'
+  end
 
+  constraints(!SubdomainRoutes) do
+    root 'high_voltage/pages#show', id: 'about'
+  end
 end
