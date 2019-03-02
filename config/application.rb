@@ -19,6 +19,8 @@ module CafeauchainBackend
         request_specs: false
       g.fixture_replacement :factory_bot, dir: "spec/factories"
     end
+    
+    config.filter_parameters << :password
 
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
