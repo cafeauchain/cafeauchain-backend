@@ -1,7 +1,7 @@
 const fields = {
     base: [
         { name: "name", label: "Product Name" },
-        { name: "description", label: "Product Description", inputType: "textarea" }
+        { name: "description", label: "Product Description", inputType: "markdown" }
     ],
     composition: [
         { name: "inventory_item_id", label: "Choose Inventory Item", inputType: "select" },
