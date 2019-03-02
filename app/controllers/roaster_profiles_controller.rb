@@ -1,6 +1,6 @@
 class RoasterProfilesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_roaster_profile, only: [:show, :edit, :update, :destroy, :dashboard, :manage_subscription, :manage_inventory]
+  before_action :set_roaster_profile, except: [:index, :new]
   layout "devise"
 
   # GET /roaster_profiles
@@ -46,6 +46,14 @@ class RoasterProfilesController < ApplicationController
     subscription = Subscription.includes(:subscription_items).find_by(user: @roaster_profile.owner)
     @subscription = ActiveModel::SerializableResource.new(subscription)
     @cards = subscription.cards
+  end
+
+  def wholesale
+  end
+
+  def shop
+    @user = current_user
+    @products = ActiveModel::SerializableResource.new(@roaster_profile.products, each_serializer: ProductSerializer)
   end
 
   private

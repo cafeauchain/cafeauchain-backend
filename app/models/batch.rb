@@ -2,22 +2,22 @@
 #
 # Table name: batches
 #
-#  id              :bigint(8)        not null, primary key
-#  ending_amount   :float
-#  roast_date      :date
-#  starting_amount :float
-#  status          :integer
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  lot_id          :bigint(8)
+#  id                :uuid             not null, primary key
+#  ending_amount     :float
+#  roast_date        :date
+#  starting_amount   :float
+#  status            :integer
+#  target_weight     :float
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  inventory_item_id :uuid
+#  lot_id            :uuid
 #
 # Indexes
 #
-#  index_batches_on_lot_id  (lot_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (lot_id => lots.id)
+#  index_batches_on_created_at         (created_at)
+#  index_batches_on_inventory_item_id  (inventory_item_id)
+#  index_batches_on_lot_id             (lot_id)
 #
 
 class Batch < ApplicationRecord
@@ -25,8 +25,9 @@ class Batch < ApplicationRecord
   validates_with BatchCheckAmountAvailableValidator
 
   belongs_to :lot
+  belongs_to :inventory_item
 
-  enum status: [:roast_in_progress, :roast_completed, :bagged_for_sale]
+  enum status: [:in_queue, :roast_in_progress, :roast_completed, :bagged_for_sale]
 
   def batch_cost # starting weight
     starting_amount * lot.price_per_pound

@@ -8,14 +8,20 @@ import { Money, AsNumber } from "shared/textFormatters";
 
 import roasterCostCalc from "utilities/roasterCostCalc";
 
-import Activity from "contexts/activity";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Activity>{activity => <Budgeter {...props} data={activity.data} loading={activity.loading} />}</Activity>
+    <Context>
+        {ctx => <Budgeter {...props} data={ctx.activity} loading={ctx.loading} getCtxData={ctx.getData} />}
+    </Context>
 );
 
 class Budgeter extends Component {
+    componentDidMount() {
+        const { data, getCtxData } = this.props;
+        if (data === undefined) getCtxData("activity");
+    }
     getRemaining = value => {
         value = Number(value);
         return value < 500 ? 500 - value : Math.ceil(value / 100) * 100 - value;
@@ -47,7 +53,9 @@ class Budgeter extends Component {
     };
 
     render() {
-        const { data, loading } = this.props;
+        const { loading } = this.props;
+        let { data } = this.props;
+        if (data === undefined) data = [];
         const { attributes } = data;
         let total,
             amountRemaining,
@@ -125,10 +133,11 @@ class Budgeter extends Component {
     }
 }
 
-const { object, bool } = PropTypes;
+const { object, bool, func } = PropTypes;
 Budgeter.propTypes = {
     data: object,
-    loading: bool
+    loading: bool,
+    getCtxData: func
 };
 
 export default Wrapper;

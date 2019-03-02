@@ -5,14 +5,26 @@ import { Form, Button } from "semantic-ui-react";
 /* eslint-disable */
 import LotSelect from "shared/lots/lotSelect";
 
+import Input from "shared/input";
+
 import requester from "utilities/apiUtils/requester";
 import API_URL from "utilities/apiUtils/url";
 
-import Lots from "contexts/lots";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Lots>{lots => <AcceptDelivery {...props} id={lots.userId} updateContext={lots.updateContext} />}</Lots>
+    <Context>
+        {ctx => (
+            <AcceptDelivery
+                {...props}
+                id={ctx.userId}
+                updateContext={ctx.updateContext}
+                lots={ctx.lots}
+                getCtxData={ctx.getData}
+            />
+        )}
+    </Context>
 );
 
 class AcceptDelivery extends Component {
@@ -21,6 +33,12 @@ class AcceptDelivery extends Component {
         this.state = {
             lotDetails: {}
         };
+    }
+    componentDidMount() {
+        const { lots, getCtxData } = this.props;
+        if (lots === undefined) {
+            getCtxData("lots");
+        }
     }
 
     parentState = obj => {
@@ -69,14 +87,27 @@ class AcceptDelivery extends Component {
             console.log("there was an error", data.response);
         } else {
             // TODO Add success/error messaging before closing
-            updateContext({ data }, closeModal());
+            await updateContext({ lots: data });
+            closeModal();
         }
     };
 
+    buildLotOptions = lots =>
+        lots.map(({ id, attributes: { name } }) => ({ value: id, text: name, key: id, id, name }));
+
     render() {
+        let { lots } = this.props;
+        if (lots === undefined) lots = [];
+        const lotOptions = this.buildLotOptions(lots);
         return (
             <Form onSubmit={this.handleSubmit}>
-                <LotSelect parentState={this.parentState} fluid />
+                <Input
+                    inputType="select"
+                    options={lotOptions}
+                    onChange={this.handleInputChange}
+                    name="lot_id"
+                    label="Choose Lot"
+                />
                 <Form.Input
                     name="quantity"
                     fluid
@@ -92,11 +123,13 @@ class AcceptDelivery extends Component {
     }
 }
 
-const { oneOfType, string, number, func } = PropTypes;
+const { oneOfType, string, number, func, array } = PropTypes;
 AcceptDelivery.propTypes = {
     id: oneOfType([number, string]),
     closeModal: func,
-    updateContext: func
+    updateContext: func,
+    lots: array,
+    getCtxData: func
 };
 
 export default Wrapper;

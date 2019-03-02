@@ -19,14 +19,18 @@ class FileInput extends Component {
     }
 
     uploadFile = async event => {
-        const { handleChange, name, fileType } = this.props;
-        const file = event.target.files[0];
+        const { handleChange, name, fileType, multiple } = this.props;
+        const files = event.target.files;
+        const file = files[0];
         let value;
         if (fileType === "image") {
             value = await fileToImage(file);
         }
         if (fileType === "csv") {
             value = await fileReader(file);
+        }
+        if (fileType === "file") {
+            value = multiple ? [...files] : file;
         }
         this.setState({ loading: true });
         await handleChange(event, { name, value });
@@ -38,7 +42,7 @@ class FileInput extends Component {
     };
 
     render() {
-        const { fileType } = this.props;
+        const { fileType, handleChange, ...rest } = this.props;
         const defaults = getDefaults(fileType);
         const {
             headerIcon = defaults.headerIcon,
@@ -47,9 +51,11 @@ class FileInput extends Component {
             accept = defaults.accept,
             uploadText = defaults.uploadText,
             changeText = defaults.changeText,
-            image
+            image,
+            files
         } = this.props;
         const { loading } = this.state;
+        // TODO right now, 'file' is actually multiple image. I need to clean this stuff up
         return (
             <Segment placeholder>
                 <Dimmer inverted active={loading}>
@@ -66,7 +72,22 @@ class FileInput extends Component {
                         <Image src={image} size="medium" rounded centered spaced style={{ marginBottom: 20 }} />
                     )}
 
+                    {fileType === "file" &&
+                        files.length > 0 &&
+                        files.map(file => (
+                            <Image
+                                key={file.name}
+                                src={URL.createObjectURL(file)}
+                                size="mini"
+                                rounded
+                                centered
+                                spaced
+                                style={{ margin: 10 }}
+                            />
+                        ))}
+
                     <Input
+                        {...rest}
                         inputType="file"
                         onChange={this.uploadFile}
                         id={id}
@@ -84,7 +105,7 @@ class FileInput extends Component {
     }
 }
 
-const { func, string } = PropTypes;
+const { func, string, bool, array } = PropTypes;
 FileInput.propTypes = {
     handleChange: func.isRequired,
     name: string.isRequired,
@@ -95,7 +116,9 @@ FileInput.propTypes = {
     uploadText: string,
     fileType: string,
     changeText: string,
-    image: string
+    image: string,
+    multiple: bool,
+    files: array
 };
 
 export default FileInput;

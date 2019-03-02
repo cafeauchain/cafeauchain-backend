@@ -2,10 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Message } from "semantic-ui-react";
 
-const ErrorHandler = ({ errors }) => {
+const ErrorHandler = ({ errors, ...rest }) => {
     if (!errors.length) return null;
     return (
-        <Message negative>
+        <Message negative {...rest}>
             {errors.map(error => (
                 <div key="error">{error}</div>
             ))}

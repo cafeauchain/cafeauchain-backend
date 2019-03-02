@@ -5,29 +5,29 @@ import { Header, Modal, Button, Form } from "semantic-ui-react";
 /* eslint-disable */
 import Table from "shared/table";
 import Input from "shared/input";
+import Flex from "shared/flex";
 
 import tableDefs from "defs/tables/openRoasts";
 
-// import API_URL from "utilities/apiUtils/url";
-// import requester from "utilities/apiUtils/requester";
-
 import { url as API_URL, requester } from "utilities/apiUtils";
 
-import Batches from "contexts/batches";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Batches>
-        {batches => (
+    <Context>
+        {ctx => (
             <OpenRoasts
                 {...props}
-                batches={batches.data}
-                loading={batches.loading}
-                updateContext={batches.updateContext}
-                userId={batches.userId}
+                batches={ctx.batches}
+                loading={ctx.loading}
+                updateContext={ctx.updateContext}
+                inventory={ctx.inventory}
+                userId={ctx.userId}
+                getCtxData={ctx.getData}
             />
         )}
-    </Batches>
+    </Context>
 );
 
 class OpenRoasts extends Component {
@@ -37,6 +37,12 @@ class OpenRoasts extends Component {
         details: {}
     };
 
+    componentDidMount() {
+        const { batches, inventory, getCtxData } = this.props;
+        if (batches === undefined) getCtxData("batches");
+        if (inventory === undefined) getCtxData("inventory");
+    }
+
     closeModal = () => this.setState({ isOpen: false, current: {}, details: {} });
 
     onClick = (e, item) => {
@@ -44,7 +50,11 @@ class OpenRoasts extends Component {
         this.setState({
             isOpen: true,
             current: item,
-            details: { ending_amount: (Number(attributes.starting_amount) * 0.9).toFixed(2) }
+            details: {
+                ending_amount: (Number(attributes.starting_amount) * 0.9).toFixed(2),
+                starting_amount: attributes.starting_amount,
+                inventory_item_id: attributes.inventory_item_id
+            }
         });
     };
 
@@ -57,12 +67,15 @@ class OpenRoasts extends Component {
         this.setState({ details });
     };
 
-    handleSubmit = async ev => {
+    handleSubmit = async (ev, isFinished) => {
         ev.preventDefault();
         const { details, current } = this.state;
         const { id, attributes } = current;
         const { userId } = this.props;
         const url = `${API_URL}/roasters/${userId}/batches/${id}`;
+        if (isFinished) {
+            details.finish_batch = true;
+        }
         const body = { ...details };
         const method = "PUT";
         // TODO probably need to add in better error handler/input validation
@@ -84,6 +97,9 @@ class OpenRoasts extends Component {
         }
     };
 
+    handleFinish = ev => this.handleSubmit(ev, true);
+    handleUpdate = ev => this.handleSubmit(ev, false);
+
     // only called after successful submit
     getBatchData = async id => {
         const url = `${API_URL}/roasters/${id}/batches`;
@@ -95,38 +111,78 @@ class OpenRoasts extends Component {
             console.log("there was an error", data.response);
         } else {
             // TODO Add success/error messaging before closing
-            updateContext({ data }, this.closeModal());
+            await updateContext({ batches: data });
+            this.closeModal();
         }
+    };
+
+    buildInventoryOptions = (inventory, lot_id) => {
+        return inventory.reduce((options, { id, attributes }) => {
+            if (lot_id.toString() === attributes.lot_id.toString()) {
+                return [
+                    ...options,
+                    {
+                        value: id,
+                        text: attributes.name,
+                        key: id,
+                        id: id,
+                        name: attributes.name
+                    }
+                ];
+            }
+            return options;
+        }, []);
     };
 
     renderForm = () => {
         const { current, details } = this.state;
+        let { inventory } = this.props;
+        if (inventory === undefined) inventory = [];
         const { attributes } = current;
         return (
-            <Form onSubmit={this.handleSubmit}>
-                <div style={{ marginBottom: 20 }}>
-                    <span style={{ fontWeight: "bold" }}>Starting Weight: </span>
-                    {attributes.starting_amount}
-                    <span> lbs</span>
-                </div>
-                <input type="hidden" value={current.id} />
-                <Input
-                    name="ending_amount"
-                    label="Roasted Yield (in lbs)"
-                    onChange={this.handleInputChange}
-                    type="number"
-                    defaultValue={details.ending_amount}
-                    step={0.1}
-                />
-                <Button size="small" primary fluid>
-                    Finish Batch
-                </Button>
+            <Form>
+                <F>
+                    <Input
+                        inputType="select"
+                        name="inventory_item_id"
+                        label="Roast Profile"
+                        onChange={this.handleInputChange}
+                        defaultValue={details.inventory_item_id.toString()}
+                        options={this.buildInventoryOptions(inventory, attributes.lot_id)}
+                    />
+
+                    <Input
+                        name="starting_amount"
+                        label="Starting Weight (in lbs)"
+                        onChange={this.handleInputChange}
+                        type="number"
+                        defaultValue={details.starting_amount}
+                    />
+
+                    <Input
+                        key="ending_amount"
+                        name="ending_amount"
+                        label="Roasted Yield (in lbs)"
+                        onChange={this.handleInputChange}
+                        type="number"
+                        defaultValue={details.ending_amount}
+                        step={0.1}
+                    />
+                    <Flex spacebetween>
+                        <Button onClick={this.handleUpdate}>Update Batch</Button>
+                        <Button primary onClick={this.handleFinish}>
+                            Finish Batch
+                        </Button>
+                    </Flex>
+                </F>
             </Form>
         );
     };
 
     render() {
-        const { batches, loading } = this.props;
+        const { loading } = this.props;
+        let { batches } = this.props;
+        if (batches === undefined) batches = [];
         const { isOpen, current } = this.state;
         const { attributes } = current;
         const title = attributes ? attributes.crop_name : "";
@@ -151,7 +207,9 @@ OpenRoasts.propTypes = {
     batches: array,
     loading: bool,
     updateContext: func,
-    userId: oneOfType([string, number])
+    userId: oneOfType([string, number]),
+    inventory: array,
+    getCtxData: func
 };
 
 export default Wrapper;

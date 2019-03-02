@@ -1,0 +1,38 @@
+.ui.cards > .card,
+.ui.card {
+    &.flex-card {
+        min-width: 220px;
+        width: auto;
+        height: 100%;
+        box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.5);
+    }
+    > .image.card-image-container {
+        height: 0;
+        padding-top: 56.25% !important;
+        position: relative;
+        // Leaving this in here incase browser support isnt good for object-fit
+        // background-size: auto;
+        // background-position: center;
+        // background-repeat: no-repeat;
+        // background: none !important;
+        // overflow: hidden;
+        img {
+            // display: none;
+            object-fit: cover;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 100%;
+            width: 100%;
+            transform: translate(-50%, -50%);
+        }
+    }
+}
+
+.flex-striped {
+    background: #fafafa;
+    padding: 3px;
+    &:nth-child(odd) {
+        background: #eaeaea;
+    }
+}

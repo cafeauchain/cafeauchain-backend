@@ -12,6 +12,7 @@
 #  name       :string
 #  slug       :string
 #  state      :string
+#  subdomain  :string
 #  twitter    :string
 #  url        :string
 #  zip_code   :string
@@ -31,12 +32,20 @@ class RoasterProfile < ApplicationRecord
   has_many :crops, through: :lots
   has_many :batches, through: :lots
   has_many :addresses, as: :addressable, dependent: :destroy
+  has_many :products
 
   belongs_to :owner, class_name: "User", foreign_key: "owner_id", optional: true
 
   has_one_attached :logo
 
   delegate :subscription, to: :owner
+  validates :subdomain, 
+            exclusion: { in: %w(www), 
+            message: "%{value} is reserved." }, 
+            presence: true, 
+            uniqueness: true
+
+  before_validation :sanitize_subdomain
 
   def bags_delivered(lot_id)
     self.transactions.collect{ |t| t.quantity.to_i if t.lot_id == lot_id }.sum
@@ -55,12 +64,17 @@ class RoasterProfile < ApplicationRecord
     pounds_roasted_in_period = batches.pluck(:starting_amount).sum
   end
 
-
   def set_owner
     if self.owner.nil?
       owner = self.users.first
       self.update(owner: owner)
     end
+  end
+  
+  private
+
+  def sanitize_subdomain
+    self.subdomain = self.subdomain.parameterize
   end
 
 end

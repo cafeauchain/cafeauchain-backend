@@ -60,10 +60,14 @@ class FormattedTable extends Component {
 
     handleSort = clickedColumn => () => {
         const { column, data, direction } = this.state;
+        const {
+            tableDefs: { fields }
+        } = this.props;
+        const item = fields.find(field => field.name === clickedColumn);
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
-                data: sortBy({ collection: data, id: clickedColumn }),
+                data: sortBy({ collection: data, id: clickedColumn, namespace: item.namespace }),
                 direction: "ascending"
             });
 
@@ -77,11 +81,16 @@ class FormattedTable extends Component {
     };
 
     buildTableCells = item => {
-        const { tableDefs } = this.props;
+        const { tableDefs, inputExtras } = this.props;
         return tableDefs.fields.map(field => {
             const { namespace, name, formatter: Formatter, ...rest } = field;
             let value = namespace ? namespacer(namespace, item)[name] : item[name];
-            if (Formatter) value = <Formatter content={value} />;
+            const itemDetails = { id: item.id, type: item.type, name };
+            let extras = {};
+            if (inputExtras) {
+                extras = { ...inputExtras, name, placeholder: humanize(name), value: value || "", isNew: item.isNew };
+            }
+            if (Formatter) value = <Formatter content={value} item={itemDetails} {...extras} />;
             return (
                 <Table.Cell {...rest} key={name}>
                     {value}
@@ -133,6 +142,7 @@ class FormattedTable extends Component {
                                         key={item.id}
                                         onClick={onClick ? e => onClick(e, item) : null}
                                         className={onClick ? "row-clickable" : null}
+                                        verticalAlign={tableDefs.props.verticalAlign}
                                     >
                                         {this.buildTableCells(item)}
                                     </Table.Row>
@@ -170,7 +180,8 @@ FormattedTable.propTypes = {
     onClick: func,
     pagination: object,
     tableDefs: object.isRequired,
-    loading: bool
+    loading: bool,
+    inputExtras: object
 };
 
 export default FormattedTable;

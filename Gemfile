@@ -32,6 +32,9 @@ gem "kaminari"
 gem "pager_api"
 gem 'active_model_serializers', '~> 0.10.0'
 gem "sentry-raven"
+gem 'acts-as-taggable-on', '~> 6.0'
+gem "sentry-raven"
+
 
 group :development do
   gem 'web-console', '>= 3.3.0'
@@ -44,6 +47,7 @@ group :development do
   gem 'spring-commands-rspec'
   gem 'annotate'
   gem "binding_of_caller"
+  gem 'hirb'
 end
 
 group :development, :test do

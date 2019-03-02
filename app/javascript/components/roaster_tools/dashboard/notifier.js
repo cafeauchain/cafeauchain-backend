@@ -4,27 +4,34 @@ import PropTypes from "prop-types";
 /* eslint-disable */
 import Messager from "shared/messager";
 
-import Lots from "contexts/lots";
+import { callMeDanger } from "utilities";
+
+import Context from "contexts/main";
 /* eslint-enable */
 
-const Wrapper = props => <Lots>{lots => <Notifier {...props} lots={lots.data} />}</Lots>;
+const Wrapper = props => <Context>{ctx => <Notifier {...props} lots={ctx.lots} getCtxData={ctx.getData} />}</Context>;
 
 class Notifier extends Component {
+    componentDidMount() {
+        const { lots, getCtxData } = this.props;
+        if (lots === undefined) {
+            getCtxData("lots");
+        }
+    }
     checkQuantities = lots => {
         return lots.reduce((notifications, lot) => {
             const {
                 id,
                 attributes: { name, in_warehouse, low_on_hand, low_remaining, on_hand }
             } = lot;
-            const msgBuilder = (title, name, low_alert, amount) => {
-                return `Your ${title} Inventory is low for ${name}.
-                Your alert level is set to ${low_alert} lbs and your actual level is ${amount} lbs`;
-            };
+            const msgBuilder = (title, name, low_alert, amount) =>
+                callMeDanger(`Your ${title} inventory is low for <strong>${name}</strong>.
+                 Your par level is <strong>${low_alert}</strong> but
+                 your actual level is <strong>${amount}</strong> lbs.`);
             // TODO Refactor this
             if (low_on_hand && low_on_hand >= on_hand) {
                 notifications.push({
                     id: id + "on_hand",
-                    // eslint-disable-next-line
                     message: msgBuilder("On Hand", name, low_on_hand, on_hand),
                     type: "negative"
                 });
@@ -32,7 +39,6 @@ class Notifier extends Component {
             if (low_remaining && low_remaining >= in_warehouse) {
                 notifications.push({
                     id: id + "in_warehouse",
-                    // eslint-disable-next-line
                     message: msgBuilder("Warehouse", name, low_remaining, in_warehouse),
                     type: "negative"
                 });
@@ -42,16 +48,18 @@ class Notifier extends Component {
     };
 
     render() {
-        const { lots } = this.props;
+        let { lots } = this.props;
+        if (lots === undefined) lots = [];
         const notifications = this.checkQuantities(lots);
         if (!notifications.length) return null;
         return <Messager header="Inventory Alerts" messages={notifications} />;
     }
 }
 
-const { array } = PropTypes;
+const { array, func } = PropTypes;
 Notifier.propTypes = {
-    lots: array
+    lots: array,
+    getCtxData: func
 };
 
 export default Wrapper;

@@ -63,6 +63,24 @@
 #                                            PATCH  /api/v1/roasters/:roaster_profile_id/transactions/:id(.:format)                          api/v1/transactions#update
 #                                            PUT    /api/v1/roasters/:roaster_profile_id/transactions/:id(.:format)                          api/v1/transactions#update
 #                                            DELETE /api/v1/roasters/:roaster_profile_id/transactions/:id(.:format)                          api/v1/transactions#destroy
+#     api_v1_roaster_profile_inventory_items GET    /api/v1/roasters/:roaster_profile_id/inventory_items(.:format)                           api/v1/inventory_items#index
+#                                            POST   /api/v1/roasters/:roaster_profile_id/inventory_items(.:format)                           api/v1/inventory_items#create
+#  new_api_v1_roaster_profile_inventory_item GET    /api/v1/roasters/:roaster_profile_id/inventory_items/new(.:format)                       api/v1/inventory_items#new
+# edit_api_v1_roaster_profile_inventory_item GET    /api/v1/roasters/:roaster_profile_id/inventory_items/:id/edit(.:format)                  api/v1/inventory_items#edit
+#      api_v1_roaster_profile_inventory_item GET    /api/v1/roasters/:roaster_profile_id/inventory_items/:id(.:format)                       api/v1/inventory_items#show
+#                                            PATCH  /api/v1/roasters/:roaster_profile_id/inventory_items/:id(.:format)                       api/v1/inventory_items#update
+#                                            PUT    /api/v1/roasters/:roaster_profile_id/inventory_items/:id(.:format)                       api/v1/inventory_items#update
+#                                            DELETE /api/v1/roasters/:roaster_profile_id/inventory_items/:id(.:format)                       api/v1/inventory_items#destroy
+#  add_images_api_v1_roaster_profile_product POST   /api/v1/roasters/:roaster_profile_id/products/:id/add_images(.:format)                   api/v1/products#add_images
+#            api_v1_roaster_profile_products GET    /api/v1/roasters/:roaster_profile_id/products(.:format)                                  api/v1/products#index
+#                                            POST   /api/v1/roasters/:roaster_profile_id/products(.:format)                                  api/v1/products#create
+#         new_api_v1_roaster_profile_product GET    /api/v1/roasters/:roaster_profile_id/products/new(.:format)                              api/v1/products#new
+#        edit_api_v1_roaster_profile_product GET    /api/v1/roasters/:roaster_profile_id/products/:id/edit(.:format)                         api/v1/products#edit
+#             api_v1_roaster_profile_product GET    /api/v1/roasters/:roaster_profile_id/products/:id(.:format)                              api/v1/products#show
+#                                            PATCH  /api/v1/roasters/:roaster_profile_id/products/:id(.:format)                              api/v1/products#update
+#                                            PUT    /api/v1/roasters/:roaster_profile_id/products/:id(.:format)                              api/v1/products#update
+#                                            DELETE /api/v1/roasters/:roaster_profile_id/products/:id(.:format)                              api/v1/products#destroy
+#            api_v1_roaster_profile_variants GET    /api/v1/roasters/:roaster_profile_id/variants(.:format)                                  api/v1/products#variants
 #       api_v1_roaster_profile_subscriptions GET    /api/v1/roasters/:roaster_profile_id/subscriptions(.:format)                             api/v1/roaster_profiles#subscriptions
 #               api_v1_roaster_profile_cards POST   /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#cards
 #                                            DELETE /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#remove_card
@@ -93,6 +111,8 @@
 #        manage_subscription_roaster_profile GET    /roasters/:id/manage_subscription(.:format)                                              roaster_profiles#manage_subscription
 #           manage_inventory_roaster_profile GET    /roasters/:id/manage_inventory(.:format)                                                 roaster_profiles#manage_inventory
 #                                roast_index GET    /roasters/:id/roast(.:format)                                                            roast#index
+#                  wholesale_roaster_profile GET    /roasters/:id/wholesale(.:format)                                                        roaster_profiles#wholesale
+#                       shop_roaster_profile GET    /roasters/:id/shop(.:format)                                                             roaster_profiles#shop
 #                           roaster_profiles GET    /roasters(.:format)                                                                      roaster_profiles#index
 #                                            POST   /roasters(.:format)                                                                      roaster_profiles#create
 #                        new_roaster_profile GET    /roasters/new(.:format)                                                                  roaster_profiles#new
@@ -142,6 +162,9 @@
 #                                            DELETE /users(.:format)                                                                         users/registrations#destroy
 #                                            POST   /users(.:format)                                                                         users/registrations#create
 #                                     logout GET    /logout(.:format)                                                                        devise/sessions#destroy
+#                                      login GET    /login(.:format)                                                                         devise/sessions#create
+#                                     signup GET    /signup(.:format)                                                                        devise/registrations#new
+#                                   register GET    /register(.:format)                                                                      devise/registrations#new
 #                                       root GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
 #                                       home GET    /home(.:format)                                                                          redirect(301, /)
 #                                            GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
@@ -181,8 +204,13 @@ Rails.application.routes.draw do
           end
         end
         get :crops, to: 'roaster_profiles#crops'
-        resources :batches
-        resources :transactions
+        resources :batches, :transactions, :inventory_items
+        resources :products do
+          member do
+            post :add_images
+          end
+        end
+        get :variants, to: 'products#variants'
         get :subscriptions
         post :cards
         delete :cards, to: "roaster_profiles#remove_card"
@@ -204,6 +232,10 @@ Rails.application.routes.draw do
       get :manage_subscription
       get :manage_inventory
       resources :roast, only: [:index]
+      get :wholesale
+      get :shop do
+        resources :products
+      end
     end
   end
 
@@ -222,6 +254,11 @@ Rails.application.routes.draw do
     get "/register" => "devise/registrations#new"
   end
 
-  root 'high_voltage/pages#show', id: 'home'
+  constraints(SubdomainRoutes) do 
+    root 'high_voltage/pages#show', id: 'home'
+  end
 
+  constraints(!SubdomainRoutes) do
+    root 'high_voltage/pages#show', id: 'about'
+  end
 end

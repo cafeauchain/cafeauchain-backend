@@ -10,11 +10,11 @@ import underscorer from "utilities/underscorer";
 import readCookie from "utilities/readCookie";
 import API_URL from "utilities/apiUtils/url";
 
-import Lots from "contexts/lots";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Lots>{lots => <Matcher {...props} id={lots.userId} updateContext={lots.updateContext} />}</Lots>
+    <Context>{ctx => <Matcher {...props} id={ctx.userId} updateContext={ctx.updateContext} />}</Context>
 );
 
 class Matcher extends Component {
@@ -97,7 +97,7 @@ class Matcher extends Component {
             console.log("there was an error", data.response);
         } else {
             // TODO Add success/error messaging before closing
-            updateContext({ data });
+            updateContext({ lots: data });
         }
     };
     render() {

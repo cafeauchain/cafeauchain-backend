@@ -12,39 +12,22 @@ import { noEmpties } from "utilities";
 
 import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
 
-import Log from "contexts/lotsByPeriod";
-import Lots from "contexts/lots";
-import Batches from "contexts/batches";
-import Activity from "contexts/activity";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => (
-    <Lots>
-        {lots => (
-            <Batches>
-                {batches => (
-                    <Activity>
-                        {activity => (
-                            <Log>
-                                {log => (
-                                    <StartBatch
-                                        {...props}
-                                        id={lots.userId}
-                                        updateLots={lots.updateContext}
-                                        updateBatches={batches.updateContext}
-                                        updateActivity={activity.updateContext}
-                                        activity={activity.data}
-                                        updateLog={log.updateContext}
-                                        lotData={lots.data}
-                                    />
-                                )}
-                            </Log>
-                        )}
-                    </Activity>
-                )}
-            </Batches>
+    <Context>
+        {ctx => (
+            <StartBatch
+                {...props}
+                id={ctx.userId}
+                updateContext={ctx.updateContext}
+                lotData={ctx.lots}
+                inventory={ctx.inventory}
+                getCtxData={ctx.getData}
+            />
         )}
-    </Lots>
+    </Context>
 );
 class StartBatch extends Component {
     constructor(props) {
@@ -57,6 +40,15 @@ class StartBatch extends Component {
             btnLoading: false,
             errors: []
         };
+    }
+    componentDidMount() {
+        const { lotData, inventory, getCtxData } = this.props;
+        if (lotData === undefined) {
+            getCtxData("lots");
+        }
+        if (inventory === undefined) {
+            getCtxData("inventory");
+        }
     }
 
     parentState = obj => {
@@ -86,16 +78,18 @@ class StartBatch extends Component {
 
     handleSubmit = async () => {
         const { lotDetails } = this.state;
-        const { id, activity } = this.props;
-        const { attributes } = activity;
-        if (moment(attributes.period_start_date).isAfter(lotDetails.roast_date, "day")) {
-            /* eslint-disable */
-            const message =
-                "You are trying to create a roast for a previous billing period. If you need to add a roast from a previous period, please email us at support@cafeauchain.com and we will be happy to help you. Please note that this could incur an additional charge if it pushes you over your usage limits.";
-            /* eslint-enable */
-            this.setState({ errors: [message], btnLoading: false });
-            return;
-        }
+        const { id } = this.props;
+        // TODO Move this validation to the backend
+        // const { id, activity } = this.props;
+        // const { attributes } = activity;
+        // if (moment(attributes.period_start_date).isAfter(lotDetails.roast_date, "day")) {
+        /* eslint-disable */
+        //     const message =
+        //         "You are trying to create a roast for a previous billing period. If you need to add a roast from a previous period, please email us at support@cafeauchain.com and we will be happy to help you. Please note that this could incur an additional charge if it pushes you over your usage limits.";
+        //     /* eslint-enable */
+        //     this.setState({ errors: [message], btnLoading: false });
+        //     return;
+        // }
         const url = `${ROASTER_URL(id)}/batches`;
         let body = { ...lotDetails };
         let respJSON = await requester({ url, body });
@@ -113,47 +107,55 @@ class StartBatch extends Component {
     // only called after successful submit
     // TODO, I dont think the try/catch will work like I want it to
     getData = async id => {
-        const lotsUrl = `${ROASTER_URL(id)}/lots`;
-        const batchesUrl = `${ROASTER_URL(id)}/batches`;
-        const activityUrl = `${ROASTER_URL(id)}/subscriptions`;
-        const logUrl = `${ROASTER_URL(id)}/lots_by_date`;
-        const { updateLots, updateBatches, updateActivity, updateLog, closeModal } = this.props;
+        const baseUrl = ROASTER_URL(id);
+        const requests = [
+            { name: "lots", url: `${baseUrl}/lots` },
+            { name: "batches", url: `${baseUrl}/batches` },
+            { name: "activity", url: `${baseUrl}/subscriptions` },
+            { name: "log", url: `${baseUrl}/lots_by_date` }
+        ];
+        const { updateContext, closeModal } = this.props;
         try {
-            const results = await Promise.all([
-                fetcher(lotsUrl),
-                fetcher(batchesUrl),
-                fetcher(activityUrl),
-                fetcher(logUrl)
-            ]);
-            Promise.all([
-                updateLots({ data: results[0] }),
-                updateBatches({ data: results[1] }),
-                updateActivity({ data: results[2] }),
-                updateLog({ data: results[3] })
-            ]).then(() => closeModal());
+            const results = await Promise.all(requests.map(request => fetcher(request.url)));
+            Promise.all(results.map((result, idx) => updateContext({ [requests[idx].name]: result }))).then(() =>
+                closeModal()
+            );
         } catch (e) {
             // eslint-disable-next-line
             console.log(e);
         }
     };
 
+    buildInventoryOptions = (inventory, lotId) => {
+        return inventory.reduce((options, { id, attributes }) => {
+            if (Number(attributes.lot_id) === Number(lotId)) {
+                return [...options, { value: id, key: id, text: attributes.name }];
+            }
+            return options;
+        }, []);
+    };
+
+    buildLotOptions = lots =>
+        lots.map(({ id, attributes: { name } }) => ({ value: id, text: name, key: id, id, name }));
+
     render() {
-        const { id, lotData } = this.props;
+        let { id, lotData, inventory } = this.props;
+        if (lotData === undefined) lotData = [];
+        if (inventory === undefined) inventory = [];
+        const lotOptions = this.buildLotOptions(lotData);
         const { lotDetails, btnLoading, errors } = this.state;
+        const isLotSelected = lotDetails.lot_id;
         let on_hand = "?";
-        if (lotDetails.lot_id) {
+        let inventoryItems = [];
+        if (isLotSelected) {
             const lot = lotData.find(lot => lot.id === lotDetails.lot_id);
             on_hand = lot.attributes.on_hand;
+            inventoryItems = this.buildInventoryOptions(inventory, lotDetails.lot_id);
         }
         const btnActive = noEmpties(lotDetails);
         return (
             <Form onSubmit={this.startSubmit}>
                 <ErrorHandler errors={errors} />
-                <p>
-                    <strong>Amount on hand: </strong>
-                    {on_hand}
-                    <F> lbs</F>
-                </p>
                 <Input
                     name="roast_date"
                     label="Date"
@@ -161,16 +163,38 @@ class StartBatch extends Component {
                     type="date"
                     defaultValue={lotDetails.roast_date}
                 />
-                <LotSelect roasterId={id} parentState={this.parentState} fluid />
                 <Input
-                    name="starting_amount"
-                    label="Amount to be Roasted (in lbs)"
+                    inputType="select"
+                    options={lotOptions}
                     onChange={this.handleInputChange}
-                    type="number"
+                    name="lot_id"
+                    label="Choose Lot"
                 />
-                <Button size="small" primary fluid loading={btnLoading} disabled={!btnActive}>
-                    Start a Batch
-                </Button>
+                {isLotSelected && (
+                    <F>
+                        <p>
+                            <strong>Amount on hand: </strong>
+                            {on_hand}
+                            <F> lbs</F>
+                        </p>
+                        <Input
+                            inputType="select"
+                            label="Roast Profile"
+                            options={inventoryItems}
+                            onChange={this.handleInputChange}
+                            name="inventory_item_id"
+                        />
+                        <Input
+                            name="starting_amount"
+                            label="Amount to be Roasted (in lbs)"
+                            onChange={this.handleInputChange}
+                            type="number"
+                        />
+                        <Button size="small" primary fluid loading={btnLoading} disabled={!btnActive}>
+                            Start a Batch
+                        </Button>
+                    </F>
+                )}
             </Form>
         );
     }
@@ -180,12 +204,10 @@ const { oneOfType, string, number, func, object, array } = PropTypes;
 StartBatch.propTypes = {
     id: oneOfType([number, string]),
     closeModal: func,
-    updateLots: func,
-    updateBatches: func,
-    updateActivity: func,
-    activity: object,
+    updateContext: func,
     lotData: array,
-    updateLog: func
+    inventory: array,
+    getCtxData: func
 };
 
 export default Wrapper;

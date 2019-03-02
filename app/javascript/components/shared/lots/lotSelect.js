@@ -3,45 +3,50 @@ import { Form } from "semantic-ui-react";
 import PropTypes from "prop-types";
 
 /* eslint-disable */
-import Lots from "contexts/lots";
+import Context from "contexts/main";
 /* eslint-enable */
 
-const Wrapper = props => <Lots>{lots => <LotSelect {...props} lots={lots.data} />}</Lots>;
+const Wrapper = props => <Context>{ctx => <LotSelect {...props} lots={ctx.lots} />}</Context>;
 
 class LotSelect extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            lots: [],
+            options: [],
             selected: {}
         };
     }
+
+    // TODO Revisit how I'm doing this
     componentDidMount() {
         const { lots } = this.props;
         this.getLots(lots);
     }
+    componentDidUpdate(props) {
+        const { lots: oldLots } = props;
+        const { lots } = this.props;
+        if (lots && oldLots !== lots) {
+            this.getLots(lots);
+        }
+    }
 
-    buildLot = data => {
-        const { attributes, id } = data;
-        const { crop_name } = attributes;
-        return {
-            text: crop_name,
-            value: id,
-            key: id,
-            id,
-            name
-        };
-    };
+    buildOption = ({ id, attributes: { name } }) => ({
+        text: name,
+        value: id,
+        key: id,
+        id,
+        name
+    });
 
     getLots = data => {
         const { parentState } = this.props;
-        const lots = data.map(this.buildLot);
-        this.setState({ lots, selected: {} }, parentState({ lotDetails: { lot_id: "" } }));
+        const options = data.map(this.buildOption);
+        this.setState({ options, selected: {} }, parentState({ lotDetails: { lot_id: "" } }));
     };
 
     getLot = id => {
-        const { lots } = this.state;
-        return lots.find(lot => lot.id === id);
+        const { options } = this.state;
+        return options.find(lot => lot.id === id);
     };
 
     onSelect = (event, { value }) => {
@@ -56,7 +61,7 @@ class LotSelect extends Component {
     };
 
     render = () => {
-        const { lots, selected } = this.state;
+        const { options, selected } = this.state;
         const value = selected ? selected.value : undefined;
         return (
             <Form.Dropdown
@@ -67,7 +72,7 @@ class LotSelect extends Component {
                 selection
                 deburr
                 value={value}
-                options={lots}
+                options={options}
                 onChange={this.onSelect}
             />
         );

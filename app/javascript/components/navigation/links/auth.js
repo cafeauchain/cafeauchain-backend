@@ -13,7 +13,8 @@ const links = user => {
             { href: `${roasterString}/dashboard`, content: "Dashboard" },
             { href: `${roasterString}/manage_inventory`, content: "Manage Inventory" },
             { href: `${roasterString}/manage_subscription`, content: "Manage Subscription" },
-            { href: `${roasterString}/edit`, content: "Edit Roaster Profile" }
+            { href: `${roasterString}/edit`, content: "Edit Roaster Profile" },
+            { href: `${roasterString}/wholesale`, content: "Wholesale" }
         ],
         nonRoaster: [{ href: "/roasters/new", content: "Complete Your Roaster Profile" }],
         admin: [

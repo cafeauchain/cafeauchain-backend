@@ -1,8 +1,11 @@
 import readCookie from "../readCookie";
 
-const requester = async ({ url, body, headers, method = "POST" }) => {
+const requester = async ({ url, body, headers, method = "POST", noContentType }) => {
     const cookie = decodeURIComponent(readCookie("X-CSRF-Token"));
     headers = { "Content-Type": "application/json", "X-CSRF-Token": cookie, ...headers };
+    if (noContentType) {
+        delete headers["Content-Type"];
+    }
     if (headers["Content-Type"] === "application/json") {
         body = JSON.stringify(body);
     }
