@@ -7,9 +7,12 @@
 // To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
 // layout file, like app/views/layouts/application.html.erb
 
+import * as Sentry from '@sentry/browser';
 // Support component names relative to this directory:
 var componentRequireContext = require.context("components", true)
 var ReactRailsUJS = require("react_ujs")
 
 ReactRailsUJS.useContext(componentRequireContext)
 // import "@babel/polyfill";
+
+Sentry.init({ dsn: 'https://787afef10ad642f4aa88c40622b6108f@sentry.io/1406268' });
