@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@rails/webpacker": "4.0.0-rc.5",
+    "@sentry/browser": "4.6.4",
     "@types/react": "^16.7.17",
     "@types/react-dom": "^16.0.11",
     "@babel/polyfill": "^7.2.5",

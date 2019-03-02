@@ -31,6 +31,7 @@ gem 'groupdate'
 gem "kaminari"
 gem "pager_api"
 gem 'active_model_serializers', '~> 0.10.0'
+gem "sentry-raven"
 
 group :development do
   gem 'web-console', '>= 3.3.0'
