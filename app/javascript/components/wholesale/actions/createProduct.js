@@ -29,10 +29,19 @@ class CreateProduct extends Component {
         errors: []
     };
     componentDidMount() {
-        const { inventory, getCtxData } = this.props;
-        if (inventory === undefined) {
-            getCtxData("inventory");
-        }
+        const {
+            inventory,
+            getCtxData,
+            userId,
+            funcs: { buildDefaultVariants }
+        } = this.props;
+        if (inventory === undefined) getCtxData("inventory");
+        fetch(ROASTER_URL(userId) + "/default_options")
+            .then(response => response.json())
+            .then(data => {
+                const items = data.reduce((obj, item) => ({ ...obj, [item.title.toLowerCase()]: item.options }), {});
+                buildDefaultVariants(items.sizes);
+            });
     }
 
     handleSubmit = async ev => {

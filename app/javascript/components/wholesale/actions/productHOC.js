@@ -11,7 +11,7 @@ import Context from "contexts/main";
 /* eslint-enable */
 
 const compositionDefault = () => ({ inventory_item_id: "", pct: "", id: shortid.generate() });
-const variantsDefault = () => ({ size: "", price_in_dollars: "", id: shortid.generate() });
+const variantsDefault = (variant = "") => ({ size: variant, price_in_dollars: "", id: shortid.generate() });
 const defaultDetails = {
     name: "",
     description: "",
@@ -44,6 +44,16 @@ function withProductForm(WrappedComponent) {
                     id: comp.id
                 }))
             };
+        };
+
+        buildDefaultVariants = (val = []) => {
+            if (val.length) {
+                const variants = val.map(variantsDefault);
+                let { details } = this.state;
+                details = { ...details };
+                details.variants = variants;
+                this.setState({ details });
+            }
         };
 
         handleInputChange = (event, { value, name, checked, ...rest }) => {
@@ -142,6 +152,7 @@ function withProductForm(WrappedComponent) {
                 addVariant: this.addVariant,
                 addInventoryItem: this.addInventoryItem,
                 buildInventoryOptions: this.buildInventoryOptions,
+                buildDefaultVariants: this.buildDefaultVariants,
                 resetForm: this.resetForm
             };
 

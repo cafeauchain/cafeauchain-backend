@@ -211,6 +211,7 @@ Rails.application.routes.draw do
           end
         end
         get :variants, to: 'products#variants'
+        get :default_options
         get :subscriptions
         post :cards
         delete :cards, to: "roaster_profiles#remove_card"
@@ -254,7 +255,7 @@ Rails.application.routes.draw do
     get "/register" => "devise/registrations#new"
   end
 
-  constraints(SubdomainRoutes) do 
+  constraints(SubdomainRoutes) do
     root 'high_voltage/pages#show', id: 'home'
   end
 
