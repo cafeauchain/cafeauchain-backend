@@ -18,7 +18,8 @@ const defaultDetails = {
     categories: [],
     product_images: [],
     composition: [compositionDefault()],
-    variants: [variantsDefault()]
+    variants: [variantsDefault()],
+    product_options: []
 };
 
 function withProductForm(WrappedComponent) {
@@ -52,6 +53,15 @@ function withProductForm(WrappedComponent) {
                 let { details } = this.state;
                 details = { ...details };
                 details.variants = variants;
+                this.setState({ details });
+            }
+        };
+
+        buildDefaultOptions = (val = []) => {
+            if (val.length) {
+                let { details } = this.state;
+                details = { ...details };
+                details.product_options = val;
                 this.setState({ details });
             }
         };
@@ -90,6 +100,13 @@ function withProductForm(WrappedComponent) {
             let { details } = this.state;
             const variant = variantsDefault();
             details.variants = [...details.variants, variant];
+            this.setState({ details });
+        };
+
+        setOptions = (val = []) => {
+            let { details } = this.state;
+            details = { ...details };
+            details.product_options = val;
             this.setState({ details });
         };
 
@@ -151,8 +168,10 @@ function withProductForm(WrappedComponent) {
                 removeButton: this.removeButton,
                 addVariant: this.addVariant,
                 addInventoryItem: this.addInventoryItem,
+                setOptions: this.setOptions,
                 buildInventoryOptions: this.buildInventoryOptions,
                 buildDefaultVariants: this.buildDefaultVariants,
+                buildDefaultOptions: this.buildDefaultOptions,
                 resetForm: this.resetForm
             };
 

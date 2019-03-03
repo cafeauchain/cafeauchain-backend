@@ -9,7 +9,9 @@ module InventoryServices
     #   "composition":
     #     [{"inventory_item_id":"12","pct":"25"},{"inventory_item_id":"3","pct":"50"},{"inventory_item_id":"11","pct":"25"}],
     #   "variants":
-    #     [{"size": "12oz", "bean_type": "whole_bean", price_in_dollars: "14.99"},{"size": "12oz", "bean_type": "ground", price_in_dollars: "15.00"},{"size": "5lb", "bean_type": "whole_bean", price_in_dollars: "60.99"}]
+    #     [{"size": "12oz", "price_in_dollars": "14.99"},{"size": "12oz", "price_in_dollars": "15.00"},{"size": "5lb", "price_in_dollars": "60.99"}],
+    #   "product_options":
+    #     ["whole_bean", "medium_ground", "espresso"]
     # }
     # price_in_dollars gets converted to price_in_cents and that is how it is stored
     ############################
@@ -23,7 +25,12 @@ module InventoryServices
     end
 
     def call
-      @product = @roaster.products.new(title: @product_params[:name], description: @product_params[:description], status: @product_params[:status])
+      @product = @roaster.products.new(
+        title: @product_params[:name],
+        description: @product_params[:description],
+        status: @product_params[:status],
+        product_options: @product_params[:product_options]
+      )
       @product.category_list = @categories_array
       if @product.save
         @composition_array.each do |component|
