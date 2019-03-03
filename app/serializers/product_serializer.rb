@@ -23,7 +23,7 @@
 #
 
 class ProductSerializer < ActiveModel::Serializer
-  attributes :id, :title, :description, :slug, :composition, :product_image_urls #, :variant_options
+  attributes :id, :title, :description, :slug, :composition, :product_image_urls, :product_options #, :variant_options
 
   def composition
     self.object.product_inventory_items.map do |item|
@@ -35,6 +35,14 @@ class ProductSerializer < ActiveModel::Serializer
     object.roaster_profile_id.variant_options.each do |option|
       # title: string, options: array
       { title: option.title, options: option.options }
+    end
+  end
+
+  def product_options
+    if self.object.product_options.present?
+      self.object.product_options
+    else
+      []
     end
   end
 end
