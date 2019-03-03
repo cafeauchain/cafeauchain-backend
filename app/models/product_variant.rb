@@ -2,14 +2,15 @@
 #
 # Table name: product_variants
 #
-#  id             :uuid             not null, primary key
-#  custom_options :jsonb
-#  price_in_cents :integer
-#  quantity       :integer
-#  variant_title  :string
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  product_id     :uuid
+#  id                 :uuid             not null, primary key
+#  custom_options     :jsonb
+#  price_in_cents     :integer
+#  production_options :string           default([]), is an Array
+#  quantity           :integer
+#  variant_title      :string
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  product_id         :uuid
 #
 # Indexes
 #
