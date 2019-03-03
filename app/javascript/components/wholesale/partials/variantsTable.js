@@ -14,8 +14,8 @@ const Variants = ({ variants, fields, handleChange, btn: RemoveButton }) => (
     <Container style={{ marginBottom: 10 }}>
         <Header as="h3" content="Product Sizes" style={{ marginBottom: 10 }} />
         <Flex spacing="10">
-            {fields.map(({ label, flex }) => (
-                <div key={label} flex={flex}>
+            {fields.map(({ label, flex, width }) => (
+                <div key={label} flex={flex} style={{ width: width }}>
                     <strong>{label}</strong>
                 </div>
             ))}
@@ -23,10 +23,11 @@ const Variants = ({ variants, fields, handleChange, btn: RemoveButton }) => (
         {variants.map((item, idx) => (
             <F key={item.id}>
                 <Flex spacing="10" centercross>
-                    {fields.map(({ name, label, inputType, flex, ...rest }) => {
+                    {fields.map(({ name, label, inputType, flex, width, ...rest }, fieldIdx) => {
                         const value = name ? item[name] : Weights({ content: item["size"] });
+                        const showRemoveBtn = fields.length === fieldIdx + 1 && variants.length > 1;
                         return (
-                            <div key={name} flex={flex}>
+                            <div key={name} flex={flex} style={{ width: showRemoveBtn ? width + 65 : width }}>
                                 <Input
                                     key={name}
                                     name={name}
@@ -37,13 +38,16 @@ const Variants = ({ variants, fields, handleChange, btn: RemoveButton }) => (
                                     data-itemid={item.id}
                                     onChange={handleChange}
                                     value={value}
+                                    action={showRemoveBtn}
                                     {...rest}
-                                />
+                                >
+                                    <input />
+                                    {showRemoveBtn && <RemoveButton idx={idx} remover="variants" />}
+                                </Input>
                             </div>
                         );
                     })}
                 </Flex>
-                {variants.length > 1 && <RemoveButton idx={idx} remover="variants" />}
             </F>
         ))}
     </Container>

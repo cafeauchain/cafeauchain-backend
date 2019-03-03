@@ -8,9 +8,9 @@ const fields = {
         { name: "pct", label: "Composition %", type: "number", min: 0, max: 100 }
     ],
     variants: [
-        { name: "size", label: "Size (in ounces)", step: 0.1, flex: "50" },
-        { name: "", label: "", readOnly: true, transparent: true, flex: "fill" },
-        { name: "price_in_dollars", label: "Price", step: 0.01, flex: "25" }
+        { name: "size", label: "Size (in ounces)", placeholder: "oz", step: 0.1, flex: "auto", width: 100 },
+        { name: "", label: "", readOnly: true, transparent: true, flex: "auto", width: 60 },
+        { name: "price_in_dollars", label: "Price", step: 0.01, flex: "auto", width: 100 }
     ]
 };
 
