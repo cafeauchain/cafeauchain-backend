@@ -1,6 +1,6 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Header, Container } from "semantic-ui-react";
+import { Header } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
@@ -11,8 +11,8 @@ import { Weights } from "shared/textFormatters";
 /* eslint-enable */
 
 const Variants = ({ variants, fields, handleChange, btn: RemoveButton }) => (
-    <Container style={{ marginBottom: 10 }}>
-        <Header as="h3" content="Product Options" style={{ marginBottom: 10 }} />
+    <div style={{ marginBottom: 10 }}>
+        <Header as="h3" content="Product Size" style={{ marginBottom: 10 }} />
         <Flex spacing="10">
             {fields.map(({ label, flex, width }) => (
                 <div key={label} flex={flex} style={{ width: width, whiteSpace: "nowrap" }}>
@@ -50,7 +50,7 @@ const Variants = ({ variants, fields, handleChange, btn: RemoveButton }) => (
                 </Flex>
             </F>
         ))}
-    </Container>
+    </div>
 );
 
 const { array, func } = PropTypes;
