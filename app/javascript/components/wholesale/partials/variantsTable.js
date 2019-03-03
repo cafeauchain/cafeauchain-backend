@@ -12,10 +12,10 @@ import { Weights } from "shared/textFormatters";
 
 const Variants = ({ variants, fields, handleChange, btn: RemoveButton }) => (
     <Container style={{ marginBottom: 10 }}>
-        <Header as="h3" content="Product Sizes" style={{ marginBottom: 10 }} />
+        <Header as="h3" content="Product Options" style={{ marginBottom: 10 }} />
         <Flex spacing="10">
             {fields.map(({ label, flex, width }) => (
-                <div key={label} flex={flex} style={{ width: width }}>
+                <div key={label} flex={flex} style={{ width: width, whiteSpace: "nowrap" }}>
                     <strong>{label}</strong>
                 </div>
             ))}
