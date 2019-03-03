@@ -12,6 +12,11 @@ p2 = Plan.create!(stripe_plan_id: "plan_EW5n1MwhCcYy5r",
   price_in_cents: 1999,
   interval: "monthly",
   name: "Proof of Perk Base")
+p3 = Plan.create!(stripe_plan_id: 'plan_EdJPS9KT8YVr8b',
+  price_in_cents: 999,
+  interval: "monthly",
+  name: 'Proof of Perk Wholesale Lite'
+)
 
 u2 = User.create!(name: 'Arthur Pendragon', email: 'pendragondevelopment@gmail.com', password: 'changeme', password_confirmation: 'changeme', admin: false)
 puts "#{u2.name} created."

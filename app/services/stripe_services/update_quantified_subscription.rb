@@ -15,17 +15,7 @@ module StripeServices
         if additional_pounds > 0
           quantity = additional_pounds.to_i
           stripe_sub = Stripe::Subscription.retrieve(subscription.stripe_subscription_id)
-          sub_items = stripe_sub.items.data.select{ |si| si.plan.id == plan.stripe_plan_id}
-          if sub_items.empty?
-            stripe_sub.items = [
-              {plan: plan.stripe_plan_id}
-            ]
-            stripe_sub.save
-            sub_item = stripe_sub.items.data.select{ |si| si.plan.id == plan.stripe_plan_id}
-            sub_item_id = sub_item.first.id
-          else
-            sub_item_id = sub_items.first.id
-          end
+          sub_item_id = subscription.find_subscription_item_id(stripe_sub, plan.stripe_plan_id)
           Stripe::UsageRecord.create(:quantity => quantity, :timestamp => Time.now.to_time.to_i, :subscription_item => sub_item_id)
           return subscription
         end
