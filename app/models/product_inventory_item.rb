@@ -21,7 +21,7 @@ class ProductInventoryItem < ApplicationRecord
   belongs_to :product
   belongs_to :inventory_item
 
-  default_scope { where(:inactive => false)}
+  # default_scope { where(:inactive => false)}
 
   def product_name
     inventory_item.name

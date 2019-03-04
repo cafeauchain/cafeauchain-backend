@@ -15,7 +15,7 @@ p2 = Plan.create!(stripe_plan_id: "plan_EW5n1MwhCcYy5r",
 
 u2 = User.create!(name: 'Arthur Pendragon', email: 'pendragondevelopment@gmail.com', password: 'changeme', password_confirmation: 'changeme', admin: false)
 puts "#{u2.name} created."
-roaster = RoasterProfile.create(name: "Pendragon Coffee", url: 'pendragoncoffee.com', address_1: "345 W Hancock Ave", address_2: "Suite 108", zip_code: "30601", city: "Athens", state: "GA", about: "Good coffee, round table.")
+roaster = RoasterProfile.create(name: "Pendragon Coffee", subdomain: 'pendragon-coffee', url: 'pendragoncoffee.com', address_1: "345 W Hancock Ave", address_2: "Suite 108", zip_code: "30601", city: "Athens", state: "GA", about: "Good coffee, round table.")
 puts "#{roaster.name} created."
 roaster.users << u2
 roaster.set_owner
