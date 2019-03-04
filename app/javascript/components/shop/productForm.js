@@ -91,7 +91,7 @@ class Products extends React.Component {
     };
 
     render() {
-        const { variantOptions, productOptions } = this.props;
+        const { variantOptions, productOptions, inCart } = this.props;
         const { errors, details, btnLoading, added } = this.state;
         const selected = variantOptions.find(variant => variant.value === details.id);
         const subtotal = Number(details.quantity) * Number(selected.price);
@@ -115,28 +115,30 @@ class Products extends React.Component {
                             </div>
                         </F>
                     )}
+                    {!inCart && (
+                        <Flex spacing="10">
+                            <div flex="50">
+                                <Input
+                                    inputType={multipleVariants ? "select" : undefined}
+                                    options={multipleVariants ? variantOptions : undefined}
+                                    label="Size"
+                                    value={multipleVariants ? details.id : variantOptions[0].text}
+                                    onChange={multipleVariants ? this.handleInputChange : undefined}
+                                    readOnly={multipleVariants ? undefined : true}
+                                />
+                            </div>
+                            <div flex="50">
+                                <Input
+                                    label="Option"
+                                    inputType="select"
+                                    options={productOptions}
+                                    value={details.option}
+                                    onChange={this.handleInputChange}
+                                />
+                            </div>
+                        </Flex>
+                    )}
 
-                    <Flex spacing="10">
-                        <div flex="50">
-                            <Input
-                                inputType={multipleVariants ? "select" : undefined}
-                                options={multipleVariants ? variantOptions : undefined}
-                                label="Size"
-                                value={multipleVariants ? details.id : variantOptions[0].text}
-                                onChange={multipleVariants ? this.handleInputChange : undefined}
-                                readOnly={multipleVariants ? undefined : true}
-                            />
-                        </div>
-                        <div flex="50">
-                            <Input
-                                label="Option"
-                                inputType="select"
-                                options={productOptions}
-                                value={details.option}
-                                onChange={this.handleInputChange}
-                            />
-                        </div>
-                    </Flex>
                     <Card.Description>
                         <Input
                             action
