@@ -3,11 +3,8 @@ import PropTypes from "prop-types";
 import { Container, Header, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
-import QuickActions from "wholesale/quickActions";
-import RoastedInventory from "wholesale/inventory";
-import Notifier from "wholesale/notifier";
-import ProductInventory from "wholesale/productInventory";
-import VariantInventory from "wholesale/variantsTable";
+import StartBatch from "roaster_tools/startBatch";
+import Inventory from "wholesale/inventory";
 
 import Context from "contexts/index";
 /* eslint-enable */
@@ -31,11 +28,8 @@ const Dashboard = () => (
         <Segment>
             <Header as="h1" content="Manage Wholesale" />
         </Segment>
-        {true && <Notifier />}
-        <Segment>{true && <QuickActions />}</Segment>
-        <Segment>{true && <ProductInventory />}</Segment>
-        <Segment>{true && <VariantInventory />}</Segment>
-        <Segment>{true && <RoastedInventory />}</Segment>
+        <Segment>{true && <StartBatch />}</Segment>
+        <Segment>{true && <Inventory />}</Segment>
     </Container>
 );
 
