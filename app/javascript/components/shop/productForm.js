@@ -11,6 +11,8 @@ import Modal from "shared/modal";
 import { Weights, Money } from "shared/textFormatters";
 import ErrorHandler from "shared/errorHandler";
 
+import { requester, url as API_URL } from "utilities/apiUtils";
+
 import Context from "contexts/main";
 /* eslint-enable */
 
@@ -36,7 +38,9 @@ class Products extends React.Component {
                 id: props.variantOptions[0].value,
                 option: props.productOptions[0].value
             },
-            errors: []
+            errors: [],
+            btnLoading: false,
+            added: false
         };
     }
 
@@ -66,16 +70,29 @@ class Products extends React.Component {
         this.setState({ details, errors: [] });
     };
 
-    handleSubmit = e => {
+    handleSubmit = async e => {
+        const { target } = e;
+        target.blur();
         e.preventDefault();
+        await this.setState({ btnLoading: true });
         const { details } = this.state;
-        // eslint-disable-next-line
-        console.log(details);
+        const url = `${API_URL}/carts`;
+        const response = await requester({ url, body: details });
+        await setTimeout(() => this.setState({ btnLoading: false }), 600);
+        if (response instanceof Error) {
+            this.setState({ errors: response.response.data });
+        } else {
+            if (response.redirect) {
+                window.location.href = await response.redirect_url;
+            } else {
+                this.setState({ added: true });
+            }
+        }
     };
 
     render() {
         const { variantOptions, productOptions } = this.props;
-        const { errors, details } = this.state;
+        const { errors, details, btnLoading, added } = this.state;
         const selected = variantOptions.find(variant => variant.value === details.id);
         const subtotal = Number(details.quantity) * Number(selected.price);
         const multipleVariants = variantOptions.length > 1;
@@ -155,9 +172,18 @@ class Products extends React.Component {
                             <Money type="positive">{subtotal}</Money>
                         </Flex>
                         <br />
-                        <Button primary floated="right" onClick={this.handleSubmit}>
-                            <Icon name="cart plus" />
-                            Add To Cart
+                        <Button primary floated="right" onClick={this.handleSubmit} loading={btnLoading}>
+                            {added ? (
+                                <F>
+                                    <span>Added &nbsp;</span>
+                                    <Icon name="check" className="button" />
+                                </F>
+                            ) : (
+                                <F>
+                                    <Icon name="cart plus" />
+                                    Add To Cart
+                                </F>
+                            )}
                         </Button>
                     </Card.Header>
                 </Card.Content>

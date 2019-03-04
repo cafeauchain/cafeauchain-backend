@@ -217,6 +217,7 @@ Rails.application.routes.draw do
         delete :cards, to: "roaster_profiles#remove_card"
         put :set_as_default
       end
+      resources :carts
     end
   end
 

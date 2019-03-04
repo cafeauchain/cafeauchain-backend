@@ -23,7 +23,7 @@
 #
 
 class ProductSerializer < ActiveModel::Serializer
-  attributes :id, :title, :description, :slug, :composition, :product_image_urls, :product_options #, :variant_options
+  attributes :id, :title, :description, :slug, :composition, :product_image_urls, :product_options, :status #, :variant_options
 
   def composition
     self.object.product_inventory_items.map do |item|

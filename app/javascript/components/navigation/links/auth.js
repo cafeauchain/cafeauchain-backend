@@ -5,9 +5,12 @@ import { Button, Dropdown, Icon } from "semantic-ui-react";
 import styles from "stylesheets/variables.scss";
 
 const links = user => {
-    const { roaster_profile_id, admin } = user;
+    const { roaster_profile_id, admin, customer_profile_id } = user;
     const roasterString = "/roasters/" + roaster_profile_id;
     const buildItems = array => array.map(item => <Dropdown.Item as="a" key={item.content} {...item} />);
+    const isRoaster = roaster_profile_id !== null;
+    const isNew = roaster_profile_id === null && customer_profile_id === null;
+    const isCustomer = customer_profile_id !== null;
     const dropdowns = {
         roaster: [
             { href: `${roasterString}/dashboard`, content: "Dashboard" },
@@ -16,6 +19,7 @@ const links = user => {
             { href: `${roasterString}/edit`, content: "Edit Roaster Profile" },
             { href: `${roasterString}/wholesale`, content: "Wholesale" }
         ],
+        wholesaleDropdowns: [{ href: "/", content: "History (Doesnt work)" }],
         nonRoaster: [{ href: "/roasters/new", content: "Complete Your Roaster Profile" }],
         admin: [
             {
@@ -35,8 +39,9 @@ const links = user => {
                 content: (
                     <Dropdown text="My Account" item fluid className="no-border" style={{ height: "100%" }}>
                         <Dropdown.Menu>
-                            {roaster_profile_id && buildItems(dropdowns.roaster)}
-                            {!roaster_profile_id && buildItems(dropdowns.nonRoaster)}
+                            {isRoaster && buildItems(dropdowns.roaster)}
+                            {isNew && buildItems(dropdowns.nonRoaster)}
+                            {isCustomer && buildItems(dropdowns.wholesaleDropdowns)}
                             {admin && (
                                 <F>
                                     <Dropdown.Header
