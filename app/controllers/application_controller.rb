@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :set_current_roaster
   before_action :set_raven_context
   after_action :set_csrf_cookie
   layout :layout_by_resource  
@@ -36,5 +37,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def set_current_roaster
+    if !SubdomainRoutes
+      @current_roaster = RoasterProfile.find_by(subdomain: request.subdomain)
+    end
+  end
 
 end

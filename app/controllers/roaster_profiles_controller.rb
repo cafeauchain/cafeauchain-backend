@@ -1,6 +1,6 @@
 class RoasterProfilesController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_roaster_profile, except: [:index, :new]
+  before_action :authenticate_user!, except: [:shop]
+  before_action :set_roaster_profile, except: [:index, :new, :shop]
   layout "devise"
 
   # GET /roaster_profiles
@@ -52,6 +52,7 @@ class RoasterProfilesController < ApplicationController
   end
 
   def shop
+    @roaster_profile = @current_roaster || RoasterProfile.find_by(subdomain: request.subdomain)
     @user = current_user
     @products = ActiveModel::SerializableResource.new(@roaster_profile.products, each_serializer: ProductSerializer)
   end
