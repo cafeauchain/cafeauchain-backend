@@ -44,6 +44,19 @@ class Subscription < ApplicationRecord
     end
     next_charge = (charge_amounts_in_cents.sum / 100)
   end
-  
+
+  def find_subscription_item_id(stripe_sub, stripe_plan_id)
+    sub_items = stripe_sub.items.data.select{ |si| si.plan.id == stripe_plan_id}
+    if sub_items.empty?
+      stripe_sub.items = [
+        {plan: stripe_plan_id}
+      ]
+      stripe_sub.save
+      sub_item = stripe_sub.items.data.select{ |si| si.plan.id == stripe_plan_id}
+      sub_item_id = sub_item.first.id
+    else
+      sub_item_id = sub_items.first.id
+    end
+  end
 
 end

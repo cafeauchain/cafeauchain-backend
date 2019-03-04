@@ -11,7 +11,7 @@ import randomCoffeeImage from "shared/randomCoffeeImage";
 
 import Product from "shop/product";
 
-import { sortBy, truncate } from "utilities";
+import { sortBy, truncate, humanize } from "utilities";
 
 import Context from "contexts/main";
 /* eslint-enable */
@@ -54,7 +54,7 @@ class Products extends React.Component {
                     ...arr,
                     {
                         text,
-                        value: attributes.bag_size,
+                        value: variant_id,
                         key: variant_id,
                         id: variant_id,
                         name,
@@ -64,6 +64,18 @@ class Products extends React.Component {
             }
             return arr;
         }, []);
+
+    productOptionsBuilder = product_options => {
+        if (product_options.length === 0) {
+            product_options = ["whole_bean"];
+        }
+        return product_options.map(item => ({
+            text: humanize(item),
+            value: item,
+            key: item
+        }));
+    };
+
     render() {
         const { products = [], variants = [] } = this.props;
         let sorted = sortBy({ collection: products, id: "title", namespace: "attributes" });
@@ -72,27 +84,23 @@ class Products extends React.Component {
                 <Header as="h2" content="Product Grid" />
                 <Flex centermain wrap spacing="20">
                     {sorted.reduce((arr, { attributes, id }) => {
-                        const { product_image_urls, title, description } = attributes;
+                        const { product_image_urls, title, description, product_options } = attributes;
                         const img = product_image_urls[0] || randomCoffeeImage();
                         const shortDesc = truncate(description, 200);
                         const variantOptions = this.variantBuilder(variants, id, title);
-                        const grindOptions = [
-                            { value: "whole_bean", text: "Whole Bean", key: "whole_bean" },
-                            { value: "medium_grind", text: "Medium Grind", key: "medium_grind" }
-                        ];
+                        const productOptions = this.productOptionsBuilder(product_options);
                         if (!variantOptions.length) return arr;
 
                         return [
                             ...arr,
                             <div key={id} flex="33" style={{ flexGrow: 0, margin: "15px 0" }}>
                                 <Product
-                                    id={id}
                                     img={img}
                                     title={title}
                                     description={description}
                                     shortDesc={shortDesc}
                                     variantOptions={variantOptions}
-                                    grindOptions={grindOptions}
+                                    productOptions={productOptions}
                                 />
                             </div>
                         ];

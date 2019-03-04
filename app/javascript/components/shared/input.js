@@ -1,11 +1,11 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
 import { Form, Label, Input as SUInput } from "semantic-ui-react";
-import ReactMde from "react-mde";
-import "react-mde/lib/styles/css/react-mde-all.css";
 
-import underscorer from "../utilities/underscorer";
-import getText from "../utilities/getTextFromChildren";
+/* eslint-disable */
+import MarkdownEditor from "shared/markdownEditor";
+import { underscorer, getTextFromChildren as getText } from "utilities";
+/* eslint-enable */
 
 const Input = props => {
     const {
@@ -42,14 +42,13 @@ const Input = props => {
             )}
 
             {inputType === "textarea" && (
+                <Form.TextArea {...rest} label={label} placeholder={placeholder} name={name} onChange={onChange} />
+            )}
+
+            {inputType === "markdown" && (
                 <Form.Field>
                     <label>{label}</label>
-                    <ReactMde
-                        {...rest}
-                        placeholder={placeholder} 
-                        name={name} 
-                        onChange={onChange} 
-                    />
+                    <MarkdownEditor placeholder={placeholder} name={name} onChange={onChange} {...rest} />
                 </Form.Field>
             )}
 

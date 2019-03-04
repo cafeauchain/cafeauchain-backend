@@ -11,14 +11,15 @@ import Context from "contexts/main";
 /* eslint-enable */
 
 const compositionDefault = () => ({ inventory_item_id: "", pct: "", id: shortid.generate() });
-const variantsDefault = () => ({ size: "", price_in_dollars: "", id: shortid.generate() });
+const variantsDefault = (variant = "") => ({ size: variant, price_in_dollars: "", id: shortid.generate() });
 const defaultDetails = {
     name: "",
     description: "",
     categories: [],
     product_images: [],
     composition: [compositionDefault()],
-    variants: [variantsDefault()]
+    variants: [variantsDefault()],
+    product_options: []
 };
 
 function withProductForm(WrappedComponent) {
@@ -44,6 +45,25 @@ function withProductForm(WrappedComponent) {
                     id: comp.id
                 }))
             };
+        };
+
+        buildDefaultVariants = (val = []) => {
+            if (val.length) {
+                const variants = val.map(variantsDefault);
+                let { details } = this.state;
+                details = { ...details };
+                details.variants = variants;
+                this.setState({ details });
+            }
+        };
+
+        buildDefaultOptions = (val = []) => {
+            if (val.length) {
+                let { details } = this.state;
+                details = { ...details };
+                details.product_options = val;
+                this.setState({ details });
+            }
         };
 
         handleInputChange = (event, { value, name, checked, ...rest }) => {
@@ -80,6 +100,13 @@ function withProductForm(WrappedComponent) {
             let { details } = this.state;
             const variant = variantsDefault();
             details.variants = [...details.variants, variant];
+            this.setState({ details });
+        };
+
+        setOptions = (val = []) => {
+            let { details } = this.state;
+            details = { ...details };
+            details.product_options = val;
             this.setState({ details });
         };
 
@@ -141,7 +168,10 @@ function withProductForm(WrappedComponent) {
                 removeButton: this.removeButton,
                 addVariant: this.addVariant,
                 addInventoryItem: this.addInventoryItem,
+                setOptions: this.setOptions,
                 buildInventoryOptions: this.buildInventoryOptions,
+                buildDefaultVariants: this.buildDefaultVariants,
+                buildDefaultOptions: this.buildDefaultOptions,
                 resetForm: this.resetForm
             };
 

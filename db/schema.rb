@@ -97,6 +97,8 @@ ActiveRecord::Schema.define(version: 2019_03_01_142455) do
     t.integer "quantity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "production_options", default: [], array: true
+    t.string "notes"
     t.index ["cart_id"], name: "index_cart_items_on_cart_id"
   end
 
@@ -243,6 +245,7 @@ ActiveRecord::Schema.define(version: 2019_03_01_142455) do
     t.datetime "updated_at", null: false
     t.integer "price_in_cents"
     t.uuid "product_id"
+    t.string "production_options", default: [], array: true
     t.index ["created_at"], name: "index_product_variants_on_created_at"
     t.index ["product_id"], name: "index_product_variants_on_product_id"
   end
@@ -421,6 +424,12 @@ ActiveRecord::Schema.define(version: 2019_03_01_142455) do
   add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "wholesale_profiles"
   add_foreign_key "products", "roaster_profiles"
+  add_foreign_key "inventory_items", "lots"
+  add_foreign_key "lots", "crops"
+  add_foreign_key "lots", "roaster_profiles"
+  add_foreign_key "product_inventory_items", "inventory_items"
+  add_foreign_key "product_inventory_items", "products"
+  add_foreign_key "product_variants", "products"
   add_foreign_key "subscription_charges", "subscriptions"
   add_foreign_key "subscription_items", "plans"
   add_foreign_key "subscription_items", "subscriptions"

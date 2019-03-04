@@ -1,8 +1,8 @@
 module InventoryServices
   class AddRoastToInventory
 
-    def self.call(inventory_item_id, ending_amount)
-      @inventory_item = InventoryItem.find(inventory_item_id)
+    def self.call(lot_id, ending_amount)
+      @inventory_item = InventoryItem.find_by(lot_id: lot_id)
       # TODO Still do not know why this doesnt work - KS
       # @inventory_item.increment(quantity: ending_amount.to_f)
       # @inventory_item.save

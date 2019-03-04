@@ -6,10 +6,12 @@ import { Form, Button, Segment } from "semantic-ui-react";
 import Input from "shared/input";
 import ErrorHandler from "shared/errorHandler";
 import FileUpload from "shared/fileUpload";
+import Flex from "shared/flex";
 
 import withProductForm from "wholesale/actions/productHOC";
 
 import Variants from "wholesale/partials/variantsTable";
+import Options from "wholesale/partials/optionsTable";
 import CompositionTable from "wholesale/partials/compositionTable";
 
 import fields from "defs/forms/createProduct";
@@ -29,10 +31,20 @@ class CreateProduct extends Component {
         errors: []
     };
     componentDidMount() {
-        const { inventory, getCtxData } = this.props;
-        if (inventory === undefined) {
-            getCtxData("inventory");
-        }
+        const {
+            inventory,
+            getCtxData,
+            userId,
+            funcs: { buildDefaultVariants, buildDefaultOptions }
+        } = this.props;
+        if (inventory === undefined) getCtxData("inventory");
+        fetch(ROASTER_URL(userId) + "/default_options")
+            .then(response => response.json())
+            .then(data => {
+                const items = data.reduce((obj, item) => ({ ...obj, [item.title.toLowerCase()]: item.options }), {});
+                buildDefaultVariants(items.sizes);
+                buildDefaultOptions(items.options);
+            });
     }
 
     handleSubmit = async ev => {
@@ -86,10 +98,11 @@ class CreateProduct extends Component {
             removeButton,
             addVariant,
             addInventoryItem,
+            setOptions,
             buildInventoryOptions
         } = funcs;
         const inventoryOptions = buildInventoryOptions(inventory);
-        const { composition, variants } = details;
+        const { composition, variants, product_options: options } = details;
         const btnActive = validateInputs(details);
         return (
             <Form>
@@ -126,13 +139,25 @@ class CreateProduct extends Component {
                 </Segment>
 
                 <Segment style={{ background: "#efefef" }}>
-                    <Variants
-                        variants={variants}
-                        fields={fields.variants}
-                        handleChange={handleInputChange}
-                        btn={removeButton}
-                    />
-                    <Button type="button" color="blue" content="Add Variant" onClick={addVariant} />
+                    <Flex spacing="10">
+                        <div flex="fill">
+                            <Variants
+                                variants={variants}
+                                fields={fields.variants}
+                                handleChange={handleInputChange}
+                                btn={removeButton}
+                            />
+                            <Button type="button" color="blue" content="Add Variant" onClick={addVariant} />
+                        </div>
+                        <div flex="fill">
+                            <Options
+                                options={options}
+                                handleChange={handleInputChange}
+                                btn={removeButton}
+                                setOptions={setOptions}
+                            />
+                        </div>
+                    </Flex>
                 </Segment>
 
                 <Button
