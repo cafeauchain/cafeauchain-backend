@@ -260,6 +260,7 @@ Rails.application.routes.draw do
   end
 
   constraints(!SubdomainRoutes) do
-    root 'high_voltage/pages#show', id: 'about'
+    # root 'high_voltage/pages#show', id: 'about'
+    root 'roaster_profiles#shop'
   end
 end
