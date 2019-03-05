@@ -3,6 +3,7 @@ module Api::V1
     before_action :set_cart
 
     def index
+<<<<<<< HEAD
       render json: {data: {user: @user, cart: @cart, items: @cart.cart_items} }, status: 200
     end
 
@@ -12,6 +13,10 @@ module Api::V1
       render json: {item: @item, items: @cart.cart_items, cart: @cart }, status: 200
     end
 
+=======
+    end
+    
+>>>>>>> Getting login and cart to work
     def update
       options = params[:option].split(",")
       @item = OrderServices::CreateCartItem.update(params[:id], params[:quantity], options, params[:notes])

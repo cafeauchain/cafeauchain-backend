@@ -15,4 +15,6 @@ class CustomerProfile < ApplicationRecord
   has_many :users
   has_many :addresses, as: :addressable, dependent: :destroy
 
+  has_many :wholesale_profiles
+
 end
