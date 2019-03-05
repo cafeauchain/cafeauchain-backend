@@ -1,6 +1,6 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Container, Segment, Item } from "semantic-ui-react";
+import { Container, Segment, Item, Sticky, Header, Label } from "semantic-ui-react";
 
 import "./styles.scss";
 
@@ -14,6 +14,7 @@ import randomCoffeeImage from "shared/randomCoffeeImage";
 
 import ProductForm from "shop/productForm";
 
+import { humanize } from "utilities";
 import { requester, url as API_URL } from "utilities/apiUtils";
 
 import Context from "contexts/main";
