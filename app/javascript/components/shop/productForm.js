@@ -114,18 +114,13 @@ class ProductForm extends React.Component {
         const { getCtxData } = this.props;
         const url = `${API_URL}/carts/${cartId}`;
         const response = await requester({ url, method: "DELETE" });
-        await setTimeout(() => this.setState({ loading: false }), 600);
         if (response instanceof Error) {
-            this.setState({ errors: response.response.data });
+            setTimeout(() => this.setState({ errors: response.response.data, loading: false }), 600);
         } else {
             if (response.redirect) {
                 window.location.href = await response.redirect_url;
             } else {
-                // TODO This is not removing this component
-                // because 'cart' is being SSR'ed instead of handled in context.
-                // Figure out how get initial values from SSR and updated values from context
-                // I could just hide it with css. It would be gone with the next page refresh...
-                getCtxData("cart");
+                setTimeout(() => getCtxData("cart"), 600);
             }
         }
     };
