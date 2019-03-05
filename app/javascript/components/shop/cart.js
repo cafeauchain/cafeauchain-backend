@@ -1,6 +1,6 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Container, Segment, Item, Sticky, Header } from "semantic-ui-react";
+import { Container, Segment, Item, Sticky, Header, Card } from "semantic-ui-react";
 
 import "./styles.scss";
 
@@ -10,7 +10,7 @@ import Modal from "shared/modal";
 import { Money, Weights } from "shared/textFormatters";
 
 import ProductForm from "shop/productForm";
-import CartDetails from "shop/cartDetails";
+import CartItemDetails from "shop/cartItemDetails";
 
 import Context from "contexts/main";
 import Provider from "contexts/wholesale";
@@ -71,7 +71,7 @@ class Cart extends React.Component {
                                     ];
                                     return (
                                         <Item key={item.id}>
-                                            <CartDetails item={item} />
+                                            <CartItemDetails item={item} />
                                             <Item.Content>
                                                 <ProductForm
                                                     productOptions={productOptions}

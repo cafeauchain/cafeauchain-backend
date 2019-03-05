@@ -9,7 +9,7 @@ import randomCoffeeImage from "shared/randomCoffeeImage";
 import { humanize } from "utilities";
 /* eslint-enable */
 
-const CartDetails = ({ item }) => {
+const CartItemDetails = ({ item }) => {
     const image = item.image || randomCoffeeImage();
     return (
         <F>
@@ -33,8 +33,8 @@ const CartDetails = ({ item }) => {
     );
 };
 
-CartDetails.propTypes = {
+CartItemDetails.propTypes = {
     item: PropTypes.object
 };
 
-export default CartDetails;
+export default CartItemDetails;
