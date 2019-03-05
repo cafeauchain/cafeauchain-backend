@@ -23,17 +23,26 @@ import Provider from "contexts/wholesale";
 const Wrapper = props => (
     <Provider requests={[{ name: "cart" }]}>
         <Context>
-            {ctx => <Cart {...props} loading={ctx.loading} userId={ctx.userId} getCtxData={ctx.getData} />}
+            {ctx => (
+                <Cart
+                    {...props}
+                    cart={ctx.cart || props.cart.data}
+                    loading={ctx.loading}
+                    userId={ctx.userId}
+                    getCtxData={ctx.getData}
+                />
+            )}
         </Context>
     </Provider>
 );
 
 class Cart extends React.Component {
     static propTypes = () => {
-        const { array } = PropTypes;
+        const { array, object } = PropTypes;
         return {
             variantOptions: array,
-            productOptions: array
+            productOptions: array,
+            cart: object
         };
     };
     constructor(props) {
@@ -43,11 +52,11 @@ class Cart extends React.Component {
 
     render() {
         const {
-            cart: { data: cart }
+            cart: { attributes }
         } = this.props;
         let items = [];
-        if (cart.attributes) {
-            items = cart.attributes.cart_items;
+        if (attributes) {
+            items = attributes.cart_items;
         }
         return (
             <Container style={{ margin: "4em 0" }}>
@@ -95,5 +104,9 @@ class Cart extends React.Component {
         );
     }
 }
+
+Wrapper.propTypes = {
+    cart: PropTypes.object
+};
 
 export default Wrapper;
