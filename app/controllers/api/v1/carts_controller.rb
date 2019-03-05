@@ -14,7 +14,7 @@ module Api::V1
 
     def update
       options = params[:option].split(",")
-      @item = OrderServices::CreateCartItem.update(params[:id], params[:quantity], options, params[:notes])
+      @item = OrderServices::CreateCartItem.update(params[:id], params[:quantity], params[:notes])
       # @cart.add_to_cart(params[:id], params[:quantity], options, params[:notes])
       # I'm might be doing this wrong but I'm adding/updating each cart item individually
       # So instead of a cart_items param that is an array of all cart_items, I am sending individual requests for each one
