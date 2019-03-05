@@ -92,6 +92,7 @@ class Cart extends React.Component {
                                                         variantOptions={variantOptions}
                                                         quantity={item.quantity}
                                                         inCart
+                                                        cartId={item.id}
                                                     />
                                                 </Item.Description>
                                             </Item.Content>

@@ -25,7 +25,7 @@ module Api::V1
     end
 
     def destroy
-      CartItem.find_by(product_variant_id: params[:id]).destroy
+      CartItem.find(params[:id]).destroy
       render json: {"redirect": false, data: @cart}, status: 200
     end
 

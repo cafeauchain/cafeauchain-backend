@@ -18,16 +18,17 @@ import Context from "contexts/main";
 
 const Wrapper = props => (
     <Context>
-        {ctx => <Products {...props} loading={ctx.loading} userId={ctx.userId} getCtxData={ctx.getData} />}
+        {ctx => <ProductForm {...props} loading={ctx.loading} userId={ctx.userId} getCtxData={ctx.getData} />}
     </Context>
 );
 
-class Products extends React.Component {
+class ProductForm extends React.Component {
     static propTypes = () => {
-        const { array } = PropTypes;
+        const { array, oneOfType, string, number } = PropTypes;
         return {
             variantOptions: array,
-            productOptions: array
+            productOptions: array,
+            cartId: oneOfType([string, number])
         };
     };
     constructor(props) {
@@ -109,11 +110,9 @@ class Products extends React.Component {
         target.blur();
         e.preventDefault();
         await this.setState({ loading: true });
-        const {
-            details: { id }
-        } = this.state;
+        const { cartId } = this.props;
         const { getCtxData } = this.props;
-        const url = `${API_URL}/carts/${id}`;
+        const url = `${API_URL}/carts/${cartId}`;
         const response = await requester({ url, method: "DELETE" });
         await setTimeout(() => this.setState({ loading: false }), 600);
         if (response instanceof Error) {
@@ -125,6 +124,7 @@ class Products extends React.Component {
                 // TODO This is not removing this component
                 // because 'cart' is being SSR'ed instead of handled in context.
                 // Figure out how get initial values from SSR and updated values from context
+                // I could just hide it with css. It would be gone with the next page refresh...
                 getCtxData("cart");
             }
         }
