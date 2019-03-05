@@ -22,21 +22,19 @@ const Wrapper = props => (
 
 class Products extends React.Component {
     static propTypes = () => {
-        const { array, oneOfType, string, number } = PropTypes;
+        const { array } = PropTypes;
         return {
-            id: oneOfType([string, number]),
             variantOptions: array,
-            grindOptions: array
+            productOptions: array
         };
     };
     constructor(props) {
         super(props);
         this.state = {
             details: {
-                id: props.id,
                 quantity: 1,
-                size: props.variantOptions[0].value,
-                grind: props.grindOptions[0].value
+                id: props.variantOptions[0].value,
+                option: props.productOptions[0].value
             },
             errors: []
         };
@@ -76,9 +74,9 @@ class Products extends React.Component {
     };
 
     render() {
-        const { variantOptions, grindOptions } = this.props;
+        const { variantOptions, productOptions } = this.props;
         const { errors, details } = this.state;
-        const selected = variantOptions.find(variant => variant.value === details.size);
+        const selected = variantOptions.find(variant => variant.value === details.id);
         const subtotal = Number(details.quantity) * Number(selected.price);
         const multipleVariants = variantOptions.length > 1;
         return (
@@ -107,17 +105,17 @@ class Products extends React.Component {
                                 inputType={multipleVariants ? "select" : undefined}
                                 options={multipleVariants ? variantOptions : undefined}
                                 label="Size"
-                                value={multipleVariants ? details.size : variantOptions[0].text}
+                                value={multipleVariants ? details.id : variantOptions[0].text}
                                 onChange={multipleVariants ? this.handleInputChange : undefined}
                                 readOnly={multipleVariants ? undefined : true}
                             />
                         </div>
                         <div flex="50">
                             <Input
-                                label="Grind"
+                                label="Option"
                                 inputType="select"
-                                options={grindOptions}
-                                value={details.grind}
+                                options={productOptions}
+                                value={details.option}
                                 onChange={this.handleInputChange}
                             />
                         </div>

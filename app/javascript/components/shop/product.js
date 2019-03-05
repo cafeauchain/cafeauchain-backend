@@ -27,9 +27,8 @@ const Products = ({ img, title, description, shortDesc, ...rest }) => (
 );
 
 Products.propTypes = () => {
-    const { array, oneOfType, string, number, node } = PropTypes;
+    const { array, string, node } = PropTypes;
     return {
-        id: oneOfType([string, number]),
         img: node,
         title: string,
         description: string,
