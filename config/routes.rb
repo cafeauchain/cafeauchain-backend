@@ -258,7 +258,7 @@ Rails.application.routes.draw do
     resources :lots
   end
 
-  get 'cart', to: 'cart#index'
+  get 'cart', to: 'carts#index'
 
   get 'dashboard', to: 'dashboard#index'
   devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations" }

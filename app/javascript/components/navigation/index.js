@@ -17,8 +17,8 @@ import Context from "contexts/main";
 const Wrapper = ({ cart, ...rest }) => {
     const requests = cart ? [] : ["cart"];
     return (
-        <Provider requests={requests}>
-            <Context>{ctx => <Nav {...rest} cart={ctx.cart || cart.data} getCtxData={ctx.getData} />}</Context>
+        <Provider requests={[]}>
+            <Context>{ctx => <Nav {...rest} cart={ctx.cart} getCtxData={ctx.getData} />}</Context>
         </Provider>
     );
 };
@@ -30,7 +30,7 @@ class Nav extends Component {
         //eslint-disable-next-line
         const { loggedIn, user } = props;
         this.state = {
-            links: loggedIn ? authorized(user) : base
+            links: base
         };
     }
 
@@ -83,9 +83,9 @@ class Nav extends Component {
         const { cart, user } = this.props;
         const cart_items = cart && cart.attributes ? cart.attributes.cart_items : [];
         let buttons = links.buttons;
-        if (user.customer_profile_id) {
-            buttons = [this.renderCartButton(cart_items), ...buttons];
-        }
+        // if (user.customer_profile_id) {
+        //     buttons = [this.renderCartButton(cart_items), ...buttons];
+        // }
         return <NavBar leftItems={links.left} rightItems={links.right} buttons={buttons} />;
     }
 }

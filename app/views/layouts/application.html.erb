@@ -12,9 +12,9 @@
     <%= csrf_meta_tags %>
   </head>
   <body class="<%= yield(:body_class) %>">
-    <%= react_component "navigation", props = {user: current_user, loggedIn: user_signed_in?, cart: @cart} %>
+    <%= react_component "navigation", props = {user: @user, loggedIn: user_signed_in?, cart: @cart} %>
     <%= yield %>
-    <%= react_component "footer", props = {user: current_user, loggedIn: user_signed_in?}, {:class => "site-footer"} %>
+    <%= react_component "footer", props = {user: @user, loggedIn: user_signed_in?}, {:class => "site-footer"} %>
     <!-- Start of HubSpot Embed Code -->
       <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/5365116.js"></script>
     <!-- End of HubSpot Embed Code -->

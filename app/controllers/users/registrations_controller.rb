@@ -1,6 +1,6 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  
-  def create 
+
+  def create
     build_resource(registration_params)
 
     if resource.save
@@ -12,16 +12,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
       elsif SubdomainRoutes
         cp = CustomerProfile.create(owner_id: resource.id)
         cp.users << resource
-        cp.wholesale_profiles.create(roaster_profile: current_roaster)
+        wp = cp.wholesale_profiles.create(roaster_profile: current_roaster)
+        wp.create_cart
         render json: {"redirect":true,"redirect_url": shop_roaster_profile_path(current_roaster)}, status: 200
       end
     else
-      render json: { success: false, error: resource.errors }, status: 422 
+      render json: { success: false, error: resource.errors }, status: 422
     end
-  end 
+  end
 
   protected
-  
+
   def after_sign_up_path_for(resource)
     if resource.roaster_profile.nil? && SubdomainRoutes
       new_roaster_profile_path

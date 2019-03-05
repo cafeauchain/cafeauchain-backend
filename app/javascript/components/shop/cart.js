@@ -20,12 +20,12 @@ import Provider from "contexts/wholesale";
 const Wrapper = ({ cart, ...props }) => {
     const requests = cart ? [] : ["cart"];
     return (
-        <Provider requests={requests}>
+        <Provider requests={[]}>
             <Context>
                 {ctx => (
                     <Cart
                         {...props}
-                        cart={ctx.cart || cart.data}
+                        cart={ctx.cart}
                         loading={ctx.loading}
                         userId={ctx.userId}
                         getCtxData={ctx.getData}
@@ -51,6 +51,9 @@ class Cart extends React.Component {
     handleStickyRef = stickyRef => this.setState({ stickyRef });
 
     render() {
+        console.log(this.props);
+        return null;
+
         const { stickyRef } = this.state;
         const {
             cart: { attributes }
