@@ -4,6 +4,7 @@ module Api::V1
 
     def index
       render json: @cart, status: 200
+      render json: {data: {user: @user, cart: @cart, items: @cart.cart_items} }, status: 200
     end
 
     def create
