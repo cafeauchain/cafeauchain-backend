@@ -1,6 +1,6 @@
-import React, { Fragment as F } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import { Container, Segment, Item, Sticky, Header, Card } from "semantic-ui-react";
+import { Container, Segment, Item, Sticky, Header } from "semantic-ui-react";
 
 import "./styles.scss";
 
@@ -11,6 +11,7 @@ import { Money, Weights } from "shared/textFormatters";
 
 import ProductForm from "shop/productForm";
 import CartItemDetails from "shop/cartItemDetails";
+import CartDetails from "shop/cartDetails";
 
 import Context from "contexts/main";
 import Provider from "contexts/wholesale";
@@ -63,6 +64,7 @@ class Cart extends React.Component {
                 <Flex spacing="30">
                     <div flex="66" ref={this.handleStickyRef}>
                         <Segment>
+                            <Header as="h2" content={"Cart: " + attributes.roaster_name} dividing />
                             <Item.Group divided relaxed="very">
                                 {items.map(item => {
                                     const productOptions = [{ value: item.production_options[0], key: "product" }];
@@ -89,25 +91,7 @@ class Cart extends React.Component {
                     </div>
                     <div flex="33">
                         <Sticky context={stickyRef} offset={100}>
-                            <Segment>
-                                <Header as="h2" content="Cart Totals" />
-                                <div>
-                                    <F>Total Line Items: </F>
-                                    {attributes.total_line_items}
-                                </div>
-                                <div>
-                                    <F>Total Items: </F>
-                                    {attributes.total_items}
-                                </div>
-                                <div>
-                                    <F>Total Weight: </F>
-                                    <Weights>{attributes.total_weight}</Weights>
-                                </div>
-                                <div>
-                                    <F>Cart Total: </F>
-                                    <Money type="postive">{attributes.total_price}</Money>
-                                </div>
-                            </Segment>
+                            <CartDetails attributes={attributes} />
                         </Sticky>
                     </div>
                 </Flex>
