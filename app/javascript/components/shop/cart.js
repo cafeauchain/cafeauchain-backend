@@ -66,7 +66,7 @@ class Cart extends React.Component {
                             <Item.Group divided relaxed="very">
                                 {items.map(item => {
                                     const image = item.image || randomCoffeeImage();
-                                    const productOptions = [{ value: item.size, key: "product" }];
+                                    const productOptions = [{ value: item.production_options[0], key: "product" }];
                                     const variantOptions = [
                                         { value: item.variant_id, key: "quantity", price: item.price }
                                     ];
@@ -82,6 +82,9 @@ class Cart extends React.Component {
                                                 <Item.Extra>
                                                     <F>Price Each: </F>
                                                     <Money type="positive">{item.price}</Money>
+                                                </Item.Extra>
+                                                <Item.Extra>
+                                                    <Label>{humanize(item.production_options[0])}</Label>
                                                 </Item.Extra>
                                                 <Item.Description>
                                                     <ProductForm
