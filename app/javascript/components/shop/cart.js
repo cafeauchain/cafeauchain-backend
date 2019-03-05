@@ -7,6 +7,7 @@ import "./styles.scss";
 /* eslint-disable */
 import Flex from "shared/flex";
 import Modal from "shared/modal";
+import { Money, Weights } from "shared/textFormatters";
 
 import ProductForm from "shop/productForm";
 import CartDetails from "shop/cartDetails";
@@ -46,7 +47,10 @@ class Cart extends React.Component {
         this.state = {};
     }
 
+    handleStickyRef = stickyRef => this.setState({ stickyRef });
+
     render() {
+        const { stickyRef } = this.state;
         const {
             cart: { attributes }
         } = this.props;
@@ -54,10 +58,23 @@ class Cart extends React.Component {
         if (attributes) {
             items = attributes.cart_items;
         }
+        const totals = items.reduce(
+            (total, item) => {
+                const qty = Number(item.quantity);
+                const price_in_cents = Number(item.price) * 100;
+                const weight = Number(item.size);
+                return {
+                    price: total.price + (qty * price_in_cents) / 100,
+                    quantity: total.quantity + qty,
+                    weight: total.weight + qty * weight
+                };
+            },
+            { price: 0, quantity: 0, weight: 0 }
+        );
         return (
             <Container style={{ margin: "4em 0" }}>
                 <Flex spacing="30">
-                    <div flex="66">
+                    <div flex="66" ref={this.handleStickyRef}>
                         <Segment>
                             <Item.Group divided relaxed="very">
                                 {items.map(item => {
@@ -83,7 +100,29 @@ class Cart extends React.Component {
                             </Item.Group>
                         </Segment>
                     </div>
-                    <div flex="33">Cart Total</div>
+                    <div flex="33">
+                        <Sticky context={stickyRef} offset={100}>
+                            <Segment>
+                                <Header as="h2" content="Cart Totals" />
+                                <div>
+                                    <F>Total Line Items: </F>
+                                    {items.length}
+                                </div>
+                                <div>
+                                    <F>Total Items: </F>
+                                    {totals.quantity}
+                                </div>
+                                <div>
+                                    <F>Total Weight: </F>
+                                    <Weights>{totals.weight}</Weights>
+                                </div>
+                                <div>
+                                    <F>Cart Total: </F>
+                                    <Money type="postive">{totals.price}</Money>
+                                </div>
+                            </Segment>
+                        </Sticky>
+                    </div>
                 </Flex>
             </Container>
         );
