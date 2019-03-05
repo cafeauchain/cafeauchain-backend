@@ -1,6 +1,6 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Header, Button, Card, Icon } from "semantic-ui-react";
+import { Header, Button, Card, Icon, Dimmer, Loader } from "semantic-ui-react";
 
 import "./styles.scss";
 
@@ -40,7 +40,8 @@ class Products extends React.Component {
             },
             errors: [],
             btnLoading: false,
-            added: false
+            added: false,
+            loading: false
         };
     }
 
@@ -103,14 +104,41 @@ class Products extends React.Component {
         }
     };
 
+    handleDelete = async e => {
+        const { target } = e;
+        target.blur();
+        e.preventDefault();
+        await this.setState({ loading: true });
+        const {
+            details: { id }
+        } = this.state;
+        const { getCtxData } = this.props;
+        const url = `${API_URL}/carts/${id}`;
+        const response = await requester({ url, method: "DELETE" });
+        await setTimeout(() => this.setState({ loading: false }), 600);
+        if (response instanceof Error) {
+            this.setState({ errors: response.response.data });
+        } else {
+            if (response.redirect) {
+                window.location.href = await response.redirect_url;
+            } else {
+                // TODO This is not removing this component
+                // because 'cart' is being SSR'ed instead of handled in context.
+                // Figure out how get initial values from SSR and updated values from context
+                getCtxData("cart");
+            }
+        }
+    };
+
     render() {
         const { variantOptions, productOptions, inCart } = this.props;
-        const { errors, details, btnLoading, added } = this.state;
+        const { errors, details, btnLoading, added, loading } = this.state;
         const selected = variantOptions.find(variant => variant.value === details.id);
         const subtotal = Number(details.quantity) * Number(selected.price);
         const multipleVariants = variantOptions.length > 1;
         return (
             <F>
+                <Dimmer active={loading} inverted content={<Loader size="large" />} />
                 <Card.Content extra>
                     <ErrorHandler errors={errors} />
                     {false && (
@@ -206,6 +234,9 @@ class Products extends React.Component {
                                 </F>
                             )}
                         </Button>
+                        {inCart && (
+                            <Button color="red" onClick={this.handleDelete} loading={btnLoading} content="Remove" />
+                        )}
                     </Card.Header>
                 </Card.Content>
             </F>

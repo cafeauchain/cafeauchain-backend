@@ -24,6 +24,11 @@ module Api::V1
       render json: {"redirect":false, data: @cart}, status: 200
     end
 
+    def destroy
+      CartItem.find_by(product_variant_id: params[:id]).destroy
+      render json: {"redirect": false, data: @cart}, status: 200
+    end
+
     private
 
     def set_cart
