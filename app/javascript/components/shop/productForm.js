@@ -34,7 +34,7 @@ class Products extends React.Component {
         super(props);
         this.state = {
             details: {
-                quantity: 1,
+                quantity: props.quantity || 1,
                 id: props.variantOptions[0].value,
                 option: props.productOptions[0].value
             },
@@ -70,14 +70,24 @@ class Products extends React.Component {
         this.setState({ details, errors: [] });
     };
 
-    handleSubmit = async e => {
+    handleSubmit = e => {
+        this.onSubmit(e, "POST");
+    };
+
+    handleUpdate = e => {
+        this.onSubmit(e, "PUT");
+    };
+
+    onSubmit = async (e, method) => {
         const { target } = e;
         target.blur();
         e.preventDefault();
         await this.setState({ btnLoading: true });
         const { details } = this.state;
-        const url = `${API_URL}/carts`;
-        const response = await requester({ url, body: details });
+        const { getCtxData } = this.props;
+        let url = `${API_URL}/carts`;
+        if (method === "PUT") url += "/" + details.id;
+        const response = await requester({ url, body: details, method });
         await setTimeout(() => this.setState({ btnLoading: false }), 600);
         if (response instanceof Error) {
             this.setState({ errors: response.response.data });
@@ -86,6 +96,9 @@ class Products extends React.Component {
                 window.location.href = await response.redirect_url;
             } else {
                 this.setState({ added: true });
+                if (method === "PUT") {
+                    getCtxData("cart");
+                }
             }
         }
     };
@@ -122,6 +135,7 @@ class Products extends React.Component {
                                     inputType={multipleVariants ? "select" : undefined}
                                     options={multipleVariants ? variantOptions : undefined}
                                     label="Size"
+                                    name="id"
                                     value={multipleVariants ? details.id : variantOptions[0].text}
                                     onChange={multipleVariants ? this.handleInputChange : undefined}
                                     readOnly={multipleVariants ? undefined : true}
@@ -174,16 +188,21 @@ class Products extends React.Component {
                             <Money type="positive">{subtotal}</Money>
                         </Flex>
                         <br />
-                        <Button primary floated="right" onClick={this.handleSubmit} loading={btnLoading}>
+                        <Button
+                            primary
+                            floated="right"
+                            onClick={inCart ? this.handleUpdate : this.handleSubmit}
+                            loading={btnLoading}
+                        >
                             {added ? (
                                 <F>
-                                    <span>Added &nbsp;</span>
+                                    {inCart ? "Updated  " : "Added  "}
                                     <Icon name="check" className="button" />
                                 </F>
                             ) : (
                                 <F>
                                     <Icon name="cart plus" />
-                                    Add To Cart
+                                    {inCart ? "Update Cart" : "Add to Cart"}
                                 </F>
                             )}
                         </Button>

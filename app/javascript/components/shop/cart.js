@@ -1,6 +1,6 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Container, Segment, Button, Item, Label, Icon } from "semantic-ui-react";
+import { Container, Segment, Item } from "semantic-ui-react";
 
 import "./styles.scss";
 
@@ -51,58 +51,46 @@ class Cart extends React.Component {
         }
         return (
             <Container style={{ margin: "4em 0" }}>
-                <Segment>
-                    <Item.Group divided relaxed="very">
-                        {items.map(item => {
-                            const image = item.image || randomCoffeeImage();
-                            return (
-                                <Item key={item.id}>
-                                    <Item.Image size="tiny" src={image} />
-                                    <Item.Content>
-                                        <Item.Header>{item.name}</Item.Header>
-                                        <Item.Meta>
-                                            <div>
-                                                <F>Size: </F>
-                                                <Weights>{item.size}</Weights>
-                                            </div>
-                                            <div>
-                                                <F>Price Each: </F>
-                                                <Money type="positive">{item.price}</Money>
-                                            </div>
-                                        </Item.Meta>
-                                        <Item.Description>
-                                            <ProductForm
-                                                productOptions={[{ text: "temp", value: item.size, key: "temp" }]}
-                                                variantOptions={[
-                                                    {
-                                                        text: "temp2",
-                                                        value: item.quantity,
-                                                        key: "temp2",
-                                                        price: item.price
-                                                    }
-                                                ]}
-                                                inCart
-                                            />
-                                        </Item.Description>
-                                        <Item.Extra>A link to something?</Item.Extra>
-                                        <Item.Extra>
-                                            <Label>IMAX</Label>
-                                            <Label icon="globe" content="Additional Languages" />
-                                        </Item.Extra>
-                                        <Item.Extra>
-                                            <Button primary floated="right">
-                                                Buy tickets
-                                                <Icon name="right chevron" />
-                                            </Button>
-                                            <Label>Limited</Label>
-                                        </Item.Extra>
-                                        <Item.Meta>A link to something?</Item.Meta>
-                                    </Item.Content>
-                                </Item>
-                            );
-                        })}
-                    </Item.Group>
-                </Segment>
+                <Flex spacing="30">
+                    <div flex="66">
+                        <Segment>
+                            <Item.Group divided relaxed="very">
+                                {items.map(item => {
+                                    const image = item.image || randomCoffeeImage();
+                                    const productOptions = [{ value: item.size, key: "product" }];
+                                    const variantOptions = [
+                                        { value: item.variant_id, key: "quantity", price: item.price }
+                                    ];
+                                    return (
+                                        <Item key={item.id}>
+                                            <Item.Image size="tiny" src={image} />
+                                            <Item.Content>
+                                                <Item.Header>{item.name}</Item.Header>
+                                                <Item.Extra>
+                                                    <F>Size: </F>
+                                                    <Weights>{item.size}</Weights>
+                                                </Item.Extra>
+                                                <Item.Extra>
+                                                    <F>Price Each: </F>
+                                                    <Money type="positive">{item.price}</Money>
+                                                </Item.Extra>
+                                                <Item.Description>
+                                                    <ProductForm
+                                                        productOptions={productOptions}
+                                                        variantOptions={variantOptions}
+                                                        quantity={item.quantity}
+                                                        inCart
+                                                    />
+                                                </Item.Description>
+                                            </Item.Content>
+                                        </Item>
+                                    );
+                                })}
+                            </Item.Group>
+                        </Segment>
+                    </div>
+                    <div flex="33">Cart Total</div>
+                </Flex>
             </Container>
         );
     }

@@ -59,7 +59,7 @@ class Nav extends Component {
                 <F>
                     <Icon.Group size="big">
                         <Icon name="cart" />
-                        {items && items.length && (
+                        {items && items.length > 0 && (
                             <Icon
                                 corner="top right"
                                 name="check circle"
