@@ -275,7 +275,7 @@ Rails.application.routes.draw do
   end
 
   constraints(!SubdomainRoutes) do
-    # root 'high_voltage/pages#show', id: 'about'
+    get :cart, to: 'carts#index'
     root 'roaster_profiles#shop'
   end
 end

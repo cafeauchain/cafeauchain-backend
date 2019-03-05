@@ -43,6 +43,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
 
   belongs_to :roaster_profile, optional: true
+  belongs_to :customer_profile, optional: true
   has_one :subscription
   has_many :cards, through: :subscription
 
