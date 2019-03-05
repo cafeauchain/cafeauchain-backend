@@ -1,21 +1,15 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Container, Segment, Item, Sticky, Header, Label } from "semantic-ui-react";
+import { Container, Segment, Item, Sticky, Header } from "semantic-ui-react";
 
 import "./styles.scss";
 
 /* eslint-disable */
 import Flex from "shared/flex";
-import Input from "shared/input";
 import Modal from "shared/modal";
-import { Weights, Money } from "shared/textFormatters";
-import ErrorHandler from "shared/errorHandler";
-import randomCoffeeImage from "shared/randomCoffeeImage";
 
 import ProductForm from "shop/productForm";
-
-import { humanize } from "utilities";
-import { requester, url as API_URL } from "utilities/apiUtils";
+import CartDetails from "shop/cartDetails";
 
 import Context from "contexts/main";
 import Provider from "contexts/wholesale";
@@ -42,10 +36,8 @@ const Wrapper = ({ cart, ...props }) => {
 
 class Cart extends React.Component {
     static propTypes = () => {
-        const { array, object } = PropTypes;
+        const { object } = PropTypes;
         return {
-            variantOptions: array,
-            productOptions: array,
             cart: object
         };
     };
@@ -69,36 +61,21 @@ class Cart extends React.Component {
                         <Segment>
                             <Item.Group divided relaxed="very">
                                 {items.map(item => {
-                                    const image = item.image || randomCoffeeImage();
                                     const productOptions = [{ value: item.production_options[0], key: "product" }];
                                     const variantOptions = [
                                         { value: item.variant_id, key: "quantity", price: item.price }
                                     ];
                                     return (
                                         <Item key={item.id}>
-                                            <Item.Image size="tiny" src={image} />
+                                            <CartDetails item={item} />
                                             <Item.Content>
-                                                <Item.Header>{item.name}</Item.Header>
-                                                <Item.Extra>
-                                                    <F>Size: </F>
-                                                    <Weights>{item.size}</Weights>
-                                                </Item.Extra>
-                                                <Item.Extra>
-                                                    <F>Price Each: </F>
-                                                    <Money type="positive">{item.price}</Money>
-                                                </Item.Extra>
-                                                <Item.Extra>
-                                                    <Label>{humanize(item.production_options[0])}</Label>
-                                                </Item.Extra>
-                                                <Item.Description>
-                                                    <ProductForm
-                                                        productOptions={productOptions}
-                                                        variantOptions={variantOptions}
-                                                        quantity={item.quantity}
-                                                        inCart
-                                                        cartId={item.id}
-                                                    />
-                                                </Item.Description>
+                                                <ProductForm
+                                                    productOptions={productOptions}
+                                                    variantOptions={variantOptions}
+                                                    quantity={item.quantity}
+                                                    inCart
+                                                    cartId={item.id}
+                                                />
                                             </Item.Content>
                                         </Item>
                                     );
