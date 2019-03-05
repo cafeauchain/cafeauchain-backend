@@ -3,8 +3,8 @@ class CartSerializer < ActiveModel::Serializer
 
   def cart_items
     self.object.cart_items.map do |item|
-      variant = ProductVariant.find(item.product_variant_id)
-      product = Product.find(variant.product_id)
+      variant = item.product_variant
+      product = variant.product
       {
         id: item.id,
         production_options: item.production_options,
@@ -20,7 +20,7 @@ class CartSerializer < ActiveModel::Serializer
   end
 
   def total_price
-    self.object.cart_items.reduce(0) { |total, item| total + (ProductVariant.find(item.product_variant_id).price_in_cents.to_i/100.0 * item.quantity) }
+    self.object.cart_items.sum { |ci| ci.product_variant.price_in_cents.to_f/100.0 * ci.quantity }
   end
 
   def total_line_items
@@ -28,10 +28,10 @@ class CartSerializer < ActiveModel::Serializer
   end
 
   def total_items
-    self.object.cart_items.reduce(0) { |total, item| total + item.quantity }
+    self.object.cart_items.sum { |ci| ci.quantity }
   end
 
   def total_weight
-    self.object.cart_items.reduce(0) { |total, item| total + (ProductVariant.find(item.product_variant_id).custom_options["size"].to_i * item.quantity) }
+    self.object.cart_items.sum { |ci| ci.product_variant.custom_options["size"].to_i * ci.quantity }
   end
 end
