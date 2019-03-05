@@ -230,7 +230,13 @@ class ProductForm extends React.Component {
                             )}
                         </Button>
                         {inCart && (
-                            <Button color="red" onClick={this.handleDelete} loading={btnLoading} content="Remove" />
+                            <Button
+                                color="red"
+                                inverted
+                                onClick={this.handleDelete}
+                                loading={btnLoading}
+                                content="Remove"
+                            />
                         )}
                     </Card.Header>
                 </Card.Content>
