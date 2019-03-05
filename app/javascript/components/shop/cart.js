@@ -21,21 +21,24 @@ import Context from "contexts/main";
 import Provider from "contexts/wholesale";
 /* eslint-enable */
 
-const Wrapper = props => (
-    <Provider requests={[{ name: "cart" }]}>
-        <Context>
-            {ctx => (
-                <Cart
-                    {...props}
-                    cart={ctx.cart || props.cart.data}
-                    loading={ctx.loading}
-                    userId={ctx.userId}
-                    getCtxData={ctx.getData}
-                />
-            )}
-        </Context>
-    </Provider>
-);
+const Wrapper = ({ cart, ...props }) => {
+    const requests = cart ? [] : ["cart"];
+    return (
+        <Provider requests={requests}>
+            <Context>
+                {ctx => (
+                    <Cart
+                        {...props}
+                        cart={ctx.cart || cart.data}
+                        loading={ctx.loading}
+                        userId={ctx.userId}
+                        getCtxData={ctx.getData}
+                    />
+                )}
+            </Context>
+        </Provider>
+    );
+};
 
 class Cart extends React.Component {
     static propTypes = () => {
