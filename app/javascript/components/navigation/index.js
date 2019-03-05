@@ -14,10 +14,11 @@ import Provider from "contexts/wholesale";
 import Context from "contexts/main";
 /* eslint-enable */
 
-const Wrapper = ({ ...rest }) => {
+const Wrapper = ({ cart, ...rest }) => {
+    const requests = cart ? [] : ["cart"];
     return (
-        <Provider requests={[{ name: "cart" }]}>
-            <Context>{ctx => <Nav {...rest} {...ctx} />}</Context>
+        <Provider requests={requests}>
+            <Context>{ctx => <Nav {...rest} cart={ctx.cart || cart.data} getCtxData={ctx.getData} />}</Context>
         </Provider>
     );
 };
@@ -35,7 +36,7 @@ class Nav extends Component {
 
     componentDidMount() {
         // TODO This is probably a really bad idea
-        const { getData } = this.props;
+        const { getCtxData } = this.props;
         var oldFetch = fetch;
         // eslint-disable-next-line
         fetch = (url, options) => {
@@ -43,7 +44,7 @@ class Nav extends Component {
             if (url === "/api/v1/carts" && options && options.method === "POST") {
                 const inner = async () => {
                     const resolved = await promise;
-                    if (resolved.ok) getData("cart");
+                    if (resolved.ok) getCtxData("cart");
                     return resolved;
                 };
                 inner();
@@ -79,9 +80,12 @@ class Nav extends Component {
 
     render() {
         const { links } = this.state;
-        const { cart = {} } = this.props;
+        const { cart, user } = this.props;
+        const cart_items = cart && cart.attributes ? cart.attributes.cart_items : [];
         let buttons = links.buttons;
-        buttons = [this.renderCartButton(cart.items), ...buttons];
+        if (user.customer_profile_id) {
+            buttons = [this.renderCartButton(cart_items), ...buttons];
+        }
         return <NavBar leftItems={links.left} rightItems={links.right} buttons={buttons} />;
     }
 }
@@ -91,7 +95,11 @@ Nav.propTypes = {
     loggedIn: bool.isRequired,
     user: object,
     cart: object,
-    getData: func
+    getCtxData: func
+};
+
+Wrapper.propTypes = {
+    cart: object
 };
 
 export default Wrapper;

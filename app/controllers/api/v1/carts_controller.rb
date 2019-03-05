@@ -3,7 +3,7 @@ module Api::V1
     before_action :set_cart
 
     def index
-      render json: {data: {user: @user, cart: @cart, items: @cart.cart_items} }, status: 200
+      render json: @cart, status: 200
     end
 
     def create
