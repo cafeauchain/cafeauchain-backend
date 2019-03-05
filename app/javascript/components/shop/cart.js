@@ -58,19 +58,6 @@ class Cart extends React.Component {
         if (attributes) {
             items = attributes.cart_items;
         }
-        const totals = items.reduce(
-            (total, item) => {
-                const qty = Number(item.quantity);
-                const price_in_cents = Number(item.price) * 100;
-                const weight = Number(item.size);
-                return {
-                    price: total.price + (qty * price_in_cents) / 100,
-                    quantity: total.quantity + qty,
-                    weight: total.weight + qty * weight
-                };
-            },
-            { price: 0, quantity: 0, weight: 0 }
-        );
         return (
             <Container style={{ margin: "4em 0" }}>
                 <Flex spacing="30">
@@ -106,19 +93,19 @@ class Cart extends React.Component {
                                 <Header as="h2" content="Cart Totals" />
                                 <div>
                                     <F>Total Line Items: </F>
-                                    {items.length}
+                                    {attributes.total_line_items}
                                 </div>
                                 <div>
                                     <F>Total Items: </F>
-                                    {totals.quantity}
+                                    {attributes.total_items}
                                 </div>
                                 <div>
                                     <F>Total Weight: </F>
-                                    <Weights>{totals.weight}</Weights>
+                                    <Weights>{attributes.total_weight}</Weights>
                                 </div>
                                 <div>
                                     <F>Cart Total: </F>
-                                    <Money type="postive">{totals.price}</Money>
+                                    <Money type="postive">{attributes.total_price}</Money>
                                 </div>
                             </Segment>
                         </Sticky>
