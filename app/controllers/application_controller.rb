@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :set_raven_context
   before_action :set_cart
   after_action :set_csrf_cookie
-  layout :layout_by_resource
+  # layout :layout_by_resource
 
   helper_method :current_roaster
   helper_method :set_cart
@@ -27,13 +27,13 @@ class ApplicationController < ActionController::Base
     Raven.extra_context(params: params.to_unsafe_h, url: request.url)
   end
 
-  def layout_by_resource
-    if devise_controller?
-      "devise"
-    else
-      "application"
-    end
-  end
+  # def layout_by_resource
+  #   if devise_controller?
+  #     "devise"
+  #   else
+  #     "application"
+  #   end
+  # end
 
   def current_roaster
     if SubdomainRoutes

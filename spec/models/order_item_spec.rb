@@ -4,6 +4,8 @@
 #
 #  id                 :uuid             not null, primary key
 #  line_item_cost     :float
+#  notes              :string
+#  product_options    :string           default([]), is an Array
 #  quantity           :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null

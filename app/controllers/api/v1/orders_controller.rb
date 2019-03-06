@@ -11,7 +11,14 @@ module Api::V1
       @cart.cart_items.each do |ci|
         pv = ProductVariant.find(ci.product_variant_id)
         # TODO This is probably a terrible idea and shouldnt be done
-        @order.order_items.create(product_variant_id: pv.id, quantity: ci.quantity, line_item_cost: (ci.quantity * pv.price_in_cents), id: SecureRandom.uuid )
+        @order.order_items.create(
+          product_variant_id: pv.id,
+          quantity: ci.quantity,
+          line_item_cost: (ci.quantity * pv.price_in_cents),
+          id: SecureRandom.uuid,
+          product_options: ci.production_options,
+          notes: ci.notes
+        )
       end
       if @order.update(status: :processing)
         @cart.cart_items.destroy_all

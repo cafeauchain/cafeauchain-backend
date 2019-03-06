@@ -22,6 +22,7 @@
 #
 
 class RoasterProfile < ApplicationRecord
+  include Rails.application.routes.url_helpers
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
 
@@ -39,10 +40,10 @@ class RoasterProfile < ApplicationRecord
   has_one_attached :logo
 
   delegate :subscription, to: :owner
-  validates :subdomain, 
-            exclusion: { in: %w(www), 
-            message: "%{value} is reserved." }, 
-            presence: true, 
+  validates :subdomain,
+            exclusion: { in: %w(www),
+            message: "%{value} is reserved." },
+            presence: true,
             uniqueness: true
 
   before_validation :sanitize_subdomain
@@ -71,7 +72,13 @@ class RoasterProfile < ApplicationRecord
       self.update(owner: owner)
     end
   end
-  
+
+  def logo_image_url
+    if logo.nil?
+      url_for(logo)
+    end
+  end
+
   private
 
   def sanitize_subdomain
