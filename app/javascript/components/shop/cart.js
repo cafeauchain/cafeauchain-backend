@@ -51,9 +51,6 @@ class Cart extends React.Component {
     handleStickyRef = stickyRef => this.setState({ stickyRef });
 
     render() {
-        console.log(this.props);
-        return null;
-
         const { stickyRef } = this.state;
         const {
             cart: { attributes }
