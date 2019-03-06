@@ -52,4 +52,10 @@ class User < ApplicationRecord
   def is_owner
     roaster_profile.owner == self
   end
+
+  def cart(roaster)
+    if !customer_profile.nil?
+      customer_profile.wholesale_profiles.find_by(roaster_profile: roaster).cart
+    end
+  end
 end

@@ -32,21 +32,11 @@ module Api::V1
     private
 
     def set_cart
-      @user = current_user;
-      if @user.customer_profile_id.present?
-        @cust_id = @user.customer_profile_id
-        @whlsl_id = WholesaleProfile.find_by(customer_profile_id: @cust_id).id
-        @cart = Cart.find_by(wholesale_profile_id: @whlsl_id)
+      if user_signed_in?
+        @user = current_user
+        @cart = current_user.cart(current_roaster)
       end
     end
 
-    def set_cart_OLD
-      begin
-        @cart = Cart.find(session[:cart_id])
-      rescue ActiveRecord::RecordNotFound
-        @cart = current_user.customer_profile.wholesale_profile.cart.create
-      end
-      session[:cart_id] = @cart.id
-    end
   end
 end
