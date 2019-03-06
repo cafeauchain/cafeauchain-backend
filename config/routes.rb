@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-04T16:33:21.480685 #46118]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-03-05T19:59:27.293633 #62811]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                     Prefix Verb   URI Pattern                                                                              Controller#Action
 #  upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #             api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -155,7 +155,6 @@
 #                                            PATCH  /producers/:id(.:format)                                                                 producer_profiles#update
 #                                            PUT    /producers/:id(.:format)                                                                 producer_profiles#update
 #                                            DELETE /producers/:id(.:format)                                                                 producer_profiles#destroy
-#                                       cart GET    /cart(.:format)                                                                          cart#index
 #                                  dashboard GET    /dashboard(.:format)                                                                     dashboard#index
 #                           new_user_session GET    /users/sign_in(.:format)                                                                 users/sessions#new
 #                               user_session POST   /users/sign_in(.:format)                                                                 users/sessions#create
@@ -177,6 +176,7 @@
 #                                     signup GET    /signup(.:format)                                                                        devise/registrations#new
 #                                   register GET    /register(.:format)                                                                      devise/registrations#new
 #                                       root GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
+#                                       cart GET    /cart(.:format)                                                                          carts#index
 #                                            GET    /                                                                                        roaster_profiles#shop
 #                                       home GET    /home(.:format)                                                                          redirect(301, /)
 #                                            GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
@@ -258,8 +258,6 @@ Rails.application.routes.draw do
     resources :lots
   end
 
-  get 'cart', to: 'carts#index'
-
   get 'dashboard', to: 'dashboard#index'
   devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations" }
 
@@ -275,7 +273,7 @@ Rails.application.routes.draw do
   end
 
   constraints(!SubdomainRoutes) do
-    get :cart, to: 'carts#index'
+    get 'cart', to: 'carts#index'
     root 'roaster_profiles#shop'
   end
 end

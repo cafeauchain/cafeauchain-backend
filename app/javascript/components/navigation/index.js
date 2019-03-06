@@ -83,9 +83,9 @@ class Nav extends Component {
         const { cart, user } = this.props;
         const cart_items = cart && cart.attributes ? cart.attributes.cart_items : [];
         let buttons = links.buttons;
-        // if (user.customer_profile_id) {
-        //     buttons = [this.renderCartButton(cart_items), ...buttons];
-        // }
+        if (user.customer_profile_id) {
+            buttons = [this.renderCartButton(cart_items), ...buttons];
+        }
         return <NavBar leftItems={links.left} rightItems={links.right} buttons={buttons} />;
     }
 }
