@@ -17,8 +17,8 @@ import Context from "contexts/main";
 const Wrapper = ({ cart, ...rest }) => {
     const requests = cart ? [] : ["cart"];
     return (
-        <Provider requests={[]}>
-            <Context>{ctx => <Nav {...rest} cart={ctx.cart} getCtxData={ctx.getData} />}</Context>
+        <Provider requests={requests}>
+            <Context>{ctx => <Nav {...rest} cart={ctx.cart || cart.data} getCtxData={ctx.getData} />}</Context>
         </Provider>
     );
 };
@@ -30,7 +30,7 @@ class Nav extends Component {
         //eslint-disable-next-line
         const { loggedIn, user } = props;
         this.state = {
-            links: base
+            links: loggedIn ? authorized(user) : base
         };
     }
 
