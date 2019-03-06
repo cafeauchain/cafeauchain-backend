@@ -52,18 +52,13 @@ class Cart extends React.Component {
 
     render() {
         const { stickyRef } = this.state;
-        const {
-            cart: { attributes }
-        } = this.props;
-        let items = [];
-        if (attributes) {
-            items = attributes.cart_items;
-        }
+        const { cart } = this.props;
+        const { cart_items: items = [], roaster_name = "" } = cart.attributes;
         return (
             <Container style={{ margin: "4em 0" }}>
                 <div style={{ width: "calc( 100% - 328px )" }} ref={this.handleStickyRef}>
                     <Segment>
-                        <Header as="h2" content={"Cart: " + attributes.roaster_name} dividing />
+                        <Header as="h2" content={"Cart: " + roaster_name} dividing />
                         <Item.Group divided relaxed="very">
                             {items.map(item => {
                                 const productOptions = [{ value: item.production_options[0], key: "product" }];
@@ -86,7 +81,7 @@ class Cart extends React.Component {
                         </Item.Group>
                         <Rail position="right">
                             <Sticky context={stickyRef} offset={100}>
-                                <CartDetails attributes={attributes} />
+                                <CartDetails cart={cart} />
                             </Sticky>
                         </Rail>
                     </Segment>

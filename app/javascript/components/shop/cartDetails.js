@@ -5,27 +5,58 @@ import { Header, Card, Button, Statistic } from "semantic-ui-react";
 /* eslint-disable */
 import Flex from "shared/flex";
 import { Money, Weights } from "shared/textFormatters";
+import ErrorHandler from "shared/errorHandler";
+
+import { url as API_URL, requester } from "utilities/apiUtils";
 /* eslint-enable */
 
 class CartDetails extends React.Component {
     static propTypes = () => {
         const { object } = PropTypes;
         return {
-            attributes: object
+            cart: object
         };
     };
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            errors: []
+        };
     }
 
+    handleSubmit = async e => {
+        const { target } = e;
+        e.preventDefault();
+        target.blur();
+        const { cart } = this.props;
+        console.log(cart);
+        const url = `${API_URL}/orders`;
+        const body = { id: cart.id };
+        const response = await requester({ url, body });
+        if (response instanceof Error) {
+            this.setState({ errors: response.response.data });
+        } else {
+            if (response.redirect) {
+                window.location.href = await response.redirect_url;
+            } else {
+                console.log("do something other than redirect to the orders/invoice page?");
+                console.log(response);
+            }
+        }
+    };
+
     render() {
-        const { attributes } = this.props;
+        const {
+            cart: { attributes }
+        } = this.props;
+        const { errors } = this.state;
         // TODO Use real address and allow them to change
         // Either prefined or on the fly
         const shipping = "18.68";
+        const cartTotal = Number(attributes.total_price) + Number(shipping);
         return (
             <Card fluid>
+                <ErrorHandler errors={errors} />
                 <Header as="h2" content="Cart Details" attached />
                 <Card.Content>
                     <Card.Description content="Shipping Address" />
@@ -72,11 +103,17 @@ class CartDetails extends React.Component {
                         <Statistic size="mini">
                             <Statistic.Label>Total</Statistic.Label>
                             <Statistic.Value>
-                                <Money type="postive">{Number(attributes.total_price) + Number(shipping)}</Money>
+                                <Money type="postive">{cartTotal}</Money>
                             </Statistic.Value>
                         </Statistic>
                         <div>
-                            <Button content="Place Order" primary icon="right arrow" labelPosition="right" />
+                            <Button
+                                content="Place Order"
+                                primary
+                                icon="right arrow"
+                                labelPosition="right"
+                                onClick={this.handleSubmit}
+                            />
                         </div>
                     </Flex>
                 </Card.Content>
