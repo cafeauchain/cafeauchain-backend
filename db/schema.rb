@@ -185,7 +185,7 @@ ActiveRecord::Schema.define(version: 2019_03_03_132459) do
     t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"
   end
 
-  create_table "order_items", id: :uuid, default: nil, force: :cascade do |t|
+  create_table "order_items", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid "product_variant_id"
     t.integer "quantity"
     t.float "line_item_cost"

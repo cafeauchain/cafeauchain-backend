@@ -5,7 +5,7 @@ class CreateOrderItems < ActiveRecord::Migration[5.2]
       t.integer :quantity
       t.float :line_item_cost
       t.references :order, foreign_key: true
-      t.uuid :uuid
+      t.uuid :uuid, default: "uuid_generate_v4()", null: false
 
       t.timestamps
     end

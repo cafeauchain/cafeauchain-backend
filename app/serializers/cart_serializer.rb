@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: carts
+#
+#  id                   :bigint(8)        not null, primary key
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  wholesale_profile_id :bigint(8)
+#
+# Indexes
+#
+#  index_carts_on_wholesale_profile_id  (wholesale_profile_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (wholesale_profile_id => wholesale_profiles.id)
+#
+
 class CartSerializer < ActiveModel::Serializer
   attributes :id, :cart_items, :total_price, :total_line_items, :total_weight, :total_items, :roaster_name
 
