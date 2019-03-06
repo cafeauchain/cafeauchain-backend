@@ -5,13 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :set_raven_context
   before_action :set_cart
   after_action :set_csrf_cookie
-  # layout :layout_by_resource
-
-  def current_roaster
-    if SubdomainRoutes
-      @current_roaster ||= RoasterProfile.find_by(subdomain: request.subdomain)
-    end
-  end
+  layout :layout_by_resource
 
   helper_method :current_roaster
   helper_method :set_cart
@@ -41,8 +35,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_current_roaster
-    if !SubdomainRoutes
+  def current_roaster
+    if SubdomainRoutes
       @current_roaster = RoasterProfile.find_by(subdomain: request.subdomain)
     end
   end
@@ -51,7 +45,8 @@ class ApplicationController < ActionController::Base
     if user_signed_in?
       @cart = current_user.cart(current_roaster)
       @cart = ActiveModel::SerializableResource.new(@cart, each_serializer: CartSerializer)
+    else
+      @cart = nil
     end
   end
-
 end
