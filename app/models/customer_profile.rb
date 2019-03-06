@@ -14,6 +14,10 @@
 #
 #  index_customer_profiles_on_owner_id  (owner_id)
 #
+# Indexes
+#
+#  index_customer_profiles_on_owner_id  (owner_id)
+#
 
 class CustomerProfile < ApplicationRecord
 
