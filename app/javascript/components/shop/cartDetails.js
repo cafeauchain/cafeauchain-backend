@@ -69,7 +69,7 @@ class CartDetails extends React.Component {
                 </Card.Content>
                 <Card.Content>
                     <Flex spacebetween centercross spacing="10">
-                        <Statistic size="tiny">
+                        <Statistic size="mini">
                             <Statistic.Label>Total</Statistic.Label>
                             <Statistic.Value>
                                 <Money type="postive">{Number(attributes.total_price) + Number(shipping)}</Money>
