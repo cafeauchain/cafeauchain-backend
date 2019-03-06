@@ -53,7 +53,6 @@ class RoasterProfilesController < ApplicationController
 
   def shop
     @roaster_profile = @current_roaster || RoasterProfile.find_by(subdomain: request.subdomain)
-    @user = current_user
     @products = ActiveModel::SerializableResource.new(@roaster_profile.products, each_serializer: ProductSerializer)
   end
 
