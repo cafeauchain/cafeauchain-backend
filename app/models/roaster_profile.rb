@@ -46,6 +46,7 @@ class RoasterProfile < ApplicationRecord
             uniqueness: true
 
   before_validation :sanitize_subdomain
+  before_save :set_subdomain, if: :new_record?
 
   def bags_delivered(lot_id)
     self.transactions.collect{ |t| t.quantity.to_i if t.lot_id == lot_id }.sum
@@ -75,6 +76,10 @@ class RoasterProfile < ApplicationRecord
 
   def sanitize_subdomain
     self.subdomain = self.subdomain.parameterize
+  end
+
+  def set_subdomain
+    self.subdomain = self.name.parameterize
   end
 
 end
