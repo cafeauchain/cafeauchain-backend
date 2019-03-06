@@ -51,4 +51,10 @@
     color: inherit;
     box-shadow: none;
     font-weight: normal;
+    &.link {
+        color: $lightgreen;
+    }
+    &:hover {
+        text-decoration: underline;
+    }
 }

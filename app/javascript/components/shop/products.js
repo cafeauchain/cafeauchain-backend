@@ -79,6 +79,7 @@ class Products extends React.Component {
     render() {
         const { products = [], variants = [] } = this.props;
         let sorted = sortBy({ collection: products, id: "title", namespace: "attributes" });
+        sorted = sorted.filter(product => product.attributes.status === "live");
         return (
             <F>
                 <Header as="h2" content="Product Grid" />

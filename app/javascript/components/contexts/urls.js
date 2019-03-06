@@ -10,7 +10,8 @@ const urls = id => ({
     inventory: `${ROASTER_URL(id)}/inventory_items`,
     transactions: `${ROASTER_URL(id)}/transactions`,
     products: `${ROASTER_URL(id)}/products`,
-    variants: `${ROASTER_URL(id)}/variants`
+    variants: `${ROASTER_URL(id)}/variants`,
+    cart: `${API_URL}/carts`
 });
 
 export default urls;

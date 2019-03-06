@@ -10,7 +10,7 @@ import Modal from "shared/modal";
 import ProductForm from "shop/productForm";
 /* eslint-enable */
 
-const Products = ({ img, title, description, shortDesc, ...rest }) => (
+const Product = ({ img, title, description, shortDesc, ...rest }) => (
     <Card className="flex-card">
         <Image src={img} as="div" className="card-image-container" />
         <Card.Content>
@@ -26,7 +26,7 @@ const Products = ({ img, title, description, shortDesc, ...rest }) => (
     </Card>
 );
 
-Products.propTypes = () => {
+Product.propTypes = () => {
     const { array, string, node } = PropTypes;
     return {
         img: node,
@@ -38,4 +38,4 @@ Products.propTypes = () => {
     };
 };
 
-export default Products;
+export default Product;

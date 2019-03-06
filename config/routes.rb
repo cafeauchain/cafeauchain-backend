@@ -1,5 +1,6 @@
 # == Route Map
 #
+# I, [2019-03-05T19:59:27.293633 #62811]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                     Prefix Verb   URI Pattern                                                                              Controller#Action
 #  upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #             api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -81,6 +82,7 @@
 #                                            PUT    /api/v1/roasters/:roaster_profile_id/products/:id(.:format)                              api/v1/products#update
 #                                            DELETE /api/v1/roasters/:roaster_profile_id/products/:id(.:format)                              api/v1/products#destroy
 #            api_v1_roaster_profile_variants GET    /api/v1/roasters/:roaster_profile_id/variants(.:format)                                  api/v1/products#variants
+#     api_v1_roaster_profile_default_options GET    /api/v1/roasters/:roaster_profile_id/default_options(.:format)                           api/v1/roaster_profiles#default_options
 #       api_v1_roaster_profile_subscriptions GET    /api/v1/roasters/:roaster_profile_id/subscriptions(.:format)                             api/v1/roaster_profiles#subscriptions
 #               api_v1_roaster_profile_cards POST   /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#cards
 #                                            DELETE /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#remove_card
@@ -88,6 +90,14 @@
 #                    api_v1_roaster_profiles POST   /api/v1/roasters(.:format)                                                               api/v1/roaster_profiles#create
 #                     api_v1_roaster_profile PATCH  /api/v1/roasters/:id(.:format)                                                           api/v1/roaster_profiles#update
 #                                            PUT    /api/v1/roasters/:id(.:format)                                                           api/v1/roaster_profiles#update
+#                               api_v1_carts GET    /api/v1/carts(.:format)                                                                  api/v1/carts#index
+#                                            POST   /api/v1/carts(.:format)                                                                  api/v1/carts#create
+#                            new_api_v1_cart GET    /api/v1/carts/new(.:format)                                                              api/v1/carts#new
+#                           edit_api_v1_cart GET    /api/v1/carts/:id/edit(.:format)                                                         api/v1/carts#edit
+#                                api_v1_cart GET    /api/v1/carts/:id(.:format)                                                              api/v1/carts#show
+#                                            PATCH  /api/v1/carts/:id(.:format)                                                              api/v1/carts#update
+#                                            PUT    /api/v1/carts/:id(.:format)                                                              api/v1/carts#update
+#                                            DELETE /api/v1/carts/:id(.:format)                                                              api/v1/carts#destroy
 #                                admin_plans GET    /admin/plans(.:format)                                                                   admin/plans#index
 #                                            POST   /admin/plans(.:format)                                                                   admin/plans#create
 #                             new_admin_plan GET    /admin/plans/new(.:format)                                                               admin/plans#new
@@ -166,6 +176,8 @@
 #                                     signup GET    /signup(.:format)                                                                        devise/registrations#new
 #                                   register GET    /register(.:format)                                                                      devise/registrations#new
 #                                       root GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
+#                                       cart GET    /cart(.:format)                                                                          carts#index
+#                                            GET    /                                                                                        roaster_profiles#shop
 #                                       home GET    /home(.:format)                                                                          redirect(301, /)
 #                                            GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
 #                                       page GET    /*id                                                                                     high_voltage/pages#show
@@ -217,6 +229,7 @@ Rails.application.routes.draw do
         delete :cards, to: "roaster_profiles#remove_card"
         put :set_as_default
       end
+      resources :carts
     end
   end
 
@@ -260,6 +273,7 @@ Rails.application.routes.draw do
   end
 
   constraints(!SubdomainRoutes) do
-    root 'high_voltage/pages#show', id: 'about'
+    get 'cart', to: 'carts#index'
+    root 'roaster_profiles#shop'
   end
 end

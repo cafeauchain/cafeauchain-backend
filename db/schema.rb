@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_01_142455) do
+ActiveRecord::Schema.define(version: 2019_03_03_132459) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -424,12 +424,6 @@ ActiveRecord::Schema.define(version: 2019_03_01_142455) do
   add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "wholesale_profiles"
   add_foreign_key "products", "roaster_profiles"
-  add_foreign_key "inventory_items", "lots"
-  add_foreign_key "lots", "crops"
-  add_foreign_key "lots", "roaster_profiles"
-  add_foreign_key "product_inventory_items", "inventory_items"
-  add_foreign_key "product_inventory_items", "products"
-  add_foreign_key "product_variants", "products"
   add_foreign_key "subscription_charges", "subscriptions"
   add_foreign_key "subscription_items", "plans"
   add_foreign_key "subscription_items", "subscriptions"

@@ -43,6 +43,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
 
   belongs_to :roaster_profile, optional: true
+  belongs_to :customer_profile, optional: true
   has_one :subscription
   has_many :cards, through: :subscription
 
@@ -50,5 +51,11 @@ class User < ApplicationRecord
 
   def is_owner
     roaster_profile.owner == self
+  end
+
+  def cart(roaster)
+    if !customer_profile.wholesale_profiles.find_by(roaster_profile: roaster).nil?
+      customer_profile.wholesale_profiles.find_by(roaster_profile: roaster).cart
+    end
   end
 end
