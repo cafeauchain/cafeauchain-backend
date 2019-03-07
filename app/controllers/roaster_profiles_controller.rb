@@ -1,7 +1,6 @@
 class RoasterProfilesController < ApplicationController
   before_action :authenticate_user!, except: [:shop]
   before_action :set_roaster_profile, except: [:index, :new, :shop]
-  layout "devise"
 
   # GET /roaster_profiles
   # GET /roaster_profiles.json
