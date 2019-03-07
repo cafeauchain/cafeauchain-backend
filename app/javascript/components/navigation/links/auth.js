@@ -19,7 +19,7 @@ const links = user => {
             { href: `${roasterString}/edit`, content: "Edit Roaster Profile" },
             { href: `${roasterString}/wholesale`, content: "Wholesale" }
         ],
-        wholesaleDropdowns: [{ href: "/", content: "History (Doesnt work)" }],
+        wholesaleDropdowns: [{ href: "/", content: "Account (Doesnt work)" }, { href: "/orders", content: "Orders" }],
         nonRoaster: [{ href: "/roasters/new", content: "Complete Your Roaster Profile" }],
         admin: [
             {
