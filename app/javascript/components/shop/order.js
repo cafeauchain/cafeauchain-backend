@@ -9,7 +9,7 @@ import { Money, Weights } from "shared/textFormatters";
 import Table from "shared/table";
 import randomCoffeeImage from "shared/randomCoffeeImage";
 
-import { humanize } from "utilities";
+import { humanize, sortBy } from "utilities";
 
 import tableDefs from "defs/tables/orderLineItems";
 
@@ -61,6 +61,10 @@ class Order extends React.Component {
         const order_items = attributes ? attributes.order_items : [];
         const roasterLogo = roaster.roaster_img_url || randomCoffeeImage();
         const customerLogo = user.img_url || randomCoffeeImage();
+        const sorted =
+            order_items && order_items.length
+                ? sortBy({ collection: order_items, id: "size", sorts: [{ name: "name" }, { name: "size" }] })
+                : [];
         return (
             <Container style={{ margin: "4em 0" }}>
                 <Segment>
@@ -137,7 +141,7 @@ class Order extends React.Component {
                             </div>
                         </Flex>
                         <br />
-                        <Table tableDefs={tableDefs} data={order_items} />
+                        <Table tableDefs={tableDefs} data={sorted} />
                         <br />
                         <Flex spacing="30" spacebetween>
                             <div flex="66" />
