@@ -24,5 +24,6 @@
 #
 
 class Card < ApplicationRecord
-  belongs_to :subscription
+  belongs_to :subscription, optional: true
+  belongs_to :customer_profile, optional: true
 end

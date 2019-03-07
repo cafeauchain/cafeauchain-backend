@@ -50,6 +50,9 @@ group :development do
   gem 'lol_dba'
   gem 'rack-mini-profiler'
   gem 'bullet'
+  gem 'flamegraph'
+  gem 'stackprof'
+  gem 'memory_profiler'
 end
 
 group :development, :test do
