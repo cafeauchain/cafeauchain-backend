@@ -48,7 +48,7 @@ group :development do
   gem "binding_of_caller"
   gem 'hirb'
   gem 'lol_dba'
-  gem 'rack-mini-profiler'
+  gem 'rack-mini-profiler', require: false
   gem 'bullet'
   gem 'flamegraph'
   gem 'stackprof'
