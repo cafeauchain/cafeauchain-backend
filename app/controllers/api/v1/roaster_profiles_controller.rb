@@ -65,7 +65,7 @@ module Api::V1
 
     def cards
       begin
-        StripeServices::CreateCard.call(@roaster_profile.subscription.id, params[:token], params[:setAsDefault])
+        StripeServices::CreateCard.call(@roaster_profile.subscription.id, nil, params[:token], params[:setAsDefault])
         render json: @roaster_profile.subscription.cards, status: 200
       rescue StandardError => e
         render json: {

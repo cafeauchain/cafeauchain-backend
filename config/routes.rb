@@ -1,6 +1,10 @@
 # == Route Map
 #
+<<<<<<< HEAD
 # I, [2019-03-08T08:07:19.192851 #24985]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+=======
+# I, [2019-03-07T10:13:18.019848 #83298]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+>>>>>>> Configured card create service to work for customers and subscriptions
 #                                     Prefix Verb   URI Pattern                                                                              Controller#Action
 #  upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #             api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -19,6 +23,15 @@
 #                                            PATCH  /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#update
 #                                            PUT    /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#update
 #                                            DELETE /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#destroy
+#              api_v1_customer_profile_cards POST   /api/v1/customers/:customer_profile_id/cards(.:format)                                   api/v1/customer_profiles#cards
+#                   api_v1_customer_profiles GET    /api/v1/customers(.:format)                                                              api/v1/customer_profiles#index
+#                                            POST   /api/v1/customers(.:format)                                                              api/v1/customer_profiles#create
+#                new_api_v1_customer_profile GET    /api/v1/customers/new(.:format)                                                          api/v1/customer_profiles#new
+#               edit_api_v1_customer_profile GET    /api/v1/customers/:id/edit(.:format)                                                     api/v1/customer_profiles#edit
+#                    api_v1_customer_profile GET    /api/v1/customers/:id(.:format)                                                          api/v1/customer_profiles#show
+#                                            PATCH  /api/v1/customers/:id(.:format)                                                          api/v1/customer_profiles#update
+#                                            PUT    /api/v1/customers/:id(.:format)                                                          api/v1/customer_profiles#update
+#                                            DELETE /api/v1/customers/:id(.:format)                                                          api/v1/customer_profiles#destroy
 #              api_v1_producer_profile_crops GET    /api/v1/producers/:producer_profile_id/crops(.:format)                                   api/v1/crops#index
 #                                            POST   /api/v1/producers/:producer_profile_id/crops(.:format)                                   api/v1/crops#create
 #           new_api_v1_producer_profile_crop GET    /api/v1/producers/:producer_profile_id/crops/new(.:format)                               api/v1/crops#new
@@ -225,6 +238,9 @@ Rails.application.routes.draw do
         end
       end
       resources :subscriptions
+      resources :customer_profiles, path: "customers" do
+        post :cards
+      end
       resources :producer_profiles, path: "producers" do
         resources :crops
       end
