@@ -83,7 +83,7 @@ class FormattedTable extends Component {
     buildTableCells = item => {
         const { tableDefs, inputExtras } = this.props;
         return tableDefs.fields.map(field => {
-            const { namespace, name, formatter: Formatter, ...rest } = field;
+            const { namespace, name, formatter: Formatter, link, ...rest } = field;
             let value = namespace ? namespacer(namespace, item)[name] : item[name];
             const itemDetails = { id: item.id, type: item.type, name };
             let extras = {};
@@ -91,6 +91,7 @@ class FormattedTable extends Component {
                 extras = { ...inputExtras, name, placeholder: humanize(name), value: value || "", isNew: item.isNew };
             }
             if (Formatter) value = <Formatter content={value} item={itemDetails} {...extras} />;
+            if (link) value = <a href={link + item.id}>{value}</a>;
             return (
                 <Table.Cell {...rest} key={name}>
                     {value}

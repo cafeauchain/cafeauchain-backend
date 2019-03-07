@@ -2,7 +2,7 @@ module Api::V1
   class OrdersController < ApplicationController
     before_action :set_cart
     before_action :authenticate_user!
-    before_action :set_order, only: [:show]
+    before_action :set_order, only: [:show, :update]
 
     def create
       @roaster = current_roaster
@@ -27,6 +27,16 @@ module Api::V1
     end
 
     def show
+    end
+
+    def index
+      @orders = Order.all
+      render json: @orders, status: 200
+    end
+
+    def update
+      @order.update(status: params[:status])
+      render json: {"redirect":false, data: @cart}, status: 200
     end
 
     private
