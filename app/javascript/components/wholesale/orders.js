@@ -8,10 +8,10 @@ import Table from "shared/table";
 import tableDefs from "defs/tables/ordersTable";
 /* eslint-enable */
 
-const Orders = ({ orders, roaster }) => {
+const Orders = ({ orders }) => {
     const onClick = (e, item) => {
         e.preventDefault();
-        window.location = "/roasters/" + roaster.id + "/orders/" + item.id;
+        window.location = "/manage/orders/" + item.id;
     };
     let data = [];
     if (orders) {
@@ -27,8 +27,7 @@ const Orders = ({ orders, roaster }) => {
 
 const { object } = PropTypes;
 Orders.propTypes = {
-    orders: object,
-    roaster: object
+    orders: object
 };
 
 export default Orders;

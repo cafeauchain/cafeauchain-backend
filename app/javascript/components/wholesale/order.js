@@ -70,7 +70,7 @@ class Order extends React.Component {
                 <Segment>
                     <Header as="h2" content="Order Details" dividing />
                     <p>
-                        <a href="/orders">Back to All Orders</a>
+                        <a href="/manage/orders">Back to All Orders</a>
                     </p>
                     <Segment style={{ maxWidth: 900, margin: "40px auto" }}>
                         <Label size="large" ribbon="right" content="Open" color="green" />
