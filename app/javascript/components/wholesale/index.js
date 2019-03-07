@@ -3,16 +3,18 @@ import PropTypes from "prop-types";
 import { Container, Header, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
-import StartBatch from "roaster_tools/startBatch";
 import Inventory from "wholesale/inventory";
+import QuickActions from "wholesale/quickActions";
+import Orders from "wholesale/orders";
 
 import Context from "contexts/index";
 /* eslint-enable */
 
-const Wrapper = ({ roaster, ...rest }) => {
+const Wrapper = props => {
+    const { roaster } = props;
     return (
         <Context roaster={roaster} requests={["inventory", "lots", "products"]}>
-            <Dashboard {...rest} />
+            <Dashboard {...props} />
         </Context>
     );
 };
@@ -23,14 +25,28 @@ Wrapper.propTypes = {
     roaster: object
 };
 
-const Dashboard = () => (
+const Dashboard = ({ orders, roaster }) => (
     <Container style={{ margin: "4em 0" }}>
         <Segment>
             <Header as="h1" content="Manage Wholesale" />
         </Segment>
-        <Segment>{true && <StartBatch />}</Segment>
-        <Segment>{true && <Inventory />}</Segment>
+        {true && <QuickActions />}
+        {true && (
+            <Segment>
+                <Orders orders={orders} roaster={roaster} />
+            </Segment>
+        )}
+        {true && (
+            <Segment>
+                <Inventory />
+            </Segment>
+        )}
     </Container>
 );
+
+Dashboard.propTypes = {
+    orders: object,
+    roaster: object
+};
 
 export default Wrapper;
