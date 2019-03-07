@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-05T19:59:27.293633 #62811]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-03-06T14:41:21.237124 #88266]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                     Prefix Verb   URI Pattern                                                                              Controller#Action
 #  upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #             api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -98,6 +98,14 @@
 #                                            PATCH  /api/v1/carts/:id(.:format)                                                              api/v1/carts#update
 #                                            PUT    /api/v1/carts/:id(.:format)                                                              api/v1/carts#update
 #                                            DELETE /api/v1/carts/:id(.:format)                                                              api/v1/carts#destroy
+#                              api_v1_orders GET    /api/v1/orders(.:format)                                                                 api/v1/orders#index
+#                                            POST   /api/v1/orders(.:format)                                                                 api/v1/orders#create
+#                           new_api_v1_order GET    /api/v1/orders/new(.:format)                                                             api/v1/orders#new
+#                          edit_api_v1_order GET    /api/v1/orders/:id/edit(.:format)                                                        api/v1/orders#edit
+#                               api_v1_order GET    /api/v1/orders/:id(.:format)                                                             api/v1/orders#show
+#                                            PATCH  /api/v1/orders/:id(.:format)                                                             api/v1/orders#update
+#                                            PUT    /api/v1/orders/:id(.:format)                                                             api/v1/orders#update
+#                                            DELETE /api/v1/orders/:id(.:format)                                                             api/v1/orders#destroy
 #                                admin_plans GET    /admin/plans(.:format)                                                                   admin/plans#index
 #                                            POST   /admin/plans(.:format)                                                                   admin/plans#create
 #                             new_admin_plan GET    /admin/plans/new(.:format)                                                               admin/plans#new
@@ -177,6 +185,14 @@
 #                                   register GET    /register(.:format)                                                                      devise/registrations#new
 #                                       root GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
 #                                       cart GET    /cart(.:format)                                                                          carts#index
+#                                     orders GET    /orders(.:format)                                                                        orders#index
+#                                            POST   /orders(.:format)                                                                        orders#create
+#                                  new_order GET    /orders/new(.:format)                                                                    orders#new
+#                                 edit_order GET    /orders/:id/edit(.:format)                                                               orders#edit
+#                                      order GET    /orders/:id(.:format)                                                                    orders#show
+#                                            PATCH  /orders/:id(.:format)                                                                    orders#update
+#                                            PUT    /orders/:id(.:format)                                                                    orders#update
+#                                            DELETE /orders/:id(.:format)                                                                    orders#destroy
 #                                            GET    /                                                                                        roaster_profiles#shop
 #                                       home GET    /home(.:format)                                                                          redirect(301, /)
 #                                            GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
@@ -230,6 +246,7 @@ Rails.application.routes.draw do
         put :set_as_default
       end
       resources :carts
+      resources :orders
     end
   end
 
@@ -274,6 +291,7 @@ Rails.application.routes.draw do
 
   constraints(!SubdomainRoutes) do
     get 'cart', to: 'carts#index'
+    resources :orders
     root 'roaster_profiles#shop'
   end
 end

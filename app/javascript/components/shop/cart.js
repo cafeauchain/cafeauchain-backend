@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Container, Segment, Item, Sticky, Header } from "semantic-ui-react";
+import { Container, Segment, Item, Sticky, Header, Rail } from "semantic-ui-react";
 
 import "./styles.scss";
 
@@ -52,49 +52,40 @@ class Cart extends React.Component {
 
     render() {
         const { stickyRef } = this.state;
-        const {
-            cart: { attributes }
-        } = this.props;
-        let items = [];
-        if (attributes) {
-            items = attributes.cart_items;
-        }
+        const { cart } = this.props;
+        const { cart_items: items = [], roaster_name = "" } = cart.attributes;
         return (
             <Container style={{ margin: "4em 0" }}>
-                <Flex spacing="30">
-                    <div flex="66" ref={this.handleStickyRef}>
-                        <Segment>
-                            <Header as="h2" content={"Cart: " + attributes.roaster_name} dividing />
-                            <Item.Group divided relaxed="very">
-                                {items.map(item => {
-                                    const productOptions = [{ value: item.production_options[0], key: "product" }];
-                                    const variantOptions = [
-                                        { value: item.variant_id, key: "quantity", price: item.price }
-                                    ];
-                                    return (
-                                        <Item key={item.id}>
-                                            <CartItemDetails item={item} />
-                                            <Item.Content>
-                                                <ProductForm
-                                                    productOptions={productOptions}
-                                                    variantOptions={variantOptions}
-                                                    quantity={item.quantity}
-                                                    inCart
-                                                    cartId={item.id}
-                                                />
-                                            </Item.Content>
-                                        </Item>
-                                    );
-                                })}
-                            </Item.Group>
-                        </Segment>
-                    </div>
-                    <div flex="33">
-                        <Sticky context={stickyRef} offset={100}>
-                            <CartDetails attributes={attributes} />
-                        </Sticky>
-                    </div>
-                </Flex>
+                <div style={{ width: "calc( 100% - 328px )" }} ref={this.handleStickyRef}>
+                    <Segment>
+                        <Header as="h2" content={"Cart: " + roaster_name} dividing />
+                        <Item.Group divided relaxed="very">
+                            {items.map(item => {
+                                const productOptions = [{ value: item.production_options[0], key: "product" }];
+                                const variantOptions = [{ value: item.variant_id, key: "quantity", price: item.price }];
+                                return (
+                                    <Item key={item.id}>
+                                        <CartItemDetails item={item} />
+                                        <Item.Content>
+                                            <ProductForm
+                                                productOptions={productOptions}
+                                                variantOptions={variantOptions}
+                                                quantity={item.quantity}
+                                                inCart
+                                                cartId={item.id}
+                                            />
+                                        </Item.Content>
+                                    </Item>
+                                );
+                            })}
+                        </Item.Group>
+                        <Rail position="right">
+                            <Sticky context={stickyRef} offset={100}>
+                                <CartDetails cart={cart} />
+                            </Sticky>
+                        </Rail>
+                    </Segment>
+                </div>
             </Container>
         );
     }
