@@ -11,7 +11,7 @@ import tableDefs from "defs/tables/ordersTable";
 const Orders = ({ orders, roaster }) => {
     const onClick = (e, item) => {
         e.preventDefault();
-        window.location = "roasters/" + roaster.id + "/orders/" + item.id;
+        window.location = "/roasters/" + roaster.id + "/orders/" + item.id;
     };
     let data = [];
     if (orders) {

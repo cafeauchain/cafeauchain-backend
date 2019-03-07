@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-06T14:41:21.237124 #88266]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-03-07T13:12:17.265307 #8241]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                     Prefix Verb   URI Pattern                                                                              Controller#Action
 #  upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #             api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -258,6 +258,7 @@ Rails.application.routes.draw do
 
   resources :roaster_profiles, path: "roasters" do
     resources :lots, only: [:show, :index]
+    resources :orders, only: [:show]
     member do
       get :dashboard
       get :manage_subscription
