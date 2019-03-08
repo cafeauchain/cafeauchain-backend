@@ -69,7 +69,7 @@ class Order extends React.Component {
             address_2: attributes.addresses.length ? attributes.addresses[0].address_2 : "",
             city: attributes.addresses.length ? attributes.addresses[0].city : "",
             state: attributes.addresses.length ? attributes.addresses[0].state : "",
-            zip_code: attributes.addresses.length ? attributes.addresses[0].zip_code : 0,
+            zip_code: attributes.addresses.length ? attributes.addresses[0].zip_code : "",
             terms: attributes.terms
         };
         return (

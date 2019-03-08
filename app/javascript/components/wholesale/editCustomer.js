@@ -69,8 +69,8 @@ class EditCustomer extends Component {
                 <Divider />
                 <Form onSubmit={this.handleSubmit}>
                     <Input label="Company Name" value={company_name} />
-                    <Input label="Name" value={name} />
-                    <Input label="Email" value={email} type="email" />
+                    <Input label="Contact Name" name="name" value={name} />
+                    <Input label="Contact Email" name="email" value={email} type="email" />
 
                     <Form.Group inline widths="equal">
                         <Input label="Address 1" value={address_1} />

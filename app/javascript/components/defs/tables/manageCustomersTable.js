@@ -4,12 +4,14 @@ import { AsNumber, PosMoney } from "shared/textFormatters";
 
 const tableDefinition = {
     fields: [
-        { name: "name", namespace: "attributes/owner" },
-        { name: "email", namespace: "attributes/owner" },
+        { name: "company_name", label: "Company", namespace: "attributes" },
+        { name: "name", label: "Primary Contact", namespace: "attributes/owner" },
+        { name: "email", label: "Contact Email", namespace: "attributes" },
         { name: "terms", namespace: "attributes" },
-        { name: "order_count", namespace: "attributes", formatter: AsNumber, textAlign: "right" },
+        { name: "order_count", label: "Orders", namespace: "attributes", formatter: AsNumber, textAlign: "right" },
         {
             name: "order_value",
+            label: "Lifetime Value",
             namespace: "attributes",
             formatter: PosMoney,
             textAlign: "right"
