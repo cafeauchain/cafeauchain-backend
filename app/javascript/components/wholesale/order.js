@@ -11,6 +11,8 @@ import randomCoffeeImage from "shared/randomCoffeeImage";
 
 import { humanize, sortBy } from "utilities";
 
+import OrderFulfillment from "wholesale/orderFulfillment";
+
 import tableDefs from "defs/tables/orderLineItems";
 
 import Context from "contexts/main";
@@ -25,7 +27,7 @@ const Wrapper = ({ order, ...props }) => {
                 {ctx => (
                     <Order
                         {...props}
-                        order={order.data}
+                        order={ctx.order || order.data}
                         loading={ctx.loading}
                         userId={ctx.userId}
                         getCtxData={ctx.getData}
@@ -65,6 +67,7 @@ class Order extends React.Component {
             order_items && order_items.length
                 ? sortBy({ collection: order_items, id: "size", sorts: [{ name: "name" }, { name: "size" }] })
                 : [];
+        const closed = attributes.status === "complete";
         return (
             <Container style={{ margin: "4em 0" }}>
                 <Segment>
@@ -72,8 +75,14 @@ class Order extends React.Component {
                     <p>
                         <a href="/manage/orders">Back to All Orders</a>
                     </p>
+                    <OrderFulfillment id={id} status={attributes.status} />
                     <Segment style={{ maxWidth: 900, margin: "40px auto" }}>
-                        <Label size="large" ribbon="right" content="Open" color="green" />
+                        <Label
+                            size="large"
+                            ribbon="right"
+                            content={closed ? "Closed" : "Open"}
+                            color={closed ? "black" : "green"}
+                        />
                         <Flex spacing="30" spacebetween>
                             <div flex="66">
                                 <Item.Group>

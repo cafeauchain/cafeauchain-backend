@@ -36,7 +36,8 @@ module Api::V1
 
     def update
       @order.update(status: params[:status])
-      render json: {"redirect":false, data: @cart}, status: 200
+      @order = ActiveModel::SerializableResource.new(@order, serializer: OrderSerializer::SingleOrderSerializer)
+      render json: {"redirect":false, data: @order}, status: 200
     end
 
     private
