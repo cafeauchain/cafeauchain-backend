@@ -255,6 +255,7 @@ Rails.application.routes.draw do
       end
       resources :carts
       resources :orders
+      resources :customers
     end
   end
 

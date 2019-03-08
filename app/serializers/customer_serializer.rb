@@ -1,5 +1,5 @@
 class CustomerSerializer < ActiveModel::Serializer
-  attributes :id, :owner, :addresses, :terms, :order_count, :order_value
+  attributes :id, :owner, :email, :company_name, :addresses, :terms, :order_count, :order_value
 
   def terms
     wp = self.object.wholesale_profiles.find_by(roaster_profile: scope.roaster_profile)
@@ -16,4 +16,13 @@ class CustomerSerializer < ActiveModel::Serializer
     end
     '%.2f' % (value)
   end
+
+  def orders
+    self.object.orders.map do |order|
+      OrderSerializer.new(order)
+    end
+  end
+end
+class SingleCustomerSerializer < CustomerSerializer
+  attributes :orders
 end

@@ -4,7 +4,7 @@ module Manage
     before_action :set_customer, only: [:show]
 
     def show
-      @customer = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer)
+      @customer = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: current_user)
       render "manage/customer"
     end
 
