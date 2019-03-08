@@ -93,7 +93,7 @@ class FormattedTable extends Component {
             if (Formatter) value = <Formatter content={value} item={itemDetails} {...extras} />;
             if (link) value = <a href={link + item.id}>{value}</a>;
             return (
-                <Table.Cell {...rest} key={name}>
+                <Table.Cell {...rest} key={rest.key || name}>
                     {value}
                 </Table.Cell>
             );
@@ -127,7 +127,7 @@ class FormattedTable extends Component {
                                         <Table.HeaderCell
                                             sorted={column === field.name ? direction : null}
                                             onClick={tableProps.sortable ? this.handleSort(field.name) : null}
-                                            key={field.name}
+                                            key={field.key || field.name}
                                             title={field.title}
                                             textAlign={field.textAlign}
                                         >
