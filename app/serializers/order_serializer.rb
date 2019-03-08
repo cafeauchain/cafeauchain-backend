@@ -18,7 +18,7 @@
 #
 
 class OrderSerializer < ActiveModel::Serializer
-  attributes :id, :order_total, :subtotal, :shipping, :total_line_items, :total_weight, :total_items, :roaster_name, :status, :order_date
+  attributes :id, :order_total, :subtotal, :shipping, :total_line_items, :total_weight, :total_items, :roaster_name, :status, :order_date, :company_name
 
   def order_items
     self.object.order_items.map do |item|
@@ -69,6 +69,10 @@ class OrderSerializer < ActiveModel::Serializer
 
   def order_date
     self.object.created_at
+  end
+
+  def company_name
+    self.object.customer_profile.company_name
   end
 end
 

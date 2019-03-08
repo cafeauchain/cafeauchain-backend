@@ -19,6 +19,7 @@
 
 class Order < ApplicationRecord
   belongs_to :wholesale_profile
+  has_one :customer_profile, through: :wholesale_profile
   has_many :order_items
   has_one :invoice
 
