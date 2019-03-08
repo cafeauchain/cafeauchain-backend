@@ -1,7 +1,6 @@
 class RoasterProfilesController < ApplicationController
   before_action :authenticate_user!, except: [:shop]
   before_action :set_roaster_profile, except: [:index, :new, :shop]
-  layout "devise"
 
   # GET /roaster_profiles
   # GET /roaster_profiles.json
@@ -49,6 +48,9 @@ class RoasterProfilesController < ApplicationController
   end
 
   def wholesale
+    @wholesale_profiles = @roaster_profile.wholesale_profiles
+    @orders = @roaster_profile.orders
+    @orders = ActiveModel::SerializableResource.new(@roaster_profile.orders, each_serializer: OrderSerializer)
   end
 
   def shop

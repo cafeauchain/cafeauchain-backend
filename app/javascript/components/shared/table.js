@@ -83,7 +83,7 @@ class FormattedTable extends Component {
     buildTableCells = item => {
         const { tableDefs, inputExtras } = this.props;
         return tableDefs.fields.map(field => {
-            const { namespace, name, formatter: Formatter, ...rest } = field;
+            const { namespace, name, formatter: Formatter, link, ...rest } = field;
             let value = namespace ? namespacer(namespace, item)[name] : item[name];
             const itemDetails = { id: item.id, type: item.type, name };
             let extras = {};
@@ -91,8 +91,9 @@ class FormattedTable extends Component {
                 extras = { ...inputExtras, name, placeholder: humanize(name), value: value || "", isNew: item.isNew };
             }
             if (Formatter) value = <Formatter content={value} item={itemDetails} {...extras} />;
+            if (link) value = <a href={link + item.id}>{value}</a>;
             return (
-                <Table.Cell {...rest} key={name}>
+                <Table.Cell {...rest} key={rest.key || name}>
                     {value}
                 </Table.Cell>
             );
@@ -126,7 +127,7 @@ class FormattedTable extends Component {
                                         <Table.HeaderCell
                                             sorted={column === field.name ? direction : null}
                                             onClick={tableProps.sortable ? this.handleSort(field.name) : null}
-                                            key={field.name}
+                                            key={field.key || field.name}
                                             title={field.title}
                                             textAlign={field.textAlign}
                                         >

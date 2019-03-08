@@ -15,10 +15,20 @@ import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = ({ cart, ...rest }) => {
-    const requests = cart ? [] : ["cart"];
+    const isCustomer = rest.loggedIn && rest.user.customer_profile_id;
+    const requests = isCustomer && !cart ? ["cart"] : [];
     return (
         <Provider requests={requests}>
-            <Context>{ctx => <Nav {...rest} cart={ctx.cart || cart.data} getCtxData={ctx.getData} />}</Context>
+            <Context>
+                {ctx => (
+                    <Nav
+                        {...rest}
+                        isCustomer={isCustomer}
+                        cart={isCustomer ? ctx.cart || cart.data : undefined}
+                        getCtxData={ctx.getData}
+                    />
+                )}
+            </Context>
         </Provider>
     );
 };
@@ -36,21 +46,23 @@ class Nav extends Component {
 
     componentDidMount() {
         // TODO This is probably a really bad idea
-        const { getCtxData } = this.props;
-        var oldFetch = fetch;
-        // eslint-disable-next-line
-        fetch = (url, options) => {
-            var promise = oldFetch(url, options);
-            if (url === "/api/v1/carts" && options && options.method === "POST") {
-                const inner = async () => {
-                    const resolved = await promise;
-                    if (resolved.ok) getCtxData("cart");
-                    return resolved;
-                };
-                inner();
-            }
-            return promise;
-        };
+        const { getCtxData, isCustomer } = this.props;
+        if (isCustomer) {
+            var oldFetch = fetch;
+            // eslint-disable-next-line
+            fetch = (url, options) => {
+                var promise = oldFetch(url, options);
+                if (url === "/api/v1/carts" && options && options.method === "POST") {
+                    const inner = async () => {
+                        const resolved = await promise;
+                        if (resolved.ok) getCtxData("cart");
+                        return resolved;
+                    };
+                    inner();
+                }
+                return promise;
+            };
+        }
     }
 
     renderCartButton = items => {
@@ -80,10 +92,10 @@ class Nav extends Component {
 
     render() {
         const { links } = this.state;
-        const { cart, user } = this.props;
+        const { cart, isCustomer } = this.props;
         const cart_items = cart && cart.attributes ? cart.attributes.cart_items : [];
         let buttons = links.buttons;
-        if (user !== null && user.customer_profile_id) {
+        if (isCustomer) {
             buttons = [this.renderCartButton(cart_items), ...buttons];
         }
         return <NavBar leftItems={links.left} rightItems={links.right} buttons={buttons} />;
@@ -95,11 +107,13 @@ Nav.propTypes = {
     loggedIn: bool.isRequired,
     user: object,
     cart: object,
-    getCtxData: func
+    getCtxData: func,
+    isCustomer: bool
 };
 
 Wrapper.propTypes = {
-    cart: object
+    cart: object,
+    roaster: object
 };
 
 export default Wrapper;

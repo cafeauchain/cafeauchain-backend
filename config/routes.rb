@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-06T14:41:21.237124 #88266]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-03-07T14:56:46.839137 #11339]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                     Prefix Verb   URI Pattern                                                                              Controller#Action
 #  upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #             api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -139,6 +139,11 @@
 #                                            PATCH  /roasters/:id(.:format)                                                                  roaster_profiles#update
 #                                            PUT    /roasters/:id(.:format)                                                                  roaster_profiles#update
 #                                            DELETE /roasters/:id(.:format)                                                                  roaster_profiles#destroy
+#                               manage_order GET    /manage/orders/:id(.:format)                                                             manage/orders#show
+#                     manage_wholesale_index GET    /manage/wholesale(.:format)                                                              manage/wholesale#index
+#                     manage_inventory_index GET    /manage/inventory(.:format)                                                              manage/inventory#index
+#                     manage_dashboard_index GET    /manage/dashboard(.:format)                                                              manage/dashboard#index
+#                  manage_subscription_index GET    /manage/subscription(.:format)                                                           manage/subscription#index
 #                     producer_profile_crops GET    /producers/:producer_profile_id/crops(.:format)                                          crops#index
 #                                            POST   /producers/:producer_profile_id/crops(.:format)                                          crops#create
 #                  new_producer_profile_crop GET    /producers/:producer_profile_id/crops/new(.:format)                                      crops#new
@@ -258,6 +263,7 @@ Rails.application.routes.draw do
 
   resources :roaster_profiles, path: "roasters" do
     resources :lots, only: [:show, :index]
+    # resources :orders, only: [:show]
     member do
       get :dashboard
       get :manage_subscription
@@ -268,6 +274,15 @@ Rails.application.routes.draw do
         resources :products
       end
     end
+  end
+
+  #
+  namespace :manage do
+    resources :orders, only: [:show, :index]
+    resources :wholesale, only: [:index]
+    resources :inventory, only: [:index]
+    resources :dashboard, only: [:index]
+    resources :subscription, only: [:index]
   end
 
   resources :producer_profiles, path: "producers" do

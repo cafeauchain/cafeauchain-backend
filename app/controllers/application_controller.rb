@@ -27,14 +27,6 @@ class ApplicationController < ActionController::Base
     Raven.extra_context(params: params.to_unsafe_h, url: request.url)
   end
 
-  # def layout_by_resource
-  #   if devise_controller?
-  #     "devise"
-  #   else
-  #     "application"
-  #   end
-  # end
-
   def current_roaster
     if SubdomainRoutes
       @current_roaster = RoasterProfile.find_by(subdomain: request.subdomain)
@@ -42,7 +34,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_cart
-    if user_signed_in?
+    if user_signed_in? && current_user.roaster_profile.nil?
       @cart = current_user.cart(current_roaster)
       # @cart = ActiveModel::SerializableResource.new(@cart, each_serializer: CartSerializer)
     else

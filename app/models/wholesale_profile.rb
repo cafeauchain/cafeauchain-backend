@@ -24,4 +24,5 @@ class WholesaleProfile < ApplicationRecord
   belongs_to :roaster_profile
   belongs_to :customer_profile
   has_one :cart
+  has_many :orders
 end

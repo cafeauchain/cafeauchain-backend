@@ -5,6 +5,11 @@ class OrdersController < ApplicationController
 
   def show
     @order = ActiveModel::SerializableResource.new(@order, serializer: OrderSerializer::SingleOrderSerializer)
+    if current_roaster.present?
+      render "wholesale_portal/order"
+    else
+      render "roaster_admin/order"
+    end
   end
 
   def index

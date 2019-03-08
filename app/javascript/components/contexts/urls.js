@@ -11,7 +11,8 @@ const urls = id => ({
     transactions: `${ROASTER_URL(id)}/transactions`,
     products: `${ROASTER_URL(id)}/products`,
     variants: `${ROASTER_URL(id)}/variants`,
-    cart: `${API_URL}/carts`
+    cart: `${API_URL}/carts`,
+    orders: `${API_URL}/orders`
 });
 
 export default urls;

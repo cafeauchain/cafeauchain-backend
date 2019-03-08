@@ -149,7 +149,8 @@ class RoastLog extends Component {
                     <Button onClick={this.updatePeriod} period="month" content="Month" active={period === "month"} />
                 </Button.Group>
                 <Table tableDefs={modified} data={data} loading={loading} />
-                <Flex spacebetween style={{ marginTop: 20 }}>
+                <br />
+                <Flex spacebetween>
                     <Button
                         primary
                         onClick={e => this.updateData(e, "previous")}

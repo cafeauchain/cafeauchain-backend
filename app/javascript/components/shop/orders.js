@@ -11,11 +11,15 @@ import { humanize } from "utilities";
 import tableDefs from "defs/tables/ordersTable";
 /* eslint-enable */
 
-const Orders = ({ orders: { data } }) => {
+const Orders = ({ orders }) => {
     const onClick = (e, item) => {
         e.preventDefault();
         window.location = "/orders/" + item.id;
     };
+    let data = [];
+    if (orders) {
+        data = orders.data;
+    }
     return (
         <Container style={{ margin: "4em 0" }}>
             <Segment>
