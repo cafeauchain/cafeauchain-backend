@@ -17,4 +17,6 @@ class CustomerProfile < ApplicationRecord
 
   has_many :wholesale_profiles
 
+  has_many :orders, through: :wholesale_profiles
+
 end

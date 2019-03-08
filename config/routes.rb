@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-07T14:56:46.839137 #11339]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-03-08T08:07:19.192851 #24985]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                     Prefix Verb   URI Pattern                                                                              Controller#Action
 #  upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #             api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -139,7 +139,10 @@
 #                                            PATCH  /roasters/:id(.:format)                                                                  roaster_profiles#update
 #                                            PUT    /roasters/:id(.:format)                                                                  roaster_profiles#update
 #                                            DELETE /roasters/:id(.:format)                                                                  roaster_profiles#destroy
+#                              manage_orders GET    /manage/orders(.:format)                                                                 manage/orders#index
 #                               manage_order GET    /manage/orders/:id(.:format)                                                             manage/orders#show
+#                           manage_customers GET    /manage/customers(.:format)                                                              manage/customers#index
+#                            manage_customer GET    /manage/customers/:id(.:format)                                                          manage/customers#show
 #                     manage_wholesale_index GET    /manage/wholesale(.:format)                                                              manage/wholesale#index
 #                     manage_inventory_index GET    /manage/inventory(.:format)                                                              manage/inventory#index
 #                     manage_dashboard_index GET    /manage/dashboard(.:format)                                                              manage/dashboard#index
@@ -279,6 +282,7 @@ Rails.application.routes.draw do
   #
   namespace :manage do
     resources :orders, only: [:show, :index]
+    resources :customers, only: [:show, :index]
     resources :wholesale, only: [:index]
     resources :inventory, only: [:index]
     resources :dashboard, only: [:index]
