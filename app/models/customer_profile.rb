@@ -2,10 +2,12 @@
 #
 # Table name: customer_profiles
 #
-#  id         :bigint(8)        not null, primary key
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  owner_id   :integer
+#  id           :bigint(8)        not null, primary key
+#  company_name :string
+#  email        :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  owner_id     :integer
 #
 
 class CustomerProfile < ApplicationRecord
@@ -16,5 +18,7 @@ class CustomerProfile < ApplicationRecord
   has_many :addresses, as: :addressable, dependent: :destroy
 
   has_many :wholesale_profiles
+
+  has_many :orders, through: :wholesale_profiles
 
 end

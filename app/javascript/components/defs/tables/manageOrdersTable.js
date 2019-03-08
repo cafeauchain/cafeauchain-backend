@@ -17,6 +17,7 @@ const Humanize = props => {
 
 const tableDefinition = {
     fields: [
+        { name: "company_name", namespace: "attributes", link: "/manage/orders/" },
         { name: "order_date", namespace: "attributes", formatter: DateFormatter, link: "/manage/orders/" },
         { name: "id", label: "Order Id", link: "/manage/orders/", textAlign: "center" },
         { name: "status", namespace: "attributes", formatter: Humanize },
