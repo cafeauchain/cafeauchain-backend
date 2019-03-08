@@ -74,8 +74,12 @@ class OrderSerializer < ActiveModel::Serializer
   def company_name
     self.object.customer_profile.company_name
   end
+
+  def terms
+    self.object.wholesale_profile.terms
+  end
 end
 
 class SingleOrderSerializer < OrderSerializer
-  attributes :order_items
+  attributes :order_items, :terms
 end

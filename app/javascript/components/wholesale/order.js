@@ -113,7 +113,7 @@ class Order extends React.Component {
                                     <Item>
                                         <Item.Image size="tiny" src={customerLogo} />
                                         <Item.Content verticalAlign="top">
-                                            <Item.Header as="a">The Coffee Drinkery</Item.Header>
+                                            <Item.Header as="a">{attributes.company_name}</Item.Header>
                                             <Item.Description>
                                                 <p>
                                                     123 Any Street
@@ -135,7 +135,7 @@ class Order extends React.Component {
                                     <div flex="50">
                                         <strong>Terms:</strong>
                                     </div>
-                                    <div flex="50">On Receipt</div>
+                                    <div flex="50">{attributes.terms}</div>
                                     <div flex="50">
                                         <strong>Status:</strong>
                                     </div>
