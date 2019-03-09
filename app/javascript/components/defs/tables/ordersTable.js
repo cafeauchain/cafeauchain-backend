@@ -7,7 +7,7 @@ import { humanize } from "utilities";
 /* eslint-enable */
 
 const DateFormatter = props => {
-    return moment(props.content).format("MMM d, YYYY");
+    return moment(props.content).format("MMM D, YYYY");
 };
 
 const Humanize = props => {

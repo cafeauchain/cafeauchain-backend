@@ -312,6 +312,6 @@ Rails.application.routes.draw do
   constraints(!SubdomainRoutes) do
     get 'cart', to: 'carts#index'
     resources :orders
-    root 'roaster_profiles#shop'
+    root 'shop/shop#index'
   end
 end

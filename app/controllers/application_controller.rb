@@ -3,9 +3,8 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :current_roaster
   before_action :set_raven_context
-  before_action :set_cart
+  before_action :set_cart, if: :current_roaster
   after_action :set_csrf_cookie
-  # layout :layout_by_resource
 
   helper_method :current_roaster
   helper_method :set_cart
@@ -36,7 +35,7 @@ class ApplicationController < ActionController::Base
   def set_cart
     if user_signed_in? && current_user.roaster_profile.nil?
       @cart = current_user.cart(current_roaster)
-      # @cart = ActiveModel::SerializableResource.new(@cart, each_serializer: CartSerializer)
+      @ser_cart = ActiveModel::SerializableResource.new(@cart, each_serializer: CartSerializer)
     else
       @cart = nil
     end

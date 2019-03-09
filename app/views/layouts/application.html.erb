@@ -12,7 +12,11 @@
     <%= csrf_meta_tags %>
   </head>
   <body class="<%= yield(:body_class) %>">
-    <%= react_component "navigation", props = {user: current_user, loggedIn: user_signed_in?, cart: @cart} %>
+    <% if current_roaster %>
+        <%= react_component "navigation", props = {user: current_user, loggedIn: user_signed_in?, cart: @ser_cart, isCustomer: true} %>
+    <% else %>
+        <%= react_component "navigation", props = {user: current_user, loggedIn: user_signed_in?, cart: nil} %>
+    <% end %>
     <%= yield %>
     <%= react_component "footer", props = {user: current_user, loggedIn: user_signed_in?}, {:class => "site-footer"} %>
     <!-- Start of HubSpot Embed Code -->
