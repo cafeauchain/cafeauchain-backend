@@ -14,8 +14,7 @@ import Provider from "contexts/wholesale";
 import Context from "contexts/main";
 /* eslint-enable */
 
-const Wrapper = ({ cart, ...rest }) => {
-    const isCustomer = rest.loggedIn && rest.user.customer_profile_id;
+const Wrapper = ({ cart, isCustomer, ...rest }) => {
     const requests = isCustomer && !cart ? ["cart"] : [];
     return (
         <Provider requests={requests}>
@@ -113,7 +112,8 @@ Nav.propTypes = {
 
 Wrapper.propTypes = {
     cart: object,
-    roaster: object
+    roaster: object,
+    isCustomer: bool
 };
 
 export default Wrapper;
