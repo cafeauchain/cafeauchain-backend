@@ -100,6 +100,7 @@ ActiveRecord::Schema.define(version: 2019_03_08_184113) do
     t.string "production_options", default: [], array: true
     t.string "notes"
     t.index ["cart_id"], name: "index_cart_items_on_cart_id"
+    t.index ["product_variant_id"], name: "index_cart_items_on_product_variant_id"
   end
 
   create_table "carts", force: :cascade do |t|
@@ -127,8 +128,10 @@ ActiveRecord::Schema.define(version: 2019_03_08_184113) do
     t.integer "owner_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "stripe_customer_id"
     t.string "email"
     t.string "company_name"
+    t.index ["owner_id"], name: "index_customer_profiles_on_owner_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -197,6 +200,7 @@ ActiveRecord::Schema.define(version: 2019_03_08_184113) do
     t.string "product_options", default: [], array: true
     t.string "notes"
     t.index ["order_id"], name: "index_order_items_on_order_id"
+    t.index ["product_variant_id"], name: "index_order_items_on_product_variant_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -284,6 +288,7 @@ ActiveRecord::Schema.define(version: 2019_03_08_184113) do
     t.string "address_2"
     t.integer "owner_id"
     t.string "subdomain"
+    t.index ["owner_id"], name: "index_roaster_profiles_on_owner_id"
   end
 
   create_table "subscription_charges", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
