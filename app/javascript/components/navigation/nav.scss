@@ -50,3 +50,24 @@
     animation-duration: 0.3s;
     animation-iteration-count: 4;
 }
+
+// Roaster/admin nav
+.roaster-container {
+    flex: 1 1 100%;
+}
+.roaster-container__sidebar {
+    max-width: 400px;
+    background: #1b1c1d;
+}
+.roaster-nav {
+    min-width: 300px;
+    margin-left: auto;
+    margin-right: 0;
+    text-align: right;
+    & > .menu {
+        position: fixed;
+        top: calc(4em + 60px);
+        left: 0;
+        max-width: 300px;
+    }
+}
