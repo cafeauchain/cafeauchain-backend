@@ -20,6 +20,10 @@
 #  updated_at :datetime         not null
 #  owner_id   :integer
 #
+# Indexes
+#
+#  index_roaster_profiles_on_owner_id  (owner_id)
+#
 
 class RoasterProfile < ApplicationRecord
   include Rails.application.routes.url_helpers

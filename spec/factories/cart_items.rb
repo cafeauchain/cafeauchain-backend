@@ -13,7 +13,8 @@
 #
 # Indexes
 #
-#  index_cart_items_on_cart_id  (cart_id)
+#  index_cart_items_on_cart_id             (cart_id)
+#  index_cart_items_on_product_variant_id  (product_variant_id)
 #
 # Foreign Keys
 #
