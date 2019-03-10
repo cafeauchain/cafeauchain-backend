@@ -1,0 +1,6 @@
+<% content_for :title, defined?(title) ? title : "This is the title" %>
+<% props = local_assigns.except(:title, :component, :nav, :scripts) %>
+<%= react_component component, props %>
+<% scripts.each do |s| %>
+<script src=<%= s %>></script>
+<% end %>

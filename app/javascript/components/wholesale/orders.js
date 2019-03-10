@@ -1,6 +1,6 @@
-import React, { Component, Fragment as F } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Header, Button, Icon } from "semantic-ui-react";
+import { Segment, Header, Button, Icon } from "semantic-ui-react";
 
 /* eslint-disable */
 import Table from "shared/table";
@@ -107,11 +107,11 @@ class Orders extends Component {
             namespace: "attributes"
         });
         return (
-            <F>
+            <Segment>
                 <Header as="h2" content="All Orders" dividing />
                 <ErrorHandler errors={errors} />
                 <Table tableDefs={this.tableDefs} data={sorted} loading={loading} />
-            </F>
+            </Segment>
         );
     }
 }

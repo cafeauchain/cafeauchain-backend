@@ -282,12 +282,12 @@ Rails.application.routes.draw do
 
   #
   namespace :manage do
+    get "dashboard", to: "primary#dashboard"
+    get "inventory", to: "primary#inventory"
     resources :orders, only: [:show, :index]
     resources :customers, only: [:show, :index]
-    resources :wholesale, only: [:index]
-    resources :inventory, only: [:index]
-    resources :dashboard, only: [:index]
-    resources :subscription, only: [:index]
+    get "wholesale", to: "primary#wholesale"
+    get "subscription", to: "primary#subscription"
   end
 
   resources :producer_profiles, path: "producers" do
