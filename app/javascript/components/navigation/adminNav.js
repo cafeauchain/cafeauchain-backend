@@ -9,7 +9,7 @@ class AdminNav extends Component {
     }
     render() {
         const {
-            user: { roaster_profile_id: id }
+            roaster: { id }
         } = this.props;
 
         const inventory = [
@@ -76,9 +76,9 @@ class AdminNav extends Component {
         );
     }
 }
-const { oneOfType, number, string, object } = PropTypes;
+const { object } = PropTypes;
 AdminNav.propTypes = {
-    user: object
+    roaster: object
 };
 
 export default AdminNav;
