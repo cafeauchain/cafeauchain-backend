@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form, Container, Header, Divider, Dimmer, Loader } from "semantic-ui-react";
+import { Form, Header, Divider, Dimmer, Loader } from "semantic-ui-react";
 
 import usStates from "../utilities/usStates";
 import Input from "../shared/input";
@@ -77,14 +77,14 @@ class App extends Component {
 
         const Input = this.renderInput;
         return (
-            <Container className="form roaster-wizard">
+            <div className="form roaster-wizard">
                 <Dimmer active={loading} inverted>
                     <Loader size="large">Saving</Loader>
                 </Dimmer>
                 <Header as="h2">Roaster Profile</Header>
-                <Container align="center">
+                <div>
                     <ImageChange src={img_url} id={id} />
-                </Container>
+                </div>
                 <Divider />
                 <Form onSubmit={this.startSubmit}>
                     <Input label="Name" value={name} />
@@ -111,7 +111,7 @@ class App extends Component {
 
                     <Form.Button>Submit</Form.Button>
                 </Form>
-            </Container>
+            </div>
         );
     }
 }

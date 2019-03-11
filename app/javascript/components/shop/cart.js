@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Container, Segment, Item, Sticky, Header, Rail } from "semantic-ui-react";
+import { Segment, Item, Sticky, Header, Rail } from "semantic-ui-react";
 
 import "./styles.scss";
 
@@ -55,7 +55,7 @@ class Cart extends React.Component {
         const { cart } = this.props;
         const { cart_items: items = [], roaster_name = "" } = cart.attributes;
         return (
-            <Container style={{ margin: "4em 0" }}>
+            <div>
                 <div style={{ width: "calc( 100% - 328px )" }} ref={this.handleStickyRef}>
                     <Segment>
                         <Header as="h2" content={"Cart: " + roaster_name} dividing />
@@ -86,7 +86,7 @@ class Cart extends React.Component {
                         </Rail>
                     </Segment>
                 </div>
-            </Container>
+            </div>
         );
     }
 }

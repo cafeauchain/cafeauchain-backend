@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Container, Segment, Header } from "semantic-ui-react";
+import { Segment, Header } from "semantic-ui-react";
 
 /* eslint-disable */
 import Table from "shared/table";
@@ -54,13 +54,11 @@ class Orders extends Component {
             namespace: "attributes"
         });
         return (
-            <Container style={{ margin: "4em 0" }}>
-                <Segment>
-                    <Header as="h2" content="All Customers" dividing />
-                    <ErrorHandler errors={errors} />
-                    <Table tableDefs={tableDefs} data={sorted} loading={loading} onClick={this.onClick} />
-                </Segment>
-            </Container>
+            <Segment>
+                <Header as="h2" content="All Customers" dividing />
+                <ErrorHandler errors={errors} />
+                <Table tableDefs={tableDefs} data={sorted} loading={loading} onClick={this.onClick} />
+            </Segment>
         );
     }
 }

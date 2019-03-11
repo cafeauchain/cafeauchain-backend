@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Container, Grid, Header, Segment } from "semantic-ui-react";
+import { Grid, Header, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
 import Budgeter from "roaster_tools/budgeter";
@@ -31,7 +31,7 @@ Wrapper.propTypes = {
 };
 
 const Dashboard = () => (
-    <Container style={{ margin: "4em 0" }}>
+    <div>
         <Segment>
             <Header as="h1" content="Dashboard" />
         </Segment>
@@ -47,7 +47,7 @@ const Dashboard = () => (
         </Grid>
         <Segment>{true && <OpenContracts />}</Segment>
         <Segment>{true && <RoastLog />}</Segment>
-    </Container>
+    </div>
 );
 
 export default Wrapper;

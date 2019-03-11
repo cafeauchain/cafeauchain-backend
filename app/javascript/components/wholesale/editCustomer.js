@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form, Container, Header, Divider, Dimmer, Loader } from "semantic-ui-react";
+import { Form, Header, Divider, Dimmer, Loader } from "semantic-ui-react";
 
 /* eslint-disable */
 import { usStates } from "utilities";
@@ -58,14 +58,14 @@ class EditCustomer extends Component {
 
         const Input = this.renderInput;
         return (
-            <Container className="form roaster-wizard">
+            <div className="form roaster-wizard">
                 <Dimmer active={loading} inverted>
                     <Loader size="large">Saving</Loader>
                 </Dimmer>
                 <Header as="h2">Customer Profile</Header>
-                <Container align="center">
+                <div align="center">
                     <ImageChange src={img_url} id={id} />
-                </Container>
+                </div>
                 <Divider />
                 <Form onSubmit={this.handleSubmit}>
                     <Input label="Company Name" value={company_name} />
@@ -87,7 +87,7 @@ class EditCustomer extends Component {
 
                     <Form.Button>Submit</Form.Button>
                 </Form>
-            </Container>
+            </div>
         );
     }
 }

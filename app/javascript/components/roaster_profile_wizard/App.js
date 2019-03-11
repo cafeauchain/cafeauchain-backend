@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Message } from "semantic-ui-react";
+import { Message } from "semantic-ui-react";
 
 /* eslint-disable */
 import { url as API_URL, requester } from "utilities/apiUtils";
@@ -127,14 +127,14 @@ class App extends Component {
         const { current_step: step, roaster_profile: profile, loading } = this.state;
         const settings = this.getWizardSettings(step);
         return (
-            <Container className="form roaster-wizard">
+            <div className="form roaster-wizard">
                 <WizardWrapper renderErrors={this.renderErrors} {...settings} loading={loading}>
                     {Number(step) === 1 && <Step1Fields handleChange={this.handleChange} values={profile} />}
                     {Number(step) === 2 && <Step2Fields handleChange={this.handleChange} values={profile} />}
                     {Number(step) === 3 && <Step3Fields handleChange={this.handleChange} values={profile} />}
                     {Number(step) === 4 && <Confirmation values={profile} />}
                 </WizardWrapper>
-            </Container>
+            </div>
         );
     }
 }

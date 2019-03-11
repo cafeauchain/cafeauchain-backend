@@ -1,6 +1,6 @@
 import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Image, Container, Header, Divider } from "semantic-ui-react";
+import { Image, Header, Divider } from "semantic-ui-react";
 
 class Profile extends Component {
     constructor(props) {
@@ -31,17 +31,17 @@ class Profile extends Component {
         // so the about section can have multiple paragraphs
 
         return (
-            <Container className="form roaster-wizard">
+            <div className="form roaster-wizard">
                 <Header as="h2">Roaster Profile</Header>
-                <Container>
+                <div>
                     <Header as="h3">
                         <Image src={img_url} size="small" verticalAlign="middle" />
                         {name}
                     </Header>
-                </Container>
+                </div>
 
                 <Divider style={{ clear: "both" }} />
-                <Container>
+                <div>
                     <Header as="h4">About Us</Header>
                     <p>{about}</p>
 
@@ -72,8 +72,8 @@ class Profile extends Component {
                             <p>{twitter}</p>
                         </F>
                     )}
-                </Container>
-            </Container>
+                </div>
+            </div>
         );
     }
 }
