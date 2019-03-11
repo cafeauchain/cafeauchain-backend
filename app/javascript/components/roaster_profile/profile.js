@@ -9,7 +9,7 @@ class Profile extends Component {
     }
 
     render() {
-        const { profile } = this.props;
+        const { roaster } = this.props;
         const {
             name,
             about,
@@ -24,8 +24,7 @@ class Profile extends Component {
             url,
             zip_code,
             img_url
-        } = profile;
-
+        } = roaster;
         // TODO This needs to look better.
         // Also, we should consider a WYSIWYG or Markdown editor on edit
         // so the about section can have multiple paragraphs
@@ -80,7 +79,7 @@ class Profile extends Component {
 
 const { object } = PropTypes;
 Profile.propTypes = {
-    profile: object.isRequired
+    roaster: object.isRequired
 };
 
 export default Profile;

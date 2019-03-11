@@ -13,7 +13,7 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            details: props.profile,
+            details: props.roaster,
             loading: false
         };
     }
@@ -118,7 +118,7 @@ class App extends Component {
 
 const { object } = PropTypes;
 App.propTypes = {
-    profile: object.isRequired
+    roaster: object.isRequired
 };
 
 export default App;
