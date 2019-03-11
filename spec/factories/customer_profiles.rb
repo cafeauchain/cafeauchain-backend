@@ -14,10 +14,6 @@
 #
 #  index_customer_profiles_on_owner_id  (owner_id)
 #
-# Indexes
-#
-#  index_customer_profiles_on_owner_id  (owner_id)
-#
 
 FactoryBot.define do
   factory :customer_profile do

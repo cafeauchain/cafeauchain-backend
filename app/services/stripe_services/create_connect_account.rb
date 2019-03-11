@@ -74,6 +74,7 @@ module StripeServices
         first_name: first_name,
         last_name: last_name,
         email: @roaster_profile.owner.email,
+        ssn_last_4: params[:owner][:ssn_last_4]
         dob: {
           day: params[:owner][:dob_day], 
           month: params[:owner][:dob_month], 
@@ -129,6 +130,7 @@ module StripeServices
         account.id,
         owner
       )
+      @roaster_profile.update(stripe_account_id: account.id)
     end
 
   end
