@@ -1,6 +1,6 @@
 import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Container, Icon, Image, Menu, Sidebar } from "semantic-ui-react";
+import { Icon, Image, Menu, Sidebar } from "semantic-ui-react";
 
 // eslint-disable-next-line
 import logo from "images/cac-unofficial-logo.png";
@@ -59,15 +59,15 @@ class NavBar extends Component {
         });
 
     render() {
-        const { leftItems, rightItems, buttons } = this.props;
+        const { rightItems, buttons } = this.props;
         const { visible, screenSize, menuHeight } = this.state;
-        let logoBorder = leftItems.length ? "" : " no-border";
+        let logoBorder = " no-border";
 
         return (
             <div className="navbar-spacer" ref={this.menuRef} style={{ paddingTop: menuHeight }}>
                 <Menu fixed="top">
-                    <Menu.Item className={"no-left-border" + logoBorder}>
-                        <Image size="mini" src={logo} as="a" href="/" onLoad={this.logoLoaded} />
+                    <Menu.Item className={"no-left-border" + logoBorder} as="a" href="/">
+                        <Image size="mini" src={logo} onLoad={this.logoLoaded} />
                         <h2 style={{ margin: "0 0 0 20px" }}>Cafe au Chain</h2>
                     </Menu.Item>
                     {screenSize === "tablet" && (
@@ -90,12 +90,11 @@ class NavBar extends Component {
                                     animation="overlay"
                                     vertical
                                     visible={visible}
-                                    content={menuItemBuilder(leftItems.concat(rightItems))}
+                                    content={menuItemBuilder(rightItems)}
                                 />
                             </Sidebar.Pushable>
                         </F>
                     )}
-                    {screenSize === "desktop" && menuItemBuilder(leftItems)}
                     <Menu.Menu
                         position="right"
                         content={menuItemBuilder(screenSize === "tablet" ? buttons : rightItems.concat(buttons))}

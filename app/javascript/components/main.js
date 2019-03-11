@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 /* eslint-disable */
-import Nav from "navigation/index";
+import HeaderNav from "navigation/header";
 import AdminNav from "navigation/adminNav";
 import Context from "contexts/main";
 import Provider from "contexts/index";
@@ -15,10 +15,16 @@ const Main = ({ component, ...rest }) => (
         <DynamicLoader resolve={() => import("./" + component)} {...rest} />
         <Context>
             {ctx => (
-                <NavPortal>
-                    {false && <Nav user={rest.user} loggedIn {...ctx} />}
-                    {true && <AdminNav roaster={rest.roaster} />}
-                </NavPortal>
+                <React.Fragment>
+                    {rest.roaster && (
+                        <NavPortal mountNode="main-nav">
+                            <AdminNav roaster={rest.roaster} {...ctx} />
+                        </NavPortal>
+                    )}
+                    <NavPortal mountNode="header-nav">
+                        <HeaderNav {...ctx} />
+                    </NavPortal>
+                </React.Fragment>
             )}
         </Context>
     </Provider>
