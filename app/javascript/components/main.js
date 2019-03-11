@@ -16,13 +16,13 @@ const Main = ({ component, ...rest }) => (
         <Context>
             {ctx => (
                 <React.Fragment>
-                    {rest.roaster && !rest.static && (
+                    {rest.roaster && !rest.static && !rest.cart && (
                         <NavPortal mountNode="main-nav">
                             <AdminNav roaster={rest.roaster} {...ctx} />
                         </NavPortal>
                     )}
                     <NavPortal mountNode="header-nav">
-                        <HeaderNav {...ctx} />
+                        <HeaderNav {...ctx} cart={rest.cart} />
                     </NavPortal>
                 </React.Fragment>
             )}

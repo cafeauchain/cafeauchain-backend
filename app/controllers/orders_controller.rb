@@ -5,16 +5,25 @@ class OrdersController < ApplicationController
 
   def show
     @order = ActiveModel::SerializableResource.new(@order, serializer: OrderSerializer::SingleOrderSerializer)
-    if current_roaster.present?
-      render "wholesale_portal/order"
-    else
-      render "roaster_admin/order"
-    end
+    render "manage/primary", locals: {
+      roaster: current_roaster,
+      order: @order,
+      title: 'Order',
+      component: 'shop/order',
+      cart: @ser_cart
+    }
   end
 
   def index
-    @orders = Order.all
-    @orders = ActiveModel::SerializableResource.new(@orders, each_serializer: OrderSerializer)
+    orders = Order.all
+    @orders = ActiveModel::SerializableResource.new(orders, each_serializer: OrderSerializer)
+    render "manage/primary", locals: {
+      roaster: current_roaster,
+      orders: @orders,
+      title: 'Orders',
+      component: 'shop/orders',
+      cart: @ser_cart
+    }
   end
 
   private

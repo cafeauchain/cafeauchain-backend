@@ -1,13 +1,12 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Header } from "semantic-ui-react";
 
 import "./styles.scss";
 
 /* eslint-disable */
 import Flex from "shared/flex";
 import { Weights, Money } from "shared/textFormatters";
-import randomCoffeeImage from "shared/randomCoffeeImage";
+import defaultImg from "images/cac-logo-with-bg.png";
 
 import Product from "shop/product";
 
@@ -82,11 +81,10 @@ class Products extends React.Component {
         sorted = sorted.filter(product => product.attributes.status === "live");
         return (
             <F>
-                <Header as="h2" content="Product Grid" />
                 <Flex centermain wrap spacing="20">
                     {sorted.reduce((arr, { attributes, id }) => {
                         const { product_image_urls, title, description, product_options } = attributes;
-                        const img = product_image_urls[0] || randomCoffeeImage();
+                        const img = product_image_urls[0] || defaultImg;
                         const shortDesc = truncate(description, 200);
                         const variantOptions = this.variantBuilder(variants, id, title);
                         const productOptions = this.productOptionsBuilder(product_options);
