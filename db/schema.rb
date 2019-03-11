@@ -288,10 +288,7 @@ ActiveRecord::Schema.define(version: 2019_03_11_001458) do
     t.string "address_2"
     t.integer "owner_id"
     t.string "subdomain"
-<<<<<<< HEAD
-=======
     t.string "stripe_account_id"
->>>>>>> 380bd216af1313d009311f0d76f0d7eb1843c90e
     t.index ["owner_id"], name: "index_roaster_profiles_on_owner_id"
   end
 
