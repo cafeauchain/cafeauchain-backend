@@ -1,10 +1,6 @@
 # == Route Map
 #
-<<<<<<< HEAD
 # I, [2019-03-08T08:07:19.192851 #24985]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
-=======
-# I, [2019-03-07T10:13:18.019848 #83298]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
->>>>>>> Configured card create service to work for customers and subscriptions
 #                                     Prefix Verb   URI Pattern                                                                              Controller#Action
 #  upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #             api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
