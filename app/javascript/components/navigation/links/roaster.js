@@ -3,7 +3,7 @@ import { Button } from "semantic-ui-react";
 
 const links = () => {
     return {
-        right: [],
+        right: [{ as: "a", content: "Dashboard", key: "dashboard", href: "/manage/dashboard" }],
         buttons: [
             {
                 as: "a",

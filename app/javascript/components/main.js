@@ -16,7 +16,7 @@ const Main = ({ component, ...rest }) => (
         <Context>
             {ctx => (
                 <React.Fragment>
-                    {rest.roaster && (
+                    {rest.roaster && !rest.static && (
                         <NavPortal mountNode="main-nav">
                             <AdminNav roaster={rest.roaster} {...ctx} />
                         </NavPortal>
