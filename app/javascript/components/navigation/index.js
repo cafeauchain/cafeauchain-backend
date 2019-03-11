@@ -1,9 +1,11 @@
+// TODO This can probably be deleted
 // TODO: Add roaster profile slug for links, and user role for conditional links
 import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
 import { Icon } from "semantic-ui-react";
 
 import NavBar from "./responsiveNavbar";
+import AdminNav from "./adminNav";
 
 import authorized from "./links/auth";
 import base from "./links/base";
@@ -16,6 +18,7 @@ import Context from "contexts/main";
 
 const Wrapper = ({ cart, isCustomer, ...rest }) => {
     const requests = isCustomer && !cart ? ["cart"] : [];
+    const useAdminNav = !isCustomer && rest.loggedIn;
     return (
         <Provider requests={requests}>
             <Context>
@@ -23,6 +26,7 @@ const Wrapper = ({ cart, isCustomer, ...rest }) => {
                     <Nav
                         {...rest}
                         isCustomer={isCustomer}
+                        useAdminNav={useAdminNav}
                         cart={isCustomer ? ctx.cart || cart.data : undefined}
                         getCtxData={ctx.getData}
                     />
@@ -91,12 +95,22 @@ class Nav extends Component {
 
     render() {
         const { links } = this.state;
-        const { cart, isCustomer } = this.props;
+        const { cart, isCustomer, useAdminNav } = this.props;
         const cart_items = cart && cart.attributes ? cart.attributes.cart_items : [];
         let buttons = links.buttons;
         if (isCustomer) {
             buttons = [this.renderCartButton(cart_items), ...buttons];
         }
+        if (useAdminNav)
+            return (
+                <AdminNav
+                    {...this.props}
+                    {...this.state}
+                    leftItems={links.left}
+                    rightItems={links.right}
+                    buttons={buttons}
+                />
+            );
         return <NavBar leftItems={links.left} rightItems={links.right} buttons={buttons} />;
     }
 }
@@ -107,7 +121,8 @@ Nav.propTypes = {
     user: object,
     cart: object,
     getCtxData: func,
-    isCustomer: bool
+    isCustomer: bool,
+    useAdminNav: bool
 };
 
 Wrapper.propTypes = {

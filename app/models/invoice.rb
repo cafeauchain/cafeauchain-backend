@@ -27,4 +27,8 @@ class Invoice < ApplicationRecord
 
   enum status: [:draft, :awaiting_payment, :partial_payment, :paid_in_full]
   enum payment_type: [:card_on_file, :terms_with_vendor]
+
+  def total_in_cents
+    (self.total * 100).to_i
+  end
 end

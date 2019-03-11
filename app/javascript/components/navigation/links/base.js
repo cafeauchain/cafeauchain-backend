@@ -2,7 +2,6 @@ import React from "react";
 import { Button } from "semantic-ui-react";
 
 const links = {
-    left: [],
     right: [
         { as: "a", content: "About", key: "about", href: "/about" },
         { as: "a", content: "Contact", key: "contact", href: "/contact" }

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Container, Grid, Header, Segment } from "semantic-ui-react";
+import { Grid, Header, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
 import AddLots from "roaster_tools/inventory/addLots";
@@ -25,7 +25,7 @@ Wrapper.propTypes = {
 };
 
 const Dashboard = () => (
-    <Container style={{ margin: "4em 0" }}>
+    <div>
         <Segment>
             <Header as="h1" content="Manage Inventory" />
         </Segment>
@@ -36,7 +36,7 @@ const Dashboard = () => (
             </Grid.Column>
             <Grid.Column width={6}>{true && <AddLots />}</Grid.Column>
         </Grid>
-    </Container>
+    </div>
 );
 
 export default Wrapper;

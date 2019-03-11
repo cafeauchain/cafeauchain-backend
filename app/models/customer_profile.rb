@@ -23,6 +23,7 @@ class CustomerProfile < ApplicationRecord
   has_many :addresses, as: :addressable, dependent: :destroy
 
   has_many :wholesale_profiles
+  has_many :cards
 
   has_many :orders, through: :wholesale_profiles
 

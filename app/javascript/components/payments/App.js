@@ -2,19 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { Elements, StripeProvider } from "react-stripe-elements";
-import {
-    Container,
-    Divider,
-    Grid,
-    Header,
-    Icon,
-    Message,
-    Segment,
-    Label,
-    List,
-    Dimmer,
-    Loader
-} from "semantic-ui-react";
+import { Divider, Grid, Header, Icon, Message, Segment, Label, List, Dimmer, Loader } from "semantic-ui-react";
 
 /* eslint-disable */
 import { readCookie } from "utilities";
@@ -132,7 +120,7 @@ class App extends Component {
 
         return (
             <StripeProvider apiKey={stripeApiKey}>
-                <Container className="form roaster-wizard">
+                <div className="form roaster-wizard">
                     <Segment padded>
                         <h2>
                             Subscription Details
@@ -182,7 +170,7 @@ class App extends Component {
                         </Dimmer>
                         {this.renderCards(cards)}
                     </Grid>
-                </Container>
+                </div>
             </StripeProvider>
         );
     }

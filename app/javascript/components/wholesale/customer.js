@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Container, Segment, Header } from "semantic-ui-react";
+import { Segment, Header } from "semantic-ui-react";
 
 /* eslint-disable */
 import Table from "shared/table";
@@ -73,13 +73,13 @@ class Order extends React.Component {
             terms: attributes.terms
         };
         return (
-            <Container style={{ margin: "4em 0" }}>
+            <div>
                 <Segment>
                     <Header as="h2" content="Customer Details" dividing />
                     <EditCustomer profile={profile} />
                     <Table tableDefs={tableDefs} data={sorted} onClick={this.onClick} />
                 </Segment>
-            </Container>
+            </div>
         );
     }
 }

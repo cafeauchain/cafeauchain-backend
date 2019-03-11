@@ -23,5 +23,5 @@ class Order < ApplicationRecord
   has_many :order_items
   has_one :invoice
 
-  enum status: [:draft, :processing, :awaiting_payment, :fulfilled, :complete]
+  enum status: [:draft, :processing, :awaiting_payment, :paid_in_full, :fulfilled]
 end

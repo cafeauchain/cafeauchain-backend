@@ -20,6 +20,7 @@
 
 class ProductVariant < ApplicationRecord
   belongs_to :product
+  has_many :order_items
 
   def product_title
     product.present? ? product.title : "Cant find it"

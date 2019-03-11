@@ -11,19 +11,29 @@
             border: 0 !important;
         }
         > .button {
-            box-shadow: 0 0 0 2px inset $lightgreen;
-            color: white;
-            background: $lightgreen;
-            &.login-btn {
-                background: white;
-                color: $lightgreen;
+            &:not(.unstyled) {
+                box-shadow: 0 0 0 2px inset $lightgreen;
+                color: white;
+                background: $lightgreen;
+                &.login-btn {
+                    background: white;
+                    color: $lightgreen;
+                }
+            }
+            &.unstyled {
+                font-size: inherit;
             }
         }
         &:hover {
             > .button {
-                background: $darkgreen;
-                box-shadow: 0 0 0 2px inset $darkgreen;
-                color: white;
+                &:not(.unstyled) {
+                    background: $darkgreen;
+                    box-shadow: 0 0 0 2px inset $darkgreen;
+                    color: white;
+                }
+                &.unstyled {
+                    text-decoration: none;
+                }
             }
         }
     }
@@ -49,4 +59,25 @@
     animation-name: pulse;
     animation-duration: 0.3s;
     animation-iteration-count: 4;
+}
+
+// Roaster/admin nav
+.roaster-container {
+    flex: 1 1 100%;
+}
+.roaster-container__sidebar {
+    max-width: 400px;
+    background: #1b1c1d;
+}
+.roaster-nav {
+    min-width: 300px;
+    margin-left: auto;
+    margin-right: 0;
+    text-align: right;
+    & > .menu {
+        position: fixed;
+        top: calc(4em + 60px);
+        left: 0;
+        max-width: 300px;
+    }
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Container, Header, Segment } from "semantic-ui-react";
+import { Header, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
 import Inventory from "wholesale/inventory";
@@ -26,7 +26,7 @@ Wrapper.propTypes = {
 };
 
 const Dashboard = ({ orders, roaster }) => (
-    <Container style={{ margin: "4em 0" }}>
+    <div style={{ margin: "4em 0" }}>
         <Segment>
             <Header as="h1" content="Manage Wholesale" />
         </Segment>
@@ -41,7 +41,7 @@ const Dashboard = ({ orders, roaster }) => (
                 <Inventory />
             </Segment>
         )}
-    </Container>
+    </div>
 );
 
 Dashboard.propTypes = {

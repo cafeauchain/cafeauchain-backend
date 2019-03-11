@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Dimmer, Image, Container, Loader } from "semantic-ui-react";
+import { Dimmer, Image, Loader } from "semantic-ui-react";
 
 import ImageUpload from "./ImageUpload";
 
@@ -27,12 +27,12 @@ class ImageChange extends Component {
                 verticalAlign="bottom"
                 style={{ padding: 0, background: "rgba(0,0,0,0.6)", border: "1px solid rgba(0,0,0,0.4)" }}
             >
-                <Container style={{ background: "#d9d9d9", padding: "20px 10px" }}>
+                <div style={{ background: "#d9d9d9", padding: "20px 10px" }}>
                     {/* There probably needs to be a Confirm action/button
                         so that the old logo isnt destroyed if the new one gets scrambled
                         during the upload process */}
                     <ImageUpload id={id} handleImage={this.handleImage} handleLoader={this.handleLoader} />
-                </Container>
+                </div>
             </Dimmer>
         );
 

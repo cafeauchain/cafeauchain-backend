@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= content_for?(:title) ? yield(:title) : "Cafe au Chain | Know where your coffee comes from" %></title>
+    <title><%= content_for?(:title) ? yield(:title) : "Know where your coffee comes from" %> | Cafe au Chain</title>
     <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Cafe au Chain | Proof of Perk helps roaster track their coffee from distributors through the roasting process, and helps their customers learn where their coffee comes from." %>">
     <%= favicon_link_tag asset_path('cac-unofficial-logo.png') %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
@@ -12,12 +12,28 @@
     <%= csrf_meta_tags %>
   </head>
   <body class="<%= yield(:body_class) %>">
-    <% if current_roaster %>
-        <%= react_component "navigation", props = {user: current_user, loggedIn: user_signed_in?, cart: @ser_cart, isCustomer: true} %>
+    <div id="header-nav"></div>
+    <% if user_signed_in? %>
+        <!-- Logged In Navs -->
+        <% if current_roaster %>
+            <!-- Customer -->
+            <%= react_component "navigation", props = {user: current_user, loggedIn: user_signed_in?, cart: @ser_cart, isCustomer: true} %>
+            <%= yield %>
+        <% else %>
+            <!-- Roaster/Admin -->
+            <!-- <div id="header-nav"></div> -->
+            <div class="flex-parent roaster-container">
+                <div class="flex-child roaster-container__sidebar">
+                    <div id="main-nav" class="roaster-nav"></div>
+                </div>
+                <div class="roaster-container__main flex-child__75"><%= yield %></div>
+            </div>
+        <% end %>
     <% else %>
+        <!-- Public -->
         <%= react_component "navigation", props = {user: current_user, loggedIn: user_signed_in?, cart: nil} %>
+        <%= yield %>
     <% end %>
-    <%= yield %>
     <%= react_component "footer", props = {user: current_user, loggedIn: user_signed_in?}, {:class => "site-footer"} %>
     <!-- Start of HubSpot Embed Code -->
       <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/5365116.js"></script>

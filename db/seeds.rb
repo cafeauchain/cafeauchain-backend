@@ -20,10 +20,11 @@ p3 = Plan.create!(stripe_plan_id: 'plan_EdJPS9KT8YVr8b',
 
 u2 = User.create!(name: 'Arthur Pendragon', email: 'pendragondevelopment@gmail.com', password: 'changeme', password_confirmation: 'changeme', admin: false)
 puts "#{u2.name} created."
-roaster = RoasterProfile.create(name: "Pendragon Coffee", subdomain: 'pendragon-coffee', url: 'pendragoncoffee.com', address_1: "345 W Hancock Ave", address_2: "Suite 108", zip_code: "30601", city: "Athens", state: "GA", about: "Good coffee, round table.")
+roaster = RoasterProfile.create(name: "Pendragon Coffee", subdomain: 'pendragon-coffee', url: 'pendragoncoffee.com', about: "Good coffee, round table.")
 puts "#{roaster.name} created."
 roaster.users << u2
 roaster.set_owner
+roaster.addresses.create(street_1: "345 W Hancock Ave", street_2: "Suite 108", postal_code: "30601", city: "Athens", state: "GA", primary_location: true, location_label: "Main Office", country: "United States of America")
 sub = StripeServices::EnrollBaseSubscription.initial_enroll(u2.id)
 token = Stripe::Token.create(
   card: {
@@ -33,7 +34,7 @@ token = Stripe::Token.create(
     cvc: "314",
   },
 )
-card = StripeServices::CreateCard.call(sub.id, token, true)
+card = StripeServices::CreateCard.call(sub.id, nil, token, true)
 producer = ProducerProfile.create(name: "Gold Mountain Coffee Growers")
 puts "#{producer.name} created."
 crops = []

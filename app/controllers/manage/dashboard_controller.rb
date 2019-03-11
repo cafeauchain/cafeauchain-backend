@@ -1,3 +1,4 @@
+# TODO This can probably be deleted
 module Manage
   class DashboardController < ApplicationController
 
