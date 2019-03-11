@@ -37,23 +37,27 @@ class RoasterProfilesController < ApplicationController
   end
 
   def manage_inventory
+    # TODO This method can probably be deleted
 
   end
 
 
   def manage_subscription
+    # TODO This method can probably be deleted
     subscription = Subscription.includes(:subscription_items).find_by(user: @roaster_profile.owner)
     @subscription = ActiveModel::SerializableResource.new(subscription)
     @cards = subscription.cards
   end
 
   def wholesale
+    # TODO This method can probably be deleted
     @wholesale_profiles = @roaster_profile.wholesale_profiles
     @orders = @roaster_profile.orders
     @orders = ActiveModel::SerializableResource.new(@roaster_profile.orders, each_serializer: OrderSerializer)
   end
 
   def shop
+    # TODO This method can probably be deleted
     @roaster_profile = @current_roaster || RoasterProfile.find_by(subdomain: request.subdomain)
     @products = ActiveModel::SerializableResource.new(@roaster_profile.products, each_serializer: ProductSerializer)
   end

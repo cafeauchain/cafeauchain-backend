@@ -1,3 +1,4 @@
+// TODO This can probably be deleted
 // TODO: Add roaster profile slug for links, and user role for conditional links
 import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";

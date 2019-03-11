@@ -1,3 +1,4 @@
+// TODO This can probably be deleted
 import React, { Fragment as F } from "react";
 import { Button, Dropdown, Icon } from "semantic-ui-react";
 

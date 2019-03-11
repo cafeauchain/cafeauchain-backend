@@ -266,6 +266,7 @@ Rails.application.routes.draw do
   end
 
   resources :roaster_profiles, path: "roasters" do
+    # TODO These can probably all be deleted
     resources :lots, only: [:show, :index]
     # resources :orders, only: [:show]
     member do
@@ -280,7 +281,6 @@ Rails.application.routes.draw do
     end
   end
 
-  #
   namespace :manage do
     get "dashboard", to: "primary#dashboard"
     get "inventory", to: "primary#inventory"
