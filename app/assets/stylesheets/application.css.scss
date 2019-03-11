@@ -71,6 +71,27 @@ body {
     .site-footer {
         margin-top: auto;
     }
+    // Roaster/admin nav
+    .roaster-container {
+        flex: 1 1 100%;
+    }
+    .roaster-container__main {
+        padding: 4em;
+        max-width: calc(100% - 300px);
+    }
+    .roaster-container__sidebar {
+        background: #1b1c1d;
+    }
+    .roaster-nav {
+        width: 300px;
+        text-align: right;
+        #main-nav {
+            position: fixed;
+            top: calc(4em + 60px);
+            left: 0;
+            width: 300px;
+        }
+    }
 }
 
 @import "stripe";
