@@ -1,6 +1,6 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Container, Segment, Header, Item, Label } from "semantic-ui-react";
+import { Segment, Header, Item, Label } from "semantic-ui-react";
 import moment from "moment";
 
 /* eslint-disable */
@@ -66,7 +66,7 @@ class Order extends React.Component {
                 ? sortBy({ collection: order_items, id: "size", sorts: [{ name: "name" }, { name: "size" }] })
                 : [];
         return (
-            <Container style={{ margin: "4em 0" }}>
+            <div>
                 <Segment>
                     <Header as="h2" content="Order Details" dividing />
                     <p>
@@ -185,7 +185,7 @@ class Order extends React.Component {
                         <Segment secondary>These are full terms. Should they be editable?</Segment>
                     </Segment>
                 </Segment>
-            </Container>
+            </div>
         );
     }
 }

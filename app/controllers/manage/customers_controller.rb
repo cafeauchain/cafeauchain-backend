@@ -1,23 +1,26 @@
 module Manage
   class CustomersController < ApplicationController
-    before_action :authenticate_user!
-    before_action :set_customer, only: [:show]
 
     def show
-      @customer = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: current_user)
-      render "manage/customer"
+      customer = CustomerProfile.find(params[:id])
+      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: current_user)
+      render "manage/primary", locals: {
+        roaster: current_user.roaster_profile,
+        customer: @customer,
+        component: "wholesale/customer",
+        title: customer.company_name
+      }
     end
 
     def index
-      @customers = CustomerProfile.all
-      @customers = ActiveModel::SerializableResource.new(@customers, each_serializer: CustomerSerializer, scope: current_user)
-      render "manage/customers"
-    end
-
-    private
-
-    def set_customer
-      @customer = CustomerProfile.find(params[:id])
+      customers = CustomerProfile.all
+      @customers = ActiveModel::SerializableResource.new(customers, each_serializer: CustomerSerializer, scope: current_user)
+      render "manage/primary", locals: {
+        roaster: current_user.roaster_profile,
+        customers: @customers,
+        component: "wholesale/customers",
+        title: "View Customers"
+      }
     end
 
   end

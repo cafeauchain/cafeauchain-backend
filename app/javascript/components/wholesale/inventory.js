@@ -32,9 +32,8 @@ class RoastedInventory extends React.Component {
         }
     }
     render() {
-        const { loading, userId } = this.props;
-        let { data } = this.props;
-        if (data === undefined) data = [];
+        const { loading } = this.props;
+        let { data = [] } = this.props;
         const onClick = (e, item) => {
             // eslint-disable-next-line
             console.log(item);
@@ -50,7 +49,7 @@ class RoastedInventory extends React.Component {
                     <F>
                         <br />
                         <div style={{ textAlign: "right" }}>
-                            <Button as="a" href={`/roasters/${userId}/lots`} content="View All Lots" />
+                            <Button as="a" href="/manage/lots" content="View All Lots" />
                         </div>
                     </F>
                 )}
@@ -59,11 +58,10 @@ class RoastedInventory extends React.Component {
     }
 }
 
-const { array, bool, oneOfType, string, number, func } = PropTypes;
+const { array, bool, func } = PropTypes;
 RoastedInventory.propTypes = {
     data: array,
     loading: bool,
-    userId: oneOfType([string, number]),
     getCtxData: func
 };
 

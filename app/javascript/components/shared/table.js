@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 // TODO Remove semantic-ui-react-button-pagination
 // import Pagination from "semantic-ui-react-button-pagination";
-import { Pagination, Table, Ref, Loader, Dimmer, Container } from "semantic-ui-react";
+import { Pagination, Table, Ref, Loader, Dimmer } from "semantic-ui-react";
 
 /* eslint-disable */
 import { humanize, namespacer, sortBy, debounce } from "utilities";
@@ -107,7 +107,7 @@ class FormattedTable extends Component {
 
         return (
             <Ref innerRef={this.containerRef}>
-                <Container>
+                <div>
                     <Dimmer active={loading} inverted>
                         <Loader active={loading} size="large" style={{ top: 0, marginTop: 60 }} />
                     </Dimmer>
@@ -169,7 +169,7 @@ class FormattedTable extends Component {
                             )}
                         </Table>
                     </div>
-                </Container>
+                </div>
             </Ref>
         );
     }

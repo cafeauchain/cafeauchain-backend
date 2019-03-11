@@ -27,8 +27,9 @@ class ModalWithTrigger extends Component {
         this.setState({ isOpen: true });
     };
     render() {
-        const { text, showBtn, isOpen, closeModal, ...rest } = this.props;
+        let { text, showBtn, isOpen, closeModal, unstyled, className = "", ...rest } = this.props;
         const { success, isOpen: isOpenState } = this.state;
+        if (unstyled) className += " unstyled";
         return (
             <FormattedModal
                 {...rest}
@@ -37,7 +38,17 @@ class ModalWithTrigger extends Component {
                 closeModal={this.closeModal}
                 successClose={this.successClose}
                 trigger={
-                    text ? <Button primary onClick={this.triggerClick} disabled={!showBtn} content={text} /> : undefined
+                    text ? (
+                        <Button
+                            primary={!unstyled}
+                            onClick={this.triggerClick}
+                            disabled={!showBtn}
+                            content={text}
+                            className={className}
+                        />
+                    ) : (
+                        undefined
+                    )
                 }
             />
         );
@@ -49,7 +60,9 @@ ModalWithTrigger.propTypes = {
     text: string,
     showBtn: bool,
     closeModal: func,
-    isOpen: bool
+    isOpen: bool,
+    unstyled: bool,
+    className: string
 };
 
 ModalWithTrigger.defaultProps = {

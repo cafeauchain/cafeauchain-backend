@@ -11,11 +11,11 @@ import detailFields from "defs/details/singleLot";
 /* eslint-enable */
 
 const SingleLot = props => {
-    const { lot, roaster: r } = props;
+    const { lot } = props;
     const { data } = lot;
     const { attributes } = data;
     return (
-        <Container style={{ margin: "4em 0" }}>
+        <React.Fragment>
             <Segment>
                 <Header as="h2" content={attributes.crop_name} />
                 <Segment>
@@ -29,16 +29,15 @@ const SingleLot = props => {
                 <Header as="h3" content="Transactions" />
                 <Table tableDefs={tableDefs} data={attributes.transactions} />
                 <br />
-                <Button as="a" href={`/roasters/${r.slug}/lots`} content="Back to Lots" />
+                <Button as="a" href="/manage/lots" content="Back to Lots" />
             </Segment>
-        </Container>
+        </React.Fragment>
     );
 };
 
 const { object } = PropTypes;
 SingleLot.propTypes = {
-    lot: object,
-    roaster: object
+    lot: object
 };
 
 export default SingleLot;

@@ -1,6 +1,6 @@
 import React, { PureComponent, Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Container, Header, Table, Image } from "semantic-ui-react";
+import { Header, Table, Image } from "semantic-ui-react";
 
 class App extends PureComponent {
     render() {
@@ -30,10 +30,10 @@ class App extends PureComponent {
             ]
         });
         return (
-            <Container className="form roaster-wizard">
+            <div className="form roaster-wizard">
                 <Header as="h2">Roasters</Header>
                 <Table striped headerRow={headerRow} renderBodyRow={renderBodyRow} tableData={profiles} />
-            </Container>
+            </div>
         );
     }
 }

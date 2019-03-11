@@ -3,18 +3,28 @@ require 'stripe'
 module StripeServices
   class CreateCard
 
-    def self.call(subscription_id, token, setAsDefault)
-      @subscription = Subscription.find(subscription_id)
+    def self.call(subscription_id, customer_profile_id, token, setAsDefault)
       Stripe.api_key = Rails.application.credentials.stripe_secret_key
-
-      customer = Stripe::Customer.retrieve(@subscription.stripe_customer_id)
+      if !subscription_id.nil?
+        @chargeable = Subscription.find(subscription_id)
+      else
+        @chargeable = CustomerProfile.find(customer_profile_id)
+        if @chargeable.stripe_customer_id.nil? || @chargeable.stripe_customer_id.blank?
+          customer = Stripe::Customer.create({
+            email: @chargeable.user.email, # will change to customer
+            description: "Account for wholesale customer #{@chargeable.user.name}"
+          })
+          @chargeable.update(stripe_customer_id: customer.id)
+        end
+      end
+      customer = Stripe::Customer.retrieve(@chargeable.stripe_customer_id)
       stripe_card = customer.sources.create(source: token)
       if setAsDefault
-        @subscription.cards.where(default: true).each{ |card| card.update(default: false)}
+        @chargeable.cards.where(default: true).each{ |card| card.update(default: false)}
         customer.default_source = stripe_card[:id]
         customer.save
       end
-      @card = @subscription.cards.create(
+      @card = @chargeable.cards.create(
         brand: stripe_card[:brand],
         stripe_card_id: stripe_card[:id],
         exp_month: stripe_card[:exp_month],

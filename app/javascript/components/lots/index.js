@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Container, Segment, Header, Button } from "semantic-ui-react";
+import { Segment, Header, Button } from "semantic-ui-react";
 
 /* eslint-disable */
 import Table from "shared/table";
@@ -13,24 +13,21 @@ const AllContracts = props => {
         window.location = window.location + "/" + item.id;
     };
 
-    const { lots, roaster: r } = props;
+    const { lots } = props;
     const { data } = lots;
     return (
-        <Container style={{ margin: "4em 0" }}>
-            <Segment>
-                <Header as="h2" content="All Contracts" />
-                <Table tableDefs={tableDefs} data={data} onClick={onClick} />
-                <br />
-                <Button as="a" href={`/roasters/${r.slug}/dashboard`} content="Back to the Dashboard" />
-            </Segment>
-        </Container>
+        <Segment>
+            <Header as="h2" content="All Contracts" />
+            <Table tableDefs={tableDefs} data={data} onClick={onClick} />
+            <br />
+            <Button as="a" href="/manage/dashboard" content="Back to the Dashboard" />
+        </Segment>
     );
 };
 
 const { object } = PropTypes;
 AllContracts.propTypes = {
-    lots: object,
-    roaster: object
+    lots: object
 };
 
 export default AllContracts;

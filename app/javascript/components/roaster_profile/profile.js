@@ -1,6 +1,6 @@
 import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Image, Container, Header, Divider } from "semantic-ui-react";
+import { Image, Header, Divider } from "semantic-ui-react";
 
 class Profile extends Component {
     constructor(props) {
@@ -9,7 +9,7 @@ class Profile extends Component {
     }
 
     render() {
-        const { profile } = this.props;
+        const { roaster } = this.props;
         const {
             name,
             about,
@@ -24,24 +24,23 @@ class Profile extends Component {
             url,
             zip_code,
             img_url
-        } = profile;
-
+        } = roaster;
         // TODO This needs to look better.
         // Also, we should consider a WYSIWYG or Markdown editor on edit
         // so the about section can have multiple paragraphs
 
         return (
-            <Container className="form roaster-wizard">
+            <div className="form roaster-wizard">
                 <Header as="h2">Roaster Profile</Header>
-                <Container>
+                <div>
                     <Header as="h3">
                         <Image src={img_url} size="small" verticalAlign="middle" />
                         {name}
                     </Header>
-                </Container>
+                </div>
 
                 <Divider style={{ clear: "both" }} />
-                <Container>
+                <div>
                     <Header as="h4">About Us</Header>
                     <p>{about}</p>
 
@@ -72,15 +71,15 @@ class Profile extends Component {
                             <p>{twitter}</p>
                         </F>
                     )}
-                </Container>
-            </Container>
+                </div>
+            </div>
         );
     }
 }
 
 const { object } = PropTypes;
 Profile.propTypes = {
-    profile: object.isRequired
+    roaster: object.isRequired
 };
 
 export default Profile;

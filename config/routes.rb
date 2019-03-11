@@ -19,6 +19,15 @@
 #                                            PATCH  /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#update
 #                                            PUT    /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#update
 #                                            DELETE /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#destroy
+#              api_v1_customer_profile_cards POST   /api/v1/customers/:customer_profile_id/cards(.:format)                                   api/v1/customer_profiles#cards
+#                   api_v1_customer_profiles GET    /api/v1/customers(.:format)                                                              api/v1/customer_profiles#index
+#                                            POST   /api/v1/customers(.:format)                                                              api/v1/customer_profiles#create
+#                new_api_v1_customer_profile GET    /api/v1/customers/new(.:format)                                                          api/v1/customer_profiles#new
+#               edit_api_v1_customer_profile GET    /api/v1/customers/:id/edit(.:format)                                                     api/v1/customer_profiles#edit
+#                    api_v1_customer_profile GET    /api/v1/customers/:id(.:format)                                                          api/v1/customer_profiles#show
+#                                            PATCH  /api/v1/customers/:id(.:format)                                                          api/v1/customer_profiles#update
+#                                            PUT    /api/v1/customers/:id(.:format)                                                          api/v1/customer_profiles#update
+#                                            DELETE /api/v1/customers/:id(.:format)                                                          api/v1/customer_profiles#destroy
 #              api_v1_producer_profile_crops GET    /api/v1/producers/:producer_profile_id/crops(.:format)                                   api/v1/crops#index
 #                                            POST   /api/v1/producers/:producer_profile_id/crops(.:format)                                   api/v1/crops#create
 #           new_api_v1_producer_profile_crop GET    /api/v1/producers/:producer_profile_id/crops/new(.:format)                               api/v1/crops#new
@@ -225,6 +234,9 @@ Rails.application.routes.draw do
         end
       end
       resources :subscriptions
+      resources :customer_profiles, path: "customers" do
+        post :cards
+      end
       resources :producer_profiles, path: "producers" do
         resources :crops
       end
@@ -266,6 +278,7 @@ Rails.application.routes.draw do
   end
 
   resources :roaster_profiles, path: "roasters" do
+    # TODO These can probably all be deleted
     resources :lots, only: [:show, :index]
     # resources :orders, only: [:show]
     member do
@@ -280,14 +293,14 @@ Rails.application.routes.draw do
     end
   end
 
-  #
   namespace :manage do
+    get "dashboard", to: "primary#dashboard"
+    get "inventory", to: "primary#inventory"
     resources :orders, only: [:show, :index]
     resources :customers, only: [:show, :index]
-    resources :wholesale, only: [:index]
-    resources :inventory, only: [:index]
-    resources :dashboard, only: [:index]
-    resources :subscription, only: [:index]
+    get "wholesale", to: "primary#wholesale"
+    get "subscription", to: "primary#subscription"
+    resources :lots, only: [:show, :index]
   end
 
   resources :producer_profiles, path: "producers" do

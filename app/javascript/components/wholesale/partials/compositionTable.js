@@ -1,6 +1,6 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Header, Container } from "semantic-ui-react";
+import { Header } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
@@ -9,7 +9,7 @@ import Table from "shared/table";
 /* eslint-enable */
 
 const Composition = ({ composition, fields, inventoryOptions, handleChange, btn: RemoveButton }) => (
-    <Container style={{ marginBottom: 10 }}>
+    <div style={{ marginBottom: 10 }}>
         <Header as="h3" content="Product Composition" style={{ marginBottom: 10 }} />
         <Flex spacing="10">
             <div flex="66">
@@ -43,7 +43,7 @@ const Composition = ({ composition, fields, inventoryOptions, handleChange, btn:
                 {composition.length > 1 && <RemoveButton idx={idx} remover="composition" />}
             </F>
         ))}
-    </Container>
+    </div>
 );
 
 const { array, func } = PropTypes;

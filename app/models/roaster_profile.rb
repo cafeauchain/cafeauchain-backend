@@ -2,23 +2,28 @@
 #
 # Table name: roaster_profiles
 #
-#  id         :bigint(8)        not null, primary key
-#  about      :text
-#  address_1  :string
-#  address_2  :string
-#  city       :string
-#  facebook   :string
-#  location   :string
-#  name       :string
-#  slug       :string
-#  state      :string
-#  subdomain  :string
-#  twitter    :string
-#  url        :string
-#  zip_code   :string
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  owner_id   :integer
+#  id                :bigint(8)        not null, primary key
+#  about             :text
+#  address_1         :string
+#  address_2         :string
+#  city              :string
+#  facebook          :string
+#  location          :string
+#  name              :string
+#  slug              :string
+#  state             :string
+#  subdomain         :string
+#  twitter           :string
+#  url               :string
+#  zip_code          :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  owner_id          :integer
+#  stripe_account_id :string
+#
+# Indexes
+#
+#  index_roaster_profiles_on_owner_id  (owner_id)
 #
 
 class RoasterProfile < ApplicationRecord
@@ -43,6 +48,7 @@ class RoasterProfile < ApplicationRecord
   has_one_attached :logo
 
   delegate :subscription, to: :owner
+
   validates :subdomain,
             exclusion: { in: %w(www),
             message: "%{value} is reserved." },
@@ -51,6 +57,10 @@ class RoasterProfile < ApplicationRecord
 
   before_validation :sanitize_subdomain
   before_save :set_subdomain, if: :new_record?
+
+  def primary_address
+    self.addresses.find_by(primary_location: true)
+  end
 
   def bags_delivered(lot_id)
     self.transactions.collect{ |t| t.quantity.to_i if t.lot_id == lot_id }.sum

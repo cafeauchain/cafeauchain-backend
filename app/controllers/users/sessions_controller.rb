@@ -7,7 +7,7 @@ class Users::SessionsController < Devise::SessionsController
     if resource.roaster_profile.nil? && SubdomainRoutes.matches?(request)
       render json: {"redirect":true,"redirect_url": new_roaster_profile_path}, status: 200
     elsif !resource.roaster_profile.nil? && SubdomainRoutes.matches?(request)
-      render json: {"redirect":true,"redirect_url": dashboard_roaster_profile_path(resource.roaster_profile)}, status: 200
+      render json: {"redirect":true,"redirect_url": manage_dashboard_path}, status: 200
     elsif !SubdomainRoutes.matches?(request)
       render json: {"redirect":true,"redirect_url": shop_roaster_profile_path(current_roaster)}, status: 200
     end

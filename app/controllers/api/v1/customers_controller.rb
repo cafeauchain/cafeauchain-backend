@@ -24,7 +24,19 @@ module Api::V1
         render json: @customer.errors.full_messages, status: 422
       end
     end
-
+    
+    def cards
+      begin
+        StripeServices::CreateCard.call(nil, @customer_profile.id, params[:token], params[:setAsDefault])
+        render json: @roaster_profile.subscription.cards, status: 200
+      rescue StandardError => e
+        render json: {
+            error: e.http_status,
+            message: e.message,
+            code: e.code
+        }, status: e.http_status
+      end
+    end
 
     private
 

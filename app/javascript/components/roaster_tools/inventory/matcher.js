@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Container, Button, Form, Header } from "semantic-ui-react";
+import { Button, Form, Header } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
@@ -104,7 +104,7 @@ class Matcher extends Component {
         const { dbKeys, data } = this.props;
         const { disabled, details } = this.state;
         return (
-            <Container>
+            <div>
                 <p>
                     Your import was parsed correctly! Now, we need to map the columns in your import to the fields in
                     our database! Please select the header from the dropdown that aligns with our database field.
@@ -142,7 +142,7 @@ class Matcher extends Component {
                     })}
                     <Button content="Import Lots" disabled={disabled} primary />
                 </Form>
-            </Container>
+            </div>
         );
     }
 }

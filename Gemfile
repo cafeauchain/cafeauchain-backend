@@ -33,8 +33,6 @@ gem "pager_api"
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'acts-as-taggable-on', '~> 6.0'
 gem "sentry-raven"
-gem 'acts-as-taggable-on', '~> 6.0'
-gem "sentry-raven"
 
 
 group :development do
@@ -49,6 +47,12 @@ group :development do
   gem 'annotate'
   gem "binding_of_caller"
   gem 'hirb'
+  gem 'lol_dba'
+  gem 'rack-mini-profiler', require: false
+  gem 'bullet'
+  gem 'flamegraph'
+  gem 'stackprof'
+  gem 'memory_profiler'
 end
 
 group :development, :test do

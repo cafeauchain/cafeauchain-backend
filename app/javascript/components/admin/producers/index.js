@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Divider, Grid, Header, Segment, Container } from "semantic-ui-react";
+import { Divider, Grid, Header, Segment } from "semantic-ui-react";
 import CreateProducer from "./createProducer";
 import UploadProducers from "./uploadProducers";
 import tableDefs from "./tableDefs";
@@ -102,7 +102,7 @@ class Producers extends Component {
         const { fieldType, url } = this.props;
         const { producers, pagination } = this.state;
         return (
-            <Container style={{ margin: "4em 0" }}>
+            <div>
                 <Segment.Group>
                     <Segment>
                         <Header as="h2" textAlign="center">
@@ -134,7 +134,7 @@ class Producers extends Component {
                         />
                     </Segment>
                 </Segment.Group>
-            </Container>
+            </div>
         );
     }
 }
