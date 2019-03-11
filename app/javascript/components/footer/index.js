@@ -6,7 +6,11 @@ import logo from "images/cac-unofficial-logo.png";
 
 const Footer = ({ loggedIn }) => {
     return (
-        <Segment inverted style={{ padding: "3em 0em", background: "#3a3a3a" }} vertical>
+        <Segment
+            inverted={!loggedIn}
+            style={{ padding: "1em 0em", background: loggedIn ? "#ffffff" : "#3a3a3a" }}
+            vertical
+        >
             <Container textAlign="center">
                 {!loggedIn && (
                     <React.Fragment>
@@ -43,7 +47,7 @@ const Footer = ({ loggedIn }) => {
                 )}
 
                 <Image src={logo} centered size="mini" />
-                <List horizontal inverted divided link size="small">
+                <List horizontal inverted={!loggedIn} divided link size="small">
                     <List.Item as="a" href="/site-map">
                         Site Map
                     </List.Item>

@@ -108,7 +108,6 @@ class NavBar extends Component {
 
 const { array } = PropTypes;
 NavBar.propTypes = {
-    leftItems: array,
     rightItems: array,
     buttons: array
 };
