@@ -17,6 +17,7 @@
         <% if current_roaster %>
             <!-- Customer -->
             <%= react_component "navigation", props = {user: current_user, loggedIn: user_signed_in?, cart: @ser_cart, isCustomer: true} %>
+            <%= yield %>
         <% else %>
             <!-- Roaster/Admin -->
             <%= react_component "navigation/header", props = {user: current_user, loggedIn: user_signed_in?} %>
@@ -30,6 +31,7 @@
     <% else %>
         <!-- Public -->
         <%= react_component "navigation", props = {user: current_user, loggedIn: user_signed_in?, cart: nil} %>
+        <%= yield %>
     <% end %>
     <%= react_component "footer", props = {user: current_user, loggedIn: user_signed_in?}, {:class => "site-footer"} %>
     <!-- Start of HubSpot Embed Code -->
