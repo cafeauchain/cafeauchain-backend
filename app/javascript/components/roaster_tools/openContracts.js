@@ -32,11 +32,10 @@ class OpenContracts extends Component {
         }
     }
     render() {
-        let { lots } = this.props;
-        const { userId, loading } = this.props;
-        if (lots === undefined) lots = [];
+        let { lots = [] } = this.props;
+        const { loading } = this.props;
         const onClick = (e, item) => {
-            window.location = `/roasters/${userId}/lots/${item.id}`;
+            window.location = `/manage/lots/${item.id}`;
         };
         const limit = 5;
         const limitLots = () => lots.slice(0, limit);
@@ -48,7 +47,7 @@ class OpenContracts extends Component {
                     <F>
                         <br />
                         <div style={{ textAlign: "right" }}>
-                            <Button as="a" href={`/roasters/${userId}/lots`} content="View All Lots" />
+                            <Button as="a" href="/manage/lots" content="View All Lots" />
                         </div>
                     </F>
                 )}
@@ -57,11 +56,10 @@ class OpenContracts extends Component {
     }
 }
 
-const { array, bool, oneOfType, string, number, func } = PropTypes;
+const { array, bool, func } = PropTypes;
 OpenContracts.propTypes = {
     lots: array,
     loading: bool,
-    userId: oneOfType([string, number]),
     getCtxData: func
 };
 

@@ -33,7 +33,7 @@ class VariantsTable extends React.Component {
     }
 
     render() {
-        const { loading, userId, data = [] } = this.props;
+        const { loading, data = [] } = this.props;
         const limit = 25;
         const limitData = () => data.slice(0, limit);
         return (
@@ -44,7 +44,7 @@ class VariantsTable extends React.Component {
                     <F>
                         <br />
                         <div style={{ textAlign: "right" }}>
-                            <Button as="a" href={`/roasters/${userId}/lots`} content="View All Lots" />
+                            <Button as="a" href="/manage/lots" content="View All Lots" />
                         </div>
                     </F>
                 )}
@@ -53,11 +53,10 @@ class VariantsTable extends React.Component {
     }
 }
 
-const { array, bool, oneOfType, string, number, func } = PropTypes;
+const { array, bool, func } = PropTypes;
 VariantsTable.propTypes = {
     data: array,
     loading: bool,
-    userId: oneOfType([string, number]),
     getCtxData: func
 };
 
