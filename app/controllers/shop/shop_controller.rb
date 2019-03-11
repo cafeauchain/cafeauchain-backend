@@ -5,14 +5,15 @@ module Shop
     before_action :set_cart
 
     def index
-      @roaster = @current_roaster || RoasterProfile.find_by(subdomain: request.subdomain)
+      @roaster = @roaster_profile
       @products = ActiveModel::SerializableResource.new(@roaster.products, each_serializer: ProductSerializer)
+      @serialized_cart = ActiveModel::SerializableResource.new(@cart, each_serializer: CartSerializer)
       render "manage/primary", locals: {
         roaster: @roaster,
         products: @products,
         title: 'Products',
         component: 'shop',
-        cart: @ser_cart
+        cart: @serialized_cart
       }
     end
 

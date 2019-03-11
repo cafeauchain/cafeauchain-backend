@@ -35,7 +35,6 @@ class ApplicationController < ActionController::Base
   def set_cart
     if user_signed_in? && current_user.roaster_profile.nil?
       @cart = current_user.cart(current_roaster)
-      @ser_cart = ActiveModel::SerializableResource.new(@cart, each_serializer: CartSerializer)
     else
       @cart = nil
     end

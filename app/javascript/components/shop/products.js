@@ -42,7 +42,7 @@ class Products extends React.Component {
 
     componentDidMount() {
         const { products, variants, getCtxData } = this.props;
-        if (products === undefined) getCtxData("inventory");
+        if (products === undefined) getCtxData("products");
         if (variants === undefined) getCtxData("variants");
     }
     variantBuilder = (variants, id, name) =>

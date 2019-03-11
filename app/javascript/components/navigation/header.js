@@ -10,16 +10,13 @@ import "./nav.scss";
 class Header extends Component {
     constructor(props) {
         super(props);
-        const { cart, userId } = props;
-        this.state = {
-            links: userId ? (cart ? customer() : roaster()) : base
-        };
+        this.state = {};
     }
 
     render() {
-        const {
-            links: { right = [], buttons }
-        } = this.state;
+        const { cart, userId } = this.props;
+        const links = userId ? (cart ? customer({ cart }) : roaster()) : base;
+        const { right = [], buttons } = links;
         return <NavBar rightItems={right} buttons={buttons} />;
     }
 }

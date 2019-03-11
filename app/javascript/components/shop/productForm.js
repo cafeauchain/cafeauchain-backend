@@ -98,9 +98,7 @@ class ProductForm extends React.Component {
                 window.location.href = await response.redirect_url;
             } else {
                 this.setState({ added: true });
-                if (method === "PUT") {
-                    getCtxData("cart");
-                }
+                getCtxData("cart");
             }
         }
     };

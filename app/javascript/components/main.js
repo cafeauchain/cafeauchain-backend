@@ -11,7 +11,7 @@ import DynamicLoader from "loader";
 /* eslint-enable */
 
 const Main = ({ component, ...rest }) => (
-    <Provider roaster={rest.roaster} requests={[]}>
+    <Provider roaster={rest.roaster} requests={[]} data={{ ...rest }}>
         <DynamicLoader resolve={() => import("./" + component)} {...rest} />
         <Context>
             {ctx => (
@@ -22,7 +22,7 @@ const Main = ({ component, ...rest }) => (
                         </NavPortal>
                     )}
                     <NavPortal mountNode="header-nav">
-                        <HeaderNav {...ctx} cart={rest.cart} />
+                        <HeaderNav {...ctx} />
                     </NavPortal>
                 </React.Fragment>
             )}

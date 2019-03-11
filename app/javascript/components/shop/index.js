@@ -1,11 +1,11 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Container, Header, Segment } from "semantic-ui-react";
+import { Header, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
 import Products from "shop/products";
 
-import Context from "contexts/index";
+import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => {
@@ -30,12 +30,8 @@ const Dashboard = () => (
         <Segment>
             <Header as="h1" content="Shop Wholesale" />
         </Segment>
-        {true && (
-            <Segment>
-                <Products />
-            </Segment>
-        )}
+        {true && <Products />}
     </F>
 );
 
-export default Wrapper;
+export default Dashboard;
