@@ -17,7 +17,6 @@ class FormattedTable extends Component {
             direction: null,
             scrollable: true
         };
-        this.tableRef = React.createRef();
         this.containerRef = React.createRef();
         this._handleWindowResize = debounce(this._handleWindowResize, 250);
     }
