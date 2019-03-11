@@ -1,6 +1,5 @@
 module OrderServices
   class ProcessOrder
-    
     def self.process(order_id, payment_type)
       @order = Order.find(order_id)
       @invoice = @order.invoice
