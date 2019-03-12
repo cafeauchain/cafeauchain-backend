@@ -269,6 +269,9 @@ Rails.application.routes.draw do
       resources :orders
       resources :customers do
         post :cards
+        member do
+          post :add_logo
+        end
       end
     end
   end

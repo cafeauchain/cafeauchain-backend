@@ -1,7 +1,7 @@
 module Api::V1
   class CustomersController < ApplicationController
     before_action :set_roaster
-    before_action :set_customer, only: [:show, :update]
+    before_action :set_customer, only: [:show, :update, :add_logo]
 
     def index
       @customers = @roaster.customer_profiles
@@ -19,12 +19,13 @@ module Api::V1
       wp = @customer.wholesale_profiles.find_by(roaster_profile: @roaster);
       owner = @customer.owner
       @customer.addresses.update(primary_location: false)
-      address = address_params.clone
+      address = address_params
       address["country"] = "USA"
       address["primary_location"] = true
       address["location_label"] = "Office"
-      if @customer.addresses.find_by(street_1: address["street_1"], postal_code: address["postal_code"] ).present?
-        address_params.update(address)
+      current_address = @customer.addresses.find_by(street_1: address["street_1"], postal_code: address["postal_code"] )
+      if current_address.present?
+        current_address.update(address)
       else
         @customer.addresses.create(address)
       end
@@ -33,7 +34,7 @@ module Api::V1
         # TODO We probably need a better check of the side of the app than "current_roaster"
         # Customer Side
         if current_roaster.present?
-          render json: { redirect: true, redirect_url: root_path(@roaster) }, status: 200
+          render json: { redirect: false, redirect_url: root_path(@roaster) }, status: 200
         # Roaster/Admin Side
         else
           render json: { redirect: true, redirect_url: manage_customers_path(@roaster) }, status: 200
@@ -54,6 +55,11 @@ module Api::V1
             code: e.code
         }, status: e.http_status
       end
+    end
+
+    def add_logo
+      @customer.logo.attach(params[:logo])
+      render json: {data: 'i didnt do it'}, status: 200
     end
 
     private
@@ -79,7 +85,7 @@ module Api::V1
     end
 
     def address_params
-      params.permit(:street_1, :street_2, :city, :state, :postal_code, :country)
+      params.permit(:street_1, :street_2, :city, :state, :postal_code)
     end
   end
 end

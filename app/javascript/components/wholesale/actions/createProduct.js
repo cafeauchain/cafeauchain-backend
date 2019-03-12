@@ -118,7 +118,7 @@ class CreateProduct extends Component {
                     />
                 ))}
                 <FileUpload
-                    fileType="file"
+                    fileType="fileImage"
                     label="Upload Product Images"
                     id="product_images"
                     name="product_images"

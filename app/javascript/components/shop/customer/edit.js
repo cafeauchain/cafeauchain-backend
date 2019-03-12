@@ -4,8 +4,10 @@ import { Form, Header, Divider, Dimmer, Loader } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
+import FileUpload from "shared/fileUpload";
 import ImageChange from "shared/ImageChange";
 import Addresses from "shared/addresses";
+import Flex from "shared/flex";
 
 import { url as API_URL, requester } from "utilities/apiUtils";
 
@@ -49,6 +51,13 @@ class EditCustomer extends Component {
         const { id, ...profile } = details;
         const url = `${API_URL}/customers/${id}`;
         const response = await requester({ url, body: profile, method: "PUT" });
+        const hasAttachments = details.hasOwnProperty("logo") && details.logo.length > 0;
+        if (hasAttachments) {
+            let formData = new FormData();
+            details.logo.forEach(file => formData.append("logo[]", file));
+            // const { id: productId } = respJSON.data;
+            await requester({ url: url + "/add_logo", body: formData, noContentType: true });
+        }
         setTimeout(async () => {
             if (response instanceof Error) {
                 this.setState({ errors: response.response.data, loading: false });
@@ -56,7 +65,6 @@ class EditCustomer extends Component {
                 if (response.redirect) {
                     window.location.href = await response.redirect_url;
                 } else {
-                    // await updateDate("orders");
                     this.setState({ loading: false });
                 }
             }
@@ -69,6 +77,7 @@ class EditCustomer extends Component {
         if (name === "") return;
         const val = value || checked;
         details[name] = val;
+        console.log(details);
         this.setState({ details });
     };
 
@@ -76,7 +85,7 @@ class EditCustomer extends Component {
 
     render() {
         const { details, loading } = this.state;
-        const { name, terms, img_url, id, company_name, email, ...address } = details;
+        const { name, terms, logo = [], id, company_name, email, ...address } = details;
 
         const Input = this.renderInput;
         return (
@@ -85,14 +94,26 @@ class EditCustomer extends Component {
                     <Loader size="large">Saving</Loader>
                 </Dimmer>
                 <Header as="h2">Customer Profile</Header>
-                <div align="center">
-                    <ImageChange src={img_url} id={id} />
-                </div>
-                <Divider />
+
                 <Form onSubmit={this.handleSubmit}>
-                    <Input label="Company Name" value={company_name} />
-                    <Input label="Contact Name" name="name" value={name} />
-                    <Input label="Contact Email" name="email" value={email} type="email" />
+                    <Flex spacing="20">
+                        <div flex="66">
+                            <Input label="Company Name" value={company_name} />
+                            <Input label="Contact Name" name="name" value={name} />
+                            <Input label="Contact Email" name="email" value={email} type="email" />
+                        </div>
+                        <div flex="33">
+                            <Header as="h4" content="Company Logo" />
+                            <FileUpload
+                                name="logo"
+                                handleChange={this.handleInputChange}
+                                headerText="No Logo Added"
+                                fileType="fileImage"
+                                files={logo}
+                                textAlign="center"
+                            />
+                        </div>
+                    </Flex>
                     <Header as="h4" content="Primary Address" />
 
                     <Addresses details={address} onChange={this.handleInputChange} />
