@@ -9,7 +9,7 @@ module OrderServices
       else
         @invoice.update(status: :awaiting_payment)
       end
-      InventoryServices::UpdateVariantInventory.update(@order)
+      InventoryServices::UpdateProductInventoryFromOrder.update(@order)
     end
   end
 end

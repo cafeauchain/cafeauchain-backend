@@ -1,6 +1,5 @@
-# TODO If this logic is correct, this service probably needs to be renamed
 module InventoryServices
-  class UpdateVariantInventory
+  class UpdateProductInventoryFromOrder
     def self.update(order)
       order.order_items.each do |order_item|
         product = order_item.product_variant.product.product_inventory_items.select{ |pii| !pii.inactive }.map do |pii|
