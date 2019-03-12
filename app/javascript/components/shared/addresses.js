@@ -26,7 +26,6 @@ class Addresses extends Component {
 
                 <Form.Group inline widths="equal">
                     <Input label="City" value={city} onChange={onChange} />
-                    <Input label="Zip" value={postal_code} name="postal_code" onChange={onChange} />
                     <Input
                         inputType="select"
                         label="State"
@@ -34,6 +33,7 @@ class Addresses extends Component {
                         options={usStates}
                         onChange={onChange}
                     />
+                    <Input label="Zip" value={postal_code} name="postal_code" onChange={onChange} />
                 </Form.Group>
             </F>
         );
