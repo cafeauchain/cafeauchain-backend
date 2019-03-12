@@ -9,6 +9,7 @@ module Shop
       render "manage/primary", locals: {
         roaster: @roaster_profile,
         profile: @customer,
+        cart: @cart,
         component: "shop/customer/edit",
         title: "Customer Profile"
       }
