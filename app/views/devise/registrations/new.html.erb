@@ -1,12 +1,6 @@
 <% content_for :title, "Register" %>
 <%= react_component "main", props = {
-    user: current_user,
-    loggedIn: user_signed_in?,
     url: registration_path(resource_name),
-    resource: resource,
-    name: resource_name,
-    errors: devise_error_messages!,
     fieldType: "register",
-    component: "login",
-    static: true
+    component: "login"
 } %>
