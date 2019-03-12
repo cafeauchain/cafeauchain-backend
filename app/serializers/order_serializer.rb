@@ -38,46 +38,6 @@ class OrderSerializer < ActiveModel::Serializer
       }
     end
   end
-
-  def roaster_name
-    self.object.wholesale_profile.roaster_profile.name
-  end
-
-  def subtotal
-    '%.2f' % (self.object.order_items.sum { |oi| oi.product_variant.price_in_cents.to_f/100.0 * oi.quantity })
-  end
-
-  def total_line_items
-    self.object.order_items.length
-  end
-
-  def shipping
-    '%.2f' % (18.63)
-  end
-
-  def order_total
-    '%.2f' % (self.object.order_items.sum { |oi| oi.product_variant.price_in_cents.to_f/100.0 * oi.quantity } + shipping.to_f)
-  end
-
-  def total_items
-    self.object.order_items.sum { |oi| oi.quantity }
-  end
-
-  def total_weight
-    self.object.order_items.sum { |oi| oi.product_variant.custom_options["size"].to_i * oi.quantity }
-  end
-
-  def order_date
-    self.object.created_at
-  end
-
-  def company_name
-    self.object.customer_profile.company_name
-  end
-
-  def terms
-    self.object.wholesale_profile.terms
-  end
 end
 
 class SingleOrderSerializer < OrderSerializer
