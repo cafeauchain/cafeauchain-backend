@@ -18,13 +18,31 @@ module Api::V1
     def update
       wp = @customer.wholesale_profiles.find_by(roaster_profile: @roaster);
       owner = @customer.owner
+      @customer.addresses.update(primary_location: false)
+      address = address_params.clone
+      address["country"] = "USA"
+      address["primary_location"] = true
+      address["location_label"] = "Office"
+      if @customer.addresses.find_by(street_1: address["street_1"], postal_code: address["postal_code"] ).present?
+        address_params.update(address)
+      else
+        @customer.addresses.create(address)
+      end
+
       if @customer.update!(customer_params) && wp.update!(wholesale_params) && owner.update!(owner_params)
-        render json: @customer, status: 200, serializer: CustomerSerializer::SingleCustomerSerializer
+        # TODO We probably need a better check of the side of the app than "current_roaster"
+        # Customer Side
+        if current_roaster.present?
+          render json: { redirect: true, redirect_url: root_path(@roaster) }, status: 200
+        # Roaster/Admin Side
+        else
+          render json: { redirect: true, redirect_url: manage_customers_path(@roaster) }, status: 200
+        end
       else
         render json: @customer.errors.full_messages, status: 422
       end
     end
-    
+
     def cards
       begin
         StripeServices::CreateCard.call(nil, @customer_profile.id, params[:token], params[:setAsDefault])
@@ -41,7 +59,7 @@ module Api::V1
     private
 
     def set_roaster
-      @roaster = current_user.roaster_profile
+      @roaster = current_user.roaster_profile || current_roaster
     end
 
     def set_customer
@@ -58,6 +76,10 @@ module Api::V1
 
     def wholesale_params
       params.permit(:terms)
+    end
+
+    def address_params
+      params.permit(:street_1, :street_2, :city, :state, :postal_code, :country)
     end
   end
 end

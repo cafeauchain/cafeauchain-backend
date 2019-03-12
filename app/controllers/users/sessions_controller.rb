@@ -9,7 +9,11 @@ class Users::SessionsController < Devise::SessionsController
     elsif !resource.roaster_profile.nil? && SubdomainRoutes.matches?(request)
       render json: {"redirect":true,"redirect_url": manage_dashboard_path}, status: 200
     elsif !SubdomainRoutes.matches?(request)
-      render json: {"redirect":true,"redirect_url": shop_roaster_profile_path(current_roaster)}, status: 200
+      customer = current_user.customer_profile
+      wholesale = customer.wholesale_profiles.find_by(roaster_profile: current_roaster)
+      isProfileComplete = customer.company_name.present? && (wholesale.terms.present? || customer.stripe_customer_id.present?)
+      redirect_url = isProfileComplete ? root_path(current_roaster) : shop_profile_index_path(current_roaster)
+      render json: { "redirect":true, "redirect_url": redirect_url }, status: 200
     end
   end
 

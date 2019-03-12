@@ -3,7 +3,7 @@ module Manage
 
     def show
       customer = CustomerProfile.find(params[:id])
-      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: current_user)
+      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: current_user.roaster_profile)
       render "manage/primary", locals: {
         roaster: current_user.roaster_profile,
         customer: @customer,
@@ -14,7 +14,7 @@ module Manage
 
     def index
       customers = CustomerProfile.all
-      @customers = ActiveModel::SerializableResource.new(customers, each_serializer: CustomerSerializer, scope: current_user)
+      @customers = ActiveModel::SerializableResource.new(customers, each_serializer: CustomerSerializer, scope: current_user.roaster_profile)
       render "manage/primary", locals: {
         roaster: current_user.roaster_profile,
         customers: @customers,

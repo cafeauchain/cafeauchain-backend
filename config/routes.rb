@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-08T08:07:19.192851 #24985]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-03-12T14:31:48.777982 #742]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                     Prefix Verb   URI Pattern                                                                              Controller#Action
 #  upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #             api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -19,15 +19,6 @@
 #                                            PATCH  /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#update
 #                                            PUT    /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#update
 #                                            DELETE /api/v1/subscriptions/:id(.:format)                                                      api/v1/subscriptions#destroy
-#              api_v1_customer_profile_cards POST   /api/v1/customers/:customer_profile_id/cards(.:format)                                   api/v1/customer_profiles#cards
-#                   api_v1_customer_profiles GET    /api/v1/customers(.:format)                                                              api/v1/customer_profiles#index
-#                                            POST   /api/v1/customers(.:format)                                                              api/v1/customer_profiles#create
-#                new_api_v1_customer_profile GET    /api/v1/customers/new(.:format)                                                          api/v1/customer_profiles#new
-#               edit_api_v1_customer_profile GET    /api/v1/customers/:id/edit(.:format)                                                     api/v1/customer_profiles#edit
-#                    api_v1_customer_profile GET    /api/v1/customers/:id(.:format)                                                          api/v1/customer_profiles#show
-#                                            PATCH  /api/v1/customers/:id(.:format)                                                          api/v1/customer_profiles#update
-#                                            PUT    /api/v1/customers/:id(.:format)                                                          api/v1/customer_profiles#update
-#                                            DELETE /api/v1/customers/:id(.:format)                                                          api/v1/customer_profiles#destroy
 #              api_v1_producer_profile_crops GET    /api/v1/producers/:producer_profile_id/crops(.:format)                                   api/v1/crops#index
 #                                            POST   /api/v1/producers/:producer_profile_id/crops(.:format)                                   api/v1/crops#create
 #           new_api_v1_producer_profile_crop GET    /api/v1/producers/:producer_profile_id/crops/new(.:format)                               api/v1/crops#new
@@ -115,6 +106,15 @@
 #                                            PATCH  /api/v1/orders/:id(.:format)                                                             api/v1/orders#update
 #                                            PUT    /api/v1/orders/:id(.:format)                                                             api/v1/orders#update
 #                                            DELETE /api/v1/orders/:id(.:format)                                                             api/v1/orders#destroy
+#                      api_v1_customer_cards POST   /api/v1/customers/:customer_id/cards(.:format)                                           api/v1/customers#cards
+#                           api_v1_customers GET    /api/v1/customers(.:format)                                                              api/v1/customers#index
+#                                            POST   /api/v1/customers(.:format)                                                              api/v1/customers#create
+#                        new_api_v1_customer GET    /api/v1/customers/new(.:format)                                                          api/v1/customers#new
+#                       edit_api_v1_customer GET    /api/v1/customers/:id/edit(.:format)                                                     api/v1/customers#edit
+#                            api_v1_customer GET    /api/v1/customers/:id(.:format)                                                          api/v1/customers#show
+#                                            PATCH  /api/v1/customers/:id(.:format)                                                          api/v1/customers#update
+#                                            PUT    /api/v1/customers/:id(.:format)                                                          api/v1/customers#update
+#                                            DELETE /api/v1/customers/:id(.:format)                                                          api/v1/customers#destroy
 #                                admin_plans GET    /admin/plans(.:format)                                                                   admin/plans#index
 #                                            POST   /admin/plans(.:format)                                                                   admin/plans#create
 #                             new_admin_plan GET    /admin/plans/new(.:format)                                                               admin/plans#new
@@ -148,14 +148,17 @@
 #                                            PATCH  /roasters/:id(.:format)                                                                  roaster_profiles#update
 #                                            PUT    /roasters/:id(.:format)                                                                  roaster_profiles#update
 #                                            DELETE /roasters/:id(.:format)                                                                  roaster_profiles#destroy
+#                           manage_dashboard GET    /manage/dashboard(.:format)                                                              manage/primary#dashboard
+#                           manage_inventory GET    /manage/inventory(.:format)                                                              manage/primary#inventory
 #                              manage_orders GET    /manage/orders(.:format)                                                                 manage/orders#index
 #                               manage_order GET    /manage/orders/:id(.:format)                                                             manage/orders#show
 #                           manage_customers GET    /manage/customers(.:format)                                                              manage/customers#index
 #                            manage_customer GET    /manage/customers/:id(.:format)                                                          manage/customers#show
-#                     manage_wholesale_index GET    /manage/wholesale(.:format)                                                              manage/wholesale#index
-#                     manage_inventory_index GET    /manage/inventory(.:format)                                                              manage/inventory#index
-#                     manage_dashboard_index GET    /manage/dashboard(.:format)                                                              manage/dashboard#index
-#                  manage_subscription_index GET    /manage/subscription(.:format)                                                           manage/subscription#index
+#                           manage_wholesale GET    /manage/wholesale(.:format)                                                              manage/primary#wholesale
+#                        manage_subscription GET    /manage/subscription(.:format)                                                           manage/primary#subscription
+#                                manage_lots GET    /manage/lots(.:format)                                                                   manage/lots#index
+#                                 manage_lot GET    /manage/lots/:id(.:format)                                                               manage/lots#show
+#                         shop_profile_index GET    /shop/profile(.:format)                                                                  shop/profile#index
 #                     producer_profile_crops GET    /producers/:producer_profile_id/crops(.:format)                                          crops#index
 #                                            POST   /producers/:producer_profile_id/crops(.:format)                                          crops#create
 #                  new_producer_profile_crop GET    /producers/:producer_profile_id/crops/new(.:format)                                      crops#new
@@ -210,7 +213,7 @@
 #                                            PATCH  /orders/:id(.:format)                                                                    orders#update
 #                                            PUT    /orders/:id(.:format)                                                                    orders#update
 #                                            DELETE /orders/:id(.:format)                                                                    orders#destroy
-#                                            GET    /                                                                                        roaster_profiles#shop
+#                                            GET    /                                                                                        shop/shop#index
 #                                       home GET    /home(.:format)                                                                          redirect(301, /)
 #                                            GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
 #                                       page GET    /*id                                                                                     high_voltage/pages#show
@@ -234,9 +237,6 @@ Rails.application.routes.draw do
         end
       end
       resources :subscriptions
-      resources :customer_profiles, path: "customers" do
-        post :cards
-      end
       resources :producer_profiles, path: "producers" do
         resources :crops
       end
@@ -267,7 +267,9 @@ Rails.application.routes.draw do
       end
       resources :carts
       resources :orders
-      resources :customers
+      resources :customers do
+        post :cards
+      end
     end
   end
 
@@ -301,6 +303,10 @@ Rails.application.routes.draw do
     get "wholesale", to: "primary#wholesale"
     get "subscription", to: "primary#subscription"
     resources :lots, only: [:show, :index]
+  end
+
+  namespace :shop do
+    resources :profile, only: [:index]
   end
 
   resources :producer_profiles, path: "producers" do

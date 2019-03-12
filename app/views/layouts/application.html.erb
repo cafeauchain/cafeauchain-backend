@@ -13,19 +13,17 @@
   </head>
   <body class="<%= yield(:body_class) %>">
     <div id="header-nav"></div>
-    <% if user_signed_in? %>
-        <% if current_roaster %>
-            <!-- Customer -->
-            <div class="width-wrapper"><%= yield %></div>
-        <% else %>
-            <!-- Roaster/Admin -->
-            <div class="flex-parent roaster-container">
-                <div class="flex-child roaster-container__sidebar">
-                    <div id="main-nav"></div>
-                </div>
-                <div class="roaster-container__main width-wrapper flex-child__75"><%= yield %></div>
+    <% if user_signed_in? && !current_roaster %>
+        <!-- Roaster/Admin -->
+        <div class="flex-parent roaster-container">
+            <div class="flex-child roaster-container__sidebar">
+                <div id="main-nav"></div>
             </div>
-        <% end %>
+            <div class="roaster-container__main width-wrapper flex-child__75"><%= yield %></div>
+        </div>
+    <% else %>
+        <!-- Customer/Login -->
+        <div class="width-wrapper"><%= yield %></div>
     <% end %>
     <%= react_component "footer", props = {user: current_user, loggedIn: user_signed_in?}, {:class => "site-footer"} %>
     <!-- Start of HubSpot Embed Code -->

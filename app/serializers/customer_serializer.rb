@@ -2,7 +2,7 @@ class CustomerSerializer < ActiveModel::Serializer
   attributes :id, :owner, :email, :company_name, :addresses, :terms, :order_count, :order_value
 
   def terms
-    wp = self.object.wholesale_profiles.find_by(roaster_profile: scope.roaster_profile)
+    wp = self.object.wholesale_profiles.find_by(roaster_profile: scope)
     wp.terms
   end
 
