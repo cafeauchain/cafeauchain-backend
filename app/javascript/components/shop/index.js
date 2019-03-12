@@ -9,7 +9,6 @@ import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = props => {
-    // const requests = ["products", "variants"].filter(request => !props[request]);
     const { roaster, ...rest } = props;
     const requests = ["products", "variants"];
     return (

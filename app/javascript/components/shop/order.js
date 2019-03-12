@@ -14,13 +14,11 @@ import { humanize, sortBy } from "utilities";
 import tableDefs from "defs/tables/orderLineItems";
 
 import Context from "contexts/main";
-import Provider from "contexts/wholesale";
 /* eslint-enable */
 
 const Wrapper = ({ order, ...props }) => {
-    const requests = order ? [] : [];
     return (
-        <Provider requests={requests}>
+        <div>
             <Context>
                 {ctx => (
                     <Order
@@ -32,7 +30,7 @@ const Wrapper = ({ order, ...props }) => {
                     />
                 )}
             </Context>
-        </Provider>
+        </div>
     );
 };
 

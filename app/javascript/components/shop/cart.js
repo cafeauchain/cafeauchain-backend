@@ -14,7 +14,6 @@ import CartItemDetails from "shop/cartItemDetails";
 import CartDetails from "shop/cartDetails";
 
 import Context from "contexts/main";
-import Provider from "contexts/wholesale";
 /* eslint-enable */
 
 const Wrapper = ({ cart, ...props }) => {

@@ -12,13 +12,11 @@ import { sortBy } from "utilities";
 import tableDefs from "defs/tables/customerOrdersTable";
 
 import Context from "contexts/main";
-import Provider from "contexts/wholesale";
 /* eslint-enable */
 
 const Wrapper = ({ customer, ...props }) => {
-    const requests = [];
     return (
-        <Provider requests={requests}>
+        <div>
             <Context>
                 {ctx => (
                     <Order
@@ -30,7 +28,7 @@ const Wrapper = ({ customer, ...props }) => {
                     />
                 )}
             </Context>
-        </Provider>
+        </div>
     );
 };
 
