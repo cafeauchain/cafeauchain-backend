@@ -12,7 +12,7 @@ class Users::SessionsController < Devise::SessionsController
       customer = current_user.customer_profile
       wholesale = customer.wholesale_profiles.find_by(roaster_profile: current_roaster)
       isProfileComplete = customer.company_name.present? && (wholesale.terms.present? || customer.stripe_customer_id.present?)
-      redirect_url = isProfileComplete ? root_path(current_roaster) : shop_profile_index_path(current_roaster)
+      redirect_url = isProfileComplete ? root_path() : shop_profile_index_path()
       render json: { "redirect":true, "redirect_url": redirect_url }, status: 200
     end
   end
