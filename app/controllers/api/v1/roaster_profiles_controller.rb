@@ -24,8 +24,8 @@ module Api::V1
       if @roaster_profile_wizard.roaster_profile.save!
         logo = (params[:roaster_profile][:logo])
         roaster_profile = @roaster_profile_wizard.roaster_profile
-        roaster_profile.addresses.create!(location_label: "Office", primary_location: true, street_1: params[:roaster_profile][:address_1], street_2: params[:roaster_profile][:address_2],
-          city: params[:roaster_profile][:city], state: params[:roaster_profile][:state], postal_code: params[:roaster_profile][:zip_code], country: "United States of America")
+        roaster_profile.addresses.create!(location_label: "Office", primary_location: true, street_1: params[:roaster_profile][:street_1], street_2: params[:roaster_profile][:street_2],
+          city: params[:roaster_profile][:city], state: params[:roaster_profile][:state], postal_code: params[:roaster_profile][:postal_code], country: "United States of America")
         roaster_profile.users << current_user
         roaster_profile.set_owner
         if !logo.blank?
