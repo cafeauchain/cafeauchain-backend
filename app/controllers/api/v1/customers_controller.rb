@@ -58,7 +58,7 @@ module Api::V1
     end
 
     def add_logo
-      ActiveStorageServices::ImageAttachment.new(params[:logo][0], @customer.id, "CustomerProfile", "logo").callAsFile
+      ActiveStorageServices::ImageAttachment.new(params[:logo], @customer.id, "CustomerProfile", "logo").callAsFile
       render json: {data: "success"}, status: 200
     end
 

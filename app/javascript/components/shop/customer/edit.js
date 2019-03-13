@@ -55,7 +55,7 @@ class EditCustomer extends Component {
         const hasAttachments = details.hasOwnProperty("logo") && details.logo.length > 0;
         if (hasAttachments) {
             let formData = new FormData();
-            details.logo.forEach(file => formData.append("logo[]", file));
+            formData.append("logo", details.logo[0]);
             await requester({ url: url + "/add_logo", body: formData, noContentType: true });
         }
         setTimeout(async () => {
