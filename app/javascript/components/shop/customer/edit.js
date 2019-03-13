@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form, Header, Divider, Dimmer, Loader } from "semantic-ui-react";
+import { Form, Header, Dimmer, Loader } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
