@@ -128,7 +128,7 @@ class StartBatch extends Component {
 
     buildInventoryOptions = (inventory, lotId) => {
         return inventory.reduce((options, { id, attributes }) => {
-            if (Number(attributes.lot_id) === Number(lotId)) {
+            if (attributes.lot_id === lotId) {
                 return [...options, { value: id, key: id, text: attributes.name }];
             }
             return options;
