@@ -3,12 +3,27 @@
 // Possibly a prop to omit/hide/defualt to 0 when added from quick actions?
 
 const fields = [
-    { name: "lot_size", label: "lbs", placeholder: "Pounds ordered from producer" },
-    { name: "on_hand", label: "lbs", placeholder: "Pounds on hand", defaultValue: 0 },
-    { name: "roasted", label: "lbs", placeholder: "Pounds roasted (green weight)", defaultValue: 0 },
-    { name: "price_per_pound", label: "/lb", placeholder: "Price per pound", icon: "dollar" },
-    { name: "name", placeholder: "Lot Name" },
-    { name: "label", placeholder: "Lot Abbreviation (for Roast Log)" }
+    { name: "name", label: "Lot Name" },
+    { name: "label", label: "Lot Abbreviation (for Roast Log)" },
+    {
+        name: "lot_size",
+        label: "Pounds Ordered from Producer",
+        inputLabel: "lbs"
+    },
+    {
+        name: "price_per_pound",
+        label: "Price per Pound",
+        inputLabel: "/lb",
+        icon: "dollar"
+    },
+    { name: "on_hand", label: "Pounds on Hand", inputLabel: "lbs", defaultValue: 0, hidden: true },
+    {
+        name: "roasted",
+        label: "Pounds Roasted (green weight)",
+        inputLabel: "lbs",
+        defaultValue: 0,
+        hidden: true
+    }
 ];
 
 export default fields;
