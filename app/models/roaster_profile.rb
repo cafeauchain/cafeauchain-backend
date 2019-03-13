@@ -25,10 +25,6 @@
 #
 #  index_roaster_profiles_on_owner_id  (owner_id)
 #
-# Indexes
-#
-#  index_roaster_profiles_on_owner_id  (owner_id)
-#
 
 class RoasterProfile < ApplicationRecord
   include Rails.application.routes.url_helpers
@@ -46,6 +42,7 @@ class RoasterProfile < ApplicationRecord
   has_many :wholesale_profiles
   has_many :orders, through: :wholesale_profiles
   has_many :customer_profiles, through: :wholesale_profiles
+  has_many :shipping_methods
 
   belongs_to :owner, class_name: "User", foreign_key: "owner_id", optional: true
 
