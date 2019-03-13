@@ -1,7 +1,7 @@
 <% content_for :body_class, 'home' %>
 <%= react_component "main", props = {
     loggedIn: user_signed_in?,
-    roaster: current_user.roaster_profile,
+    roaster: current_user ? current_user.roaster_profile : nil,
     component: "home",
     static: true
 } %>
