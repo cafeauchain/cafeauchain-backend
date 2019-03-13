@@ -13,26 +13,22 @@ import { sortBy } from "utilities";
 
 import { requester, url as API_URL } from "utilities/apiUtils";
 
-import Provider from "contexts/index";
 import Context from "contexts/main";
 /* eslint-enable */
 
-const Wrapper = ({ orders, roaster, ...props }) => {
-    const requests = orders ? [] : [];
+const Wrapper = props => {
     return (
-        <Provider roaster={roaster} requests={requests}>
-            <Context>
-                {ctx => (
-                    <Orders
-                        {...props}
-                        orders={ctx.orders || orders.data}
-                        loading={ctx.loading}
-                        userId={ctx.userId}
-                        getCtxData={ctx.getData}
-                    />
-                )}
-            </Context>
-        </Provider>
+        <Context>
+            {ctx => (
+                <Orders
+                    {...props}
+                    orders={ctx.orders}
+                    loading={ctx.loading}
+                    userId={ctx.userId}
+                    getCtxData={ctx.getData}
+                />
+            )}
+        </Context>
     );
 };
 
@@ -116,14 +112,10 @@ class Orders extends Component {
     }
 }
 
-const { array, object, func } = PropTypes;
+const { array, func } = PropTypes;
 Orders.propTypes = {
     orders: array,
     getCtxData: func
-};
-Wrapper.propTypes = {
-    orders: object,
-    roaster: object
 };
 
 export default Wrapper;

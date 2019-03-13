@@ -6,27 +6,10 @@ import { Header, Segment } from "semantic-ui-react";
 import Inventory from "wholesale/inventory";
 import QuickActions from "wholesale/quickActions";
 import Orders from "wholesale/orders";
-
-import Context from "contexts/index";
 /* eslint-enable */
 
-const Wrapper = props => {
-    const { roaster } = props;
-    return (
-        <Context roaster={roaster} requests={["inventory", "lots", "products"]}>
-            <Dashboard {...props} />
-        </Context>
-    );
-};
-
-const { oneOfType, number, string, object } = PropTypes;
-Wrapper.propTypes = {
-    roaster_profile_id: oneOfType([number, string]),
-    roaster: object
-};
-
 const Dashboard = ({ orders, roaster }) => (
-    <div style={{ margin: "4em 0" }}>
+    <div>
         <Segment>
             <Header as="h1" content="Manage Wholesale" />
         </Segment>
@@ -44,9 +27,10 @@ const Dashboard = ({ orders, roaster }) => (
     </div>
 );
 
+const { object } = PropTypes;
 Dashboard.propTypes = {
     orders: object,
     roaster: object
 };
 
-export default Wrapper;
+export default Dashboard;

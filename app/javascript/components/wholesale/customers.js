@@ -10,26 +10,22 @@ import tableDefs from "defs/tables/manageCustomersTable";
 
 import { sortBy } from "utilities";
 
-import Provider from "contexts/index";
 import Context from "contexts/main";
 /* eslint-enable */
 
-const Wrapper = ({ roaster, customers, ...props }) => {
-    const requests = [];
+const Wrapper = props => {
     return (
-        <Provider roaster={roaster} requests={requests}>
-            <Context>
-                {ctx => (
-                    <Orders
-                        {...props}
-                        customers={ctx.customers || customers.data}
-                        loading={ctx.loading}
-                        userId={ctx.userId}
-                        getCtxData={ctx.getData}
-                    />
-                )}
-            </Context>
-        </Provider>
+        <Context>
+            {ctx => (
+                <Orders
+                    {...props}
+                    customers={ctx.customers}
+                    loading={ctx.loading}
+                    userId={ctx.userId}
+                    getCtxData={ctx.getData}
+                />
+            )}
+        </Context>
     );
 };
 
@@ -63,13 +59,9 @@ class Orders extends Component {
     }
 }
 
-const { array, object } = PropTypes;
+const { array } = PropTypes;
 Orders.propTypes = {
     customers: array
-};
-Wrapper.propTypes = {
-    roaster: object,
-    customers: object
 };
 
 export default Wrapper;

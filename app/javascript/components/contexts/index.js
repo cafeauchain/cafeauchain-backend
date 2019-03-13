@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 
 /* eslint-disable */
-import { ConfigProvider as UserProvider } from "contexts/user";
 import { ConfigProvider } from "contexts/main";
 /* eslint-enable */
 
