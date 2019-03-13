@@ -80,7 +80,7 @@ class RoasterProfile < ApplicationRecord
     subscription = Subscription.find(subscription_id)
     date_range = (subscription.next_bill_date - 30.days)..subscription.next_bill_date.end_of_day - 1.days
     batches = self.batches.where(roast_date: date_range)
-    pounds_roasted_in_period = batches.pluck(:starting_amount).sum
+    pounds_roasted_in_period = batches.pluck(:starting_amount).map{|sa| sa.to_f || 0}.sum
   end
 
   def set_owner
