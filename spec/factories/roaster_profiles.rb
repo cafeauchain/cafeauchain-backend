@@ -25,10 +25,6 @@
 #
 #  index_roaster_profiles_on_owner_id  (owner_id)
 #
-# Indexes
-#
-#  index_roaster_profiles_on_owner_id  (owner_id)
-#
 
 FactoryBot.define do
   factory :roaster_profile do
