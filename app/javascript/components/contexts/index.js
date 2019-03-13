@@ -7,11 +7,9 @@ import { ConfigProvider } from "contexts/main";
 /* eslint-enable */
 
 const Context = ({ roaster, children, requests, ...rest }) => (
-    <UserProvider value={{ roaster }}>
-        <ConfigProvider id={roaster.id} requests={requests} {...rest}>
-            {children}
-        </ConfigProvider>
-    </UserProvider>
+    <ConfigProvider id={roaster.id} requests={requests} {...rest}>
+        {children}
+    </ConfigProvider>
 );
 const { object, node, array } = PropTypes;
 Context.propTypes = {
