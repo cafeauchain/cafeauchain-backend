@@ -33,8 +33,8 @@ class CustomerProfile < ApplicationRecord
     self.addresses.find_by(primary_location: true)
   end
 
-  def logo_image_url
-    if logo.nil?
+  def logo_url
+    if logo.attached?
       url_for(logo)
     end
   end

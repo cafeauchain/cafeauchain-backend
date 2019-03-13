@@ -1,9 +1,5 @@
 class CustomerSerializer < ActiveModel::Serializer
-  attributes :id, :owner, :email, :company_name, :addresses, :terms, :order_count, :order_value, :logo_image_url, :hasImage
-
-  def hasImage
-    self.object.logo.attached?
-  end
+  attributes :id, :owner, :email, :company_name, :addresses, :terms, :order_count, :order_value, :logo_url
 
   def terms
     wp = self.object.wholesale_profiles.find_by(roaster_profile: scope)

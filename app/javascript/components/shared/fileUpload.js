@@ -75,7 +75,7 @@ class FileInput extends Component {
                             {headerText}
                         </Header>
                     )}
-                    {fileType === "image" && image && (
+                    {image && !files.length && (
                         <Image src={image} size="medium" rounded centered spaced style={{ marginBottom: 20 }} />
                     )}
 

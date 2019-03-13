@@ -22,7 +22,8 @@ class EditCustomer extends Component {
 
         this.state = {
             details: this.profileDefaults(attributes, id),
-            loading: false
+            loading: false,
+            logo_url: attributes.logo_url
         };
     }
 
@@ -55,7 +56,6 @@ class EditCustomer extends Component {
         if (hasAttachments) {
             let formData = new FormData();
             details.logo.forEach(file => formData.append("logo[]", file));
-            // const { id: productId } = respJSON.data;
             await requester({ url: url + "/add_logo", body: formData, noContentType: true });
         }
         setTimeout(async () => {
@@ -77,14 +77,13 @@ class EditCustomer extends Component {
         if (name === "") return;
         const val = value || checked;
         details[name] = val;
-        console.log(details);
         this.setState({ details });
     };
 
     renderInput = props => <Input {...props} onChange={this.handleInputChange} />;
 
     render() {
-        const { details, loading } = this.state;
+        const { details, loading, logo_url } = this.state;
         const { name, terms, logo = [], id, company_name, email, ...address } = details;
 
         const Input = this.renderInput;
@@ -110,6 +109,7 @@ class EditCustomer extends Component {
                                 headerText="No Logo Added"
                                 fileType="fileImage"
                                 files={logo}
+                                image={logo_url}
                                 textAlign="center"
                             />
                         </div>
