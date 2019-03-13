@@ -2,6 +2,7 @@ import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { Message } from "semantic-ui-react";
+import * as Showdown from "showdown";
 
 /* eslint-disable */
 import { humanize } from "utilities";
@@ -9,13 +10,34 @@ import { humanize } from "utilities";
 import IconHeader from "shared/IconHeader";
 import Details from "shared/details";
 import { AsImage } from "shared/textFormatters";
+
+import { callMeDanger } from "utilities";
 /* eslint-enable */
+
+const LongText = ({ content }) => {
+    const converter = new Showdown.Converter();
+    return callMeDanger(converter.makeHtml(content), "div");
+};
+const { string } = PropTypes;
+LongText.propTypes = {
+    content: string
+};
+
+const SmallImage = props => <AsImage {...props} size="small" />;
 
 class Confirmation extends Component {
     confirmFields = values => {
         return Object.keys(values).reduce((arr, item) => {
             if (!values[item]) return arr;
-            const formatter = item === "logo" ? props => AsImage({ ...props, size: "small" }) : "";
+            let formatter = "";
+            switch (item) {
+            case "logo":
+                formatter = SmallImage;
+                break;
+            case "about":
+                formatter = LongText;
+                break;
+            }
             return [...arr, { name: item, key: item, formatter }];
         }, []);
     };

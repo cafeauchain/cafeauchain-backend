@@ -12,6 +12,14 @@ class Addresses extends Component {
         super(props);
         this.state = {};
     }
+
+    searchFunc = (collection, val) => {
+        return collection.filter(
+            item =>
+                item.value.toLowerCase().indexOf(val.toLowerCase()) > -1 ||
+                item.text.toLowerCase().indexOf(val.toLowerCase()) > -1
+        );
+    };
     render() {
         const {
             onChange,
@@ -29,9 +37,10 @@ class Addresses extends Component {
                     <Input
                         inputType="select"
                         label="State"
-                        defaultValue={state}
+                        value={state}
                         options={usStates}
                         onChange={onChange}
+                        search={this.searchFunc}
                     />
                     <Input label="Zip" value={postal_code} name="postal_code" onChange={onChange} />
                 </Form.Group>

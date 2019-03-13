@@ -24,11 +24,11 @@ class App extends Component {
                 current_step: 1,
                 roaster_profile: {
                     name: "",
-                    address_1: "",
-                    address_2: "",
+                    street_1: "",
+                    street_2: "",
                     city: "",
                     state: "",
-                    zip_code: "",
+                    postal_code: "",
                     logo: "",
                     about: "",
                     url: "",
@@ -47,6 +47,7 @@ class App extends Component {
         if (name === "") return;
         const val = value || checked;
         roaster_profile[name] = val;
+        console.log(roaster_profile);
         this.setState({ roaster_profile });
     };
 
