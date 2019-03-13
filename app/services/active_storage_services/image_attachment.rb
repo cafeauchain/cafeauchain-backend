@@ -17,5 +17,15 @@ module ActiveStorageServices
       
       @attachable.send(@attr).attach(io: File.open(image.path), filename: (@attr.to_s + "." + filetype))
     end
+
+    def callAsFile
+      image = MiniMagick::Image.read(@file.tempfile)
+      image.combine_options do |img|
+        img.resize '300x300>'
+      end
+      image.format 'jpg'
+
+      @attachable.send(@attr).attach(io: File.open(image.path), filename: @attr.to_s + ".jpg")
+    end
   end
 end

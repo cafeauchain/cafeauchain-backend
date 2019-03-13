@@ -14,25 +14,15 @@ import CartItemDetails from "shop/cartItemDetails";
 import CartDetails from "shop/cartDetails";
 
 import Context from "contexts/main";
-import Provider from "contexts/wholesale";
 /* eslint-enable */
 
 const Wrapper = ({ cart, ...props }) => {
-    const requests = cart ? [] : ["cart"];
     return (
-        <Provider requests={requests}>
-            <Context>
-                {ctx => (
-                    <Cart
-                        {...props}
-                        cart={ctx.cart || cart.data}
-                        loading={ctx.loading}
-                        userId={ctx.userId}
-                        getCtxData={ctx.getData}
-                    />
-                )}
-            </Context>
-        </Provider>
+        <Context>
+            {ctx => (
+                <Cart {...props} cart={ctx.cart} loading={ctx.loading} userId={ctx.userId} getCtxData={ctx.getData} />
+            )}
+        </Context>
     );
 };
 

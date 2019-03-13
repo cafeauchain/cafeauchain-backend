@@ -12,15 +12,13 @@ import base from "./links/base";
 import "./nav.scss";
 
 /* eslint-disable */
-import Provider from "contexts/wholesale";
 import Context from "contexts/main";
 /* eslint-enable */
 
 const Wrapper = ({ cart, isCustomer, ...rest }) => {
-    const requests = isCustomer && !cart ? ["cart"] : [];
     const useAdminNav = !isCustomer && rest.loggedIn;
     return (
-        <Provider requests={requests}>
+        <div>
             <Context>
                 {ctx => (
                     <Nav
@@ -32,7 +30,7 @@ const Wrapper = ({ cart, isCustomer, ...rest }) => {
                     />
                 )}
             </Context>
-        </Provider>
+        </div>
     );
 };
 /* eslint-enable */

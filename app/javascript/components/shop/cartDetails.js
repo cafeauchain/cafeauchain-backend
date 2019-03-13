@@ -29,9 +29,11 @@ class CartDetails extends React.Component {
         e.preventDefault();
         target.blur();
         const { cart } = this.props;
+        // eslint-disable-next-line
         console.log(cart);
         const url = `${API_URL}/orders`;
-        const body = { id: cart.id };
+        // TODO Allow payment type to be  changed
+        const body = { id: cart.id, payment_type: "terms_with_vendor" };
         const response = await requester({ url, body });
         if (response instanceof Error) {
             this.setState({ errors: response.response.data });
@@ -39,7 +41,9 @@ class CartDetails extends React.Component {
             if (response.redirect) {
                 window.location.href = await response.redirect_url;
             } else {
+                // eslint-disable-next-line
                 console.log("do something other than redirect to the orders/invoice page?");
+                // eslint-disable-next-line
                 console.log(response);
             }
         }

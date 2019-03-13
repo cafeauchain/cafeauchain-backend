@@ -12,7 +12,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         cp.users << resource
         wp = cp.wholesale_profiles.create(roaster_profile: current_roaster)
         wp.create_cart
-        render json: {"redirect":true,"redirect_url": shop_roaster_profile_path(current_roaster)}, status: 200
+        render json: {"redirect":true,"redirect_url": shop_profile_index_path()}, status: 200
       end
     else
       render json: { success: false, error: resource.errors }, status: 422

@@ -1,6 +1,7 @@
 const getDefaults = fileType => {
     switch (fileType) {
     case "image":
+    case "fileImage":
         return {
             headerIcon: "image outline",
             headerText: "No image added",

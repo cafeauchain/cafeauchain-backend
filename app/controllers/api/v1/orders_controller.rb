@@ -20,9 +20,10 @@ module Api::V1
           notes: ci.notes
         )
       end
+      Invoice.create(subtotal: @order.subtotal, total: @order.order_total, payment_type: params[:payment_type], order_id: @order.id)
       if @order.update(status: :processing)
         @cart.cart_items.destroy_all
-        OrderServices::ProcessOrder.process(@order, params[:payment_type])
+        OrderServices::ProcessOrder.process(@order.id, params[:payment_type])
       end
       render json: {redirect_url: order_path(@order), redirect: true}, status: 200
     end

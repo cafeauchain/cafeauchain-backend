@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= content_for?(:title) ? yield(:title) : "Know where your coffee comes from" %> | Cafe au Chain</title>
-    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Cafe au Chain | Proof of Perk helps roaster track their coffee from distributors through the roasting process, and helps their customers learn where their coffee comes from." %>">
+    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Cafe au Chain | Proof of Perk helps roasters track their coffee from distributors through the roasting process, and helps their customers learn where their coffee comes from." %>">
     <%= favicon_link_tag asset_path('cac-unofficial-logo.png') %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
@@ -13,26 +13,17 @@
   </head>
   <body class="<%= yield(:body_class) %>">
     <div id="header-nav"></div>
-    <% if user_signed_in? %>
-        <!-- Logged In Navs -->
-        <% if current_roaster %>
-            <!-- Customer -->
-            <%= react_component "navigation", props = {user: current_user, loggedIn: user_signed_in?, cart: @ser_cart, isCustomer: true} %>
-            <%= yield %>
-        <% else %>
-            <!-- Roaster/Admin -->
-            <!-- <div id="header-nav"></div> -->
-            <div class="flex-parent roaster-container">
-                <div class="flex-child roaster-container__sidebar">
-                    <div id="main-nav" class="roaster-nav"></div>
-                </div>
-                <div class="roaster-container__main flex-child__75"><%= yield %></div>
+    <% if user_signed_in? && !current_roaster %>
+        <!-- Roaster/Admin -->
+        <div class="flex-parent roaster-container">
+            <div class="flex-child roaster-container__sidebar">
+                <div id="main-nav"></div>
             </div>
-        <% end %>
+            <div class="roaster-container__main width-wrapper flex-child__75"><%= yield %></div>
+        </div>
     <% else %>
-        <!-- Public -->
-        <%= react_component "navigation", props = {user: current_user, loggedIn: user_signed_in?, cart: nil} %>
-        <%= yield %>
+        <!-- Customer/Login -->
+        <div class="width-wrapper"><%= yield %></div>
     <% end %>
     <%= react_component "footer", props = {user: current_user, loggedIn: user_signed_in?}, {:class => "site-footer"} %>
     <!-- Start of HubSpot Embed Code -->

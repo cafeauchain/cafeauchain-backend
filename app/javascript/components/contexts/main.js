@@ -15,12 +15,20 @@ class ConfigProvider extends React.Component {
             }
             return { ...obj, [request.name]: {} };
         }, {});
+        let initData = {};
+        const { data: init } = props;
+        for (let key in init) {
+            if (init[key]) {
+                initData[key] = init[key].data ? init[key].data : init[key];
+            }
+        }
         this.state = {
             userId: props.id,
-            updateContext: this.updateContext,
-            loading: true,
+            // updateContext: this.updateContext,
+            // loading: true,
             ...datasets,
-            getData: this.getData
+            ...initData
+            // getData: this.getData
         };
     }
 
@@ -30,16 +38,17 @@ class ConfigProvider extends React.Component {
     }
 
     // TODO I should probably handle the initial loading better somehow
-    componentDidUpdate() {
-        const { loading } = this.state;
-        if (loading) {
-            // eslint-disable-next-line
-            setTimeout(() => this.setState({ loading: false }, console.log("updating loader")), 600);
-        }
-    }
+    // componentDidUpdate() {
+    //     const { loading } = this.state;
+    //     if (loading) {
+    //         // eslint-disable-next-line
+    //         setTimeout(() => this.setState({ loading: false }, console.log("updating loader")), 600);
+    //     }
+    // }
 
     updateContext = stateObj => {
-        this.setState({ loading: true }, this.setState(stateObj));
+        // this.setState({ loading: true }, this.setState(stateObj));
+        this.setState(stateObj);
     };
 
     getData = async request => {
@@ -52,15 +61,20 @@ class ConfigProvider extends React.Component {
 
     render() {
         const { children } = this.props;
-        return <Provider value={{ ...this.state }}>{children}</Provider>;
+        return (
+            <Provider value={{ ...this.state, getData: this.getData, updateContext: this.updateContext }}>
+                {children}
+            </Provider>
+        );
     }
 }
 
-const { node, oneOfType, number, string, array } = PropTypes;
+const { node, oneOfType, number, string, array, object } = PropTypes;
 ConfigProvider.propTypes = {
     id: oneOfType([number, string]),
     requests: array,
-    children: node
+    children: node,
+    data: object
 };
 
 export { ConfigProvider };

@@ -6,9 +6,9 @@ import { ConfigProvider as UserProvider } from "contexts/user";
 import { ConfigProvider } from "contexts/main";
 /* eslint-enable */
 
-const Context = ({ roaster, children, requests }) => (
+const Context = ({ roaster, children, requests, ...rest }) => (
     <UserProvider value={{ roaster }}>
-        <ConfigProvider id={roaster.id} requests={requests}>
+        <ConfigProvider id={roaster.id} requests={requests} {...rest}>
             {children}
         </ConfigProvider>
     </UserProvider>

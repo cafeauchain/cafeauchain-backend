@@ -11,23 +11,35 @@ import DynamicLoader from "loader";
 /* eslint-enable */
 
 const Main = ({ component, ...rest }) => (
-    <Provider roaster={rest.roaster} requests={[]}>
-        <DynamicLoader resolve={() => import("./" + component)} {...rest} />
-        <Context>
-            {ctx => (
-                <React.Fragment>
-                    {rest.roaster && (
-                        <NavPortal mountNode="main-nav">
-                            <AdminNav roaster={rest.roaster} {...ctx} />
-                        </NavPortal>
+    <React.Fragment>
+        {!rest.roaster && (
+            <React.Fragment>
+                <DynamicLoader resolve={() => import("./" + component)} {...rest} />
+                <NavPortal mountNode="header-nav">
+                    <HeaderNav />
+                </NavPortal>
+            </React.Fragment>
+        )}
+        {rest.roaster && (
+            <Provider roaster={rest.roaster} requests={[]} data={{ ...rest }}>
+                <DynamicLoader resolve={() => import("./" + component)} {...rest} />
+                <Context>
+                    {ctx => (
+                        <React.Fragment>
+                            {!ctx.static && !ctx.cart && (
+                                <NavPortal mountNode="main-nav">
+                                    <AdminNav {...ctx} />
+                                </NavPortal>
+                            )}
+                            <NavPortal mountNode="header-nav">
+                                <HeaderNav {...ctx} />
+                            </NavPortal>
+                        </React.Fragment>
                     )}
-                    <NavPortal mountNode="header-nav">
-                        <HeaderNav {...ctx} />
-                    </NavPortal>
-                </React.Fragment>
-            )}
-        </Context>
-    </Provider>
+                </Context>
+            </Provider>
+        )}
+    </React.Fragment>
 );
 
 Main.propTypes = {

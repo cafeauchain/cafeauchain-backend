@@ -4,7 +4,9 @@ import { Button, Dropdown, Icon } from "semantic-ui-react";
 // eslint-disable-next-line
 import styles from "stylesheets/variables.scss";
 
-const links = () => {
+const links = ({ cart }) => {
+    const { attributes } = cart;
+    const total_items = attributes ? attributes.total_items : 0;
     const buildItems = array => array.map(item => <Dropdown.Item as="a" key={item.content} {...item} />);
     const dropdowns = [{ href: "/", content: "Account (Doesnt work)" }, { href: "/orders", content: "Orders" }];
     return {
@@ -26,13 +28,15 @@ const links = () => {
                     <F>
                         <Icon.Group size="big">
                             <Icon name="cart" />
-                            <Icon
-                                corner="top right"
-                                name="check circle"
-                                color="green"
-                                className="pulse"
-                                // key={items.length}
-                            />
+                            {total_items > 0 && (
+                                <Icon
+                                    corner="top right"
+                                    name="check circle"
+                                    color="green"
+                                    className="pulse"
+                                    key={total_items}
+                                />
+                            )}
                         </Icon.Group>
                         <span> Cart</span>
                     </F>

@@ -32,6 +32,9 @@ class FileInput extends Component {
         if (fileType === "file") {
             value = multiple ? [...files] : file;
         }
+        if (fileType === "fileImage") {
+            value = multiple ? [...files] : [file];
+        }
         this.setState({ loading: true });
         await handleChange(event, { name, value });
         this.clearLoader();
@@ -42,6 +45,7 @@ class FileInput extends Component {
     };
 
     render() {
+        // TODO Clicking cancel when trying to upload causes everything to crash, maybe?
         const { fileType, handleChange, ...rest } = this.props;
         const defaults = getDefaults(fileType);
         const {
@@ -52,42 +56,39 @@ class FileInput extends Component {
             uploadText = defaults.uploadText,
             changeText = defaults.changeText,
             image,
-            files
-        } = this.props;
+            files,
+            textAlign = "center",
+            ...left
+        } = rest;
+
         const { loading } = this.state;
-        // TODO right now, 'file' is actually multiple image. I need to clean this stuff up
+        const noImagesAvailable = !(image || files.length);
         return (
-            <Segment placeholder>
+            <Segment placeholder={noImagesAvailable} padded={noImagesAvailable ? "very" : false} textAlign={textAlign}>
                 <Dimmer inverted active={loading}>
                     <Loader size="large" active={loading} />
                 </Dimmer>
                 <Form.Field>
-                    {(headerIcon || headerText) && !image && (
+                    {(headerIcon || headerText) && noImagesAvailable && (
                         <Header icon textAlign="center">
                             {headerIcon && <Icon name={headerIcon} />}
                             {headerText}
                         </Header>
                     )}
-                    {fileType === "image" && image && (
+                    {image && !files.length && (
                         <Image src={image} size="medium" rounded centered spaced style={{ marginBottom: 20 }} />
                     )}
 
-                    {fileType === "file" &&
-                        files.length > 0 &&
-                        files.map(file => (
-                            <Image
-                                key={file.name}
-                                src={URL.createObjectURL(file)}
-                                size="mini"
-                                rounded
-                                centered
-                                spaced
-                                style={{ margin: 10 }}
-                            />
-                        ))}
-
+                    {fileType === "fileImage" && files.length > 0 && (
+                        <Image.Group size={files.length > 2 ? "small" : "medium"}>
+                            {files.map(file => (
+                                <Image key={file.name} src={URL.createObjectURL(file)} rounded centered spaced />
+                            ))}
+                        </Image.Group>
+                    )}
+                    <br />
                     <Input
-                        {...rest}
+                        {...left}
                         inputType="file"
                         onChange={this.uploadFile}
                         id={id}
@@ -95,7 +96,7 @@ class FileInput extends Component {
                         label={(
                             <F>
                                 <Icon name="upload" />
-                                {image ? changeText : uploadText}
+                                {noImagesAvailable ? uploadText : changeText}
                             </F>
                         )}
                     />

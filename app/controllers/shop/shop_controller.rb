@@ -2,11 +2,19 @@ module Shop
   class ShopController < ApplicationController
     before_action :authenticate_user!
     before_action :set_roaster
+    before_action :set_cart
 
     def index
-      @roaster_profile = @current_roaster || RoasterProfile.find_by(subdomain: request.subdomain)
-      @products = ActiveModel::SerializableResource.new(@roaster_profile.products, each_serializer: ProductSerializer)
-      render 'roaster_profiles/shop'
+      @roaster = @roaster_profile
+      @products = ActiveModel::SerializableResource.new(@roaster.products, each_serializer: ProductSerializer)
+      @serialized_cart = ActiveModel::SerializableResource.new(@cart, each_serializer: CartSerializer)
+      render "manage/primary", locals: {
+        roaster: @roaster,
+        products: @products,
+        title: 'Products',
+        component: 'shop',
+        cart: @serialized_cart
+      }
     end
 
     private

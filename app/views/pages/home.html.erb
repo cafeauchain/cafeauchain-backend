@@ -1,2 +1,7 @@
 <% content_for :body_class, 'home' %>
-<%= react_component "home", props = {user: current_user, loggedIn: user_signed_in?} %>
+<%= react_component "main", props = {
+    loggedIn: user_signed_in?,
+    roaster: current_user.roaster_profile,
+    component: "home",
+    static: true
+} %>

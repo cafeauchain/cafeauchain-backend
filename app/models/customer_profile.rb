@@ -16,9 +16,9 @@
 #
 
 class CustomerProfile < ApplicationRecord
-
+  include Rails.application.routes.url_helpers
   belongs_to :owner, class_name: "User", foreign_key: "owner_id", optional: true
-  
+
   has_many :users
   has_many :addresses, as: :addressable, dependent: :destroy
 
@@ -26,5 +26,17 @@ class CustomerProfile < ApplicationRecord
   has_many :cards
 
   has_many :orders, through: :wholesale_profiles
+
+  has_one_attached :logo
+
+  def primary_address
+    self.addresses.find_by(primary_location: true)
+  end
+
+  def logo_url
+    if logo.attached?
+      url_for(logo)
+    end
+  end
 
 end
