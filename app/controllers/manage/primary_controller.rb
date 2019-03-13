@@ -17,9 +17,11 @@ module Manage
     end
 
     def inventory
+      lots = ActiveModel::SerializableResource.new(@roaster.lots, each_serializer: LotSerializer)
       render "manage/primary", locals: {
         roaster_profile_id: @roaster.slug,
         roaster: @roaster,
+        lots: lots,
         title: 'Inventory Dashboard',
         component: 'roaster_tools/inventory'
       }
