@@ -91,7 +91,7 @@ class RoasterProfile < ApplicationRecord
   end
 
   def logo_image_url
-    if logo.nil?
+    if logo.attached?
       url_for(logo)
     end
   end
