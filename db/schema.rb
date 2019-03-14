@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_11_001458) do
+ActiveRecord::Schema.define(version: 2019_03_13_170542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -203,6 +203,16 @@ ActiveRecord::Schema.define(version: 2019_03_11_001458) do
     t.index ["product_variant_id"], name: "index_order_items_on_product_variant_id"
   end
 
+  create_table "order_shipping_methods", force: :cascade do |t|
+    t.bigint "order_id"
+    t.bigint "shipping_method_id"
+    t.integer "final_rate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_shipping_methods_on_order_id"
+    t.index ["shipping_method_id"], name: "index_order_shipping_methods_on_shipping_method_id"
+  end
+
   create_table "orders", force: :cascade do |t|
     t.bigint "wholesale_profile_id"
     t.integer "status"
@@ -290,6 +300,19 @@ ActiveRecord::Schema.define(version: 2019_03_11_001458) do
     t.string "subdomain"
     t.string "stripe_account_id"
     t.index ["owner_id"], name: "index_roaster_profiles_on_owner_id"
+  end
+
+  create_table "shipping_methods", force: :cascade do |t|
+    t.bigint "roaster_profile_id"
+    t.integer "carrier"
+    t.string "account_id"
+    t.string "friendly_name"
+    t.string "easy_post_account_ref"
+    t.boolean "flat_rate", default: false
+    t.float "rate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["roaster_profile_id"], name: "index_shipping_methods_on_roaster_profile_id"
   end
 
   create_table "subscription_charges", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -432,8 +455,11 @@ ActiveRecord::Schema.define(version: 2019_03_11_001458) do
   add_foreign_key "lots", "crops"
   add_foreign_key "lots", "roaster_profiles"
   add_foreign_key "order_items", "orders"
+  add_foreign_key "order_shipping_methods", "orders"
+  add_foreign_key "order_shipping_methods", "shipping_methods"
   add_foreign_key "orders", "wholesale_profiles"
   add_foreign_key "products", "roaster_profiles"
+  add_foreign_key "shipping_methods", "roaster_profiles"
   add_foreign_key "subscription_charges", "subscriptions"
   add_foreign_key "subscription_items", "plans"
   add_foreign_key "subscription_items", "subscriptions"

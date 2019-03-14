@@ -27,7 +27,7 @@ gem 'mini_magick'
 gem 'mini_racer'
 gem 'stripe'
 gem 'groupdate'
-
+gem 'sendgrid-ruby'
 gem "kaminari"
 gem "pager_api"
 gem 'active_model_serializers', '~> 0.10.0'

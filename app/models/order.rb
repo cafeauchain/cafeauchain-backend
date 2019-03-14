@@ -22,6 +22,8 @@ class Order < ApplicationRecord
   has_one :customer_profile, through: :wholesale_profile
   has_many :order_items
   has_one :invoice
+  has_one :order_shipping_method
+  has_one :shipping_method, through: :order_shipping_method
 
   enum status: [:draft, :processing, :awaiting_payment, :paid_in_full, :fulfilled]
 
