@@ -27,5 +27,5 @@ class ShippingMethod < ApplicationRecord
   has_many :order_shipping_methods
   has_many :orders, through: :order_shipping_methods
 
-  enum carrier: [:pick_up, :self_delivery, :usps, :ups, :fedex :other]
+  enum carrier: [:pick_up, :self_delivery, :usps, :ups, :fedex, :other]
 end
