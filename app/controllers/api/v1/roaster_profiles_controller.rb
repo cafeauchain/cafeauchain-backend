@@ -33,7 +33,7 @@ module Api::V1
         end
         session[:roaster_profile_attributes] = nil
         StripeServices::EnrollBaseSubscription.initial_enroll(current_user.id)
-        render json: {"redirect":true,"redirect_url": roaster_profile_path(@roaster_profile_wizard.roaster_profile)}, status: 200
+        render json: {"redirect":true,"redirect_url": onboarding_lots_path()}, status: 200
       else
         redirect_to new_roaster_profile_path, alert: 'There were a problem when creating the Roaster Profile.'
       end

@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-12T18:24:31.597100 #6604]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-03-14T07:09:40.198626 #32132]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                     Prefix Verb   URI Pattern                                                                              Controller#Action
 #  upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #             api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -159,6 +159,9 @@
 #                        manage_subscription GET    /manage/subscription(.:format)                                                           manage/primary#subscription
 #                                manage_lots GET    /manage/lots(.:format)                                                                   manage/lots#index
 #                                 manage_lot GET    /manage/lots/:id(.:format)                                                               manage/lots#show
+#                         onboarding_profile GET    /onboarding/profile(.:format)                                                            onboarding/onboarding#profile
+#                            onboarding_lots GET    /onboarding/lots(.:format)                                                               onboarding/onboarding#lots
+#                  onboarding_roast_profiles GET    /onboarding/roast-profiles(.:format)                                                     onboarding/onboarding#roast_profiles
 #                         shop_profile_index GET    /shop/profile(.:format)                                                                  shop/profile#index
 #                     producer_profile_crops GET    /producers/:producer_profile_id/crops(.:format)                                          crops#index
 #                                            POST   /producers/:producer_profile_id/crops(.:format)                                          crops#create
@@ -307,6 +310,12 @@ Rails.application.routes.draw do
     get "wholesale", to: "primary#wholesale"
     get "subscription", to: "primary#subscription"
     resources :lots, only: [:show, :index]
+  end
+
+  namespace :onboarding do
+    get "profile", to: "onboarding#profile"
+    get "lots", to: "onboarding#lots"
+    get "roast-profiles", to: "onboarding#roast_profiles"
   end
 
   namespace :shop do
