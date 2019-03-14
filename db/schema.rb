@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_13_165948) do
+ActiveRecord::Schema.define(version: 2019_03_13_170542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -201,6 +201,16 @@ ActiveRecord::Schema.define(version: 2019_03_13_165948) do
     t.string "notes"
     t.index ["order_id"], name: "index_order_items_on_order_id"
     t.index ["product_variant_id"], name: "index_order_items_on_product_variant_id"
+  end
+
+  create_table "order_shipping_methods", force: :cascade do |t|
+    t.bigint "order_id"
+    t.bigint "shipping_method_id"
+    t.integer "final_rate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_order_shipping_methods_on_order_id"
+    t.index ["shipping_method_id"], name: "index_order_shipping_methods_on_shipping_method_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -445,6 +455,8 @@ ActiveRecord::Schema.define(version: 2019_03_13_165948) do
   add_foreign_key "lots", "crops"
   add_foreign_key "lots", "roaster_profiles"
   add_foreign_key "order_items", "orders"
+  add_foreign_key "order_shipping_methods", "orders"
+  add_foreign_key "order_shipping_methods", "shipping_methods"
   add_foreign_key "orders", "wholesale_profiles"
   add_foreign_key "products", "roaster_profiles"
   add_foreign_key "shipping_methods", "roaster_profiles"
