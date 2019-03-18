@@ -35,15 +35,21 @@ class ImportLots extends React.Component {
                         </div>
                     </Flex>
                     <Divider />
-                    <Button
-                        primary
-                        as="a"
-                        href="wholesale-signup"
-                        content="Wholesale Settings"
-                        floated="right"
-                        icon="right arrow"
-                        labelPosition="right"
-                    />
+                    <Flex spacing="20" spacebetween>
+                        <div>
+                            <Button as="a" href="lots" content="Add Lots" icon="left arrow" labelPosition="left" />
+                        </div>
+                        <div>
+                            <Button
+                                primary
+                                as="a"
+                                href="wholesale-signup"
+                                content="Wholesale Settings"
+                                icon="right arrow"
+                                labelPosition="right"
+                            />
+                        </div>
+                    </Flex>
                     <div style={{ clear: "both" }} />
                 </Segment>
             </React.Fragment>

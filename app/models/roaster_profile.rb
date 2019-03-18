@@ -36,7 +36,8 @@ class RoasterProfile < ApplicationRecord
   has_many :transactions
   has_many :lots
   has_many :crops, through: :lots
-  has_many :batches, through: :lots
+  has_many :inventory_items, through: :lots
+  has_many :batches, through: :inventory_items
   has_many :addresses, as: :addressable, dependent: :destroy
   has_many :products
   has_many :wholesale_profiles

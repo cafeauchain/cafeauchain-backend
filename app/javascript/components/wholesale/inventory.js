@@ -4,6 +4,7 @@ import { Header, Button } from "semantic-ui-react";
 
 /* eslint-disable */
 import Table from "shared/table";
+import Flex from "shared/flex";
 
 import tableDefs from "defs/tables/roastedInventory";
 
@@ -43,7 +44,7 @@ class RoastedInventory extends React.Component {
         const limitData = () => data.slice(0, limit);
         return (
             <F>
-                <Header as="h2" content="Roasted Inventory Levels" />
+                <Header as="h2" content="Roast Profile Inventory Levels" />
                 <Table tableDefs={tableDefs} data={limitData()} loading={loading} onClick={onClick} />
                 {data.length > limit && (
                     <F>
