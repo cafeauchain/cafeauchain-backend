@@ -32,6 +32,23 @@ module Onboarding
       }
     end
 
+    def wholesale_details
+      render "manage/primary", locals: {
+        roaster: @roaster,
+        title: 'Roaster Onboarding | Wholesale Details',
+        component: 'roaster_onboarding/wholesaleDetails'
+      }
+    end
+
+    def wholesale_signup
+      render "manage/primary", locals: {
+        roaster: @roaster,
+        owner: @roaster.owner,
+        title: 'Roaster Onboarding | Wholesale Signup',
+        component: 'roaster_onboarding/wholesaleSignup'
+      }
+    end
+
     private
 
     def set_roaster

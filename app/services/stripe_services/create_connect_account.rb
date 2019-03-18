@@ -5,11 +5,13 @@ module StripeServices
 
     #################################
     # The difference between owner and account opener is legal ownership - must have at least the owner to accept payments
-    # 
+    #
     # Params: {
     #   tax_id: 00-0000000,
     #   phone: "706-555-1212",
     #   owner: {
+    #     first_name: "",
+    #     last_name: "",
     #     dob: {
     #       day: "",
     #       month: "",
@@ -27,7 +29,8 @@ module StripeServices
     #     ssn_last_4: 1234
     #   }
     #   account_opener: {
-    #     name: "",
+    #     first_name: "",
+    #     last_name: "",
     #     dob: {
     #       day: "",
     #       month: "",
@@ -69,15 +72,15 @@ module StripeServices
           postal_code: @roaster_profile.primary_address.postal_code
         }
       }
-      first_name, last_name = @roaster_profile.owner.name.split(' ')
+      # first_name, last_name = @roaster_profile.owner.name.split(' ')
       owner = {
-        first_name: first_name,
-        last_name: last_name,
-        email: @roaster_profile.owner.email,
+        first_name: params[:owner][:first_name],
+        last_name: params[:owner][:last_name],
+        email: params[:owner][:email],
         ssn_last_4: params[:owner][:ssn_last_4]
         dob: {
-          day: params[:owner][:dob_day], 
-          month: params[:owner][:dob_month], 
+          day: params[:owner][:dob_day],
+          month: params[:owner][:dob_month],
           year: params[:owner][:dob_year]
         },
         address: {
@@ -94,10 +97,10 @@ module StripeServices
           title: params[:owner][:title]
         }
       }
-      ao_first_name, ao_last_name = params[:account_opener][:name].split(' ')
+      # ao_first_name, ao_last_name = params[:account_opener][:name].split(' ')
       account_opener = {
-        first_name: ao_first_name,
-        last_name: ao_last_name,
+        first_name: params[:account_opener][:first_name],
+        last_name: params[:account_opener][:last_name],
         email: params[:account_opener][:email],
         dob: {day: params[:account_opener][:dob_day], month: params[:account_opener][:dob_month], year: params[:account_opener][:dob_year]},
         address: {
@@ -114,7 +117,7 @@ module StripeServices
         }
 
       }
-      
+
       account = Stripe::Account.create({
         country: 'US',
         type: 'custom',

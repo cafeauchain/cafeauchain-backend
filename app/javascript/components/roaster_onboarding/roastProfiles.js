@@ -43,8 +43,8 @@ class ImportLots extends React.Component {
                             <Button
                                 primary
                                 as="a"
-                                href="wholesale-signup"
-                                content="Wholesale Settings"
+                                href="wholesale-details"
+                                content="Wholesale Details"
                                 icon="right arrow"
                                 labelPosition="right"
                             />

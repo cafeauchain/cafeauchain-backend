@@ -316,6 +316,8 @@ Rails.application.routes.draw do
     get "profile", to: "onboarding#profile"
     get "lots", to: "onboarding#lots"
     get "roast-profiles", to: "onboarding#roast_profiles"
+    get "wholesale-details", to: "onboarding#wholesale_details"
+    get "wholesale-signup", to: "onboarding#wholesale_signup"
   end
 
   namespace :shop do
