@@ -16,14 +16,10 @@ const fields = [
         inputLabel: "/lb",
         icon: "dollar"
     },
-    { name: "on_hand", label: "Pounds on Hand", inputLabel: "lbs", defaultValue: 0, hidden: true },
-    {
-        name: "roasted",
-        label: "Pounds Roasted (green weight)",
-        inputLabel: "lbs",
-        defaultValue: 0,
-        hidden: true
-    }
+    { name: "low_on_hand", label: "On Hand Par Level", inputLabel: "lbs" },
+    { name: "low_remaining", label: "Warehouse Par Level", inputLabel: "lbs" },
+    { name: "on_hand", label: "Pounds on Hand", inputLabel: "lbs", hidden: true },
+    { name: "roasted", label: "Pounds Roasted (green weight)", inputLabel: "lbs", hidden: true }
 ];
 
 export default fields;

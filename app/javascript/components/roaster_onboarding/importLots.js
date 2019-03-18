@@ -1,17 +1,22 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Segment, Button, Header, Step, Divider } from "semantic-ui-react";
 
 /* eslint-disable */
 import SingleLot from "roaster_tools/inventory/singleContract";
 import BulkLot from "roaster_tools/inventory/addLots";
+import OpenLots from "roaster_tools/openContracts";
 
 import steps from "roaster_onboarding/steps";
 import Flex from "shared/flex";
+
+import withContext from "contexts/withContext";
 /* eslint-enable */
 
 class ImportLots extends React.Component {
     state = {};
     render() {
+        const { lots } = this.props;
         return (
             <React.Fragment>
                 <Step.Group fluid items={steps("addlots")} />
@@ -37,6 +42,11 @@ class ImportLots extends React.Component {
                         </div>
                     </Flex>
                     <Divider />
+
+                    <OpenLots />
+
+                    <Divider />
+
                     <Button
                         primary
                         as="a"
@@ -45,6 +55,7 @@ class ImportLots extends React.Component {
                         floated="right"
                         icon="right arrow"
                         labelPosition="right"
+                        disabled={!lots.length}
                     />
                     <div style={{ clear: "both" }} />
                 </Segment>
@@ -52,5 +63,9 @@ class ImportLots extends React.Component {
         );
     }
 }
+const { array } = PropTypes;
+ImportLots.propTypes = {
+    lots: array
+};
 
-export default ImportLots;
+export default withContext(ImportLots);

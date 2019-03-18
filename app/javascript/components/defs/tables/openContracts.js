@@ -5,10 +5,10 @@ import { Money, AsNumber } from "shared/textFormatters";
 const tableDefinition = {
     fields: [
         { name: "name", namespace: "attributes", label: "Lot Name", width: 6 },
-        { name: "crop_name", namespace: "attributes", label: "Crop Name (Harvest Year)", width: 4 },
-        { name: "on_hand", namespace: "attributes", formatter: AsNumber, label: "In House" },
-        { name: "in_warehouse", namespace: "attributes", formatter: AsNumber, label: "Undelivered" },
-        { name: "total_amount_roasted", namespace: "attributes", formatter: AsNumber, label: "Roasted" },
+        { name: "on_hand", namespace: "attributes", formatter: AsNumber, label: "On Hand" },
+        { name: "low_on_hand", namespace: "attributes", formatter: AsNumber, label: "On Hand Par Level" },
+        { name: "in_warehouse", namespace: "attributes", formatter: AsNumber, label: "Warehouse" },
+        { name: "low_remaining", namespace: "attributes", formatter: AsNumber, label: "Warehouse Par Level" },
         { name: "pounds_of_coffee", namespace: "attributes", formatter: AsNumber, label: "Total Contract" },
         {
             name: "price_per_pound",

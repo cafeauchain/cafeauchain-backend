@@ -1,6 +1,6 @@
 import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Form, Button, Divider } from "semantic-ui-react";
+import { Form, Button, Divider, Message } from "semantic-ui-react";
 
 /* eslint-disable */
 import ProducerSelect from "shared/producers/producerSelect";
@@ -15,16 +15,19 @@ import { url as API_URL, roasterUrl as ROASTER_URL, requester } from "utilities/
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
+const defaults = {
+    producerId: "",
+    lotDetails: {},
+    hiddenFields: true,
+    btnLoading: false,
+    crop_name: "",
+    successMsg: ""
+};
+
 class SingleContract extends Component {
     constructor(props) {
         super(props);
-        console.log(props);
-        this.state = {
-            producerId: "",
-            lotDetails: {},
-            hiddenFields: true,
-            btnLoading: false
-        };
+        this.state = defaults;
         this.cropYears = this.getYears(4);
     }
 
@@ -33,11 +36,16 @@ class SingleContract extends Component {
     };
 
     handleInputChange = (event, { value, name, checked }) => {
-        let { lotDetails } = this.state;
+        let { lotDetails, crop_name } = this.state;
         lotDetails = { ...lotDetails };
         if (name === "") return;
         const val = value || checked;
         lotDetails[name] = val;
+        if (name === "harvest_year") {
+            lotDetails.name = crop_name + " " + value;
+            lotDetails.on_hand = 0;
+            lotDetails.roasted = 0;
+        }
         this.setState({ lotDetails });
     };
 
@@ -59,34 +67,21 @@ class SingleContract extends Component {
                 window.location.href = await respJSON.redirect_url;
             } else {
                 getData("lots");
-                const success = "The new lot was created successfully!";
+                const successMsg = "The new lot was created successfully!";
                 await this.setState({ btnLoading: false });
                 if (successClose) {
-                    successClose(success);
+                    successClose(successMsg);
                 } else if (closeModal) {
                     setTimeout(closeModal, 900);
+                } else {
+                    await this.setState({ successMsg });
+                    setTimeout(() => this.setState(defaults), 1200);
                 }
             }
         }
     };
 
     showHiddenFields = () => this.setState({ hiddenFields: false });
-
-    // // only called after successful submit
-    // getLotData = async id => {
-    //     const url = `${API_URL}/roasters/${id}/lots`;
-    //     const { updateContext, closeModal } = this.props;
-    //     const response = await fetch(url);
-    //     const { data } = await response.json();
-    //     if (data instanceof Error) {
-    //         // eslint-disable-next-line
-    //         console.log("there was an error", data.response);
-    //     } else {
-    //         // TODO Add success/error messaging before closing
-    //         await updateContext({ lots: data });
-    //         closeModal();
-    //     }
-    // };
 
     getYears = num => {
         const start = new Date().getFullYear();
@@ -100,7 +95,7 @@ class SingleContract extends Component {
     };
 
     render() {
-        const { producerId, lotDetails, hiddenFields, btnLoading } = this.state;
+        const { producerId, lotDetails, hiddenFields, btnLoading, successMsg } = this.state;
         return (
             <Form>
                 {/* eslint-disable */}
@@ -149,7 +144,7 @@ class SingleContract extends Component {
                                                 labelPosition={field.inputLabel ? "right" : undefined}
                                                 placeholder={field.placeholder}
                                                 onChange={this.handleInputChange}
-                                                defaultValue={field.defaultValue}
+                                                value={lotDetails[field.name]}
                                             />
                                         </div>
                                     ))}
@@ -157,6 +152,7 @@ class SingleContract extends Component {
                                 {hiddenFields && (
                                     <Button
                                         className="unstyled"
+                                        style={{ color: "green" }}
                                         content="Existing Quantities?"
                                         onClick={this.showHiddenFields}
                                         tabIndex={-1}
@@ -164,6 +160,7 @@ class SingleContract extends Component {
                                 )}
                                 <br />
                                 <br />
+                                {successMsg && <Message positive>{successMsg}</Message>}
                                 <Button fluid size="large" primary onClick={this.handleSubmit} loading={btnLoading}>
                                     Add Contract
                                 </Button>

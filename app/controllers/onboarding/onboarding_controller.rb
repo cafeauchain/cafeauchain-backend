@@ -14,8 +14,11 @@ module Onboarding
     end
 
     def lots
+      lots = @roaster.lots
+      @lots = ActiveModel::SerializableResource.new(lots, each_serializer: LotSerializer)
       render "manage/primary", locals: {
         roaster: @roaster,
+        lots: @lots,
         title: 'Roaster Onboarding | Import Lots',
         component: 'roaster_onboarding/importLots'
       }
