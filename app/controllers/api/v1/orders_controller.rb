@@ -24,7 +24,6 @@ module Api::V1
       if @order.update(status: :processing)
         @cart.cart_items.destroy_all
         OrderServices::ProcessOrder.process(@order.id, params[:payment_type])
-        NotificationServices::SendRoasterOrderEmail.send(@roaster, @cart.customer_profile, @order)
       end
       render json: {redirect_url: order_path(@order), redirect: true}, status: 200
     end
