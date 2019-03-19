@@ -15,14 +15,17 @@ const Input = props => {
         onChange,
         inputLabel,
         labelPosition = "left",
-        autoComplete = "off",
+        autoComplete = name,
         fluid = true,
         inputType = "input",
         options,
         dataArray,
         id,
+        allowLP,
         ...rest
     } = props;
+    const customInput = allowLP ? undefined : <input data-lpignore="true" />;
+    const selectFocus = e => e.target.setAttribute("autocomplete", name);
     return (
         <React.Fragment>
             {inputType === "input" && (
@@ -31,6 +34,7 @@ const Input = props => {
                     <SUInput
                         {...rest}
                         label={inputLabel}
+                        input={customInput}
                         placeholder={placeholder}
                         name={name}
                         onChange={onChange}
@@ -61,6 +65,7 @@ const Input = props => {
                     onChange={onChange}
                     options={options}
                     fluid={fluid}
+                    onFocus={selectFocus}
                 />
             )}
 
@@ -101,6 +106,7 @@ Input.propTypes = {
     options: array,
     inputType: string,
     dataArray: array,
+    allowLP: bool,
     id: string
 };
 

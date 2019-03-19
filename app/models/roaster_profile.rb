@@ -25,10 +25,6 @@
 #
 #  index_roaster_profiles_on_owner_id  (owner_id)
 #
-# Indexes
-#
-#  index_roaster_profiles_on_owner_id  (owner_id)
-#
 
 class RoasterProfile < ApplicationRecord
   include Rails.application.routes.url_helpers
@@ -40,12 +36,14 @@ class RoasterProfile < ApplicationRecord
   has_many :transactions
   has_many :lots
   has_many :crops, through: :lots
-  has_many :batches, through: :lots
+  has_many :inventory_items, through: :lots
+  has_many :batches, through: :inventory_items
   has_many :addresses, as: :addressable, dependent: :destroy
   has_many :products
   has_many :wholesale_profiles
   has_many :orders, through: :wholesale_profiles
   has_many :customer_profiles, through: :wholesale_profiles
+  has_many :shipping_methods
 
   belongs_to :owner, class_name: "User", foreign_key: "owner_id", optional: true
 
@@ -80,7 +78,7 @@ class RoasterProfile < ApplicationRecord
     subscription = Subscription.find(subscription_id)
     date_range = (subscription.next_bill_date - 30.days)..subscription.next_bill_date.end_of_day - 1.days
     batches = self.batches.where(roast_date: date_range)
-    pounds_roasted_in_period = batches.pluck(:starting_amount).sum
+    pounds_roasted_in_period = batches.pluck(:starting_amount).map{|sa| sa.to_f || 0}.sum
   end
 
   def set_owner
@@ -91,7 +89,7 @@ class RoasterProfile < ApplicationRecord
   end
 
   def logo_image_url
-    if logo.nil?
+    if logo.attached?
       url_for(logo)
     end
   end

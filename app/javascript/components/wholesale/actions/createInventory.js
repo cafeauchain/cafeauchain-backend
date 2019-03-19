@@ -117,7 +117,7 @@ class CreateInventory extends Component {
         const btnActive = noEmpties(details);
         return (
             <F>
-                <Header as="h2" content="Add Inventory Item" />
+                <Header as="h2" content="Add Roast Profile" />
                 <Form onSubmit={this.startSubmit}>
                     <ErrorHandler errors={errors} />
                     <Input

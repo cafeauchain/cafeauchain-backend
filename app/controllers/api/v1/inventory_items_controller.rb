@@ -3,7 +3,7 @@ class Api::V1::InventoryItemsController < ApplicationController
   before_action :set_lot, only: [:create]
 
   def index
-    @items = InventoryItem.all
+    @items = @roaster.inventory_items
     render json: @items, status: 200
   end
 

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Button, Form, Container } from "semantic-ui-react";
+import { Button, Form, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
 import IconHeader from "shared/IconHeader";
@@ -9,8 +9,8 @@ import IconHeader from "shared/IconHeader";
 const WizardWrapper = props => {
     const { prevFunc, prevText, nextFunc, nextText, renderErrors, children, headerText, loading } = props;
     return (
-        <Container text>
-            <Form style={{ margin: "4em 0" }}>
+        <Segment style={{ overflow: "hidden", paddingBottom: "2em" }}>
+            <Form>
                 <IconHeader iconName="coffee" header={headerText} />
                 {renderErrors()}
                 {children}
@@ -36,11 +36,11 @@ const WizardWrapper = props => {
                     />
                 )}
             </Form>
-        </Container>
+        </Segment>
     );
 };
 
-const { func, node, string } = PropTypes;
+const { func, node, string, bool } = PropTypes;
 WizardWrapper.propTypes = {
     prevText: string,
     prevFunc: func,
@@ -48,7 +48,8 @@ WizardWrapper.propTypes = {
     nextFunc: func,
     children: node,
     headerText: string,
-    renderErrors: func
+    renderErrors: func,
+    loading: bool
 };
 WizardWrapper.defaultProps = {
     prevText: "Previous Step",

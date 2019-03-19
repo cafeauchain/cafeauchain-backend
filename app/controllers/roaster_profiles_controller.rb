@@ -15,8 +15,10 @@ class RoasterProfilesController < ApplicationController
   end
 
   def show
+    roaster = ActiveModel::SerializableResource.new(@roaster_profile, serializer: RoasterSerializer)
     render "manage/primary", locals: {
       roaster: @roaster_profile,
+      profile: roaster,
       title: 'Roaster',
       component: 'roaster_profile/profile'
     }

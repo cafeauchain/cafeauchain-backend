@@ -48,7 +48,7 @@ class CropSelect extends Component {
             const { data } = responseJson;
             const crops = data.map(this.buildCrop);
             if (parentState !== undefined) {
-                this.setState({ crops, selected: {} }, parentState({ lotDetails: { crop_id: "" } }));
+                this.setState({ crops, selected: {} }, parentState({ lotDetails: { crop_id: "" }, crop_name: "" }));
             } else {
                 this.setState({ crops, selected: {} });
             }
@@ -69,7 +69,10 @@ class CropSelect extends Component {
             const { data } = responseJson;
             const crop = this.buildCrop(data);
             crops = [crop, ...crops];
-            this.setState({ crops, selected: crop }, parentState({ lotDetails: { crop_id: crop.id } }));
+            this.setState(
+                { crops, selected: crop },
+                parentState({ lotDetails: { crop_id: crop.id }, crop_name: crop.name })
+            );
         }
     };
 
@@ -88,9 +91,9 @@ class CropSelect extends Component {
         }
 
         if (parentState !== undefined) {
-            this.setState({ selected: crop }, parentState({ lotDetails: { crop_id: crop.id } }));
+            this.setState({ selected: crop }, parentState({ lotDetails: { crop_id: crop.id }, crop_name: crop.name }));
         } else {
-            this.setState({ selected: crop })
+            this.setState({ selected: crop });
         }
     };
 

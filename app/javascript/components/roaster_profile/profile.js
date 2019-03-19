@@ -1,6 +1,18 @@
 import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Image, Header, Divider } from "semantic-ui-react";
+import { Image, Header, Segment } from "semantic-ui-react";
+import * as Showdown from "showdown";
+
+/* eslint-disable */
+import { callMeDanger } from "utilities";
+
+import withContext from "contexts/withContext";
+/* eslint-enable */
+
+const LongText = ({ children }) => {
+    const converter = new Showdown.Converter();
+    return callMeDanger(converter.makeHtml(children), "div");
+};
 
 class Profile extends Component {
     constructor(props) {
@@ -9,77 +21,66 @@ class Profile extends Component {
     }
 
     render() {
-        const { roaster } = this.props;
         const {
-            name,
-            about,
-            address_1,
-            address_2,
-            city,
-            facebook,
-            // eslint-disable-next-line
-            id,
-            state,
-            twitter,
-            url,
-            zip_code,
-            img_url
-        } = roaster;
+            profile: {
+                attributes: {
+                    name,
+                    about,
+                    facebook,
+                    twitter,
+                    url,
+                    logo_image_url,
+                    primary_address: { street_1, street_2, city, state, postal_code }
+                }
+            }
+        } = this.props;
         // TODO This needs to look better.
-        // Also, we should consider a WYSIWYG or Markdown editor on edit
-        // so the about section can have multiple paragraphs
 
         return (
-            <div className="form roaster-wizard">
+            <Segment>
                 <Header as="h2">Roaster Profile</Header>
-                <div>
-                    <Header as="h3">
-                        <Image src={img_url} size="small" verticalAlign="middle" />
-                        {name}
-                    </Header>
-                </div>
+                <Header as="h3">
+                    <Image src={logo_image_url} size="huge" verticalAlign="middle" />
+                    {name}
+                </Header>
+                <Header as="h4">About Us</Header>
+                <LongText>{about}</LongText>
 
-                <Divider style={{ clear: "both" }} />
-                <div>
-                    <Header as="h4">About Us</Header>
-                    <p>{about}</p>
-
-                    <Header as="h4">Address</Header>
-                    <p>
-                        {address_1}
-                        <br />
-                        {address_2 && (
-                            <span>
-                                {address_2}
-                                <br />
-                            </span>
-                        )}
-                        {`${city}, ${state} ${zip_code}`}
-                    </p>
-
-                    <Header as="h4">Website</Header>
-                    <p>{url}</p>
-                    {facebook && (
-                        <F>
-                            <Header as="h4">Facebook</Header>
-                            <p>{facebook}</p>
-                        </F>
+                <Header as="h4">Address</Header>
+                <p>
+                    {street_1}
+                    <br />
+                    {street_2 && (
+                        <span>
+                            {street_2}
+                            <br />
+                        </span>
                     )}
-                    {twitter && (
-                        <F>
-                            <Header as="h4">Twitter</Header>
-                            <p>{twitter}</p>
-                        </F>
-                    )}
-                </div>
-            </div>
+                    {`${city}, ${state} ${postal_code}`}
+                </p>
+
+                <Header as="h4">Website</Header>
+                <p>{url}</p>
+                {facebook && (
+                    <F>
+                        <Header as="h4">Facebook</Header>
+                        <p>{facebook}</p>
+                    </F>
+                )}
+                {twitter && (
+                    <F>
+                        <Header as="h4">Twitter</Header>
+                        <p>{twitter}</p>
+                    </F>
+                )}
+            </Segment>
         );
     }
 }
 
 const { object } = PropTypes;
 Profile.propTypes = {
-    roaster: object.isRequired
+    profile: object.isRequired
 };
 
-export default Profile;
+export default withContext(Profile);

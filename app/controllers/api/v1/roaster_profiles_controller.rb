@@ -1,7 +1,7 @@
 module Api::V1
   class RoasterProfilesController < ApplicationController
-    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options]
-    before_action :set_roaster, only: [:update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options]
+    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options, :wholesale_signup]
+    before_action :set_roaster, only: [:update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options, :wholesale_signup]
 
     def validate_step
       current_step = params[:current_step]
@@ -24,8 +24,8 @@ module Api::V1
       if @roaster_profile_wizard.roaster_profile.save!
         logo = (params[:roaster_profile][:logo])
         roaster_profile = @roaster_profile_wizard.roaster_profile
-        roaster_profile.addresses.create!(location_label: "Office", primary_location: true, street_1: params[:roaster_profile][:address_1], street_2: params[:roaster_profile][:address_2],
-          city: params[:roaster_profile][:city], state: params[:roaster_profile][:state], postal_code: params[:roaster_profile][:zip_code], country: "United States of America")
+        roaster_profile.addresses.create!(location_label: "Office", primary_location: true, street_1: params[:roaster_profile][:street_1], street_2: params[:roaster_profile][:street_2],
+          city: params[:roaster_profile][:city], state: params[:roaster_profile][:state], postal_code: params[:roaster_profile][:postal_code], country: "United States of America")
         roaster_profile.users << current_user
         roaster_profile.set_owner
         if !logo.blank?
@@ -33,7 +33,7 @@ module Api::V1
         end
         session[:roaster_profile_attributes] = nil
         StripeServices::EnrollBaseSubscription.initial_enroll(current_user.id)
-        render json: {"redirect":true,"redirect_url": roaster_profile_path(@roaster_profile_wizard.roaster_profile)}, status: 200
+        render json: {"redirect":true,"redirect_url": onboarding_lots_path()}, status: 200
       else
         redirect_to new_roaster_profile_path, alert: 'There were a problem when creating the Roaster Profile.'
       end
@@ -103,6 +103,11 @@ module Api::V1
     def default_options
       @options = VariantOption.where(roaster_profile_id: @roaster_profile.id )
       render json: @options, status: 200
+    end
+
+    def wholesale_signup
+      @connect = StripeServices::CreateConnectAccount.account_create(@roaster_profile.id, params)
+      render json: @connect, status: 200
     end
 
     private
