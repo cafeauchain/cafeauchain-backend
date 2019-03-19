@@ -49,6 +49,30 @@ module Onboarding
       }
     end
 
+    def shipping
+      render "manage/primary", locals: {
+        roaster: @roaster,
+        title: 'Roaster Onboarding | Shipping',
+        component: 'roaster_onboarding/shipping'
+      }
+    end
+
+    def taxes
+      render "manage/primary", locals: {
+        roaster: @roaster,
+        title: 'Roaster Onboarding | Tax Tables',
+        component: 'roaster_onboarding/taxes'
+      }
+    end
+
+    def products
+      render "manage/primary", locals: {
+        roaster: @roaster,
+        title: 'Roaster Onboarding | Create Products',
+        component: 'roaster_onboarding/createProducts'
+      }
+    end
+
     private
 
     def set_roaster

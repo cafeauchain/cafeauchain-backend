@@ -322,6 +322,9 @@ Rails.application.routes.draw do
     get "roast-profiles", to: "onboarding#roast_profiles"
     get "wholesale-details", to: "onboarding#wholesale_details"
     get "wholesale-signup", to: "onboarding#wholesale_signup"
+    get "shipping", to: "onboarding#shipping"
+    get "taxes", to: "onboarding#taxes"
+    get "products", to: "onboarding#products"
   end
 
   namespace :shop do

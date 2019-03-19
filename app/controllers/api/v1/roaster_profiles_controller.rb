@@ -106,8 +106,16 @@ module Api::V1
     end
 
     def wholesale_signup
-      @connect = StripeServices::CreateConnectAccount.account_create(@roaster_profile.id, params)
-      render json: @connect, status: 200
+      begin
+        StripeServices::CreateConnectAccount.account_create(@roaster_profile.id, params)
+        render json: { redirect: true, redirect_url: onboarding_shipping_path }, status: 200
+      rescue StandardError => e
+        render json: {
+            error: e.http_status,
+            message: e.message,
+            code: e.code
+        }, status: e.http_status
+      end
     end
 
     private

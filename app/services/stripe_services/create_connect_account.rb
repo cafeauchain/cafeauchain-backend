@@ -63,8 +63,8 @@ module StripeServices
       }
       company = {
         name: @roaster_profile.name,
-        tax_id: params[:tax_id],
-        phone: params[:phone],
+        tax_id: params[:business][:tax_id],
+        phone: params[:business][:phone],
         address: {
           line1: @roaster_profile.primary_address.street_1,
           line2: @roaster_profile.primary_address.street_2,
@@ -87,7 +87,7 @@ module StripeServices
         },
         address: {
           line1: params[:owner][:address][:street_1],
-          line2: params[:owner][:street_2],
+          line2: params[:owner][:address][:street_2],
           city: params[:owner][:address][:city],
           state: params[:owner][:address][:state],
           postal_code: params[:owner][:address][:postal_code],
@@ -132,8 +132,8 @@ module StripeServices
         currency: 'usd',
         # account_holder_name: 'Jane Doe',
         account_holder_type: 'company',
-        routing_number: params[:routing],
-        account_number: params[:account]
+        routing_number: params[:business][:routing],
+        account_number: params[:business][:account]
       }
 
       account = Stripe::Account.create({
