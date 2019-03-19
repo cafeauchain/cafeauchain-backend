@@ -13,7 +13,7 @@
   </head>
   <body class="<%= yield(:body_class) %>">
     <div id="header-nav"></div>
-    <% if user_signed_in? && !current_roaster %>
+    <% if user_signed_in? && !current_roaster && current_user.roaster_profile.onboard_status == "onboard_completed" %>
         <!-- Roaster/Admin -->
         <div class="flex-parent roaster-container">
             <div class="flex-child roaster-container__sidebar">

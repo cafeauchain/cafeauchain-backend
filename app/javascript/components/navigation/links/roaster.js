@@ -1,9 +1,19 @@
 import React from "react";
 import { Button } from "semantic-ui-react";
 
-const links = () => {
+const links = profile => {
     return {
-        right: [{ as: "a", content: "Dashboard", key: "dashboard", href: "/manage/dashboard" }],
+        right:
+            profile.onboard_status === "onboard_completed"
+                ? [{ as: "a", content: "Dashboard", key: "dashboard", href: "/manage/dashboard" }]
+                : [
+                    {
+                        as: "a",
+                        content: "Complete Signup",
+                        key: profile.onboard_status,
+                        href: "/onboarding/" + profile.onboard_status
+                    }
+                ],
         buttons: [
             {
                 as: "a",
