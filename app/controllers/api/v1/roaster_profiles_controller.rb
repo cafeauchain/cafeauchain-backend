@@ -1,7 +1,7 @@
 module Api::V1
   class RoasterProfilesController < ApplicationController
-    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options, :wholesale_signup]
-    before_action :set_roaster, only: [:update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options, :wholesale_signup]
+    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options, :wholesale_signup, :update_onboard_status, :update_wholesale_status]
+    before_action :set_roaster, only: [:update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options, :wholesale_signup, :update_onboard_status, :update_wholesale_status]
 
     def validate_step
       current_step = params[:current_step]
@@ -33,6 +33,7 @@ module Api::V1
         end
         session[:roaster_profile_attributes] = nil
         StripeServices::EnrollBaseSubscription.initial_enroll(current_user.id)
+        roaster_profile.update(onboard_status: 'lots')
         render json: {"redirect":true,"redirect_url": onboarding_lots_path()}, status: 200
       else
         redirect_to new_roaster_profile_path, alert: 'There were a problem when creating the Roaster Profile.'
@@ -108,6 +109,7 @@ module Api::V1
     def wholesale_signup
       begin
         StripeServices::CreateConnectAccount.account_create(@roaster_profile.id, params)
+        @roaster_profile.update(onboard_status: "shipping")
         render json: { redirect: true, redirect_url: onboarding_shipping_path }, status: 200
       rescue StandardError => e
         render json: {
@@ -116,6 +118,22 @@ module Api::V1
             code: e.code
         }, status: e.http_status
       end
+    end
+
+    def update_onboard_status
+      if params[:status] == 'onboard_completed'
+        url = "/manage/dashboard"
+        @roaster_profile.update(onboard_status: params[:status], wholesale_status: 'enrolled')
+      else
+        url = "/onboarding/" + params[:status]
+        @roaster_profile.update(onboard_status: params[:status])
+      end
+      render json: { redirect: true, redirect_url: url }, status: 200
+    end
+
+    def update_wholesale_status
+      @roaster_profile.update(onboard_status: params[:status], wholesale_status: 'not_enrolled')
+      render json: { redirect: true, redirect_url: "/manage/dashboard" }, status: 200
     end
 
     private

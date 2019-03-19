@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Segment, Button, Header, Step, Divider } from "semantic-ui-react";
+import { Segment, Header, Step, Divider } from "semantic-ui-react";
 
 /* eslint-disable */
 import SingleLot from "roaster_tools/inventory/singleContract";
@@ -8,6 +8,8 @@ import BulkLot from "roaster_tools/inventory/addLots";
 import OpenLots from "roaster_tools/openContracts";
 
 import steps from "roaster_onboarding/steps";
+import OnboardFooter from "roaster_onboarding/footer";
+
 import Flex from "shared/flex";
 
 import withContext from "contexts/withContext";
@@ -16,7 +18,8 @@ import withContext from "contexts/withContext";
 class ImportLots extends React.Component {
     state = {};
     render() {
-        const { lots } = this.props;
+        const { lots = [], userId } = this.props;
+        const rightBtn = { text: "Set Up Roast Profiles", href: "roast-profiles", disabled: !lots.length };
         return (
             <React.Fragment>
                 <Step.Group fluid items={steps("addlots")} />
@@ -45,27 +48,16 @@ class ImportLots extends React.Component {
 
                     <OpenLots />
 
-                    <Divider />
-
-                    <Button
-                        primary
-                        as="a"
-                        href="roast-profiles"
-                        content="Set Up Roast Profiles"
-                        floated="right"
-                        icon="right arrow"
-                        labelPosition="right"
-                        disabled={!lots.length}
-                    />
-                    <div style={{ clear: "both" }} />
+                    <OnboardFooter left={{}} right={rightBtn} userId={userId} />
                 </Segment>
             </React.Fragment>
         );
     }
 }
-const { array } = PropTypes;
+const { array, oneOfType, number, string } = PropTypes;
 ImportLots.propTypes = {
-    lots: array
+    lots: array,
+    userId: oneOfType([number, string])
 };
 
 export default withContext(ImportLots);

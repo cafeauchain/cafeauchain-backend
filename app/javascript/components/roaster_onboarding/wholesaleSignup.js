@@ -101,16 +101,19 @@ class WholesaleSignup extends React.Component {
         setTimeout(async () => {
             if (response instanceof Error) {
                 this.setState({ errors: response.response.data, loading: false });
+                // eslint-disable-next-line
                 console.log(response);
             } else {
                 if (response.redirect) {
                     window.location.href = await response.redirect_url;
                 } else {
                     this.setState({ loading: false });
+                    // eslint-disable-next-line
                     console.log(response);
                 }
             }
         }, 400);
+        // eslint-disable-next-line
         console.log(this.state, this.props);
     };
 
@@ -125,6 +128,7 @@ class WholesaleSignup extends React.Component {
         } else {
             details[name] = val;
         }
+        // eslint-disable-next-line
         console.log(details);
         this.setState({ details });
     };

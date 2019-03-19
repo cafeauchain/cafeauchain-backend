@@ -1,18 +1,24 @@
 import React from "react";
-import { Segment, Button, Header, Divider, Step } from "semantic-ui-react";
+import PropTypes from "prop-types";
+import { Segment, Header, Step } from "semantic-ui-react";
 
 /* eslint-disable */
 import CreateInventory from "wholesale/actions/createInventory";
 import RoastProfileInventory from "wholesale/inventory";
 
+import OnboardFooter from "roaster_onboarding/footer";
 import steps from "roaster_onboarding/steps";
 
 import Flex from "shared/flex";
+import withContext from "contexts/withContext";
 /* eslint-enable */
 
-class ImportLots extends React.Component {
+class RoastProfiles extends React.Component {
     state = {};
     render() {
+        const { inventory = [], userId } = this.props;
+        const leftBtn = { text: "Add Lots", href: "lots" };
+        const rightBtn = { text: "Wholesale Details ", href: "wholesale-details", disabled: !inventory.length };
         return (
             <React.Fragment>
                 <Step.Group fluid items={steps("roastprofiles")} />
@@ -34,27 +40,17 @@ class ImportLots extends React.Component {
                             <RoastProfileInventory />
                         </div>
                     </Flex>
-                    <Divider />
-                    <Flex spacing="20" spacebetween>
-                        <div>
-                            <Button as="a" href="lots" content="Add Lots" icon="left arrow" labelPosition="left" />
-                        </div>
-                        <div>
-                            <Button
-                                primary
-                                as="a"
-                                href="wholesale-details"
-                                content="Wholesale Details"
-                                icon="right arrow"
-                                labelPosition="right"
-                            />
-                        </div>
-                    </Flex>
-                    <div style={{ clear: "both" }} />
+                    <OnboardFooter left={leftBtn} right={rightBtn} userId={userId} />
                 </Segment>
             </React.Fragment>
         );
     }
 }
 
-export default ImportLots;
+const { array, oneOfType, number, string } = PropTypes;
+RoastProfiles.propTypes = {
+    inventory: array,
+    userId: oneOfType([number, string])
+};
+
+export default withContext(RoastProfiles);

@@ -6,7 +6,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if resource.save
       sign_in(resource, scope: resource_name)
       if resource.roaster_profile.nil? && SubdomainRoutes.matches?(request)
-        resource.roaster_profile.onboard_status = "profile"
+        resource.roaster_profile.update(onboard_status: "profile")
         render json: {"redirect":true,"redirect_url": onboarding_profile_path}, status: 200
       else !SubdomainRoutes.matches?(request)
         cp = CustomerProfile.create(owner_id: resource.id)

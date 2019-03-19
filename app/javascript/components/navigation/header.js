@@ -10,6 +10,7 @@ import "./nav.scss";
 class Header extends Component {
     constructor(props) {
         super(props);
+        // eslint-disable-next-line
         console.log(props);
         this.state = {};
     }
