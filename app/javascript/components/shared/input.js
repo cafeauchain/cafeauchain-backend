@@ -15,7 +15,7 @@ const Input = props => {
         onChange,
         inputLabel,
         labelPosition = "left",
-        autoComplete = "off",
+        autoComplete = name,
         fluid = true,
         inputType = "input",
         options,
@@ -25,6 +25,7 @@ const Input = props => {
         ...rest
     } = props;
     const customInput = allowLP ? undefined : <input data-lpignore="true" />;
+    const selectFocus = e => e.target.setAttribute("autocomplete", name);
     return (
         <React.Fragment>
             {inputType === "input" && (
@@ -64,6 +65,7 @@ const Input = props => {
                     onChange={onChange}
                     options={options}
                     fluid={fluid}
+                    onFocus={selectFocus}
                 />
             )}
 

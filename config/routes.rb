@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-14T07:09:40.198626 #32132]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-03-18T21:12:57.817864 #60098]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                     Prefix Verb   URI Pattern                                                                              Controller#Action
 #  upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #             api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -48,6 +48,7 @@
 #                                            PUT    /api/v1/roasters/:roaster_profile_id/lots/:id(.:format)                                  api/v1/lots#update
 #                                            DELETE /api/v1/roasters/:roaster_profile_id/lots/:id(.:format)                                  api/v1/lots#destroy
 #               api_v1_roaster_profile_crops GET    /api/v1/roasters/:roaster_profile_id/crops(.:format)                                     api/v1/roaster_profiles#crops
+#    api_v1_roaster_profile_wholesale_signup POST   /api/v1/roasters/:roaster_profile_id/wholesale_signup(.:format)                          api/v1/roaster_profiles#wholesale_signup
 #             api_v1_roaster_profile_batches GET    /api/v1/roasters/:roaster_profile_id/batches(.:format)                                   api/v1/batches#index
 #                                            POST   /api/v1/roasters/:roaster_profile_id/batches(.:format)                                   api/v1/batches#create
 #           new_api_v1_roaster_profile_batch GET    /api/v1/roasters/:roaster_profile_id/batches/new(.:format)                               api/v1/batches#new
@@ -162,6 +163,8 @@
 #                         onboarding_profile GET    /onboarding/profile(.:format)                                                            onboarding/onboarding#profile
 #                            onboarding_lots GET    /onboarding/lots(.:format)                                                               onboarding/onboarding#lots
 #                  onboarding_roast_profiles GET    /onboarding/roast-profiles(.:format)                                                     onboarding/onboarding#roast_profiles
+#               onboarding_wholesale_details GET    /onboarding/wholesale-details(.:format)                                                  onboarding/onboarding#wholesale_details
+#                onboarding_wholesale_signup GET    /onboarding/wholesale-signup(.:format)                                                   onboarding/onboarding#wholesale_signup
 #                         shop_profile_index GET    /shop/profile(.:format)                                                                  shop/profile#index
 #                     producer_profile_crops GET    /producers/:producer_profile_id/crops(.:format)                                          crops#index
 #                                            POST   /producers/:producer_profile_id/crops(.:format)                                          crops#create
@@ -256,6 +259,7 @@ Rails.application.routes.draw do
           end
         end
         get :crops, to: 'roaster_profiles#crops'
+        post :wholesale_signup, to: 'roaster_profiles#wholesale_signup'
         resources :batches, :transactions, :inventory_items
         resources :products do
           member do

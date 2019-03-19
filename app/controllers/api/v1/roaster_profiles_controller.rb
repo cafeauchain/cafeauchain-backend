@@ -1,7 +1,7 @@
 module Api::V1
   class RoasterProfilesController < ApplicationController
-    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options]
-    before_action :set_roaster, only: [:update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options]
+    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options, :wholesale_signup]
+    before_action :set_roaster, only: [:update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options, :wholesale_signup]
 
     def validate_step
       current_step = params[:current_step]
@@ -103,6 +103,11 @@ module Api::V1
     def default_options
       @options = VariantOption.where(roaster_profile_id: @roaster_profile.id )
       render json: @options, status: 200
+    end
+
+    def wholesale_signup
+      @connect = StripeServices::CreateConnectAccount.account_create(@roaster_profile.id, params)
+      render json: @connect, status: 200
     end
 
     private

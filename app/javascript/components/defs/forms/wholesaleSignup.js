@@ -5,19 +5,22 @@ const fields = {
         { label: "Last Name", flex: "50" },
         { label: "Title" },
         { label: "Email" },
+        { label: "Phone" },
         { label: "Ownership Percentage", name: "percent_ownership", flex: "50" },
         { label: "Last 4 of SSN", name: "ssn_last_4", flex: "50" }
     ],
     dob: [
-        { label: "", name: "month", placeholder: "month", flex: "25" },
-        { label: "", name: "day", placeholder: "day", flex: "25" },
-        { label: "", name: "year", placeholder: "year", flex: "50" }
+        { label: "", name: "dob_month", placeholder: "month", flex: "25" },
+        { label: "", name: "dob_day", placeholder: "day", flex: "25" },
+        { label: "", name: "dob_year", placeholder: "year", flex: "50" }
     ],
     opener: [
         { label: "First Name", flex: "50" },
         { label: "Last Name", flex: "50" },
         { label: "Title" },
-        { label: "Email" }
+        { label: "Email" },
+        { label: "Phone" },
+        { label: "Last 4 of SSN", name: "ssn_last_4" }
     ]
 };
 

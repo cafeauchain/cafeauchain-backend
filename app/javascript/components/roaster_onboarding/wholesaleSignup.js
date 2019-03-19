@@ -85,9 +85,26 @@ class WholesaleSignup extends React.Component {
         const { target } = e;
         e.preventDefault();
         target.blur();
-        await this.setState({ loading: true });
+        // await this.setState({ loading: true });
         const { details } = this.state;
-        // console.log(this.state);
+        const { userId } = this.props;
+        const url = ROASTER_URL(userId) + "/wholesale_signup";
+        const response = await requester({ url, body: details });
+        setTimeout(async () => {
+            if (response instanceof Error) {
+                this.setState({ errors: response.response.data, loading: false });
+                console.log(response);
+            } else {
+                if (response.redirect) {
+                    window.location.href = await response.redirect_url;
+                } else {
+                    // await updateDate("orders");
+                    this.setState({ loading: false });
+                    console.log(response);
+                }
+            }
+        }, 400);
+        console.log(this.state, this.props);
     };
 
     handleInputChange = (event, { value, name, checked, ...rest }) => {
@@ -101,7 +118,7 @@ class WholesaleSignup extends React.Component {
         } else {
             details[name] = val;
         }
-        // console.log(details);
+        console.log(details);
         this.setState({ details });
     };
 
@@ -123,7 +140,7 @@ class WholesaleSignup extends React.Component {
                     </Dimmer>
                     <Header as="h2">Wholesale Signup</Header>
                     <Divider />
-                    <Form onSubmit={this.startSubmit}>
+                    <Form>
                         <Flex spacing="20">
                             <div flex="50" style={{ marginBottom: "1em" }}>
                                 <Input label="Tax ID" name="tax_id" value={tax_id} />
@@ -221,7 +238,7 @@ class WholesaleSignup extends React.Component {
                                         })}
                                     </Flex>
                                     <Addresses
-                                        details={owner.address}
+                                        details={account_opener.address}
                                         onChange={(e, item) =>
                                             this.handleInputChange(e, {
                                                 ...item,
@@ -238,7 +255,13 @@ class WholesaleSignup extends React.Component {
                         <Flex spacing="20" spacebetween>
                             <div />
                             <div>
-                                <Button content="Create Products" icon="right arrow" labelPosition="right" primary />
+                                <Button
+                                    content="Create Products"
+                                    icon="right arrow"
+                                    labelPosition="right"
+                                    primary
+                                    onClick={this.handleSubmit}
+                                />
                             </div>
                         </Flex>
                     </Form>
