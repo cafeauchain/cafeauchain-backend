@@ -10,11 +10,13 @@
 #  facebook          :string
 #  location          :string
 #  name              :string
+#  onboard_status    :integer
 #  slug              :string
 #  state             :string
 #  subdomain         :string
 #  twitter           :string
 #  url               :string
+#  wholesale_status  :integer
 #  zip_code          :string
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
