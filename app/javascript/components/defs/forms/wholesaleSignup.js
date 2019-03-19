@@ -1,5 +1,11 @@
 const fields = {
-    base: [{ name: "tax_id", label: "Tax ID", flex: "50" }, { label: "Phone", flex: "50", type: "phone" }],
+    base: [
+        { name: "tax_id", label: "Tax ID", flex: "50" },
+        { label: "Phone", flex: "50", type: "phone" },
+        { label: "Bank Routing Number", name: "routing", flex: "33", type: "phone" },
+        { label: "Bank Account Number", name: "account", flex: "33", type: "phone" },
+        { label: "Confirm Account Number", name: "account_confirm", flex: "33", type: "phone" }
+    ],
     owner: [
         { label: "First Name", flex: "50" },
         { label: "Last Name", flex: "50" },

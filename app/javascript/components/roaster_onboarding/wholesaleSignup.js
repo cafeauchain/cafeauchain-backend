@@ -127,7 +127,7 @@ class WholesaleSignup extends React.Component {
     render() {
         const {
             loading,
-            details: { tax_id, phone, owner, account_opener }
+            details: { owner, account_opener, ...details }
         } = this.state;
 
         const Input = this.renderInput;
@@ -141,14 +141,18 @@ class WholesaleSignup extends React.Component {
                     <Header as="h2">Wholesale Signup</Header>
                     <Divider />
                     <Form>
-                        <Flex spacing="20">
-                            <div flex="50" style={{ marginBottom: "1em" }}>
-                                <Input label="Tax ID" name="tax_id" value={tax_id} />
-                            </div>
-                            <div flex="50" style={{ marginBottom: "1em" }}>
-                                <Input label="Phone" value={phone} type="phone" />
-                            </div>
-                        </Flex>
+                        <Segment>
+                            <Flex spacing="10" wrap>
+                                {fields.base.map(({ name: fieldName, label, flex, ...rest }) => {
+                                    const name = fieldName || underscorer(label);
+                                    return (
+                                        <div key={name} flex={flex || "100"} style={{ marginBottom: "1em" }}>
+                                            <Input {...rest} label={label} name={name} value={details[name]} />
+                                        </div>
+                                    );
+                                })}
+                            </Flex>
+                        </Segment>
                         <br />
                         <br />
 

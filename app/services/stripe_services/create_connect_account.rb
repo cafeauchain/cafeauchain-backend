@@ -130,10 +130,10 @@ module StripeServices
         object: 'bank_account',
         country: 'US',
         currency: 'usd',
-        account_holder_name: 'Jane Doe',
+        # account_holder_name: 'Jane Doe',
         account_holder_type: 'company',
-        routing_number: '110000000',
-        account_number: '000123456789'
+        routing_number: params[:routing],
+        account_number: params[:account]
       }
 
       account = Stripe::Account.create({
