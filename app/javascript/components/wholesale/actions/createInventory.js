@@ -10,22 +10,8 @@ import { noEmpties } from "utilities";
 
 import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
 
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
-
-const Wrapper = props => (
-    <Context>
-        {ctx => (
-            <CreateInventory
-                {...props}
-                id={ctx.userId}
-                updateInventory={ctx.updateContext}
-                lotData={ctx.lots}
-                getCtxData={ctx.getData}
-            />
-        )}
-    </Context>
-);
 
 const defaultDetails = {
     quantity: 0,
@@ -33,7 +19,7 @@ const defaultDetails = {
     name: "",
     par_level: null
 };
-class CreateInventory extends Component {
+class CreateRoastProfiles extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -44,10 +30,8 @@ class CreateInventory extends Component {
     }
 
     componentDidMount() {
-        const { lotData, getCtxData } = this.props;
-        if (lotData === undefined) {
-            getCtxData("lots");
-        }
+        const { lots, getData } = this.props;
+        if (lots === undefined) getData("lots");
     }
 
     handleInputChange = (event, { value, name, checked }) => {
@@ -59,37 +43,21 @@ class CreateInventory extends Component {
         this.setState({ details, errors: [] });
     };
 
-    startSubmit = ev => {
+    handleSubmit = async ev => {
         ev.preventDefault();
-        this.setState({ btnLoading: true }, this.handleSubmit);
-    };
-
-    handleSubmit = async () => {
+        await this.setState({ btnLoading: true });
         const { details } = this.state;
-        const { id } = this.props;
-        const url = `${ROASTER_URL(id)}/inventory_items`;
+        const { userId, getData, closeModal } = this.props;
+        const url = `${ROASTER_URL(userId)}/inventory_items`;
         let body = { ...details };
-        let respJSON = await requester({ url, body });
-        if (respJSON instanceof Error) {
-            this.setState({ errors: respJSON.response.data, btnLoading: false });
+        let response = await requester({ url, body });
+        if (response instanceof Error) {
+            this.setState({ errors: response.response.data, btnLoading: false });
         } else {
-            if (respJSON.redirect) {
-                window.location.href = await respJSON.redirect_url;
+            if (response.redirect) {
+                window.location.href = await response.redirect_url;
             } else {
-                // eslint-disable-next-line
-                this.getData(id);
-            }
-        }
-    };
-
-    // only called after successful submit
-    // TODO, I dont think the try/catch will work like I want it to
-    getData = async id => {
-        const inventoryUrl = `${ROASTER_URL(id)}/inventory_items`;
-        const { updateInventory, closeModal } = this.props;
-        try {
-            const results = await Promise.all([fetcher(inventoryUrl)]);
-            Promise.all([updateInventory({ inventory: results[0] })]).then(() => {
+                await getData("inventory");
                 if (closeModal) {
                     closeModal();
                 } else {
@@ -98,10 +66,7 @@ class CreateInventory extends Component {
                         details: defaultDetails
                     });
                 }
-            });
-        } catch (e) {
-            // eslint-disable-next-line
-            console.log(e);
+            }
         }
     };
 
@@ -109,9 +74,9 @@ class CreateInventory extends Component {
         lots.map(({ id, attributes: { name } }) => ({ value: id, text: name, key: id, id, name }));
 
     render() {
-        let { lotData } = this.props;
-        if (lotData === undefined) lotData = [];
-        const lotOptions = this.buildLotOptions(lotData);
+        let { lots } = this.props;
+        if (lots === undefined) lots = [];
+        const lotOptions = this.buildLotOptions(lots);
         const { details, btnLoading, errors } = this.state;
         const isLotSelected = details.lot_id;
         const btnActive = noEmpties(details);
@@ -129,18 +94,37 @@ class CreateInventory extends Component {
                     />
                     {isLotSelected && (
                         <F>
-                            <Input name="name" label="Roast Profile" onChange={this.handleInputChange} />
-                            <Input name="par_level" label="Par Level" onChange={this.handleInputChange} />
+                            <Input
+                                name="name"
+                                label="Roast Profile"
+                                onChange={this.handleInputChange}
+                                autoComplete="off"
+                            />
+                            <Input
+                                name="par_level"
+                                label="Par Level"
+                                onChange={this.handleInputChange}
+                                type="number"
+                                autoComplete="off"
+                            />
                             <Input
                                 name="quantity"
                                 label="Starting Quantity"
                                 onChange={this.handleInputChange}
                                 defaultValue={0}
+                                type="number"
+                                autoComplete="off"
                             />
 
-                            <Button size="small" primary fluid loading={btnLoading} disabled={!btnActive}>
-                                Create Inventory Item
-                            </Button>
+                            <Button
+                                size="small"
+                                primary
+                                fluid
+                                loading={btnLoading}
+                                disabled={!btnActive}
+                                onClick={this.handleSubmit}
+                                content="Create Roast Profile"
+                            />
                         </F>
                     )}
                 </Form>
@@ -150,12 +134,11 @@ class CreateInventory extends Component {
 }
 
 const { oneOfType, string, number, func, array } = PropTypes;
-CreateInventory.propTypes = {
-    id: oneOfType([number, string]),
+CreateRoastProfiles.propTypes = {
+    userId: oneOfType([number, string]),
     closeModal: func,
-    updateInventory: func,
-    lotData: array,
-    getCtxData: func
+    lots: array,
+    getData: func
 };
 
-export default Wrapper;
+export default withContext(CreateRoastProfiles);
