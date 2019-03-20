@@ -47,7 +47,7 @@ module ShippingServices
         reference: "#{@carrier} #{@roaster.name}".parameterize,
         credentials: @credentials
       )
-      @roaster.shipping_methods.create(carrier: @carrier, easy_post_account_ref: carrier_acct.id, friendly_name: @carrier.humanize, account_id: @account_id)
+      shipping_method = @roaster.shipping_methods.create(carrier: @carrier, easy_post_account_ref: carrier_acct.id, friendly_name: @carrier.humanize, account_id: @account_id)
     end
 
   end
