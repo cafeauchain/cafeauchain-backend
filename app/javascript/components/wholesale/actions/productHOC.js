@@ -158,8 +158,10 @@ function withProductForm(WrappedComponent) {
 
         resetForm = () => {
             let defaults = { ...defaultDetails };
+            const { defaults: ctxDefaults } = this.context;
             defaults.composition = [compositionDefault()];
-            defaults.variants = [variantsDefault()];
+            defaults.variants = ctxDefaults.size.map(variantsDefault);
+            defaults.product_options = ctxDefaults.options;
             this.setState({ details: defaults });
         };
 
