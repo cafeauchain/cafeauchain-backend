@@ -42,7 +42,14 @@ class AcceptDelivery extends Component {
     }
 
     parentState = obj => {
-        this.setState(obj);
+        if (obj.lotDetails) {
+            let { lotDetails } = this.state;
+            const { lotDetails: lotDetailsFromChild, ...rest } = obj;
+            lotDetails = { ...lotDetails, ...lotDetailsFromChild };
+            this.setState({ lotDetails, ...rest });
+        } else {
+            this.setState(obj);
+        }
     };
 
     handleInputChange = (event, { value, name, checked }) => {
