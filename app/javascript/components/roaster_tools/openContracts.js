@@ -32,12 +32,14 @@ class OpenContracts extends Component {
         }
     }
     render() {
-        let { lots = [] } = this.props;
+        let { lots = [], limit = 5 } = this.props;
         const { loading } = this.props;
         const onClick = (e, item) => {
             window.location = `/manage/lots/${item.id}`;
         };
-        const limit = 5;
+        if (limit === "none") {
+            limit = undefined;
+        }
         const limitLots = () => lots.slice(0, limit);
         return (
             <F>
@@ -56,11 +58,12 @@ class OpenContracts extends Component {
     }
 }
 
-const { array, bool, func } = PropTypes;
+const { array, bool, func, oneOfType, number, string } = PropTypes;
 OpenContracts.propTypes = {
     lots: array,
     loading: bool,
-    getCtxData: func
+    getCtxData: func,
+    limit: oneOfType([number, string])
 };
 
 export default Wrapper;

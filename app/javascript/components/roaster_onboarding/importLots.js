@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
 import { Segment, Header, Step, Divider } from "semantic-ui-react";
 
@@ -21,13 +21,18 @@ class ImportLots extends React.Component {
         const { lots = [], userId } = this.props;
         const rightBtn = { text: "Set Up Roast Profiles", href: "roast-profiles", disabled: !lots.length };
         return (
-            <React.Fragment>
+            <F>
                 <Step.Group fluid items={steps("addlots")} />
                 <Segment>
                     <Header as="h1" content="Import Lots" />
                     <p>
-                        Please add at least one lot. You can add lots individually or in bulk. If you want to user the
-                        Bulk Lot Importer, you can use this template to fill out your lot information.
+                        <F>
+                            Please add at least one lot. You can add lots individually or in bulk. If you want to user
+                            the Bulk Lot Importer, you can use this
+                        </F>
+                        {" "}
+                        <a href="/assets/csvs/lot_import_template.csv">template</a>
+                        <F> to fill out your lot information.</F>
                     </p>
                     <Flex spacing="20">
                         <div flex="50">
@@ -46,11 +51,11 @@ class ImportLots extends React.Component {
                     </Flex>
                     <Divider />
 
-                    <OpenLots />
+                    <OpenLots limit="none" />
 
                     <OnboardFooter left={{}} right={rightBtn} userId={userId} />
                 </Segment>
-            </React.Fragment>
+            </F>
         );
     }
 }

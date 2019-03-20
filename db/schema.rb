@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_19_205644) do
+ActiveRecord::Schema.define(version: 2019_03_20_131538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -179,6 +179,7 @@ ActiveRecord::Schema.define(version: 2019_03_19_205644) do
     t.string "name"
     t.integer "low_on_hand"
     t.integer "low_remaining"
+    t.integer "roasted_on_import"
     t.index ["created_at"], name: "index_lots_on_created_at"
     t.index ["crop_id"], name: "index_lots_on_crop_id"
     t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"

@@ -22,12 +22,15 @@ import csvToJSON from "../../utilities/csvToJSON";
 const keys = [
     { name: "key_producer_name" },
     { name: "key_crop_name" },
+    { name: "key_harvest_year" },
+    { name: "key_name" },
+    { name: "key_label" },
     { name: "key_pounds_on_contract" },
     { name: "key_pounds_on_hand" },
     { name: "key_pounds_roasted_to_date" },
-    { name: "key_harvest_year" },
     { name: "key_price_per_pound" },
-    { name: "key_total_contract_value" }
+    { name: "key_on_hand_par_level" },
+    { name: "key_warehouse_par_level" }
 ];
 
 class AddLots extends Component {
