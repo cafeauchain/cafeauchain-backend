@@ -331,7 +331,6 @@ Rails.application.routes.draw do
     get "wholesale-details", to: "onboarding#wholesale_details"
     get "wholesale-signup", to: "onboarding#wholesale_signup"
     get "shipping", to: "onboarding#shipping"
-    get "taxes", to: "onboarding#taxes"
     get "products", to: "onboarding#products"
   end
 

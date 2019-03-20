@@ -53,7 +53,7 @@ class RoasterProfile < ApplicationRecord
 
   delegate :subscription, to: :owner
 
-  enum onboard_status: [:profile, :lots, :"roast-profiles", :"wholesale-details", :"wholesale-signup", :shipping, :taxes, :products, :onboard_completed]
+  enum onboard_status: [:profile, :lots, :"roast-profiles", :"wholesale-details", :"wholesale-signup", :shipping, :products, :onboard_completed]
   enum wholesale_status: [:not_enrolled, :started, :enrolled]
 
   validates :subdomain,

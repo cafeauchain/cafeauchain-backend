@@ -12,12 +12,6 @@ const steps = active => [
         active: active === "shipping"
     },
     {
-        key: "taxes",
-        icon: "percent",
-        title: "Tax Tables",
-        active: active === "taxes"
-    },
-    {
         key: "products",
         icon: "coffee",
         title: "Products",

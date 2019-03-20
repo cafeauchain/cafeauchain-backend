@@ -39,7 +39,7 @@ class CreateProducts extends React.Component {
         const { userId, products = [], defaults = {} } = this.props;
         const size = defaults && defaults.size ? defaults.size : [];
         const options = defaults && defaults.options ? defaults.options : [];
-        const leftBtn = { text: "Taxes", href: "taxes" };
+        const leftBtn = { text: "Shipping", href: "shipping" };
         const rightBtn = { text: "Dashboard", href: "onboard_completed", disabled: !products.length };
         return (
             <React.Fragment>

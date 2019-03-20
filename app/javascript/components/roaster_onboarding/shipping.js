@@ -14,7 +14,7 @@ import withContext from "contexts/withContext";
 class Shipping extends React.Component {
     state = {};
     render() {
-        const rightBtn = { text: "Tax Tables", href: "taxes" };
+        const rightBtn = { text: "Products", href: "products" };
         const { userId } = this.props;
         return (
             <React.Fragment>

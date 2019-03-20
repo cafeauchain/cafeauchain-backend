@@ -57,14 +57,6 @@ module Onboarding
       }
     end
 
-    def taxes
-      render "manage/primary", locals: {
-        roaster: @roaster,
-        title: 'Roaster Onboarding | Tax Tables',
-        component: 'roaster_onboarding/taxes'
-      }
-    end
-
     def products
       render "manage/primary", locals: {
         roaster: @roaster,
