@@ -3,7 +3,7 @@ class Api::V1::ProductsController < ApplicationController
   before_action :set_product, only: [:update, :add_images]
 
   def index
-    @products = Product.all
+    @products = Product.where(roaster_profile: @roaster)
     render json: @products, status: 200
   end
 
