@@ -6,6 +6,7 @@ import { Segment, Header, Step, Container } from "semantic-ui-react";
 import CreateProduct from "wholesale/actions/createProduct";
 import CreateDefaultSizes from "wholesale/actions/createDefaultSizes";
 import CreateDefaultOptions from "wholesale/actions/createDefaultOptions";
+import Products from "wholesale/productInventory";
 
 import steps from "roaster_onboarding/wholesaleSteps";
 import OnboardFooter from "roaster_onboarding/footer";
@@ -59,6 +60,7 @@ class CreateProducts extends React.Component {
                         <React.Fragment>
                             <Header as="h2" content="Create Products" />
                             <CreateProduct />
+                            <Products />
                             <br />
                             <OnboardFooter left={leftBtn} right={rightBtn} userId={userId} />
                         </React.Fragment>
