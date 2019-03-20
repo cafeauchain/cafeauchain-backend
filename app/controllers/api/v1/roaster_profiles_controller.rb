@@ -101,10 +101,10 @@ module Api::V1
       end
     end
 
-    def default_options
-      @options = VariantOption.where(roaster_profile_id: @roaster_profile.id )
-      render json: @options, status: 200
-    end
+    # def default_options
+    #   @options = VariantOption.where(roaster_profile_id: @roaster_profile.id )
+    #   render json: @options, status: 200
+    # end
 
     def wholesale_signup
       begin

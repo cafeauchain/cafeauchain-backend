@@ -39,6 +39,7 @@ const Variants = ({ variants, fields, handleChange, btn: RemoveButton }) => (
                                     onChange={handleChange}
                                     value={value}
                                     action={showRemoveBtn}
+                                    allowLP
                                     {...rest}
                                 >
                                     <input />

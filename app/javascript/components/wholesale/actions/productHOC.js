@@ -70,7 +70,10 @@ function withProductForm(WrappedComponent) {
             let { details } = this.state;
             details = { ...details };
             if (name === "") return;
-            const val = value || checked;
+            let val = value || checked;
+            if (val === undefined) {
+                val = "";
+            }
             if (rest["data-object"] && rest["data-itemid"]) {
                 let temp = details[rest["data-object"]].find(({ id }) => id === rest["data-itemid"]);
                 temp[name] = val;

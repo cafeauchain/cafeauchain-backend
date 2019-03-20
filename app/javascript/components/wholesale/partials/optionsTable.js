@@ -89,6 +89,7 @@ class Options extends Component {
                     onChange={this.handleOptionInputChange}
                     value={addedOption}
                     onKeyPress={this.handleEnter}
+                    allowLP
                 >
                     <input data-lpignore="true" />
                     <Button type="button" color="blue" content="Add Option" onClick={this.addOption} />

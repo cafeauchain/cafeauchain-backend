@@ -18,12 +18,8 @@ import fields from "defs/forms/createProduct";
 
 import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
-
-const Wrapper = props => (
-    <Context>{ctx => <CreateProduct {...props} userId={ctx.userId} inventory={ctx.inventory} />}</Context>
-);
 
 class CreateProduct extends Component {
     state = {
@@ -42,7 +38,7 @@ class CreateProduct extends Component {
             .then(response => response.json())
             .then(data => {
                 const items = data.reduce((obj, item) => ({ ...obj, [item.title.toLowerCase()]: item.options }), {});
-                buildDefaultVariants(items.sizes);
+                buildDefaultVariants(items.size);
                 buildDefaultOptions(items.options);
             });
     }
@@ -115,6 +111,7 @@ class CreateProduct extends Component {
                         inputType={inputType}
                         onChange={handleInputChange}
                         value={details[name]}
+                        autoComplete="off"
                     />
                 ))}
                 <FileUpload
@@ -184,4 +181,4 @@ CreateProduct.propTypes = {
     successClose: func
 };
 
-export default withProductForm(Wrapper);
+export default withContext(withProductForm(CreateProduct));
