@@ -31,7 +31,7 @@ class Api::V1::ProductsController < ApplicationController
   end
 
   def add_images
-    params[:product_images].each {|pi| @product.product_images.attach(pi) }
+    params[:product_images].each {|pi| ActiveStorageServices::ImageAttachment.new(pi, @product.id, "Product", "product_images").callAsFile('medium') }
   end
 
   private

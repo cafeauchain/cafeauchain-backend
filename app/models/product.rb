@@ -51,9 +51,7 @@ class Product < ApplicationRecord
   end
 
   def product_image_urls
-    urls = []
-    product_images.each{ |pi| urls << url_for(pi) }
-    return urls
+    self.product_images.map{ |pi| url_for(pi) }
   end
 
 end
