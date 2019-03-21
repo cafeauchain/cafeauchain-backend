@@ -16,17 +16,17 @@ class Header extends Component {
     }
 
     render() {
-        const { cart, userId, roaster: roasterProfile } = this.props;
-        const links = userId ? (cart ? customer({ cart }) : roaster(roasterProfile)) : base;
+        const { cart, roaster: roasterProfile, loggedIn } = this.props;
+        const links = loggedIn ? (cart ? customer({ cart }) : roaster(roasterProfile)) : base;
         const { right = [], buttons } = links;
         return <NavBar rightItems={right} buttons={buttons} />;
     }
 }
 
-const { object, oneOfType, number, string } = PropTypes;
+const { object, bool } = PropTypes;
 Header.propTypes = {
     cart: object,
-    userId: oneOfType([number, string]),
+    loggedIn: bool,
     roaster: object
 };
 

@@ -16,7 +16,7 @@ const Main = ({ component, ...rest }) => (
             <React.Fragment>
                 <DynamicLoader resolve={() => import("./" + component)} {...rest} />
                 <NavPortal mountNode="header-nav">
-                    <HeaderNav />
+                    <HeaderNav {...rest} />
                 </NavPortal>
             </React.Fragment>
         )}
