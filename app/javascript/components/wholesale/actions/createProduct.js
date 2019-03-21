@@ -120,7 +120,7 @@ class CreateProduct extends Component {
                     id="product_images"
                     name="product_images"
                     handleChange={handleInputChange}
-                    multiple
+                    multiple={5}
                     files={details["product_images"]}
                 />
 

@@ -10,7 +10,7 @@ import Flex from "shared/flex";
 /* eslint-enable */
 
 const Images = ({ content, ...rest }) => {
-    return content.map(url => <Image size="mini" src={url} key={url} {...rest} inline />);
+    return content.map(url => <Image size="tiny" src={url} key={url} {...rest} inline rounded style={{ margin: 4 }} />);
 };
 
 const ArrayHandler = ({ content = [] }) => {
@@ -80,7 +80,7 @@ const tableDefinition = {
             namespace: "attributes",
             formatter: Images,
             label: "Images",
-            style: { minWidth: 200 }
+            style: { minWidth: 200, whiteSpace: "nowrap" }
         }
     ],
     props: {
