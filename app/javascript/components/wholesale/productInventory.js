@@ -8,7 +8,7 @@ import Modal from "shared/modal";
 
 import tableDefs from "defs/tables/products";
 
-import EditProduct from "wholesale/actions/editProduct";
+import CreateProduct from "wholesale/actions/createProduct";
 
 import withContext from "contexts/withContext";
 /* eslint-enable */
@@ -42,7 +42,7 @@ class ProductInventory extends React.Component {
                         icon="edit"
                         isOpen={isOpen}
                         closeModal={this.closeModal}
-                        component={<EditProduct current={current} />}
+                        component={<CreateProduct current={current} />}
                     />
                 )}
                 <Header as="h2" content="Products" />

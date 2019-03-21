@@ -13,7 +13,7 @@ class Options extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selected: [],
+            selected: props.options,
             addedOption: ""
         };
     }

@@ -1,16 +1,15 @@
 import React from "react";
-// import PropTypes from "prop-types";
 import { Image } from "semantic-ui-react";
-// import * as Showdown from "showdown";
+
 /* eslint-disable */
-import { Money, AsNumber, Truncate, ArrayToString, Weights } from "shared/textFormatters";
-import { humanize, callMeDanger } from "utilities";
+import { Money, ArrayToString, Weights } from "shared/textFormatters";
+import { humanize } from "utilities";
 
 import Flex from "shared/flex";
 /* eslint-enable */
 
 const Images = ({ content, ...rest }) => {
-    return content.map(url => <Image size="tiny" src={url} key={url} {...rest} inline rounded style={{ margin: 4 }} />);
+    return content.map(url => <Image size="tiny" src={url.url} key={url.url} {...rest} inline rounded style={{ margin: 4 }} />);
 };
 
 const ArrayHandler = ({ content = [] }) => {
@@ -25,25 +24,15 @@ const VariantHandler = props => {
             <div key={item.id}>
                 <Flex spacing="10" spacebetween>
                     <span>
-                        <Weights>{item.custom_options.size}</Weights>
+                        <Weights>{item.size}</Weights>
                     </span>
-                    <Money type="positive">{item.price_in_cents / 100}</Money>
+                    <Money type="positive">{item.price_in_dollars}</Money>
                 </Flex>
             </div>
         );
     });
     return strings;
 };
-
-// const LongText = props => {
-//     const converter = new Showdown.Converter();
-//     const { content } = props;
-//     return <div style={{ maxWidth: 400, minWidth: 400 }}>{callMeDanger(converter.makeHtml(content))}</div>;
-// };
-// const { string } = PropTypes;
-// LongText.propTypes = {
-//     content: string
-// };
 
 const tableDefinition = {
     fields: [
@@ -56,18 +45,12 @@ const tableDefinition = {
             style: { minWidth: 200 }
         },
         {
-            name: "product_variants",
+            name: "variants",
             namespace: "attributes",
             formatter: VariantHandler,
             label: "Sizes",
             style: { minWidth: 120 }
         },
-        // {
-        //     name: "description",
-        //     namespace: "attributes",
-        //     formatter: LongText,
-        //     style: { minWidth: 400 }
-        // },
         {
             name: "composition",
             namespace: "attributes",

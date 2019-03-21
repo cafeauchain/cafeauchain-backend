@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form, Button, Segment } from "semantic-ui-react";
+import { Form, Button, Segment, Image } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
@@ -31,16 +31,20 @@ class CreateProduct extends Component {
             inventory,
             getCtxData,
             userId,
-            funcs: { buildDefaultVariants, buildDefaultOptions }
+            funcs: { buildDefaultVariants, buildDefaultOptions },
+            current
         } = this.props;
         if (inventory === undefined) getCtxData("inventory");
-        fetch(ROASTER_URL(userId) + "/default_options")
-            .then(response => response.json())
-            .then(data => {
-                const items = data.reduce((obj, item) => ({ ...obj, [item.title.toLowerCase()]: item.options }), {});
-                buildDefaultVariants(items.size);
-                buildDefaultOptions(items.options);
-            });
+        if( !current ){
+            fetch(ROASTER_URL(userId) + "/default_options")
+                .then(response => response.json())
+                .then(data => {
+                    const items = data.reduce((obj, item) => ({ ...obj, [item.title.toLowerCase()]: item.options }), {});
+                    buildDefaultVariants(items.size);
+                    buildDefaultOptions(items.options);
+                });
+        }
+        
     }
 
     handleSubmit = async ev => {
@@ -85,8 +89,14 @@ class CreateProduct extends Component {
         }
     };
 
+    onImageClick = (e,x,y,z) => {
+        // TODO Add in ability to delete active_storage_attachement and active_storage_blob by id
+        // eslint-disable-next-line
+        console.log( e.target, e.currentTarget, e.target.dataset.id);
+    }
+
     render() {
-        const { inventory = [], funcs, details } = this.props;
+        const { inventory = [], funcs, details, current } = this.props;
         const { btnLoading, errors } = this.state;
         const {
             handleInputChange,
@@ -114,15 +124,36 @@ class CreateProduct extends Component {
                         autoComplete="off"
                     />
                 ))}
-                <FileUpload
-                    fileType="fileImage"
-                    label="Upload Product Images"
-                    id="product_images"
-                    name="product_images"
-                    handleChange={handleInputChange}
-                    multiple={5}
-                    files={details["product_images"]}
-                />
+                {current && details.product_image_urls.map( url => 
+                    (
+                        <React.Fragment key={url.id}>
+                            <Image src={url.url} size="small" data-id={url.id} rounded inline style={{ margin: 4 }} onClick={this.onImageClick} />
+                            {details.product_image_urls.length < 5 && (
+                                <FileUpload
+                                    fileType="fileImage"
+                                    label="Upload Product Images"
+                                    id="product_images"
+                                    name="product_images"
+                                    handleChange={handleInputChange}
+                                    multiple={5}
+                                    files={details["product_images"] || []}
+                                />
+                            )}
+                        </React.Fragment>
+                    )
+                )}
+                {!current && (
+                    <FileUpload
+                        fileType="fileImage"
+                        label="Upload Product Images"
+                        id="product_images"
+                        name="product_images"
+                        handleChange={handleInputChange}
+                        multiple={5}
+                        files={details["product_images"] || []}
+                    />
+                )}
+                
 
                 <Segment>
                     <CompositionTable
@@ -132,9 +163,8 @@ class CreateProduct extends Component {
                         handleChange={handleInputChange}
                         btn={removeButton}
                     />
-                    <Button type="button" color="blue" content="Add Product" onClick={addInventoryItem} />
+                    <Button type="button" color="blue" content="Add Roast Profile" onClick={addInventoryItem} />
                 </Segment>
-
                 <Segment style={{ background: "#efefef" }}>
                     <Flex spacing="10">
                         <div flex="fill">
@@ -156,7 +186,6 @@ class CreateProduct extends Component {
                         </div>
                     </Flex>
                 </Segment>
-
                 <Button
                     primary
                     fluid
@@ -178,7 +207,8 @@ CreateProduct.propTypes = {
     funcs: object,
     getCtxData: func,
     closeModal: func,
-    successClose: func
+    successClose: func,
+    current: object
 };
 
 export default withContext(withProductForm(CreateProduct));

@@ -35,15 +35,11 @@ function withProductForm(WrappedComponent) {
             };
         }
 
-        buildDetailsFromItem = ({ attributes }) => {
+        buildDetailsFromItem = ({ id, attributes }) => {
             return {
-                name: attributes.title,
-                description: attributes.description,
-                composition: attributes.composition.map(comp => ({
-                    inventory_item_id: comp.inventory_item_id,
-                    pct: comp.pct,
-                    id: comp.id
-                }))
+                id,
+                ...attributes,
+                name: attributes.title
             };
         };
 
