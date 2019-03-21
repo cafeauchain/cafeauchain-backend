@@ -10,14 +10,8 @@ import tableDefs from "defs/tables/products";
 
 import EditProduct from "wholesale/actions/editProduct";
 
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
-
-const Wrapper = props => (
-    <Context>
-        {ctx => <ProductInventory {...props} data={ctx.products} loading={ctx.loading} getCtxData={ctx.getData} />}
-    </Context>
-);
 
 class ProductInventory extends React.Component {
     state = {
@@ -25,10 +19,8 @@ class ProductInventory extends React.Component {
         current: {}
     };
     componentDidMount() {
-        const { data, getCtxData } = this.props;
-        if (data === undefined) {
-            getCtxData("products");
-        }
+        const { products, getData } = this.props;
+        if (products === undefined) getData("products");
     }
 
     onClick = (e, current) => {
@@ -40,7 +32,7 @@ class ProductInventory extends React.Component {
     closeModal = () => this.setState({ isOpen: false, current: {} });
 
     render() {
-        const { data = [], loading } = this.props;
+        const { products = [], loading } = this.props;
         const { isOpen, current } = this.state;
         return (
             <F>
@@ -54,7 +46,7 @@ class ProductInventory extends React.Component {
                     />
                 )}
                 <Header as="h2" content="Products" />
-                <Table tableDefs={tableDefs} data={data} loading={loading} onClick={this.onClick} />
+                <Table tableDefs={tableDefs} data={products} loading={loading} onClick={this.onClick} />
             </F>
         );
     }
@@ -62,9 +54,9 @@ class ProductInventory extends React.Component {
 
 const { array, bool, func } = PropTypes;
 ProductInventory.propTypes = {
-    data: array,
+    products: array,
     loading: bool,
-    getCtxData: func
+    getData: func
 };
 
-export default Wrapper;
+export default withContext(ProductInventory);
