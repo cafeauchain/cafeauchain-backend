@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-21T23:06:09.596194 #16516]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-03-22T11:00:09.635928 #23182]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                         Prefix Verb   URI Pattern                                                                              Controller#Action
 #      upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                 api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -172,6 +172,7 @@
 #                            onboarding_shipping GET    /onboarding/shipping(.:format)                                                           onboarding/onboarding#shipping
 #                            onboarding_products GET    /onboarding/products(.:format)                                                           onboarding/onboarding#products
 #                             shop_profile_index GET    /shop/profile(.:format)                                                                  shop/profile#index
+#                           shop_onboard_profile GET    /shop/onboard/profile(.:format)                                                          shop/onboard/onboard#profile
 #                         producer_profile_crops GET    /producers/:producer_profile_id/crops(.:format)                                          crops#index
 #                                                POST   /producers/:producer_profile_id/crops(.:format)                                          crops#create
 #                      new_producer_profile_crop GET    /producers/:producer_profile_id/crops/new(.:format)                                      crops#new
@@ -337,6 +338,8 @@ Rails.application.routes.draw do
 
   namespace :shop do
     resources :profile, only: [:index]
+    get "onboard/profile", to: "onboard#profile"
+    
   end
 
   resources :producer_profiles, path: "producers" do
