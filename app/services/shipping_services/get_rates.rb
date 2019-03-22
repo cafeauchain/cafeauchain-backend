@@ -58,7 +58,7 @@ module ShippingServices
 
       to_address = to_address(customer)
       from_address = from_address(roaster)
-      parcel = create_parcel(carrier)
+      parcel = create_parcel(carrier, order)
 
       shipment = EasyPost::Shipment.create(
         to_address: to_address,
@@ -69,7 +69,7 @@ module ShippingServices
       rates = shipment.rates
     end
 
-    def create_parcel(carrier)
+    def self.create_parcel(carrier, order)
       case carrier
       when "usps"
         parcel = EasyPost::Parcel.create(
@@ -91,7 +91,7 @@ module ShippingServices
       end
     end
 
-    def to_address(customer)
+    def self.to_address(customer)
       to_address = EasyPost::Address.create(
         name: customer.company_name,
         street1: customer.primary_address.street_1,
@@ -103,7 +103,7 @@ module ShippingServices
       
     end
 
-    def from_address(roaster)
+    def self.from_address(roaster)
       from_address = EasyPost::Address.create(
         name: roaster.name,
         street1: roaster.primary_address.street_1,
