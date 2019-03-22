@@ -32,7 +32,7 @@ class ProductInventory extends React.Component {
     closeModal = () => this.setState({ isOpen: false, current: {} });
 
     render() {
-        const { products = [], loading } = this.props;
+        const { products = [], loading, noEdit } = this.props;
         const { isOpen, current } = this.state;
         return (
             <F>
@@ -46,7 +46,7 @@ class ProductInventory extends React.Component {
                     />
                 )}
                 <Header as="h2" content="Products" />
-                <Table tableDefs={tableDefs} data={products} loading={loading} onClick={this.onClick} />
+                <Table tableDefs={tableDefs} data={products} loading={loading} onClick={noEdit ? null : this.onClick} />
             </F>
         );
     }
@@ -56,7 +56,8 @@ const { array, bool, func } = PropTypes;
 ProductInventory.propTypes = {
     products: array,
     loading: bool,
-    getData: func
+    getData: func,
+    noEdit: bool
 };
 
 export default withContext(ProductInventory);

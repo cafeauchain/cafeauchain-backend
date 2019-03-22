@@ -53,29 +53,38 @@ class CreateProduct extends Component {
     handleSubmit = async ev => {
         ev.preventDefault();
         await this.setState({ btnLoading: true });
-        const {
-            details,
-            userId,
+        const { details, userId } = this.props;
+        const url = `${ROASTER_URL(userId)}/products`;
+        const body = { ...details };
+        const response = await requester({ url, body });
+        this.afterSubmit( response, url );
+    };
+
+    handleUpdate = async ev => {
+        ev.preventDefault();
+        await this.setState({ btnLoading: true });
+        const { details, userId } = this.props;
+        const url = `${ROASTER_URL(userId)}/products/` + details.id;
+        const body = { ...details };
+        const response = await requester({ url, body, method: 'PUT' });
+        this.afterSubmit(response, url);
+    }
+
+    afterSubmit = async (response, url) => {
+        const { 
+            details, 
             getCtxData,
             funcs: { resetForm },
             closeModal,
             successClose
         } = this.props;
-        const url = `${ROASTER_URL(userId)}/products`;
-        const body = { ...details };
-        const respJSON = await requester({ url, body });
-        if (respJSON instanceof Error) {
-            this.setState({ errors: respJSON.response.data, btnLoading: false });
+        if (response instanceof Error) {
+            this.setState({ errors: response.response.data, btnLoading: false });
         } else {
-            const hasAttachments = details.hasOwnProperty("product_images") && details.product_images.length > 0;
-            if (hasAttachments) {
-                let formData = new FormData();
-                details.product_images.forEach(file => formData.append("product_images[]", file));
-                const { id: productId } = respJSON.data;
-                await requester({ url: url + "/" + productId + "/add_images", body: formData, noContentType: true });
-            }
-            if (respJSON.redirect) {
-                window.location.href = await respJSON.redirect_url;
+            const { id: productId } = response.data;
+            await this.handleImages(details, url + "/" + productId);
+            if (response.redirect) {
+                window.location.href = await response.redirect_url;
             } else {
                 const success = details.name + " was created successfully!";
                 await this.setState({ btnLoading: false });
@@ -90,10 +99,19 @@ class CreateProduct extends Component {
                 }
             }
         }
-    };
+    }
+
+    handleImages = async (details, url) => {
+        const hasAttachments = details.hasOwnProperty("product_images") && details.product_images.length > 0;
+        if (hasAttachments) {
+            let formData = new FormData();
+            details.product_images.forEach(file => formData.append("product_images[]", file));
+            await requester({ url: url + "/add_images", body: formData, noContentType: true });
+        }
+    }
 
     render() {
-        const { inventory = [], funcs, details, current, getCtxData } = this.props;
+        const { inventory = [], funcs, details, current } = this.props;
         const { btnLoading, errors } = this.state;
         const {
             handleInputChange,
@@ -102,7 +120,8 @@ class CreateProduct extends Component {
             addVariant,
             addInventoryItem,
             setOptions,
-            buildInventoryOptions
+            buildInventoryOptions,
+            onRemove
         } = funcs;
         const inventoryOptions = buildInventoryOptions(inventory);
         const { composition, variants, product_options: options } = details;
@@ -121,18 +140,31 @@ class CreateProduct extends Component {
                         autoComplete="off"
                     />
                 ))}
-                {current && details.product_image_urls.map( url => 
+                {current && details.product_image_urls.map( (url,idx) => 
                     (
                         <React.Fragment key={url.id}>
                             <DeleteImage 
                                 url={url.url} 
                                 id={url.id} 
-                                getCtxData={getCtxData}
+                                onRemove={onRemove}
+                                idx={idx}
+                                remover='product_image_urls'
                             />
                         </React.Fragment>
                     )
                 )}
-                {(!current || current && details.product_image_urls.length < 5) && (
+                {current && details.product_image_urls.length < 5 && (
+                    <FileUpload
+                        fileType="fileImage"
+                        label="Upload Product Images"
+                        id="product_images_modal"
+                        name="product_images"
+                        handleChange={handleInputChange}
+                        multiple={5}
+                        files={details["product_images"] || []}
+                    />
+                )}
+                {!current && (
                     <FileUpload
                         fileType="fileImage"
                         label="Upload Product Images"
@@ -180,9 +212,9 @@ class CreateProduct extends Component {
                     primary
                     fluid
                     loading={btnLoading}
-                    disabled={!btnActive}
-                    onClick={this.handleSubmit}
-                    content="Create Product"
+                    disabled={current ? false : !btnActive}
+                    onClick={current ? this.handleUpdate : this.handleSubmit}
+                    content={current ? "Update Product" : "Create Product"}
                 />
             </Form>
         );

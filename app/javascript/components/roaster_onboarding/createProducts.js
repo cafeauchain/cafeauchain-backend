@@ -60,7 +60,7 @@ class CreateProducts extends React.Component {
                         <React.Fragment>
                             <Header as="h2" content="Create Products" />
                             <CreateProduct />
-                            <Products />
+                            <Products noEdit />
                             <br />
                             <OnboardFooter left={leftBtn} right={rightBtn} userId={userId} />
                         </React.Fragment>

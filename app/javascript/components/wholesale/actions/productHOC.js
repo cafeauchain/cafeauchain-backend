@@ -173,7 +173,8 @@ function withProductForm(WrappedComponent) {
                 buildInventoryOptions: this.buildInventoryOptions,
                 buildDefaultVariants: this.buildDefaultVariants,
                 buildDefaultOptions: this.buildDefaultOptions,
-                resetForm: this.resetForm
+                resetForm: this.resetForm,
+                onRemove: this.onRemove
             };
 
             return (

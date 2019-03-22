@@ -26,13 +26,11 @@ class DeleteImage extends Component {
         const { target } = e;
         e.preventDefault();
         target.blur();
-        const { id, getCtxData } = this.props;
+        const { id, onRemove, idx, remover } = this.props;
         const url = API_URL + "/delete_image/" + id;
         const response = await requester({ url, method: "DELETE" });
-        // console.log( response );
-        // TODO FIgure out how to update the modal only after delete
-        // Also, get file upload inside modal working correctly
-        getCtxData('products');
+        onRemove(e, { idx, remover });
+        // TODO Get file upload inside modal working correctly
     }
     onMouseEnter = () => {
         this.setState({ active: true });
@@ -48,7 +46,6 @@ class DeleteImage extends Component {
                 <Image
                     src={url}
                     size="small"
-                    // data-id={id}
                     rounded
                     inline
                     style={{ margin: 4 }}
@@ -74,7 +71,9 @@ const { string, number, oneOfType, func } = PropTypes;
 DeleteImage.propTypes = {
     url: string,
     id: oneOfType([ string, number ]),
-    getCtxData: func
+    onRemove: func,
+    idx: number,
+    remover: string
 };
 
 export default DeleteImage;
