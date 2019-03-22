@@ -9,7 +9,9 @@ import Flex from "shared/flex";
 /* eslint-enable */
 
 const Images = ({ content, ...rest }) => {
-    return content.map(url => <Image size="tiny" src={url.url} key={url.url} {...rest} inline rounded style={{ margin: 4 }} />);
+    return content.map(url => (
+        <Image size="tiny" src={url.url} key={url.url} {...rest} inline rounded style={{ margin: 4 }} />
+    ));
 };
 
 const ArrayHandler = ({ content = [] }) => {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form, Button, Segment, Image } from "semantic-ui-react";
+import { Form, Button, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
@@ -13,6 +13,7 @@ import withProductForm from "wholesale/actions/productHOC";
 import Variants from "wholesale/partials/variantsTable";
 import Options from "wholesale/partials/optionsTable";
 import CompositionTable from "wholesale/partials/compositionTable";
+import DeleteImage from "wholesale/actions/deleteImages";
 
 import fields from "defs/forms/createProduct";
 
@@ -39,7 +40,9 @@ class CreateProduct extends Component {
             fetch(ROASTER_URL(userId) + "/default_options")
                 .then(response => response.json())
                 .then(data => {
-                    const items = data.reduce((obj, item) => ({ ...obj, [item.title.toLowerCase()]: item.options }), {});
+                    const items = data.reduce((obj, item) => (
+                        { ...obj, [item.title.toLowerCase()]: item.options }), {}
+                    );
                     buildDefaultVariants(items.size);
                     buildDefaultOptions(items.options);
                 });
@@ -89,14 +92,8 @@ class CreateProduct extends Component {
         }
     };
 
-    onImageClick = (e,x,y,z) => {
-        // TODO Add in ability to delete active_storage_attachement and active_storage_blob by id
-        // eslint-disable-next-line
-        console.log( e.target, e.currentTarget, e.target.dataset.id);
-    }
-
     render() {
-        const { inventory = [], funcs, details, current } = this.props;
+        const { inventory = [], funcs, details, current, getCtxData } = this.props;
         const { btnLoading, errors } = this.state;
         const {
             handleInputChange,
@@ -127,22 +124,15 @@ class CreateProduct extends Component {
                 {current && details.product_image_urls.map( url => 
                     (
                         <React.Fragment key={url.id}>
-                            <Image src={url.url} size="small" data-id={url.id} rounded inline style={{ margin: 4 }} onClick={this.onImageClick} />
-                            {details.product_image_urls.length < 5 && (
-                                <FileUpload
-                                    fileType="fileImage"
-                                    label="Upload Product Images"
-                                    id="product_images"
-                                    name="product_images"
-                                    handleChange={handleInputChange}
-                                    multiple={5}
-                                    files={details["product_images"] || []}
-                                />
-                            )}
+                            <DeleteImage 
+                                url={url.url} 
+                                id={url.id} 
+                                getCtxData={getCtxData}
+                            />
                         </React.Fragment>
                     )
                 )}
-                {!current && (
+                {(!current || current && details.product_image_urls.length < 5) && (
                     <FileUpload
                         fileType="fileImage"
                         label="Upload Product Images"

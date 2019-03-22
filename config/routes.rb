@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-19T20:00:48.017691 #80120]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-03-21T23:06:09.596194 #16516]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                         Prefix Verb   URI Pattern                                                                              Controller#Action
 #      upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                 api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -35,6 +35,7 @@
 #                                                PATCH  /api/v1/producers/:id(.:format)                                                          api/v1/producer_profiles#update
 #                                                PUT    /api/v1/producers/:id(.:format)                                                          api/v1/producer_profiles#update
 #                                                DELETE /api/v1/producers/:id(.:format)                                                          api/v1/producer_profiles#destroy
+#                                         api_v1 DELETE /api/v1/delete_image/:id(.:format)                                                       api/v1/products#delete_image
 #          validate_step_api_v1_roaster_profiles POST   /api/v1/roasters/validate_step(.:format)                                                 api/v1/roaster_profiles#validate_step
 #            api_v1_roaster_profile_lots_by_date GET    /api/v1/roasters/:roaster_profile_id/lots_by_date(.:format)                              api/v1/lots#lots_by_date
 #          api_v1_roaster_profile_earliest_batch GET    /api/v1/roasters/:roaster_profile_id/earliest_batch(.:format)                            api/v1/lots#earliest
@@ -169,7 +170,6 @@
 #                   onboarding_wholesale_details GET    /onboarding/wholesale-details(.:format)                                                  onboarding/onboarding#wholesale_details
 #                    onboarding_wholesale_signup GET    /onboarding/wholesale-signup(.:format)                                                   onboarding/onboarding#wholesale_signup
 #                            onboarding_shipping GET    /onboarding/shipping(.:format)                                                           onboarding/onboarding#shipping
-#                               onboarding_taxes GET    /onboarding/taxes(.:format)                                                              onboarding/onboarding#taxes
 #                            onboarding_products GET    /onboarding/products(.:format)                                                           onboarding/onboarding#products
 #                             shop_profile_index GET    /shop/profile(.:format)                                                                  shop/profile#index
 #                         producer_profile_crops GET    /producers/:producer_profile_id/crops(.:format)                                          crops#index
@@ -253,6 +253,7 @@ Rails.application.routes.draw do
       resources :producer_profiles, path: "producers" do
         resources :crops
       end
+      delete 'delete_image/:id', to: 'products#delete_image'
       resources :roaster_profiles, only: [:create, :update], path: "roasters" do
         collection do
           post :validate_step
