@@ -59,7 +59,7 @@ class NavBar extends Component {
         });
 
     render() {
-        const { rightItems, buttons } = this.props;
+        const { rightItems, buttons, header_info } = this.props;
         const { visible, screenSize, menuHeight } = this.state;
         let logoBorder = " no-border";
 
@@ -67,8 +67,8 @@ class NavBar extends Component {
             <div className="navbar-spacer" ref={this.menuRef} style={{ paddingTop: menuHeight }}>
                 <Menu fixed="top">
                     <Menu.Item className={"no-left-border" + logoBorder} as="a" href="/">
-                        <Image size="mini" src={logo} onLoad={this.logoLoaded} />
-                        <h2 style={{ margin: "0 0 0 20px" }}>Cafe au Chain</h2>
+                        <Image size="mini" src={header_info ? header_info.url : logo} onLoad={this.logoLoaded} />
+                        <h2 style={{ margin: "0 0 0 20px" }}>{header_info ? header_info.name : "Cafe au Chain"}</h2>
                     </Menu.Item>
                     {screenSize === "tablet" && (
                         <F>
@@ -106,10 +106,11 @@ class NavBar extends Component {
     }
 }
 
-const { array } = PropTypes;
+const { array, object } = PropTypes;
 NavBar.propTypes = {
     rightItems: array,
-    buttons: array
+    buttons: array,
+    header_info: object
 };
 
 export default NavBar;
