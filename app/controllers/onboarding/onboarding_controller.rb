@@ -8,7 +8,7 @@ module Onboarding
         roaster: @roaster,
         # profile: profile,
         user: current_user,
-        loggedIn: user_signed_in?,
+        # loggedIn: user_signed_in?,
         title: 'Roaster Onboarding | Create Profile',
         component: 'roaster_onboarding/profile'
       }
