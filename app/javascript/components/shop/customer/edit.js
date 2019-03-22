@@ -66,7 +66,7 @@ class EditCustomer extends Component {
                 } else {
                     const { onboard } = this.props;
                     this.setState({ loading: false });
-                    if( onboard ) window.location.href = "payment";
+                    if( onboard ) window.location.href = "addresses";
                 }
             }
         }, 400);

@@ -6,6 +6,12 @@ const steps = active => [
         active: active === "profile"
     },
     {
+        key: "addresses",
+        icon: "address card",
+        title: "Addresses",
+        active: active === "addresses"
+    },
+    {
         key: "payment",
         icon: "dollar",
         title: "Payment Methods",

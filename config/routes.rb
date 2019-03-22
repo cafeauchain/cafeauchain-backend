@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-22T11:00:09.635928 #23182]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-03-22T14:10:53.310114 #28883]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                         Prefix Verb   URI Pattern                                                                              Controller#Action
 #      upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                 api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -113,6 +113,7 @@
 #                                                DELETE /api/v1/orders/:id(.:format)                                                             api/v1/orders#destroy
 #                          api_v1_customer_cards POST   /api/v1/customers/:customer_id/cards(.:format)                                           api/v1/customers#cards
 #                       add_logo_api_v1_customer POST   /api/v1/customers/:id/add_logo(.:format)                                                 api/v1/customers#add_logo
+#                 update_address_api_v1_customer POST   /api/v1/customers/:id/update_address(.:format)                                           api/v1/customers#update_address
 #                               api_v1_customers GET    /api/v1/customers(.:format)                                                              api/v1/customers#index
 #                                                POST   /api/v1/customers(.:format)                                                              api/v1/customers#create
 #                            new_api_v1_customer GET    /api/v1/customers/new(.:format)                                                          api/v1/customers#new
@@ -172,7 +173,8 @@
 #                            onboarding_shipping GET    /onboarding/shipping(.:format)                                                           onboarding/onboarding#shipping
 #                            onboarding_products GET    /onboarding/products(.:format)                                                           onboarding/onboarding#products
 #                             shop_profile_index GET    /shop/profile(.:format)                                                                  shop/profile#index
-#                           shop_onboard_profile GET    /shop/onboard/profile(.:format)                                                          shop/onboard/onboard#profile
+#                           shop_onboard_profile GET    /shop/onboard/profile(.:format)                                                          shop/onboard#profile
+#                         shop_onboard_addresses GET    /shop/onboard/addresses(.:format)                                                        shop/onboard#addresses
 #                         producer_profile_crops GET    /producers/:producer_profile_id/crops(.:format)                                          crops#index
 #                                                POST   /producers/:producer_profile_id/crops(.:format)                                          crops#create
 #                      new_producer_profile_crop GET    /producers/:producer_profile_id/crops/new(.:format)                                      crops#new
@@ -289,6 +291,7 @@ Rails.application.routes.draw do
         post :cards
         member do
           post :add_logo
+          post :update_address
         end
       end
     end
@@ -339,7 +342,7 @@ Rails.application.routes.draw do
   namespace :shop do
     resources :profile, only: [:index]
     get "onboard/profile", to: "onboard#profile"
-    
+    get "onboard/addresses", to: "onboard#addresses"
   end
 
   resources :producer_profiles, path: "producers" do

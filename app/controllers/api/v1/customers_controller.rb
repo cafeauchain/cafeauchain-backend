@@ -1,7 +1,7 @@
 module Api::V1
   class CustomersController < ApplicationController
     before_action :set_roaster
-    before_action :set_customer, only: [:show, :update, :add_logo]
+    before_action :set_customer, only: [:show, :update, :add_logo, :update_address]
 
     def index
       @customers = @roaster.customer_profiles
@@ -60,6 +60,28 @@ module Api::V1
     def add_logo
       ActiveStorageServices::ImageAttachment.new(params[:logo], @customer.id, "CustomerProfile", "logo").callAsFile
       render json: {data: "success"}, status: 200
+    end
+
+    def update_address
+      address = address_params
+      if params[:primary_location]
+        @customer.addresses.update(primary_location: false)
+        address["primary_location"] = true
+      end
+      address["country"] = "USA"
+      address["location_label"] = params[:location_label]
+      current_address = @customer.addresses.find_by(addressable_id: params[:addressable_id], addressable_type: params[:addressable_type])
+      if current_address.present?
+        current_address.update(address)
+        method = "update"
+      else
+        @customer.addresses.create(address)
+        method = "create"
+      end
+
+      @serCust = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
+
+      render json: { customer: @serCust, params: params, address: address, current_address: current_address, method: method }, status: 200 
     end
 
     private
