@@ -36,7 +36,7 @@ class Addresses extends Component {
         const { attributes: { addresses } } = profile;
         const { adding } = this.state;
         return (
-            <Segment>
+            <React.Fragment>
                 <Header as="h2" content="Addresses" dividing />
                 <Container text>
                     <p>Add multiple addresses and set a primary address.</p>
@@ -59,8 +59,7 @@ class Addresses extends Component {
                     )}
                     {!adding && <Button content="Add Address" color="blue" onClick={this.addAddress} />}
                 </Container>
-                
-            </Segment>
+            </React.Fragment>
         );
     }
 }

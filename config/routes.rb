@@ -343,6 +343,7 @@ Rails.application.routes.draw do
     resources :profile, only: [:index]
     get "onboard/profile", to: "onboard#profile"
     get "onboard/addresses", to: "onboard#addresses"
+    get "onboard/payment", to: "onboard#payment"
   end
 
   resources :producer_profiles, path: "producers" do

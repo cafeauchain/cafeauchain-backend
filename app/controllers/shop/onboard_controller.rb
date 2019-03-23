@@ -29,6 +29,19 @@ module Shop
       }
     end
 
+    def payment
+      customer = current_user.customer_profile
+      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster_profile)
+      render "manage/primary", locals: {
+        roaster: @roaster_profile,
+        profile: @customer,
+        header_info: {url: @roaster_profile.logo_image_url, name: @roaster_profile.name},
+        cart: @cart,
+        component: "shop/onboard/payment",
+        title: "Customer Onboarding | Payment"
+      }
+    end
+
     private
 
     def set_roaster
