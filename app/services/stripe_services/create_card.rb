@@ -11,8 +11,8 @@ module StripeServices
         @chargeable = CustomerProfile.find(customer_profile_id)
         if @chargeable.stripe_customer_id.nil? || @chargeable.stripe_customer_id.blank?
           customer = Stripe::Customer.create({
-            email: @chargeable.user.email, # will change to customer
-            description: "Account for wholesale customer #{@chargeable.user.name}"
+            email: @chargeable.email, # will change to customer
+            description: "Account for wholesale customer #{@chargeable.company_name}"
           })
           @chargeable.update(stripe_customer_id: customer.id)
         end

@@ -81,7 +81,7 @@ module Api::V1
       @card = Card.find(params[:card_id])
       if @roaster_profile.subscription.default_card.update(default: false)
         @card.update(default: true)
-        StripeServices::UpdateDefaultCard.call(@roaster_profile.subscription.id, @card.stripe_card_id)
+        StripeServices::UpdateDefaultCard.call(@roaster_profile.subscription.id, nil, @card.stripe_card_id)
         render json: @roaster_profile.subscription.cards, status: 200
       else
         render json: @card.errors, status: 422
@@ -91,7 +91,7 @@ module Api::V1
     def remove_card
       @card = Card.find(params[:card_id])
       if @roaster_profile.subscription.default_card != @card
-        StripeServices::RemoveCard.call(@roaster_profile.subscription.id, @card.stripe_card_id)
+        StripeServices::RemoveCard.call(@roaster_profile.subscription.id, nil, @card.stripe_card_id)
         @card.destroy
         render json: @roaster_profile.subscription.cards, status: 200
       else
