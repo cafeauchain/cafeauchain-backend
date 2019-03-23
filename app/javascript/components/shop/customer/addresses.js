@@ -1,39 +1,40 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Segment, Header, Container, Button } from 'semantic-ui-react';
-import shortid from "shortid";
 
 /* eslint-disable */
 import Address from "shop/customer/address";
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
-const defaultAddress = () => ({
-    id: shortid.generate(),
+const defaultAddress = {
+    location_label: "",
     street_1: "",
     street_2: "",
     city: "",
     state: "",
     postal_code: ""
-});
+};
 
 class Addresses extends Component {
     constructor(props){
         super(props);
         this.state = {
-            added: []
+            adding: false
         };
     }
 
     addAddress = e => {
-        const { added } = this.state;
-        this.setState({ added: [...added, defaultAddress()]}); 
+        this.setState({ adding: true }); 
+    }
+    resetStatus = () => {
+        this.setState({ adding: false });
     }
     
     render(){
         const { profile, updateContext } = this.props;
         const { attributes: { addresses } } = profile;
-        const { added } = this.state;
+        const { adding } = this.state;
         return (
             <Segment>
                 <Header as="h2" content="Addresses" dividing />
@@ -45,17 +46,18 @@ class Addresses extends Component {
                             address={address}
                             profileId={profile.id}
                             updateContext={updateContext}
+                            resetStatus={this.resetStatus}
                         />
                     ))}
-                    {added.map(address => (
+                    {adding && (
                         <Address
-                            key={address.id}
-                            address={address}
+                            address={defaultAddress}
                             profileId={profile.id}
                             updateContext={updateContext}
+                            resetStatus={this.resetStatus}
                         />
-                    ))}
-                    <Button content="Add Address" color="blue" onClick={this.addAddress} />
+                    )}
+                    {!adding && <Button content="Add Address" color="blue" onClick={this.addAddress} />}
                 </Container>
                 
             </Segment>

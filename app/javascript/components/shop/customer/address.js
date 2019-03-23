@@ -17,6 +17,14 @@ class Address extends React.Component {
             details: address
         };
     }
+    componentDidUpdate(props){
+        const { address } = props;
+        const { address: newAddress } = this.props;
+        if( address !== newAddress ){
+            // eslint-disable-next-line react/no-did-update-set-state
+            this.setState({ details: newAddress });
+        }
+    }
     handleInputChange = (event, { value, name, checked }) => {
         let { details } = this.state;
         details = { ...details };
@@ -30,13 +38,13 @@ class Address extends React.Component {
         const { profileId } = this.props;
         const url = API_URL + "/customers/" + profileId + "/update_address";
         const response = await requester({ url, body: {...details} });
-        console.log( response );
         this.afterSubmit(response, url);
     }
 
     afterSubmit = async (response, url) => {
         const {
-            updateContext
+            updateContext,
+            profileId
         } = this.props;
         if (response instanceof Error) {
             // this.setState({ errors: response.response.data, btnLoading: false });
@@ -44,7 +52,14 @@ class Address extends React.Component {
             if (response.redirect) {
                 window.location.href = await response.redirect_url;
             } else {
-                updateContext({ profile: response.customer.data });
+                // TODO Why doesnt the response have the correct results?
+                fetch(API_URL + "/customers/" + profileId)
+                    .then(data => data.json())
+                    .then(data => updateContext({ profile: data.data }));
+                // if( response.customer.data ){
+                //     updateContext({ profile: response.customer.data });
+                // }
+                
             }
         }
     }
@@ -72,7 +87,7 @@ class Address extends React.Component {
                                 inputType="checkbox"
                                 label="Set as Primary"
                                 name="primary_location"
-                                defaultChecked={isPrimary}
+                                checked={details.primary_location}
                                 disabled={isPrimary}
                                 onChange={this.handleInputChange}
                             />
