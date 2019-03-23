@@ -44,6 +44,19 @@ module Shop
       }
     end
 
+    def shipping
+      customer = current_user.customer_profile
+      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster_profile)
+      render "manage/primary", locals: {
+        roaster: @roaster_profile,
+        profile: @customer,
+        header_info: {url: @roaster_profile.logo_image_url, name: @roaster_profile.name},
+        cart: @cart,
+        component: "shop/onboard/shipping",
+        title: "Customer Onboarding | Shipping Preferences"
+      }
+    end
+
     private
 
     def set_roaster
