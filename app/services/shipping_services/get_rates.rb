@@ -48,13 +48,12 @@ module ShippingServices
     #   }
     # ]
 
-    def self.get_rate_estimates(wholesale_profile_id, carrier, order_id)
+    def self.get_rate_estimates(cart_id, carrier)
       EasyPost.api_key = Rails.application.credentials.easypost_api_key
 
-      wholesale_profile = WholesaleProfile.find(wholesale_profile_id)
+      cart = Cart.find(cart_id)
       roaster = wholesale_profile.roaster_profile
-      customer = wholesale_profile.customer_profile
-      order = Order.find(order_id)
+      customer = cart.customer_profile
 
       to_address = to_address(customer)
       from_address = from_address(roaster)
@@ -65,7 +64,7 @@ module ShippingServices
         from_address: from_address,
         parcel: parcel
       )
-      order.update(easypost_shipment_id: shipment.id)
+      cart.update(easypost_shipment_id: shipment.id)
       rates = shipment.rates
     end
 

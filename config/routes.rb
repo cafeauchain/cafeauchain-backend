@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-24T12:07:09.624226 #47526]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-03-24T13:45:13.061376 #51778]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                         Prefix Verb   URI Pattern                                                                              Controller#Action
 #      upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                 api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -92,9 +92,12 @@
 #                   api_v1_roaster_profile_cards POST   /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#cards
 #                                                DELETE /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#remove_card
 #          api_v1_roaster_profile_set_as_default PUT    /api/v1/roasters/:roaster_profile_id/set_as_default(.:format)                            api/v1/roaster_profiles#set_as_default
+#        api_v1_roaster_profile_shipping_methods GET    /api/v1/roasters/:roaster_profile_id/shipping_methods(.:format)                          api/v1/shipping_methods#index
+#                                                POST   /api/v1/roasters/:roaster_profile_id/shipping_methods(.:format)                          api/v1/shipping_methods#create
 #                        api_v1_roaster_profiles POST   /api/v1/roasters(.:format)                                                               api/v1/roaster_profiles#create
 #                         api_v1_roaster_profile PATCH  /api/v1/roasters/:id(.:format)                                                           api/v1/roaster_profiles#update
 #                                                PUT    /api/v1/roasters/:id(.:format)                                                           api/v1/roaster_profiles#update
+#                               api_v1_get_rates GET    /api/v1/get_rates(.:format)                                                              api/v1/shipping_methods#get_rates
 #                                   api_v1_carts GET    /api/v1/carts(.:format)                                                                  api/v1/carts#index
 #                                                POST   /api/v1/carts(.:format)                                                                  api/v1/carts#create
 #                                new_api_v1_cart GET    /api/v1/carts/new(.:format)                                                              api/v1/carts#new
@@ -289,7 +292,9 @@ Rails.application.routes.draw do
         post :cards
         delete :cards, to: "roaster_profiles#remove_card"
         put :set_as_default
+        resources :shipping_methods, only: [:index, :create]
       end
+      get :get_rates, to: "shipping_methods#get_rates"
       resources :carts
       resources :orders
       resources :customers do
