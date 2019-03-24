@@ -33,7 +33,7 @@ const CardView = props => {
                     </Card.Header>
                     <Card.Description>
                         <Icon name={"cc " + brandLower} size="large" />
-                        {`${brandUpper} ${last4} ${id}`}
+                        {`${brandUpper} ${last4}`}
                         <br />
                         {exp}
                     </Card.Description>

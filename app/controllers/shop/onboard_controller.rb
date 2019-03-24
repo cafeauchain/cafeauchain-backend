@@ -38,6 +38,7 @@ module Shop
         header_info: {url: @roaster_profile.logo_image_url, name: @roaster_profile.name},
         cart: @cart,
         stripeApiKey: Rails.application.credentials.stripe_api_key,
+        cards: customer.cards,
         scripts: ["https://js.stripe.com/v3/"],
         component: "shop/onboard/payment",
         title: "Customer Onboarding | Payment"

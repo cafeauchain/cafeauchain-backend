@@ -17,7 +17,7 @@ class CustomerPayment extends Component {
         super(props);
         const { profile: { id: profileId } } = props;
         this.state = {
-            cards: [],
+            cards: props.cards || [],
             errors: {},
             loading: false
         };
@@ -39,7 +39,7 @@ class CustomerPayment extends Component {
 
     removeCard = async card_id => {
         this.setState({ loading: true });
-        const url = this.requestUrl + "/cards";
+        const url = this.requestUrl + "/remove_card";
         const body = { card_id };
 
         const respJSON = await requester({ url, body, method: 'DELETE' });
