@@ -10,7 +10,7 @@ class OnboardShipping extends React.Component {
     state = {};
     render() {
         const left = { href: 'payment', text: 'Payment Methods'};
-        const right = { href: '/', text: 'Complete Registration', as: 'a' };
+        const right = { href: 'onboard_completed', text: 'Complete Registration' };
         return (
             <React.Fragment>
                 <Step.Group fluid items={steps("shipping")} />

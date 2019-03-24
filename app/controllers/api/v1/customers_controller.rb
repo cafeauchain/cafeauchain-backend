@@ -1,7 +1,7 @@
 module Api::V1
   class CustomersController < ApplicationController
     before_action :set_roaster
-    before_action :set_customer, only: [:show, :update, :add_logo, :cards, :set_as_default, :remove_card]
+    before_action :set_customer, except: [:index, :create]
 
     def index
       @customers = @roaster.customer_profiles
@@ -34,7 +34,12 @@ module Api::V1
         # TODO We probably need a better check of the side of the app than "current_roaster"
         # Customer Side
         if current_roaster.present?
-          render json: { redirect: false, redirect_url: root_path(@roaster) }, status: 200
+          if params[:onboard].present?
+            wp.update(onboard_status: 'addresses')
+            render json: { redirect: true, redirect_url: shop_onboard_addresses_path }, status: 200
+          else
+            render json: { redirect: false, redirect_url: root_path(@roaster) }, status: 200
+          end
         # Roaster/Admin Side
         else
           render json: { redirect: true, redirect_url: manage_customers_path(@roaster) }, status: 200
@@ -122,6 +127,12 @@ module Api::V1
       @serCust = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
 
       render json: { customer: @serCust }, status: 200 
+    end
+
+    def update_onboard_status
+      wp = @customer.wholesale_profiles.where(roaster_profile: @roaster)
+      wp.update(onboard_status: params[:status])
+      render json: {redirect: true, redirect_url: send("shop_onboard_#{params[:status]}_path")}, status: 200
     end
 
     private

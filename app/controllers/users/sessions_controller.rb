@@ -11,8 +11,9 @@ class Users::SessionsController < Devise::SessionsController
     elsif !SubdomainRoutes.matches?(request)
       customer = current_user.customer_profile
       wholesale = customer.wholesale_profiles.find_by(roaster_profile: current_roaster)
-      isProfileComplete = customer.company_name.present? && (wholesale.terms.present? || customer.stripe_customer_id.present?)
-      redirect_url = isProfileComplete ? root_path : shop_onboard_profile_path
+      isProfileComplete = wholesale.onboard_status == 'approved'
+      status = wholesale.onboard_status
+      redirect_url = isProfileComplete ? root_path : send("shop_onboard_#{status}_path")
       render json: { "redirect":true, "redirect_url": redirect_url }, status: 200
     end
   end

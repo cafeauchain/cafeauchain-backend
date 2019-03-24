@@ -3,6 +3,9 @@
 # Table name: wholesale_profiles
 #
 #  id                  :bigint(8)        not null, primary key
+#  onboard_status      :integer
+#  shipping            :integer
+#  tax_rate            :float
 #  terms               :text
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
@@ -25,4 +28,8 @@ class WholesaleProfile < ApplicationRecord
   belongs_to :customer_profile
   has_one :cart
   has_many :orders
+
+  enum onboard_status: [:profile, :addresses, :payment, :shipping, :onboard_completed, :approved]
+  # enum shipping: roaster_profile.shipping_methods
+
 end
