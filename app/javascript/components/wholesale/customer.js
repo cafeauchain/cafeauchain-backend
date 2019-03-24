@@ -1,42 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Segment, Header } from "semantic-ui-react";
+import { Segment, Button, Label } from "semantic-ui-react";
 
 /* eslint-disable */
 import Table from "shared/table";
 
 import EditCustomer from "wholesale/editCustomer";
 
-import { sortBy } from "utilities";
-
 import tableDefs from "defs/tables/customerOrdersTable";
 
-import Context from "contexts/main";
+import { sortBy, humanize } from "utilities";
+import { requester, url as API_URL } from 'utilities/apiUtils'
+import withContext from "contexts/withContext";
 /* eslint-enable */
 
-const Wrapper = ({ customer, ...props }) => {
-    return (
-        <div>
-            <Context>
-                {ctx => (
-                    <Order
-                        {...props}
-                        customer={ctx.customer || customer.data}
-                        loading={ctx.loading}
-                        userId={ctx.userId}
-                        getCtxData={ctx.getData}
-                    />
-                )}
-            </Context>
-        </div>
-    );
-};
-
-Wrapper.propTypes = {
-    customer: PropTypes.object
-};
-
-class Order extends React.Component {
+class Customer extends React.Component {
     static propTypes = () => {
         const { object } = PropTypes;
         return {
@@ -45,7 +23,9 @@ class Order extends React.Component {
     };
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            btnLoading: false
+        };
     }
 
     onClick = (e, item) => {
@@ -53,7 +33,32 @@ class Order extends React.Component {
         window.location = "/manage/orders/" + item.id;
     };
 
+    approveCustomer = async e => {
+        const { target } = e;
+        e.preventDefault();
+        target.blur();
+        await this.setState({ btnLoading: true });
+        const { customer: { id } } = this.props;
+        const url = API_URL + "/customers/" + id + "/update_onboard_status";
+        const response = await requester({ url, body: { status: 'approved' }, method: 'PUT' });
+        this.afterApproval(response);
+    }
+    afterApproval = async response => {
+        const { updateContext } = this.props;
+        setTimeout(() => {
+            this.setState({ btnLoading: false });
+            if (response instanceof Error) {
+                console.log('there was a error', response, response.response);
+            } else {
+                console.log('customer approved', response);
+                updateContext({customer: response.customer.data});
+            }
+        }, 400);
+        
+    }
+
     render() {
+        const { btnLoading } = this.state;
         const { customer } = this.props;
         const { attributes, id } = customer;
         const orders = attributes ? attributes.orders : [];
@@ -63,17 +68,34 @@ class Order extends React.Component {
             company_name: attributes.company_name || "",
             name: attributes ? attributes.owner.name : "",
             email: attributes.email || "",
-            address_1: attributes.addresses.length ? attributes.addresses[0].address_1 : "",
-            address_2: attributes.addresses.length ? attributes.addresses[0].address_2 : "",
-            city: attributes.addresses.length ? attributes.addresses[0].city : "",
-            state: attributes.addresses.length ? attributes.addresses[0].state : "",
-            zip_code: attributes.addresses.length ? attributes.addresses[0].zip_code : "",
-            terms: attributes.terms
+            street_1: attributes.primary_address.street_1 || "",
+            street_2: attributes.primary_address.street_2 || "",
+            city: attributes.primary_address.city || "",
+            state: attributes.primary_address.state || "",
+            postal_code: attributes.primary_address.postal_code || "",
+            terms: attributes.terms,
+            status: attributes.wholesale_profile.onboard_status
         };
+        let status = humanize(profile.status);
+        if( profile.status === "onboard_completed" ) status = "Pending Approval";
         return (
             <div>
                 <Segment>
-                    <Header as="h2" content="Customer Details" dividing />
+                    <Label ribbon="right" color={status === 'Approved' ? 'green' : 'grey'} content={status} />
+                    {status === 'Pending Approval' && (
+                        <div style={{ clear: "both" }}>
+                            <br />
+                            <br />
+                            <Button 
+                                primary
+                                content="Approve Customer"
+                                onClick={this.approveCustomer}
+                                floated="right"
+                                loading={btnLoading}
+                            />
+                        </div>
+                    )}
+                    <div style={{ clear: 'both'}} />
                     <EditCustomer profile={profile} />
                     <Table tableDefs={tableDefs} data={sorted} onClick={this.onClick} />
                 </Segment>
@@ -82,4 +104,4 @@ class Order extends React.Component {
     }
 }
 
-export default Wrapper;
+export default withContext(Customer);

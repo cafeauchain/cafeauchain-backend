@@ -1,5 +1,5 @@
 class CustomerSerializer < ActiveModel::Serializer
-  attributes :id, :owner, :email, :company_name, :addresses, :terms, :order_count, :order_value, :logo_url, :wholesale_profile
+  attributes :id, :owner, :email, :company_name, :addresses, :terms, :order_count, :order_value, :logo_url, :wholesale_profile, :primary_address
 
   def wholesale_profile
     self.object.wholesale_profiles.find_by(roaster_profile: scope)

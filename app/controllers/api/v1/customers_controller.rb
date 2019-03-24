@@ -132,7 +132,12 @@ module Api::V1
     def update_onboard_status
       wp = @customer.wholesale_profiles.where(roaster_profile: @roaster)
       wp.update(onboard_status: params[:status])
-      render json: {redirect: true, redirect_url: send("shop_onboard_#{params[:status]}_path")}, status: 200
+      if params[:status] == 'approved'
+        @serCust = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
+        render json: {customer: @serCust}, status: 200
+      else
+        render json: {redirect: true, redirect_url: send("shop_onboard_#{params[:status]}_path")}, status: 200
+      end
     end
 
     private
