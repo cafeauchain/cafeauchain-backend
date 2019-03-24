@@ -5,6 +5,7 @@
 #  id                   :bigint(8)        not null, primary key
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#  easypost_shipment_id :string
 #  wholesale_profile_id :bigint(8)
 #
 # Indexes
@@ -46,6 +47,10 @@ class Cart < ApplicationRecord
       self.cart_items.destroy_all
     end
     return @order
+  end
+
+  def total_weight
+    cart_items.sum { |ci| ci.product_variant.custom_options["size"].to_i * ci.quantity }
   end
 
 end
