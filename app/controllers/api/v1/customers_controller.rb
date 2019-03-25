@@ -140,6 +140,12 @@ module Api::V1
       end
     end
 
+    def set_shipping_default
+      wp = @customer.wholesale_profiles.where(roaster_profile: @roaster)
+      wp.update(shipping: params[:shipping_id])
+      render json: {success: true}, status: 200
+    end
+
     private
 
     def set_roaster
