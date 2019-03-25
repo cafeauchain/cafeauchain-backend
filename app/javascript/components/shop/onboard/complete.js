@@ -1,6 +1,6 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Step, Segment, Header } from "semantic-ui-react";
+import { Step, Segment, Header, Container } from "semantic-ui-react";
 
 /* eslint-disable */
 import steps from "shop/onboard/steps";
@@ -23,9 +23,11 @@ class OnboardComplete extends React.Component {
                 <Step.Group fluid items={steps()} />
                 <Segment>
                     <Header content="Registration Complete!" as="h2" dividing /> 
-                    <p>
-                        {callMeDanger(msg)}
-                    </p>
+                    <Container text>
+                        <p>
+                            {callMeDanger(msg)}
+                        </p>
+                    </Container>
                 </Segment>
 
             </F>
