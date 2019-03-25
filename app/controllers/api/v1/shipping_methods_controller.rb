@@ -6,7 +6,7 @@ module Api::V1
     end
 
     def create
-      @shipping_method = ShippingServices::AddShippingMethod(params, @roaster.id)
+      @shipping_method = ShippingServices::AddShippingMethod.add(params)
       render json: @shipping_method, status: 200
     end
 
