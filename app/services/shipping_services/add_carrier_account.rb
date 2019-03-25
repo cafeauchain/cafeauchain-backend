@@ -18,6 +18,7 @@ module ShippingServices
           password: @password,
           access_license_number: params[:access_license_number]
         }
+        @friendly_name = 'UPS'
       when "usps"
         @credentials = {
           company_name: @roaster.name,
@@ -27,6 +28,7 @@ module ShippingServices
           address_zip: @roaster.primary_address.postal_code,
           email: @roaster.owner.email
         }
+        @friendly_name = "USPS"
       when "fedex"
         @credentials = {
           account_number: @account_id,
@@ -34,6 +36,7 @@ module ShippingServices
           key: @username,
           password: @password,
         }
+        @friendly_name = "FedEx"
       else
         raise "Unknown carrier type"
       end
@@ -47,7 +50,7 @@ module ShippingServices
         reference: "#{@carrier} #{@roaster.name}".parameterize,
         credentials: @credentials
       )
-      shipping_method = @roaster.shipping_methods.create(carrier: @carrier, easy_post_account_ref: carrier_acct.id, friendly_name: @carrier.humanize, account_id: @account_id)
+      shipping_method = @roaster.shipping_methods.create(carrier: @carrier, easy_post_account_ref: carrier_acct.id, friendly_name: @friendly_name, account_id: @account_id)
     end
 
   end

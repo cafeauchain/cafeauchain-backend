@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-24T13:45:13.061376 #51778]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-03-25T12:09:21.634085 #57582]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                         Prefix Verb   URI Pattern                                                                              Controller#Action
 #      upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                 api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -183,6 +183,7 @@
 #                         shop_onboard_addresses GET    /shop/onboard/addresses(.:format)                                                        shop/onboard#addresses
 #                           shop_onboard_payment GET    /shop/onboard/payment(.:format)                                                          shop/onboard#payment
 #                          shop_onboard_shipping GET    /shop/onboard/shipping(.:format)                                                         shop/onboard#shipping
+#                 shop_onboard_onboard_completed GET    /shop/onboard/onboard_completed(.:format)                                                shop/onboard#onboard_completed
 #                         producer_profile_crops GET    /producers/:producer_profile_id/crops(.:format)                                          crops#index
 #                                                POST   /producers/:producer_profile_id/crops(.:format)                                          crops#create
 #                      new_producer_profile_crop GET    /producers/:producer_profile_id/crops/new(.:format)                                      crops#new
