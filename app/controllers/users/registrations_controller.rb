@@ -12,7 +12,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         cp.users << resource
         wp = cp.wholesale_profiles.create(roaster_profile: current_roaster)
         wp.create_cart
-        wp.update(:onboard_status, 'profile')
+        wp.update(onboard_status: 'profile')
         render json: {"redirect":true,"redirect_url": shop_onboard_profile_path}, status: 200
       end
     else
