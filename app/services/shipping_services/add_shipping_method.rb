@@ -1,6 +1,24 @@
 module ShippingServices
   class AddShippingMethod
 
+    ########################
+    # params = {
+    #   roaster_id: 1,
+    #   carrier: "pick up" || "pick_up",
+    #   rate: 10.99,
+    #   friendly_name: "Roaster Pick Up"
+    # }
+    # params = {
+    #   roaster_id: 1,
+    #   carrier: "ups",
+    #   account_id: "alphanumericString",
+    #   username: 'username', not stored
+    #   password: 'password', not stored
+    #   access_license_number: "if-ups123",
+    #   meter_number: "if-fedexOptional"
+    # }
+    #######################
+
     def self.add(params)
       roaster = RoasterProfile.find(params[:roaster_id])
       carrier = params[:carrier].parameterize # string -> "ups", "usps", "fedex", "pick up", "local delivery"
