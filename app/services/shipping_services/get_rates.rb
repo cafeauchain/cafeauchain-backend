@@ -48,31 +48,45 @@ module ShippingServices
     #   }
     # ]
 
-    def self.get_rate_estimates(cart_id, carrier)
+    def self.get_rate_estimates(cart_id, wholesale_profile_id)
       EasyPost.api_key = Rails.application.credentials.easypost_api_key
 
       cart = Cart.find(cart_id)
+      wholesale_profile = WholesaleProfile.find(wholesale_profile_id) 
       roaster = wholesale_profile.roaster_profile
-      customer = cart.customer_profile
+      customer = wholesale_profile.customer_profile
+
+      carrier_accounts = ShippingMethod.where(roaster_profile: roaster).map {|sm| sm.easy_post_account_ref}
 
       to_address = to_address(customer)
       from_address = from_address(roaster)
-      parcel = create_parcel(carrier, order)
+      # parcel = create_parcel(shipping_method.carrier, cart)
+      parcel = create_new_parcel(cart)
 
       shipment = EasyPost::Shipment.create(
         to_address: to_address,
         from_address: from_address,
-        parcel: parcel
+        parcel: parcel,
+        carrier_accounts: carrier_accounts
       )
       cart.update(easypost_shipment_id: shipment.id)
       rates = shipment.rates
+    end
+
+    def self.create_new_parcel(order)
+      parcel = EasyPost::Parcel.create(
+          weight: order.total_weight.to_f + 16,
+          length: 12,
+          width: 12,
+          height: 9
+        )
     end
 
     def self.create_parcel(carrier, order)
       case carrier
       when "usps"
         parcel = EasyPost::Parcel.create(
-          predefined_package: 'LargeFlatRateBox',
+          predefined_package: 'Parcel',
           weight: order.total_weight
         )
       when "ups"
