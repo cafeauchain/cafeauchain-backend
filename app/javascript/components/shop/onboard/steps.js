@@ -17,12 +17,12 @@ const steps = active => [
         title: "Payment Methods",
         active: active === "payment"
     },
-    {
-        key: "shipping",
-        icon: "truck",
-        title: "Shipping Preferences",
-        active: active === "shipping"
-    }
+    // {
+    //     key: "shipping",
+    //     icon: "truck",
+    //     title: "Shipping Preferences",
+    //     active: active === "shipping"
+    // }
 ];
 
 export default steps;
