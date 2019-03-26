@@ -23,11 +23,12 @@ module Api::V1
         @customer.addresses.update(primary_location: false)
         address["country"] = "USA"
         address["primary_location"] = true
-        address["location_label"] = "Office"
+        
         current_address = @customer.addresses.find_by(street_1: address["street_1"], postal_code: address["postal_code"] )
         if current_address.present?
           current_address.update(address)
         else
+          address["location_label"] = "Office"
           @customer.addresses.create(address)
         end
       end
