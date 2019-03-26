@@ -5,30 +5,15 @@ import "./styles.scss";
 
 /* eslint-disable */
 import Flex from "shared/flex";
-import { Weights, Money } from "shared/textFormatters";
+import { Weights } from "shared/textFormatters";
 import defaultImg from "images/cac-logo-with-bg.png";
 
 import Product from "shop/product";
 
 import { sortBy, truncate, humanize } from "utilities";
 
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
-
-const Wrapper = props => (
-    <Context>
-        {ctx => (
-            <Products
-                {...props}
-                products={ctx.products}
-                variants={ctx.variants}
-                loading={ctx.loading}
-                userId={ctx.userId}
-                getCtxData={ctx.getData}
-            />
-        )}
-    </Context>
-);
 
 class Products extends React.Component {
     static propTypes = () => {
@@ -41,9 +26,9 @@ class Products extends React.Component {
     };
 
     componentDidMount() {
-        const { products, variants, getCtxData } = this.props;
-        if (products === undefined) getCtxData("products");
-        if (variants === undefined) getCtxData("variants");
+        const { products, variants, getData } = this.props;
+        if (products === undefined) getData("products");
+        if (variants === undefined) getData("variants");
     }
     variantBuilder = (variants, id, name) =>
         variants.reduce((arr, { id: variant_id, attributes }) => {
@@ -83,8 +68,8 @@ class Products extends React.Component {
             <F>
                 <Flex centermain wrap spacing="20">
                     {sorted.reduce((arr, { attributes, id }) => {
-                        const { product_image_urls, title, description, product_options } = attributes;
-                        const img = product_image_urls[0] || defaultImg;
+                        const { product_image_urls: img_urls, title, description, product_options } = attributes;
+                        const img = img_urls.length ? img_urls[0].url : defaultImg;
                         const shortDesc = truncate(description, 200);
                         const variantOptions = this.variantBuilder(variants, id, title);
                         const productOptions = this.productOptionsBuilder(product_options);
@@ -110,4 +95,4 @@ class Products extends React.Component {
     }
 }
 
-export default Wrapper;
+export default withContext(Products);
