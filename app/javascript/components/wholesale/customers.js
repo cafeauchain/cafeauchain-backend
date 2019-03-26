@@ -10,24 +10,8 @@ import tableDefs from "defs/tables/manageCustomersTable";
 
 import { sortBy } from "utilities";
 
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
-
-const Wrapper = props => {
-    return (
-        <Context>
-            {ctx => (
-                <Orders
-                    {...props}
-                    customers={ctx.customers}
-                    loading={ctx.loading}
-                    userId={ctx.userId}
-                    getCtxData={ctx.getData}
-                />
-            )}
-        </Context>
-    );
-};
 
 class Orders extends Component {
     constructor(props) {
@@ -64,4 +48,4 @@ Orders.propTypes = {
     customers: array
 };
 
-export default Wrapper;
+export default withContext(Orders);

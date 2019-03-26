@@ -13,7 +13,7 @@ module Manage
     end
 
     def index
-      customers = CustomerProfile.all
+      customers = current_user.roaster_profile.customer_profiles
       @customers = ActiveModel::SerializableResource.new(customers, each_serializer: CustomerSerializer, scope: current_user.roaster_profile)
       render "manage/primary", locals: {
         roaster: current_user.roaster_profile,

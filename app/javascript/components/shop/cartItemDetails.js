@@ -4,13 +4,13 @@ import { Item, Label, Image } from "semantic-ui-react";
 
 /* eslint-disable */
 import { Weights, Money } from "shared/textFormatters";
-import randomCoffeeImage from "shared/randomCoffeeImage";
+import defaultImg from "images/cac-logo-with-bg.png";
 
 import { humanize } from "utilities";
 /* eslint-enable */
 
 const CartItemDetails = ({ item }) => {
-    const image = item.image || randomCoffeeImage();
+    const image = item.image ? item.image.url : defaultImg;
     return (
         <F>
             <Item.Image>

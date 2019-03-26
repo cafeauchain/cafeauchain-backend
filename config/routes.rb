@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-24T13:45:13.061376 #51778]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-03-25T15:59:52.337756 #64122]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                         Prefix Verb   URI Pattern                                                                              Controller#Action
 #      upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                 api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -118,6 +118,8 @@
 #                          api_v1_customer_cards POST   /api/v1/customers/:customer_id/cards(.:format)                                           api/v1/customers#cards
 #                 api_v1_customer_set_as_default PUT    /api/v1/customers/:customer_id/set_as_default(.:format)                                  api/v1/customers#set_as_default
 #                    api_v1_customer_remove_card DELETE /api/v1/customers/:customer_id/remove_card(.:format)                                     api/v1/customers#remove_card
+#          api_v1_customer_update_onboard_status PUT    /api/v1/customers/:customer_id/update_onboard_status(.:format)                           api/v1/customers#update_onboard_status
+#           api_v1_customer_set_shipping_default PUT    /api/v1/customers/:customer_id/set_shipping_default(.:format)                            api/v1/customers#set_shipping_default
 #                       add_logo_api_v1_customer POST   /api/v1/customers/:id/add_logo(.:format)                                                 api/v1/customers#add_logo
 #                               api_v1_customers GET    /api/v1/customers(.:format)                                                              api/v1/customers#index
 #                                                POST   /api/v1/customers(.:format)                                                              api/v1/customers#create
@@ -182,6 +184,7 @@
 #                         shop_onboard_addresses GET    /shop/onboard/addresses(.:format)                                                        shop/onboard#addresses
 #                           shop_onboard_payment GET    /shop/onboard/payment(.:format)                                                          shop/onboard#payment
 #                          shop_onboard_shipping GET    /shop/onboard/shipping(.:format)                                                         shop/onboard#shipping
+#                 shop_onboard_onboard_completed GET    /shop/onboard/onboard_completed(.:format)                                                shop/onboard#onboard_completed
 #                         producer_profile_crops GET    /producers/:producer_profile_id/crops(.:format)                                          crops#index
 #                                                POST   /producers/:producer_profile_id/crops(.:format)                                          crops#create
 #                      new_producer_profile_crop GET    /producers/:producer_profile_id/crops/new(.:format)                                      crops#new
@@ -301,6 +304,8 @@ Rails.application.routes.draw do
         post :cards
         put :set_as_default
         delete :remove_card
+        put :update_onboard_status
+        put :set_shipping_default
         member do
           post :add_logo
         end
@@ -356,6 +361,7 @@ Rails.application.routes.draw do
     get "onboard/addresses", to: "onboard#addresses"
     get "onboard/payment", to: "onboard#payment"
     get "onboard/shipping", to: "onboard#shipping"
+    get "onboard/onboard_completed", to: "onboard#onboard_completed"
   end
 
   resources :producer_profiles, path: "producers" do

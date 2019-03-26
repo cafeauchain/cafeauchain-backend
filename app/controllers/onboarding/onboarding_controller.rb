@@ -51,8 +51,10 @@ module Onboarding
     end
 
     def shipping
+      shipping_methods = @roaster.shipping_methods
       render "manage/primary", locals: {
         roaster: @roaster,
+        shipping_methods: shipping_methods,
         title: 'Roaster Onboarding | Shipping',
         component: 'roaster_onboarding/shipping'
       }

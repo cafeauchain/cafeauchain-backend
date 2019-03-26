@@ -6,6 +6,7 @@ import { Form, Header, Divider, Dimmer, Loader } from "semantic-ui-react";
 import { usStates } from "utilities";
 import Input from "shared/input";
 import ImageChange from "shared/ImageChange";
+import Addresses from "shared/addresses";
 
 import { url as API_URL, requester } from "utilities/apiUtils";
 
@@ -54,7 +55,7 @@ class EditCustomer extends Component {
 
     render() {
         const { details, loading } = this.state;
-        const { name, address_1, address_2, city, state, zip_code, terms, img_url, id, company_name, email } = details;
+        const { name, terms, img_url, id, company_name, email, ...address } = details;
 
         const Input = this.renderInput;
         return (
@@ -72,16 +73,7 @@ class EditCustomer extends Component {
                     <Input label="Contact Name" name="name" value={name} />
                     <Input label="Contact Email" name="email" value={email} type="email" />
 
-                    <Form.Group inline widths="equal">
-                        <Input label="Address 1" value={address_1} />
-                        <Input label="Address 2" value={address_2} />
-                    </Form.Group>
-
-                    <Form.Group inline widths="equal">
-                        <Input label="City" value={city} />
-                        <Input label="Zip" value={zip_code} name="zip_code" />
-                        <Input inputType="select" label="State" defaultValue={state} options={usStates} />
-                    </Form.Group>
+                    <Addresses details={address} onChange={this.handleInputChange} />
 
                     <Input inputType="textarea" label="Terms" defaultValue={terms} />
 

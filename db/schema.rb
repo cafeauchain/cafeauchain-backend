@@ -37,12 +37,6 @@ ActiveRecord::Schema.define(version: 2019_03_24_174040) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "add_options_to_products", force: :cascade do |t|
-    t.jsonb "product_options"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "addresses", force: :cascade do |t|
     t.float "latitude"
     t.float "longitude"
@@ -260,6 +254,12 @@ ActiveRecord::Schema.define(version: 2019_03_24_174040) do
     t.index ["product_id"], name: "index_product_inventory_items_on_product_id"
   end
 
+  create_table "product_options", force: :cascade do |t|
+    t.jsonb "product_options"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "product_variants", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.integer "quantity"
     t.string "variant_title"
@@ -449,6 +449,9 @@ ActiveRecord::Schema.define(version: 2019_03_24_174040) do
     t.bigint "customer_profile_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "shipping"
+    t.float "tax_rate"
+    t.integer "onboard_status"
     t.index ["customer_profile_id"], name: "index_wholesale_profiles_on_customer_profile_id"
     t.index ["roaster_profile_id"], name: "index_wholesale_profiles_on_roaster_profile_id"
   end

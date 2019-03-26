@@ -6,22 +6,37 @@ import { Header, Card, Button, Statistic } from "semantic-ui-react";
 import Flex from "shared/flex";
 import { Money, Weights } from "shared/textFormatters";
 import ErrorHandler from "shared/errorHandler";
+import Modal from "shared/modal";
 
+import ShippingOptions from "shop/shipping/options"
+import CustomerAddresses from "shop/customer/addresses";
+
+import { humanize } from "utilities";
 import { url as API_URL, requester } from "utilities/apiUtils";
+import withContext from "contexts/withContext";
 /* eslint-enable */
 
 class CartDetails extends React.Component {
     static propTypes = () => {
-        const { object } = PropTypes;
+        const { object, array } = PropTypes;
         return {
-            cart: object
+            cart: object,
+            rates: array
         };
     };
     constructor(props) {
         super(props);
+        const { rates } = props;
+        const defaultRate = rates.find( rate => rate.service === "Priority" ) || rates[0];
+        
         this.state = {
-            errors: []
+            errors: [],
+            shipping: defaultRate
         };
+    }
+
+    updateCartDetails = obj => {
+        this.setState( obj );
     }
 
     handleSubmit = async e => {
@@ -51,13 +66,13 @@ class CartDetails extends React.Component {
 
     render() {
         const {
-            cart: { attributes }
+            cart: { attributes },
+            profile: { attributes: profileAttrs },
+            rates
         } = this.props;
-        const { errors } = this.state;
-        // TODO Use real address and allow them to change
-        // Either prefined or on the fly
-        const shipping = "18.68";
-        const cartTotal = Number(attributes.total_price) + Number(shipping);
+        const { primary_address: { street_1, street_2, city, state, postal_code } } = profileAttrs; 
+        const { errors, shipping } = this.state;
+        const cartTotal = Number(attributes.total_price) + Number(shipping.retail_rate);
         return (
             <Card fluid>
                 <ErrorHandler errors={errors} />
@@ -65,11 +80,19 @@ class CartDetails extends React.Component {
                 <Card.Content>
                     <Card.Description content="Shipping Address" />
                     <Card.Meta>
-                        <div>Attn: Wholesale Bob</div>
-                        <div>123 Main Street</div>
-                        <div>Suite 110</div>
-                        <div>That One Place, MN 12345</div>
-                        <Button className="unstyled link" content="Edit" />
+                        <div><strong>{profileAttrs.company_name}</strong></div>
+                        <div>{street_1}</div>
+                        {street_2 && (
+                            <div>{street_2}</div>
+                        )}
+                        <div>{`${ city }, ${ state } ${ postal_code}`}</div>
+                        <Modal 
+                            text="Edit"
+                            title="Edit Addresses"
+                            unstyled
+                            className="link"
+                            component={<CustomerAddresses />}
+                        />
                     </Card.Meta>
                 </Card.Content>
                 <Card.Content extra>
@@ -89,12 +112,41 @@ class CartDetails extends React.Component {
                     </Flex>
                 </Card.Content>
                 <Card.Content>
+                    <p><strong>Shipping</strong></p>
                     <Flex spacebetween spacing="10">
-                        <span>Estimated Shipping: </span>
+                        <span>Service: </span>
                         <span>
-                            <Money>{shipping}</Money>
+                            {humanize(shipping.service, true)}
                         </span>
                     </Flex>
+                    <Flex spacebetween spacing="10">
+                        <span>Shipping Estimate: </span>
+                        <span>
+                            {shipping.est_delivery_days ? shipping.est_delivery_days + " days" : "Unknown"}
+                        </span>
+                    </Flex>
+                    <Flex spacebetween spacing="10">
+                        <span>Price: </span>
+                        <span>
+                            <Money>{shipping.retail_rate}</Money>
+                        </span>
+                    </Flex>
+                    <Modal
+                        text="Edit"
+                        title="Choose Shipping Options"
+                        unstyled
+                        className="link"
+                        component={(
+                            <ShippingOptions 
+                                rates={rates}
+                                updateCartDetails={this.updateCartDetails}
+                                current={shipping}
+                            />
+                        )}
+                    />
+                </Card.Content>
+                <Card.Content>
+                    
                     <Flex spacebetween spacing="10">
                         <span>Subtotal: </span>
                         <span>
@@ -126,4 +178,4 @@ class CartDetails extends React.Component {
     }
 }
 
-export default CartDetails;
+export default withContext(CartDetails);

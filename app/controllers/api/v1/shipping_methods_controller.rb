@@ -1,13 +1,24 @@
 module Api::V1
   class ShippingMethodsController < ApplicationController
+    before_action :set_roaster
+
     def index
       @shipping_methods = @roaster.shipping_methods
       render json: @shipping_methods, status: 200
     end
 
     def create
-      @shipping_method = ShippingServices::AddShippingMethod.add(params)
-      render json: @shipping_method, status: 200
+      begin
+        @shipping_method = ShippingServices::AddShippingMethod.add(params)
+        render json: @shipping_method, status: 200
+      rescue StandardError => e
+        render json: {
+            error: e.http_status,
+            message: e.message,
+            code: e.code
+        }, status: e.http_status
+      end
+      
     end
 
     def get_rates

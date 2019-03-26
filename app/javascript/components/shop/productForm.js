@@ -181,6 +181,7 @@ class ProductForm extends React.Component {
                             type="number"
                             onChange={this.handleInputChange}
                             value={details.quantity}
+                            allowLP
                         >
                             <Button
                                 type="button"
@@ -191,7 +192,7 @@ class ProductForm extends React.Component {
                                 disabled={Number(details.quantity) === 0}
                                 onClick={this.decrementQty}
                             />
-                            <input />
+                            <input data-lpignore="true" />
                             <Button
                                 type="button"
                                 primary

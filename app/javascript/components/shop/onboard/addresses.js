@@ -11,7 +11,7 @@ class OnboardAddresses extends React.Component {
     state = {};
     render() {
         const left = {};
-        const right = {href: 'payment', text: 'Payment Method', as: 'a'};
+        const right = {href: 'payment', text: 'Payment Method'};
         return (
             <React.Fragment>
                 <Step.Group fluid items={steps("addresses")} />

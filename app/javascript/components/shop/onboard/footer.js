@@ -4,13 +4,15 @@ import { Divider, Button } from "semantic-ui-react";
 
 /* eslint-disable */
 import Flex from "shared/flex";
+import { requester, url as API_URL } from "utilities/apiUtils";
+import withContext from "contexts/withContext";
 /* eslint-enable */
 
 class OnboardFooter extends React.Component {
     handleStatusUpdate = async (e, item) => {
         // TODO Decide if I need onboard_status for customers
-        const { userId } = this.props;
-        const url = roasterUrl(userId) + "/update_onboard_status";
+        const { profile } = this.props;
+        const url = API_URL + "/customers/" + profile.id + "/update_onboard_status";
         const status = item["data-status"];
         const response = await requester({ url, body: { status }, method: "PUT" });
         if (response instanceof Error) {
@@ -63,7 +65,9 @@ class OnboardFooter extends React.Component {
 const { object } = PropTypes;
 OnboardFooter.propTypes = {
     left: object,
-    right: object
+    right: object,
+    profile: object,
+    roaster: object
 };
 
-export default OnboardFooter;
+export default withContext(OnboardFooter);

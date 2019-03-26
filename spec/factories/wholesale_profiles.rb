@@ -3,6 +3,9 @@
 # Table name: wholesale_profiles
 #
 #  id                  :bigint(8)        not null, primary key
+#  onboard_status      :integer
+#  shipping            :integer
+#  tax_rate            :float
 #  terms               :text
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null

@@ -48,7 +48,9 @@ class EditCustomer extends Component {
         target.blur();
         await this.setState({ loading: true });
         const { details } = this.state;
-        const { id, ...profile } = details;
+        const { onboard } = this.props;
+        let { id, ...profile } = details;
+        profile = onboard ? { ...profile, onboard } : profile;
         const url = `${API_URL}/customers/${id}`;
         const response = await requester({ url, body: profile, method: "PUT" });
         const hasAttachments = details.hasOwnProperty("logo") && details.logo.length > 0;
@@ -64,9 +66,7 @@ class EditCustomer extends Component {
                 if (response.redirect) {
                     window.location.href = await response.redirect_url;
                 } else {
-                    const { onboard } = this.props;
                     this.setState({ loading: false });
-                    if( onboard ) window.location.href = "addresses";
                 }
             }
         }, 400);
@@ -84,6 +84,7 @@ class EditCustomer extends Component {
     renderInput = props => <Input {...props} onChange={this.handleInputChange} autoComplete="off" />;
 
     render() {
+        const { onboard } = this.props;
         const { details, loading, logo_url } = this.state;
         const { name, terms, logo = [], id, company_name, email, ...address } = details;
 
@@ -118,14 +119,16 @@ class EditCustomer extends Component {
                     <Header as="h4" content="Primary Address" />
 
                     <Addresses details={address} onChange={this.handleInputChange} />
-                    <a href="/shop/manage-addresses" style={{ fontSize: 12 }}>
-                        Manage Addresses
-                    </a>
-                    <br />
-                    <br />
+                    {!onboard && (
+                        <React.Fragment>
+                            <a href="/shop/manage-addresses" style={{ fontSize: 12 }}>
+                            Manage Addresses
+                            </a>
+                            <br />
+                            <br />
 
-                    {false && <Input inputType="textarea" label="Terms" defaultValue={terms} />}
-
+                        </React.Fragment>
+                    )}
                     <Form.Button primary onClick={this.handleSubmit} content="Update Profile" />
                 </Form>
             </Segment>
