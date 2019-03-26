@@ -72,9 +72,13 @@ class CartDetails extends React.Component {
         } = this.props;
         const { primary_address: { street_1, street_2, city, state, postal_code } } = profileAttrs; 
         const { errors, shipping } = this.state;
-        const cartTotal = Number(attributes.total_price) + Number(shipping.retail_rate);
         const speed = Number(shipping.est_delivery_days);
         const speedString = speed ? pluralize(speed, ' day') : "Unknown";
+        
+        // TODO Consider moving these calculations to the backend
+        const cartTotal = (Number(attributes.total_price) + Number(shipping.retail_rate)).toFixed(2);
+        const tax_due = (Number(profileAttrs.wholesale_profile.tax_rate) * Number(cartTotal) / 100).toFixed(2);
+        const orderTotal = (Number(cartTotal) + Number(tax_due)).toFixed(2);
         return (
             <Card fluid>
                 <ErrorHandler errors={errors} />
@@ -114,6 +118,14 @@ class CartDetails extends React.Component {
                     </Flex>
                 </Card.Content>
                 <Card.Content>
+                    <Flex spacebetween spacing="10">
+                        <span>Subtotal: </span>
+                        <span>
+                            <Money>{attributes.total_price}</Money>
+                        </span>
+                    </Flex>
+                </Card.Content>
+                <Card.Content>
                     <p><strong>Shipping</strong></p>
                     <Flex spacebetween spacing="10">
                         <span>Service: </span>
@@ -148,11 +160,17 @@ class CartDetails extends React.Component {
                     />
                 </Card.Content>
                 <Card.Content>
-                    
+                    <p><strong>Taxes</strong></p>
                     <Flex spacebetween spacing="10">
-                        <span>Subtotal: </span>
+                        <span>Rate: </span>
                         <span>
-                            <Money>{attributes.total_price}</Money>
+                            {profileAttrs.wholesale_profile.tax_rate + "%"}
+                        </span>
+                    </Flex>
+                    <Flex spacebetween spacing="10">
+                        <span>Tax Due: </span>
+                        <span>
+                            <Money>{tax_due}</Money>
                         </span>
                     </Flex>
                 </Card.Content>
@@ -161,7 +179,7 @@ class CartDetails extends React.Component {
                         <Statistic size="mini">
                             <Statistic.Label>Total</Statistic.Label>
                             <Statistic.Value>
-                                <Money type="postive">{cartTotal}</Money>
+                                <Money type="postive">{orderTotal}</Money>
                             </Statistic.Value>
                         </Statistic>
                         <div>
@@ -171,6 +189,9 @@ class CartDetails extends React.Component {
                                 icon="right arrow"
                                 labelPosition="right"
                                 onClick={this.handleSubmit}
+                                data-shipping={shipping.retail_rate}
+                                data-tax={tax_due}
+                                data-total={orderTotal}
                             />
                         </div>
                     </Flex>
