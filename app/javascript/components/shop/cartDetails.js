@@ -11,6 +11,9 @@ import Modal from "shared/modal";
 import ShippingOptions from "shop/shipping/options"
 import CustomerAddresses from "shop/customer/addresses";
 
+import CartChangePayment from "shop/cart/changePayment";
+import MiniCard from "payments/miniCard";
+
 import { humanize, pluralize } from "utilities";
 import { url as API_URL, requester } from "utilities/apiUtils";
 import withContext from "contexts/withContext";
@@ -26,12 +29,15 @@ class CartDetails extends React.Component {
     };
     constructor(props) {
         super(props);
-        const { rates } = props;
+        const { rates, cards, profile: { attributes: { terms } } } = props;
         const defaultRate = rates.find( rate => rate.service === "Priority" ) || rates[0];
-        
+        const card = cards.find( card => card.default );
+        const payment_source = card.stripe_card_id; 
         this.state = {
             errors: [],
-            shipping: defaultRate
+            shipping: defaultRate,
+            payment: terms ? "terms_with_vendor" : "card_on_file",
+            payment_source: !terms ? payment_source : undefined
         };
     }
 
@@ -68,10 +74,12 @@ class CartDetails extends React.Component {
         const {
             cart: { attributes },
             profile: { attributes: profileAttrs },
-            rates
+            rates,
+            cards,
+            stripeApiKey
         } = this.props;
         const { primary_address: { street_1, street_2, city, state, postal_code } } = profileAttrs; 
-        const { errors, shipping } = this.state;
+        const { errors, shipping, payment, payment_source } = this.state;
         const speed = Number(shipping.est_delivery_days);
         const speedString = speed ? pluralize(speed, ' day') : "Unknown";
         
@@ -79,6 +87,8 @@ class CartDetails extends React.Component {
         const cartTotal = (Number(attributes.total_price) + Number(shipping.retail_rate)).toFixed(2);
         const tax_due = (Number(profileAttrs.wholesale_profile.tax_rate) * Number(cartTotal) / 100).toFixed(2);
         const orderTotal = (Number(cartTotal) + Number(tax_due)).toFixed(2);
+
+        const card = cards.find( card => card.stripe_card_id === payment_source );
         return (
             <Card fluid>
                 <ErrorHandler errors={errors} />
@@ -173,6 +183,35 @@ class CartDetails extends React.Component {
                             <Money>{tax_due}</Money>
                         </span>
                     </Flex>
+                </Card.Content>
+                <Card.Content>
+                    <p><strong>Payment</strong></p>
+                    {payment === "terms_with_vendor" && (
+                        <div>
+                            {profileAttrs.terms}
+                        </div>
+                    )}
+                    {payment === "card_on_file" && (
+                        <div>
+                            <MiniCard card={card} />
+                        </div>
+                        
+                    )}
+                    <Modal
+                        text="Change"
+                        title="Change Payment Method"
+                        unstyled
+                        className="link"
+                        component={(
+                            <CartChangePayment 
+                                cards={cards}
+                                updateCartDetails={this.updateCartDetails}
+                                payment_source={payment_source}
+                                terms={profileAttrs.terms}
+                                stripeApiKey={stripeApiKey}
+                            />
+                        )}
+                    />
                 </Card.Content>
                 <Card.Content>
                     <Flex spacebetween centercross spacing="10">
