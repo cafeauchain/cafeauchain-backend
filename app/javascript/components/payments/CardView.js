@@ -1,20 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Button, Grid, Card, Icon, Label } from "semantic-ui-react";
+import { Button, Grid, Card, Label } from "semantic-ui-react";
 
 /* eslint-disable */
 import Flex from "shared/flex";
+
+import MiniCard from "payments/miniCard";
 /* eslint-enable */
 
 const CardView = props => {
     const {
-        card: { brand, name, last4, id, exp_month, exp_year, default: defaultCard },
+        card: { name, id, default: defaultCard, ...rest },
         setAsDefault,
         removeCard
     } = props;
-    const exp = exp_month + "/" + exp_year;
-    const brandLower = brand ? brand.toLowerCase() : "";
-    const brandUpper = brand ? brand.toUpperCase() : "";
     const innerSetAsDefault = e => {
         e.preventDefault();
         setAsDefault(id);
@@ -32,10 +31,7 @@ const CardView = props => {
                         {defaultCard && <Label color="green" corner="right" icon="asterisk" />}
                     </Card.Header>
                     <Card.Description>
-                        <Icon name={"cc " + brandLower} size="large" />
-                        {`${brandUpper} ${last4}`}
-                        <br />
-                        {exp}
+                        <MiniCard card={rest} />
                     </Card.Description>
                 </Card.Content>
                 {!defaultCard && (
