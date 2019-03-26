@@ -55,7 +55,7 @@ class EditCustomer extends Component {
         details = { ...details };
         if (name === "") return;
         const val = value || checked;
-        details[name] = val;
+        details[name] = val || "";
         this.setState({ details });
     };
 
