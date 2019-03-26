@@ -8,7 +8,7 @@ import { humanize } from "utilities";
 const Approval = props => {
     // eslint-disable-next-line react/prop-types
     const { content } = props;
-    let value = humanize(content);
+    let value = content ? humanize(content) : "";
     if( content === "onboard_completed" ) value = <span style={{ color: 'red' }}>Pending Approval</span>;
     return value;
 };
