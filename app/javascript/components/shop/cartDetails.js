@@ -73,6 +73,9 @@ class CartDetails extends React.Component {
         const { primary_address: { street_1, street_2, city, state, postal_code } } = profileAttrs; 
         const { errors, shipping } = this.state;
         const cartTotal = Number(attributes.total_price) + Number(shipping.retail_rate);
+        const speed = Number(shipping.est_delivery_days);
+        const pluralize = (val, str) => val + " " + (val > 1 ? str + "s" : str);
+        const speedString = speed ? pluralize(speed, ' day') : "Unknown";
         return (
             <Card fluid>
                 <ErrorHandler errors={errors} />
@@ -122,7 +125,7 @@ class CartDetails extends React.Component {
                     <Flex spacebetween spacing="10">
                         <span>Shipping Estimate: </span>
                         <span>
-                            {shipping.est_delivery_days ? shipping.est_delivery_days + " days" : "Unknown"}
+                            {speedString}
                         </span>
                     </Flex>
                     <Flex spacebetween spacing="10">

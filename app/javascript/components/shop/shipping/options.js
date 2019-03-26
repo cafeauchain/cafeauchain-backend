@@ -43,6 +43,9 @@ class ShippingOptions extends React.Component {
         return (
             <div>
                 {rates.map( rate => {
+                    const speed = Number(rate.est_delivery_days);
+                    const pluralize = (val, str) => val + " " + (val > 1 ? str + "s" : str);
+                    const speedString = speed ? pluralize(speed, ' day') : "Unknown";
                     return (
                         <Segment key={rate.id}>
                             {current.id === rate.id && (
@@ -61,7 +64,7 @@ class ShippingOptions extends React.Component {
                                 </div>
                                 <div flex="25"><strong>Speed: </strong></div>
                                 <div flex="75">
-                                    {rate.est_delivery_days ? rate.est_delivery_days + " days" : "Unknown"}
+                                    {speedString}
                                 </div>
                             </Flex> 
                             <br />
