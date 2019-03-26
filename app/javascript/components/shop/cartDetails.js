@@ -11,7 +11,7 @@ import Modal from "shared/modal";
 import ShippingOptions from "shop/shipping/options"
 import CustomerAddresses from "shop/customer/addresses";
 
-import { humanize } from "utilities";
+import { humanize, pluralize } from "utilities";
 import { url as API_URL, requester } from "utilities/apiUtils";
 import withContext from "contexts/withContext";
 /* eslint-enable */
@@ -74,7 +74,6 @@ class CartDetails extends React.Component {
         const { errors, shipping } = this.state;
         const cartTotal = Number(attributes.total_price) + Number(shipping.retail_rate);
         const speed = Number(shipping.est_delivery_days);
-        const pluralize = (val, str) => val + " " + (val > 1 ? str + "s" : str);
         const speedString = speed ? pluralize(speed, ' day') : "Unknown";
         return (
             <Card fluid>

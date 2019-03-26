@@ -11,6 +11,7 @@ import getTimePeriod from "./getTimePeriod";
 import humanize from "./humanize";
 import noEmpties from "./noEmpties";
 import params from "./params";
+import pluralize from "./pluralize";
 import readCookie from "./readCookie";
 import registerServiceWorker from "./registerServiceWorker";
 import roasterCostCalc from "./roasterCostCalc";
@@ -34,6 +35,7 @@ export {
     humanize,
     noEmpties,
     params,
+    pluralize,
     readCookie,
     registerServiceWorker,
     roasterCostCalc,

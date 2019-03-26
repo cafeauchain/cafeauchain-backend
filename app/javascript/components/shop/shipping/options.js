@@ -6,7 +6,7 @@ import { Segment, Button, Label } from "semantic-ui-react";
 /* eslint-disable */
 import Flex from "shared/flex";
 import { Money } from "shared/textFormatters";
-import { humanize } from "utilities";
+import { humanize, pluralize } from "utilities";
 /* eslint-enable */
 
 class ShippingOptions extends React.Component {
@@ -44,7 +44,6 @@ class ShippingOptions extends React.Component {
             <div>
                 {rates.map( rate => {
                     const speed = Number(rate.est_delivery_days);
-                    const pluralize = (val, str) => val + " " + (val > 1 ? str + "s" : str);
                     const speedString = speed ? pluralize(speed, ' day') : "Unknown";
                     return (
                         <Segment key={rate.id}>
