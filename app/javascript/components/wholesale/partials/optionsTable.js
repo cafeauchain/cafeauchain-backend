@@ -13,9 +13,7 @@ class Options extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            defaultOptions: [],
-            added: [],
-            selected: [],
+            selected: props.options,
             addedOption: ""
         };
     }
@@ -23,20 +21,20 @@ class Options extends Component {
     componentDidUpdate(props) {
         const { options } = props;
         const { options: newOptions } = this.props;
-        if (!options.length && newOptions.length) {
+        if (newOptions.length && newOptions !== options) {
             // eslint-disable-next-line
-            this.setState({ defaultOptions: newOptions, selected: newOptions });
+            this.setState({ selected: newOptions });
         }
     }
 
     addOption = e => {
         e.preventDefault();
         const { setOptions } = this.props;
-        const { addedOption, selected, added } = this.state;
+        const { addedOption, selected } = this.state;
         const modified = underscorer(addedOption);
         const updated = [...selected, modified];
         setOptions(updated);
-        this.setState({ addedOption: "", selected: updated, added: [...added, modified] });
+        this.setState({ addedOption: "", selected: updated });
     };
 
     handleOptionInputChange = (e, { value }) => {
@@ -57,14 +55,18 @@ class Options extends Component {
         if (checked) {
             selected.push(value);
         } else {
-            selected.splice(index, 1);
+            if (selected.length > 1) {
+                selected.splice(index, 1);
+            } else {
+                return;
+            }
         }
         setOptions(selected);
         this.setState({ selected });
     };
     render() {
-        const { addedOption, selected, defaultOptions, added } = this.state;
-        const options = [...defaultOptions, ...added];
+        const { options } = this.props;
+        const { addedOption, selected } = this.state;
         return (
             <div style={{ marginBottom: 5 }}>
                 <Header as="h3" content="Product Options" style={{ marginBottom: 10 }} />
@@ -89,6 +91,7 @@ class Options extends Component {
                     onChange={this.handleOptionInputChange}
                     value={addedOption}
                     onKeyPress={this.handleEnter}
+                    allowLP
                 >
                     <input data-lpignore="true" />
                     <Button type="button" color="blue" content="Add Option" onClick={this.addOption} />
@@ -98,7 +101,7 @@ class Options extends Component {
     }
 }
 
-const { array, func } = PropTypes;
+const { func, array } = PropTypes;
 Options.propTypes = {
     options: array,
     setOptions: func

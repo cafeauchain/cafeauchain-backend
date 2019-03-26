@@ -1,7 +1,7 @@
 module Api::V1
   class RoasterProfilesController < ApplicationController
-    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options, :wholesale_signup]
-    before_action :set_roaster, only: [:update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options, :wholesale_signup]
+    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options, :wholesale_signup, :update_onboard_status, :update_wholesale_status]
+    before_action :set_roaster, only: [:update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options, :wholesale_signup, :update_onboard_status, :update_wholesale_status]
 
     def validate_step
       current_step = params[:current_step]
@@ -33,6 +33,7 @@ module Api::V1
         end
         session[:roaster_profile_attributes] = nil
         StripeServices::EnrollBaseSubscription.initial_enroll(current_user.id)
+        roaster_profile.update(onboard_status: 'lots')
         render json: {"redirect":true,"redirect_url": onboarding_lots_path()}, status: 200
       else
         redirect_to new_roaster_profile_path, alert: 'There were a problem when creating the Roaster Profile.'
@@ -80,7 +81,7 @@ module Api::V1
       @card = Card.find(params[:card_id])
       if @roaster_profile.subscription.default_card.update(default: false)
         @card.update(default: true)
-        StripeServices::UpdateDefaultCard.call(@roaster_profile.subscription.id, @card.stripe_card_id)
+        StripeServices::UpdateDefaultCard.call(@roaster_profile.subscription.id, nil, @card.stripe_card_id)
         render json: @roaster_profile.subscription.cards, status: 200
       else
         render json: @card.errors, status: 422
@@ -90,7 +91,7 @@ module Api::V1
     def remove_card
       @card = Card.find(params[:card_id])
       if @roaster_profile.subscription.default_card != @card
-        StripeServices::RemoveCard.call(@roaster_profile.subscription.id, @card.stripe_card_id)
+        StripeServices::RemoveCard.call(@roaster_profile.subscription.id, nil, @card.stripe_card_id)
         @card.destroy
         render json: @roaster_profile.subscription.cards, status: 200
       else
@@ -100,14 +101,39 @@ module Api::V1
       end
     end
 
-    def default_options
-      @options = VariantOption.where(roaster_profile_id: @roaster_profile.id )
-      render json: @options, status: 200
-    end
+    # def default_options
+    #   @options = VariantOption.where(roaster_profile_id: @roaster_profile.id )
+    #   render json: @options, status: 200
+    # end
 
     def wholesale_signup
-      @connect = StripeServices::CreateConnectAccount.account_create(@roaster_profile.id, params)
-      render json: @connect, status: 200
+      begin
+        StripeServices::CreateConnectAccount.account_create(@roaster_profile.id, params)
+        @roaster_profile.update(onboard_status: "shipping")
+        render json: { redirect: true, redirect_url: onboarding_shipping_path }, status: 200
+      rescue StandardError => e
+        render json: {
+            error: e.http_status,
+            message: e.message,
+            code: e.code
+        }, status: e.http_status
+      end
+    end
+
+    def update_onboard_status
+      if params[:status] == 'onboard_completed'
+        url = "/manage/dashboard"
+        @roaster_profile.update(onboard_status: params[:status], wholesale_status: 'enrolled')
+      else
+        url = "/onboarding/" + params[:status]
+        @roaster_profile.update(onboard_status: params[:status])
+      end
+      render json: { redirect: true, redirect_url: url }, status: 200
+    end
+
+    def update_wholesale_status
+      @roaster_profile.update(onboard_status: params[:status], wholesale_status: 'not_enrolled')
+      render json: { redirect: true, redirect_url: "/manage/dashboard" }, status: 200
     end
 
     private

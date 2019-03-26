@@ -17,7 +17,16 @@ import withContext from "contexts/withContext";
 
 const defaults = {
     producerId: "",
-    lotDetails: {},
+    lotDetails: {
+        name: "",
+        label: "",
+        lot_size: "",
+        price_per_pound: "",
+        low_on_hand: "",
+        low_remaining: "",
+        on_hand: 0,
+        roasted: 0
+    },
     hiddenFields: true,
     btnLoading: false,
     crop_name: "",
@@ -32,7 +41,14 @@ class SingleContract extends Component {
     }
 
     parentState = obj => {
-        this.setState(obj);
+        if (obj.lotDetails) {
+            let { lotDetails } = this.state;
+            const { lotDetails: lotDetailsFromChild, ...rest } = obj;
+            lotDetails = { ...lotDetails, ...lotDetailsFromChild };
+            this.setState({ lotDetails, ...rest });
+        } else {
+            this.setState(obj);
+        }
     };
 
     handleInputChange = (event, { value, name, checked }) => {
@@ -43,8 +59,6 @@ class SingleContract extends Component {
         lotDetails[name] = val;
         if (name === "harvest_year") {
             lotDetails.name = crop_name + " " + value;
-            lotDetails.on_hand = 0;
-            lotDetails.roasted = 0;
         }
         this.setState({ lotDetails });
     };
@@ -144,7 +158,10 @@ class SingleContract extends Component {
                                                 labelPosition={field.inputLabel ? "right" : undefined}
                                                 placeholder={field.placeholder}
                                                 onChange={this.handleInputChange}
-                                                value={lotDetails[field.name]}
+                                                value={
+                                                    lotDetails[field.name] === undefined ? "" : lotDetails[field.name]
+                                                }
+                                                type={field.type}
                                             />
                                         </div>
                                     ))}

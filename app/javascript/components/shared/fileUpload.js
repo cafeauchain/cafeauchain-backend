@@ -33,7 +33,7 @@ class FileInput extends Component {
             value = multiple ? [...files] : file;
         }
         if (fileType === "fileImage") {
-            value = multiple ? [...files] : [file];
+            value = multiple ? [...files].slice(0, multiple > 1 ? multiple : undefined) : [file];
         }
         this.setState({ loading: true });
         await handleChange(event, { name, value });
@@ -106,7 +106,7 @@ class FileInput extends Component {
     }
 }
 
-const { func, string, bool, array } = PropTypes;
+const { func, string, bool, array, oneOfType, number } = PropTypes;
 FileInput.propTypes = {
     handleChange: func.isRequired,
     name: string.isRequired,
@@ -118,7 +118,7 @@ FileInput.propTypes = {
     fileType: string,
     changeText: string,
     image: string,
-    multiple: bool,
+    multiple: oneOfType([bool, number]),
     files: array
 };
 

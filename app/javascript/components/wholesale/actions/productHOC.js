@@ -35,15 +35,11 @@ function withProductForm(WrappedComponent) {
             };
         }
 
-        buildDetailsFromItem = ({ attributes }) => {
+        buildDetailsFromItem = ({ id, attributes }) => {
             return {
-                name: attributes.title,
-                description: attributes.description,
-                composition: attributes.composition.map(comp => ({
-                    inventory_item_id: comp.inventory_item_id,
-                    pct: comp.pct,
-                    id: comp.id
-                }))
+                id,
+                ...attributes,
+                name: attributes.title
             };
         };
 
@@ -70,7 +66,10 @@ function withProductForm(WrappedComponent) {
             let { details } = this.state;
             details = { ...details };
             if (name === "") return;
-            const val = value || checked;
+            let val = value || checked;
+            if (val === undefined) {
+                val = "";
+            }
             if (rest["data-object"] && rest["data-itemid"]) {
                 let temp = details[rest["data-object"]].find(({ id }) => id === rest["data-itemid"]);
                 temp[name] = val;
@@ -155,8 +154,10 @@ function withProductForm(WrappedComponent) {
 
         resetForm = () => {
             let defaults = { ...defaultDetails };
+            const { defaults: ctxDefaults } = this.context;
             defaults.composition = [compositionDefault()];
-            defaults.variants = [variantsDefault()];
+            defaults.variants = ctxDefaults.size.map(variantsDefault);
+            defaults.product_options = ctxDefaults.options;
             this.setState({ details: defaults });
         };
 
@@ -172,7 +173,8 @@ function withProductForm(WrappedComponent) {
                 buildInventoryOptions: this.buildInventoryOptions,
                 buildDefaultVariants: this.buildDefaultVariants,
                 buildDefaultOptions: this.buildDefaultOptions,
-                resetForm: this.resetForm
+                resetForm: this.resetForm,
+                onRemove: this.onRemove
             };
 
             return (

@@ -1,9 +1,9 @@
 class Api::V1::ProductsController < ApplicationController
-  before_action :set_roaster
+  before_action :set_roaster, except: [:delete_image]
   before_action :set_product, only: [:update, :add_images]
 
   def index
-    @products = Product.all
+    @products = Product.where(roaster_profile: @roaster)
     render json: @products, status: 200
   end
 
@@ -31,7 +31,12 @@ class Api::V1::ProductsController < ApplicationController
   end
 
   def add_images
-    params[:product_images].each {|pi| @product.product_images.attach(pi) }
+    params[:product_images].each {|pi| ActiveStorageServices::ImageAttachment.new(pi, @product.id, "Product", "product_images").callAsFile('medium') }
+  end
+
+  def delete_image
+    @image = ActiveStorage::Attachment.find(params[:id])
+    @image.purge
   end
 
   private

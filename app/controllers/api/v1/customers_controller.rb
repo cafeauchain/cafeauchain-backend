@@ -1,7 +1,7 @@
 module Api::V1
   class CustomersController < ApplicationController
     before_action :set_roaster
-    before_action :set_customer, only: [:show, :update, :add_logo]
+    before_action :set_customer, only: [:show, :update, :add_logo, :cards, :set_as_default, :remove_card]
 
     def index
       @customers = @roaster.customer_profiles
@@ -46,8 +46,47 @@ module Api::V1
 
     def cards
       begin
-        StripeServices::CreateCard.call(nil, @customer_profile.id, params[:token], params[:setAsDefault])
-        render json: @roaster_profile.subscription.cards, status: 200
+        StripeServices::CreateCard.call(nil, @customer.id, params[:token], params[:setAsDefault])
+        render json: @customer.cards, status: 200
+      rescue StandardError => e
+        render json: {
+            error: e.http_status,
+            message: e.message,
+            code: e.code
+        }, status: e.http_status
+      end
+    end
+
+    def set_as_default
+      begin
+        @card = Card.find(params[:card_id])
+        if @card.update(default: true)
+          StripeServices::UpdateDefaultCard.call(nil, @customer.id, @card.stripe_card_id)
+          render json: @customer.cards, status: 200
+        else
+          render json: @card.errors, status: 422
+        end
+      rescue StandardError => e
+        render json: {
+            error: e.http_status,
+            message: e.message,
+            code: e.code
+        }, status: e.http_status
+      end
+    end
+
+    def remove_card
+      begin
+        @card = Card.find(params[:card_id])
+        # if @roaster_profile.subscription.default_card != @card
+        StripeServices::RemoveCard.call(nil, @customer.id, @card.stripe_card_id)
+        @card.destroy
+        render json: @customer.cards, status: 200
+        # else
+        #   @card.errors.add(:base, "Cannot remove default card; please set another card as default first.")
+        #   puts @card.errors.full_messages
+        #   render json: @card.errors, status: 422
+        # end
       rescue StandardError => e
         render json: {
             error: e.http_status,
@@ -62,6 +101,29 @@ module Api::V1
       render json: {data: "success"}, status: 200
     end
 
+    def update_address
+      # TODO Consider moving this to another/its own controller because of id/customer_id conflict
+      # TODO Why doesnt the response return the correct values?
+      @customer = CustomerProfile.find(params[:customer_id])
+      address = address_params
+      if params[:primary_location]
+        @customer.addresses.update(primary_location: false)
+        address["primary_location"] = true
+      end
+      address["country"] = "USA"
+      address["location_label"] = params[:location_label]
+      current_address = @customer.addresses.find_by(id: params[:id])
+      if current_address.present?
+        current_address.update(address)
+      else
+        @customer.addresses.create(address)
+      end
+
+      @serCust = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
+
+      render json: { customer: @serCust }, status: 200 
+    end
+
     private
 
     def set_roaster
@@ -69,7 +131,12 @@ module Api::V1
     end
 
     def set_customer
-      @customer = CustomerProfile.find(params[:id])
+      if params[:customer_id].present?
+        @customer = CustomerProfile.find(params[:customer_id])
+      else
+        @customer = CustomerProfile.find(params[:id])
+      end
+      
     end
 
     def customer_params

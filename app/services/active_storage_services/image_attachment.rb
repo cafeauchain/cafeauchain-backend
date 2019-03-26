@@ -14,14 +14,23 @@ module ActiveStorageServices
       base64_string = uploaded_io[metadata.size..-1]
       blob = Base64.decode64(base64_string)
       image = MiniMagick::Image.read(blob)
-      
+
       @attachable.send(@attr).attach(io: File.open(image.path), filename: (@attr.to_s + "." + filetype))
     end
 
-    def callAsFile
+    def callAsFile(size = 'small')
+      if size == 'thumb'
+        dim = '150x150>'
+      elsif size == 'small'
+        dim = '300x300>'
+      elsif size == 'medium'
+        dim = '600x600>'
+      elsif size === 'large'
+        dim = '900x900>'
+      end
       image = MiniMagick::Image.read(@file.tempfile)
       image.combine_options do |img|
-        img.resize '300x300>'
+        img.resize dim
       end
       image.format 'jpg'
 

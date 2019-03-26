@@ -8,6 +8,7 @@ module Onboarding
         roaster: @roaster,
         # profile: profile,
         user: current_user,
+        # loggedIn: user_signed_in?,
         title: 'Roaster Onboarding | Create Profile',
         component: 'roaster_onboarding/profile'
       }
@@ -46,6 +47,22 @@ module Onboarding
         owner: @roaster.owner,
         title: 'Roaster Onboarding | Wholesale Signup',
         component: 'roaster_onboarding/wholesaleSignup'
+      }
+    end
+
+    def shipping
+      render "manage/primary", locals: {
+        roaster: @roaster,
+        title: 'Roaster Onboarding | Shipping',
+        component: 'roaster_onboarding/shipping'
+      }
+    end
+
+    def products
+      render "manage/primary", locals: {
+        roaster: @roaster,
+        title: 'Roaster Onboarding | Create Products',
+        component: 'roaster_onboarding/createProducts'
       }
     end
 

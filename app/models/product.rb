@@ -35,13 +35,15 @@ class Product < ApplicationRecord
   has_many :product_inventory_items
   has_many :inventory_items, through: :product_inventory_items
 
+  belongs_to :roaster_profile
+
   enum status: [:draft, :out_of_season, :live, :coming_soon]
 
   def compare_composition(composition_array)
     changed_inventory_items = []
     composition_array.each do |comp|
       pii = ProductInventoryItem.find_by(product: self, inventory_item_id: comp[:inventory_item_id])
-      if !pii.nil? && pii.percentage_of_product != comp[:pct] 
+      if !pii.nil? && pii.percentage_of_product != comp[:pct]
         changed_inventory_items << comp[:inventory_item_id]
       end
     end
@@ -49,9 +51,12 @@ class Product < ApplicationRecord
   end
 
   def product_image_urls
-    urls = []
-    product_images.each{ |pi| urls << url_for(pi) }
-    return urls
+    self.product_images.map{ |pi| 
+      {
+        url: url_for(pi),
+        id: pi.id
+      }
+    }
   end
 
 end

@@ -3,7 +3,9 @@ class CustomerSerializer < ActiveModel::Serializer
 
   def terms
     wp = self.object.wholesale_profiles.find_by(roaster_profile: scope)
-    wp.terms
+    if wp.present?
+      wp.terms
+    end
   end
 
   def order_count

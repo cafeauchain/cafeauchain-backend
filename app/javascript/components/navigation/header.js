@@ -10,21 +10,24 @@ import "./nav.scss";
 class Header extends Component {
     constructor(props) {
         super(props);
+        // eslint-disable-next-line
+        console.log(props);
         this.state = {};
     }
 
     render() {
-        const { cart, userId } = this.props;
-        const links = userId ? (cart ? customer({ cart }) : roaster()) : base;
+        const { cart, roaster: roasterProfile, loggedIn, header_info } = this.props;
+        const links = loggedIn ? (cart ? customer({ cart }) : roaster(roasterProfile)) : base;
         const { right = [], buttons } = links;
-        return <NavBar rightItems={right} buttons={buttons} />;
+        return <NavBar rightItems={right} buttons={buttons} header_info={header_info} />;
     }
 }
 
-const { object, oneOfType, number, string } = PropTypes;
+const { object, bool } = PropTypes;
 Header.propTypes = {
     cart: object,
-    userId: oneOfType([number, string])
+    loggedIn: bool,
+    roaster: object
 };
 
 export default Header;

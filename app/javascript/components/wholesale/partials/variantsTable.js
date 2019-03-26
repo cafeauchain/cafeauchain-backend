@@ -12,7 +12,7 @@ import { Weights } from "shared/textFormatters";
 
 const Variants = ({ variants, fields, handleChange, btn: RemoveButton }) => (
     <div style={{ marginBottom: 10 }}>
-        <Header as="h3" content="Product Size" style={{ marginBottom: 10 }} />
+        <Header as="h3" content="Product Sizes" style={{ marginBottom: 10 }} />
         <Flex spacing="10">
             {fields.map(({ label, flex, width }) => (
                 <div key={label} flex={flex} style={{ width: width, whiteSpace: "nowrap" }}>
@@ -39,6 +39,7 @@ const Variants = ({ variants, fields, handleChange, btn: RemoveButton }) => (
                                     onChange={handleChange}
                                     value={value}
                                     action={showRemoveBtn}
+                                    allowLP
                                     {...rest}
                                 >
                                     <input />

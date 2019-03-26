@@ -8,11 +8,6 @@ import { usStates } from "utilities";
 /* eslint-enable */
 
 class Addresses extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-
     searchFunc = (collection, val) => {
         return collection.filter(
             item =>

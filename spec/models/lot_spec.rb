@@ -12,6 +12,7 @@
 #  name               :string
 #  pounds_of_coffee   :float
 #  price_per_pound    :float
+#  roasted_on_import  :integer
 #  status             :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null

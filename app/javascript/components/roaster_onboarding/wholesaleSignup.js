@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Segment, Button, Header, Step, Divider, Form, Dimmer, Loader } from "semantic-ui-react";
 
 /* eslint-disable */
-import steps from "roaster_onboarding/steps";
+import steps from "roaster_onboarding/wholesaleSteps";
 import Flex from "shared/flex";
 import Input from "shared/input";
 import Addresses from "shared/addresses";
@@ -17,45 +17,53 @@ import withContext from "contexts/withContext";
 /* eslint-enable */
 
 const defaults = {
-    tax_id: "",
-    phone: "",
+    business: {
+        tax_id: "000000000",
+        phone: "7065551234",
+        routing: "110000000",
+        account: "000123456789",
+        account_confirm: "000123456789"
+    },
     owner: {
-        first_name: "",
-        last_name: "",
-        email: "",
+        first_name: "Kyle",
+        last_name: "Sullivan",
+        title: "Owner",
+        email: "a@cac.com",
+        phone: "7065551234",
+        percent_ownership: "100",
+        ssn_last_4: "1234",
         dob: {
-            day: "",
-            month: "",
-            year: ""
+            dob_day: "9",
+            dob_month: "9",
+            dob_year: "1990"
         },
         address: {
-            street_1: "",
+            street_1: "123 Any St",
             street_2: "",
-            city: "",
-            state: "",
-            postal_code: ""
-        },
-        title: "",
-        percent_ownership: "",
-        ssn_last_4: ""
+            city: "Athens",
+            state: "GA",
+            postal_code: "30601"
+        }
     },
     account_opener: {
-        first_name: "",
-        last_name: "",
-        email: "",
+        first_name: "Jordan",
+        last_name: "Burke",
+        title: "Production Manager",
+        email: "b@cac.com",
+        phone: "7065554321",
+        ssn_last_4: "4321",
         dob: {
-            day: "",
-            month: "",
-            year: ""
+            dob_day: "6",
+            dob_month: "12",
+            dob_year: "1986"
         },
         address: {
-            street_1: "",
+            street_1: "456 Market St",
             street_2: "",
-            city: "",
-            state: "",
-            postal_code: ""
-        },
-        title: ""
+            city: "Athens",
+            state: "GA",
+            postal_code: "30606"
+        }
     }
 };
 
@@ -85,7 +93,7 @@ class WholesaleSignup extends React.Component {
         const { target } = e;
         e.preventDefault();
         target.blur();
-        // await this.setState({ loading: true });
+        await this.setState({ loading: true });
         const { details } = this.state;
         const { userId } = this.props;
         const url = ROASTER_URL(userId) + "/wholesale_signup";
@@ -93,17 +101,19 @@ class WholesaleSignup extends React.Component {
         setTimeout(async () => {
             if (response instanceof Error) {
                 this.setState({ errors: response.response.data, loading: false });
+                // eslint-disable-next-line
                 console.log(response);
             } else {
                 if (response.redirect) {
                     window.location.href = await response.redirect_url;
                 } else {
-                    // await updateDate("orders");
                     this.setState({ loading: false });
+                    // eslint-disable-next-line
                     console.log(response);
                 }
             }
         }, 400);
+        // eslint-disable-next-line
         console.log(this.state, this.props);
     };
 
@@ -118,6 +128,7 @@ class WholesaleSignup extends React.Component {
         } else {
             details[name] = val;
         }
+        // eslint-disable-next-line
         console.log(details);
         this.setState({ details });
     };
@@ -127,33 +138,46 @@ class WholesaleSignup extends React.Component {
     render() {
         const {
             loading,
-            details: { owner, account_opener, ...details }
+            details: { owner, account_opener, business }
         } = this.state;
 
         const Input = this.renderInput;
         return (
             <React.Fragment>
-                <Step.Group fluid items={steps("wholesale")} />
+                <Step.Group fluid items={steps("bank")} />
                 <Segment>
                     <Dimmer active={loading} inverted>
-                        <Loader size="large">Saving</Loader>
+                        <Loader size="large">Processing</Loader>
                     </Dimmer>
                     <Header as="h2">Wholesale Signup</Header>
+                    <Segment>
+                        Tax ID: 000000000
+                        <br />
+                        Routing #: 110000000
+                        <br />
+                        Acct #: 000123456789
+                    </Segment>
                     <Divider />
                     <Form>
                         <Segment>
+                            <Header as="h4" content="Business Information" />
                             <Flex spacing="10" wrap>
                                 {fields.base.map(({ name: fieldName, label, flex, ...rest }) => {
                                     const name = fieldName || underscorer(label);
                                     return (
                                         <div key={name} flex={flex || "100"} style={{ marginBottom: "1em" }}>
-                                            <Input {...rest} label={label} name={name} value={details[name]} />
+                                            <Input
+                                                {...rest}
+                                                label={label}
+                                                name={name}
+                                                value={business[name]}
+                                                data-namespace="business"
+                                            />
                                         </div>
                                     );
                                 })}
                             </Flex>
                         </Segment>
-                        <br />
                         <br />
 
                         <Flex spacing="20">
@@ -260,7 +284,7 @@ class WholesaleSignup extends React.Component {
                             <div />
                             <div>
                                 <Button
-                                    content="Create Products"
+                                    content="Shipping"
                                     icon="right arrow"
                                     labelPosition="right"
                                     primary

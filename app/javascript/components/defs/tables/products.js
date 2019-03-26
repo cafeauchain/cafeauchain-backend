@@ -1,14 +1,17 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Image } from "semantic-ui-react";
-import * as Showdown from "showdown";
+
 /* eslint-disable */
-import { Money, AsNumber, Truncate, ArrayToString } from "shared/textFormatters";
-import { humanize, callMeDanger } from "utilities";
+import { Money, ArrayToString, Weights } from "shared/textFormatters";
+import { humanize } from "utilities";
+
+import Flex from "shared/flex";
 /* eslint-enable */
 
 const Images = ({ content, ...rest }) => {
-    return content.map(url => <Image size="mini" src={url} key={url} {...rest} inline />);
+    return content.map(url => (
+        <Image size="tiny" src={url.url} key={url.url} {...rest} inline rounded style={{ margin: 4 }} />
+    ));
 };
 
 const ArrayHandler = ({ content = [] }) => {
@@ -16,14 +19,21 @@ const ArrayHandler = ({ content = [] }) => {
     return modified.join(", ");
 };
 
-const LongText = props => {
-    const converter = new Showdown.Converter();
+const VariantHandler = props => {
     const { content } = props;
-    return <div style={{ maxWidth: 400, minWidth: 400 }}>{callMeDanger(converter.makeHtml(content))}</div>;
-};
-const { string } = PropTypes;
-LongText.propTypes = {
-    content: string
+    const strings = content.map(item => {
+        return (
+            <div key={item.id}>
+                <Flex spacing="10" spacebetween>
+                    <span>
+                        <Weights>{item.size}</Weights>
+                    </span>
+                    <Money type="positive">{item.price_in_dollars}</Money>
+                </Flex>
+            </div>
+        );
+    });
+    return strings;
 };
 
 const tableDefinition = {
@@ -37,10 +47,11 @@ const tableDefinition = {
             style: { minWidth: 200 }
         },
         {
-            name: "description",
+            name: "variants",
             namespace: "attributes",
-            formatter: LongText,
-            style: { minWidth: 400 }
+            formatter: VariantHandler,
+            label: "Sizes",
+            style: { minWidth: 120 }
         },
         {
             name: "composition",
@@ -54,14 +65,14 @@ const tableDefinition = {
             namespace: "attributes",
             formatter: Images,
             label: "Images",
-            style: { minWidth: 200 }
+            style: { minWidth: 200, whiteSpace: "nowrap" }
         }
     ],
     props: {
         celled: true,
         striped: true,
         selectable: true,
-        style: { minWidth: 1200 },
+        style: { minWidth: 800 },
         verticalAlign: "top"
     }
 };

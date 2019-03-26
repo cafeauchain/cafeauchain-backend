@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_13_170542) do
+ActiveRecord::Schema.define(version: 2019_03_24_174040) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2019_03_13_170542) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
-    t.bigint "record_id", null: false
+    t.string "record_id", null: false
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
@@ -88,6 +88,8 @@ ActiveRecord::Schema.define(version: 2019_03_13_170542) do
     t.datetime "updated_at", null: false
     t.string "stripe_card_id"
     t.string "name"
+    t.bigint "customer_profile_id"
+    t.index ["customer_profile_id"], name: "index_cards_on_customer_profile_id"
     t.index ["subscription_id"], name: "index_cards_on_subscription_id"
   end
 
@@ -107,6 +109,7 @@ ActiveRecord::Schema.define(version: 2019_03_13_170542) do
     t.bigint "wholesale_profile_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "easypost_shipment_id"
     t.index ["wholesale_profile_id"], name: "index_carts_on_wholesale_profile_id"
   end
 
@@ -185,6 +188,7 @@ ActiveRecord::Schema.define(version: 2019_03_13_170542) do
     t.string "name"
     t.integer "low_on_hand"
     t.integer "low_remaining"
+    t.integer "roasted_on_import"
     t.index ["created_at"], name: "index_lots_on_created_at"
     t.index ["crop_id"], name: "index_lots_on_crop_id"
     t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"
@@ -218,6 +222,7 @@ ActiveRecord::Schema.define(version: 2019_03_13_170542) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "easypost_shipment_id"
     t.index ["wholesale_profile_id"], name: "index_orders_on_wholesale_profile_id"
   end
 
@@ -299,6 +304,8 @@ ActiveRecord::Schema.define(version: 2019_03_13_170542) do
     t.integer "owner_id"
     t.string "subdomain"
     t.string "stripe_account_id"
+    t.integer "onboard_status"
+    t.integer "wholesale_status"
     t.index ["owner_id"], name: "index_roaster_profiles_on_owner_id"
   end
 
@@ -447,6 +454,7 @@ ActiveRecord::Schema.define(version: 2019_03_13_170542) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "cards", "customer_profiles"
   add_foreign_key "cards", "subscriptions"
   add_foreign_key "cart_items", "carts"
   add_foreign_key "carts", "wholesale_profiles"

@@ -10,11 +10,13 @@
 #  facebook          :string
 #  location          :string
 #  name              :string
+#  onboard_status    :integer
 #  slug              :string
 #  state             :string
 #  subdomain         :string
 #  twitter           :string
 #  url               :string
+#  wholesale_status  :integer
 #  zip_code          :string
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
@@ -50,6 +52,9 @@ class RoasterProfile < ApplicationRecord
   has_one_attached :logo
 
   delegate :subscription, to: :owner
+
+  enum onboard_status: [:profile, :lots, :"roast-profiles", :"wholesale-details", :"wholesale-signup", :shipping, :products, :onboard_completed]
+  enum wholesale_status: [:not_enrolled, :started, :enrolled]
 
   validates :subdomain,
             exclusion: { in: %w(www),

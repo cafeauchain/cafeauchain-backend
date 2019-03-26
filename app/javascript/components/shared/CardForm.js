@@ -4,7 +4,6 @@ import { CardElement, injectStripe } from "react-stripe-elements";
 import { Segment } from "semantic-ui-react";
 
 /* eslint-disable */
-import Input from "shared/input";
 import Modal from "shared/modal";
 
 import AdditionalDetails from "payments/additionalCardDetails";
@@ -37,9 +36,7 @@ class CheckoutForm extends Component {
     };
 
     render() {
-        const {
-            roaster: { name: roasterName }
-        } = this.props;
+        const { name } = this.props;
         const { showBtn } = this.state;
         return (
             <div className="checkout">
@@ -54,7 +51,7 @@ class CheckoutForm extends Component {
                         text="Add Card"
                         showBtn={showBtn}
                         title="Additional Card Details"
-                        component={<AdditionalDetails name={roasterName} submitCC={this.submitCC} />}
+                        component={<AdditionalDetails name={name} submitCC={this.submitCC} />}
                     />
                 </Segment>
             </div>

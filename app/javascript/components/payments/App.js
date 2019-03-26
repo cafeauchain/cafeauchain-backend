@@ -154,7 +154,7 @@ class App extends Component {
                     <div>
                         <h2>Manage Payment Methods</h2>
                         <Elements>
-                            <CardForm handleSubmit={this.handleSubmit} roaster={roaster} />
+                            <CardForm handleSubmit={this.handleSubmit} name={roaster.name} />
                         </Elements>
                     </div>
                     <Divider horizontal>

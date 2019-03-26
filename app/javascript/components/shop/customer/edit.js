@@ -1,23 +1,22 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form, Header, Dimmer, Loader } from "semantic-ui-react";
+import { Form, Header, Dimmer, Loader, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
 import FileUpload from "shared/fileUpload";
-import ImageChange from "shared/ImageChange";
 import Addresses from "shared/addresses";
 import Flex from "shared/flex";
 
 import { url as API_URL, requester } from "utilities/apiUtils";
+import withContext from "contexts/withContext";
+/* eslint-enable */
 
 class EditCustomer extends Component {
     constructor(props) {
         super(props);
         const {
-            profile: {
-                data: { attributes, id }
-            }
+            profile: { attributes, id }
         } = props;
 
         this.state = {
@@ -60,12 +59,14 @@ class EditCustomer extends Component {
         }
         setTimeout(async () => {
             if (response instanceof Error) {
-                this.setState({ errors: response.response.data, loading: false });
+                // this.setState({ errors: response.response.data, loading: false });
             } else {
                 if (response.redirect) {
                     window.location.href = await response.redirect_url;
                 } else {
+                    const { onboard } = this.props;
                     this.setState({ loading: false });
+                    if( onboard ) window.location.href = "addresses";
                 }
             }
         }, 400);
@@ -80,7 +81,7 @@ class EditCustomer extends Component {
         this.setState({ details });
     };
 
-    renderInput = props => <Input {...props} onChange={this.handleInputChange} />;
+    renderInput = props => <Input {...props} onChange={this.handleInputChange} autoComplete="off" />;
 
     render() {
         const { details, loading, logo_url } = this.state;
@@ -88,13 +89,13 @@ class EditCustomer extends Component {
 
         const Input = this.renderInput;
         return (
-            <div className="form roaster-wizard">
+            <Segment>
                 <Dimmer active={loading} inverted>
                     <Loader size="large">Saving</Loader>
                 </Dimmer>
                 <Header as="h2">Customer Profile</Header>
 
-                <Form onSubmit={this.handleSubmit}>
+                <Form>
                     <Flex spacing="20">
                         <div flex="66">
                             <Input label="Company Name" value={company_name} />
@@ -125,16 +126,17 @@ class EditCustomer extends Component {
 
                     {false && <Input inputType="textarea" label="Terms" defaultValue={terms} />}
 
-                    <Form.Button>Submit</Form.Button>
+                    <Form.Button primary onClick={this.handleSubmit} content="Update Profile" />
                 </Form>
-            </div>
+            </Segment>
         );
     }
 }
 
-const { object } = PropTypes;
+const { object, bool } = PropTypes;
 EditCustomer.propTypes = {
-    profile: object.isRequired
+    profile: object.isRequired,
+    onboard: bool
 };
 
-export default EditCustomer;
+export default withContext(EditCustomer);

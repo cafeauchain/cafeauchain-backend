@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Header, Form, Button, Icon } from "semantic-ui-react";
+import { Header, Form, Button, Icon, Divider } from "semantic-ui-react";
 import shortid from "shortid";
 
 /* eslint-disable */
@@ -10,12 +10,8 @@ import { Weights } from "shared/textFormatters";
 
 import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
-
-const Wrapper = props => (
-    <Context>{ctx => <CreateDefaults {...props} userId={ctx.userId} getCtxData={ctx.getData} />}</Context>
-);
 
 const newDefault = () => ({ value: "", id: shortid.generate() });
 class CreateDefaults extends Component {
@@ -23,9 +19,7 @@ class CreateDefaults extends Component {
         const { oneOfType, string, number, func } = PropTypes;
         return {
             userId: oneOfType([string, number]),
-            getCtxData: func,
-            closeModal: func,
-            successClose: func
+            updateContext: func
         };
     };
     state = {
@@ -39,27 +33,18 @@ class CreateDefaults extends Component {
         ev.preventDefault();
         await this.setState({ btnLoading: true });
         const { options } = this.state;
-        const { userId, successClose, closeModal } = this.props;
-        // eslint-disable-next-line
+        const { userId, updateContext } = this.props;
         const body = { title: "Size", options: options.map(({ value }) => value) };
-        // eslint-disable-next-line
-        const url = `${ROASTER_URL(userId)}/variant_defaults`;
-        // const response = await requester({ url, body });
-        const response = true;
-        alert("Not actually submitting form. Endpoint not working");
+        const url = `${ROASTER_URL(userId)}/default_options`;
+        const response = await requester({ url, body });
         if (response instanceof Error) {
             this.setState({ errors: response.response.data, btnLoading: false });
         } else {
             if (response.redirect) {
                 window.location.href = await response.redirect_url;
             } else {
-                const success = "Default Sizes were created successfully!";
                 await this.setState({ btnLoading: false });
-                if (successClose) {
-                    successClose(success);
-                } else if (closeModal) {
-                    setTimeout(closeModal, 900);
-                }
+                updateContext({ defaults: { size: body.options } });
             }
         }
     };
@@ -100,7 +85,7 @@ class CreateDefaults extends Component {
             <Form>
                 <Header as="h2" content="Create Default Product Sizes" />
                 <p>
-                    These options will be used as the defaults when creating new products. For example, if you ususally
+                    These options will be used as the defaults when creating new products. For example, if you usually
                     offer your coffees in 12 oz, 1 lb and 5 lb bags, add those values here and each time you create a
                     new product, it will automatically create three Product Variants with those sizes already defined.
                     Additionally, you will be able to add and remove sizes for each product as necessary.
@@ -115,19 +100,20 @@ class CreateDefaults extends Component {
                             onChange={this.handleInputChange}
                             value={value}
                             type="number"
+                            allowLP
                         >
-                            <input />
-                            {options.length > 1 && (
-                                <Button
-                                    type="button"
-                                    color="red"
-                                    icon
-                                    content={<Icon name="close" />}
-                                    compact
-                                    idx={idx}
-                                    onClick={this.onRemove}
-                                />
-                            )}
+                            <input data-lpignore="true" />
+
+                            <Button
+                                type="button"
+                                color="red"
+                                icon
+                                content={<Icon name="close" />}
+                                compact
+                                idx={idx}
+                                onClick={this.onRemove}
+                                disabled={options.length < 2}
+                            />
                         </Input>
                         {Number(value) >= 16 && (
                             <div style={{ margin: "-10px 0 10px" }}>
@@ -140,12 +126,21 @@ class CreateDefaults extends Component {
                 ))}
                 <br />
                 <Button color="blue" onClick={this.addOption} content="Add Option" />
-                <br />
-                <br />
-                <Button primary fluid loading={btnLoading} onClick={this.handleSubmit} content="Create Defaults" />
+
+                <Divider />
+                <Button
+                    primary
+                    floated="right"
+                    loading={btnLoading}
+                    onClick={this.handleSubmit}
+                    content="Create Default Sizes"
+                    icon="right arrow"
+                    labelPosition="right"
+                />
+                <div style={{ clear: "both" }} />
             </Form>
         );
     }
 }
 
-export default Wrapper;
+export default withContext(CreateDefaults);

@@ -12,6 +12,7 @@
 #  name               :string
 #  pounds_of_coffee   :float
 #  price_per_pound    :float
+#  roasted_on_import  :integer
 #  status             :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
@@ -45,7 +46,7 @@ class Lot < ApplicationRecord
   end
 
   def coffee_on_hand
-    roasted = self.batches.pluck(:starting_amount).map{|sa| sa.to_f}.sum
+    roasted = self.batches.pluck(:starting_amount).map{|sa| sa.to_f}.sum + self.roasted_on_import.to_f
     delivered = self.transactions.where(trans_type: :asset_delivery).pluck(:quantity).map{|q| q.to_f}.sum
     return (delivered - roasted)
   end

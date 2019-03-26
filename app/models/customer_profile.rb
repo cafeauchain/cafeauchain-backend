@@ -20,7 +20,7 @@ class CustomerProfile < ApplicationRecord
   belongs_to :owner, class_name: "User", foreign_key: "owner_id", optional: true
 
   has_many :users
-  has_many :addresses, as: :addressable, dependent: :destroy
+  has_many :addresses, -> { order 'addresses.primary_location DESC, addresses.created_at' }, as: :addressable, dependent: :destroy
 
   has_many :wholesale_profiles
   has_many :cards
