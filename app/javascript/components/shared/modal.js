@@ -18,9 +18,12 @@ class ModalWithTrigger extends Component {
         if (closeModalProps) return closeModalProps();
         this.setState({ isOpen: false, success: "" });
     };
-    successClose = msg => {
+    successClose = (msg, cb, data) => {
         this.setState({ success: msg });
-        setTimeout(this.closeModal, 900);
+        setTimeout(() => {
+            this.closeModal();
+            return cb ? cb(data) : null;
+        }, 900);
     };
     triggerClick = e => {
         e.preventDefault();

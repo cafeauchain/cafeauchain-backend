@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form, Header, Divider, Dimmer, Loader } from "semantic-ui-react";
+import { Form, Header, Divider, Dimmer, Loader, Image, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
-import { usStates } from "utilities";
 import Input from "shared/input";
-import ImageChange from "shared/ImageChange";
 import Addresses from "shared/addresses";
+import Flex from "shared/flex";
+import ErrorHandler from "shared/errorHandler";
 
 import { url as API_URL, requester } from "utilities/apiUtils";
+/* eslint-enable */
 
 class EditCustomer extends Component {
     constructor(props) {
@@ -17,6 +18,13 @@ class EditCustomer extends Component {
             details: props.profile,
             loading: false
         };
+    }
+
+    componentDidUpdate(props){
+        const { profile } = props;
+        const { profile: newProfile } = this.props;
+        // eslint-disable-next-line react/no-did-update-set-state
+        if( profile !== newProfile ) this.setState({ details: newProfile }); 
     }
 
     handleSubmit = async e => {
@@ -54,8 +62,8 @@ class EditCustomer extends Component {
     renderInput = props => <Input {...props} onChange={this.handleInputChange} />;
 
     render() {
-        const { details, loading } = this.state;
-        const { name, terms, img_url, id, company_name, email, ...address } = details;
+        const { details, loading, errors } = this.state;
+        const { name, terms, tax_rate, logo_url, id, company_name, email, ...address } = details;
 
         const Input = this.renderInput;
         return (
@@ -63,21 +71,28 @@ class EditCustomer extends Component {
                 <Dimmer active={loading} inverted>
                     <Loader size="large">Saving</Loader>
                 </Dimmer>
-                <Header as="h2">Customer Profile</Header>
-                <div align="center">
-                    <ImageChange src={img_url} id={id} />
-                </div>
                 <Divider />
                 <Form onSubmit={this.handleSubmit}>
-                    <Input label="Company Name" value={company_name} />
-                    <Input label="Contact Name" name="name" value={name} />
-                    <Input label="Contact Email" name="email" value={email} type="email" />
+                    <ErrorHandler errors={errors} />
+                    <Flex spacing="20">
+                        <div flex="66">
+                            <Input label="Company Name" value={company_name} />
+                            <Input label="Contact Name" name="name" value={name} />
+                            <Input label="Contact Email" name="email" value={email} type="email" />
+                        </div>
+                        <div flex="33">
+                            <Image src={logo_url} size="medium" bordered padded="very" rounded />
+                        </div>
+                    </Flex>
 
                     <Addresses details={address} onChange={this.handleInputChange} />
-
-                    <Input inputType="textarea" label="Terms" defaultValue={terms} />
-
-                    <Form.Button>Submit</Form.Button>
+                    <Segment tertiary>
+                        <Header as="h4" content="Wholesale Profile Details" />
+                        <Input inputType="textarea" label="Terms" value={terms} />
+                        <Input label="Tax Rate" value={tax_rate} />
+                    </Segment>
+                    <Form.Button content="Update Customer Profile" primary />
+                    <br />
                 </Form>
             </div>
         );

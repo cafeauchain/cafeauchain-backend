@@ -18,16 +18,18 @@ module Api::V1
     def update
       wp = @customer.wholesale_profiles.find_by(roaster_profile: @roaster);
       owner = @customer.owner
-      @customer.addresses.update(primary_location: false)
       address = address_params
-      address["country"] = "USA"
-      address["primary_location"] = true
-      address["location_label"] = "Office"
-      current_address = @customer.addresses.find_by(street_1: address["street_1"], postal_code: address["postal_code"] )
-      if current_address.present?
-        current_address.update(address)
-      else
-        @customer.addresses.create(address)
+      if address.present?
+        @customer.addresses.update(primary_location: false)
+        address["country"] = "USA"
+        address["primary_location"] = true
+        address["location_label"] = "Office"
+        current_address = @customer.addresses.find_by(street_1: address["street_1"], postal_code: address["postal_code"] )
+        if current_address.present?
+          current_address.update(address)
+        else
+          @customer.addresses.create(address)
+        end
       end
 
       if @customer.update!(customer_params) && wp.update!(wholesale_params) && owner.update!(owner_params)
@@ -42,7 +44,8 @@ module Api::V1
           end
         # Roaster/Admin Side
         else
-          render json: { redirect: true, redirect_url: manage_customers_path(@roaster) }, status: 200
+          @serCustomer = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
+          render json: { customer: @serCustomer }, status: 200
         end
       else
         render json: @customer.errors.full_messages, status: 422
@@ -170,7 +173,7 @@ module Api::V1
     end
 
     def wholesale_params
-      params.permit(:terms)
+      params.permit(:terms, :tax_rate, :onboard_status)
     end
 
     def address_params
