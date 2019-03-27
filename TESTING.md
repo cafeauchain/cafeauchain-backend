@@ -5,13 +5,17 @@ Testing the user experience is vital to the success of the Cafe au Chain platfor
 ## Test account numbers, credentials, etc
 
 Credit card: 4242 4242 4242 4242
+
 Exp Date: 12/23
+
 CVC: 123
 
 Routing number: 110000000
+
 Account number: 000123456789
 
 Business Tax Id: 000000000
+
 SSN: 000000000
 
 ## Using the issue tracker
