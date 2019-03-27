@@ -380,12 +380,12 @@ Rails.application.routes.draw do
   end
 
   constraints(ValidSubdomain) do
-    root 'high_voltage/pages#show', id: 'home'
-  end
-
-  constraints(!ValidSubdomain) do
     get 'cart', to: 'carts#index'
     resources :orders
     root 'shop/shop#index'
+  end
+
+  constraints(!ValidSubdomain) do
+    root 'high_voltage/pages#show', id: 'home'
   end
 end
