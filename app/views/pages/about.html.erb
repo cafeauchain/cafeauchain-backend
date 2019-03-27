@@ -1,1 +1,15 @@
-<div>this is the about page</div>
+<% content_for :title, "About Us" %>
+<%= react_component "main", props = {
+    loggedIn: user_signed_in?,
+    roaster: current_user ? current_user.roaster_profile : nil,
+    header_info: current_roaster ? {url: current_roaster.logo_image_url, name: current_roaster.name} : nil,
+    component: 'empty',
+    title: "About Us",
+    static: true
+} %>
+<div class="width-wrapper">
+    <div class="segment ui">
+        <h1>This is the about page</h1>
+    </div>
+</div>
+

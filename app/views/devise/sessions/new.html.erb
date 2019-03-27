@@ -1,6 +1,7 @@
 <% content_for :title, "Login" %>
 <%= react_component "main", props = {
     url: session_path(resource_name),
+    header_info: {url: current_roaster.logo_image_url, name: current_roaster.name},
     fieldType: "login",
     component: "login"
 } %>
