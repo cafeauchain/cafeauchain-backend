@@ -254,10 +254,10 @@ ActiveRecord::Schema.define(version: 2019_03_27_033035) do
     t.index ["product_id"], name: "index_product_inventory_items_on_product_id"
   end
 
-  create_table "product_options", force: :cascade do |t|
-    t.jsonb "product_options"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table "product_options", force: :cascade do |t|	
+    t.jsonb "product_options"	
+    t.datetime "created_at", null: false	
+    t.datetime "updated_at", null: false	
   end
 
   create_table "product_variants", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|

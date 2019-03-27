@@ -4,18 +4,13 @@ import { Button, Form, Header } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
+import ErrorHandler from "shared/errorHandler";
 
-import humanize from "utilities/humanize";
-import underscorer from "utilities/underscorer";
-import readCookie from "utilities/readCookie";
-import API_URL from "utilities/apiUtils/url";
+import { humanize, underscorer } from "utilities"
+import { requester, roasterUrl } from "utilities/apiUtils";
 
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
-
-const Wrapper = props => (
-    <Context>{ctx => <Matcher {...props} id={ctx.userId} updateContext={ctx.updateContext} />}</Context>
-);
 
 class Matcher extends Component {
     constructor(props) {
@@ -25,7 +20,10 @@ class Matcher extends Component {
         const details = dbKeys.reduce((obj, item, idx) => ({ ...obj, [item.name]: sheetKeys[idx] }), {});
         this.state = {
             details,
-            disabled: true
+            disabled: true,
+            errors: [],
+            btnLoading: false,
+            positiveMessage: false
         };
     }
     componentDidMount() {
@@ -44,12 +42,15 @@ class Matcher extends Component {
         details = { ...details };
         if (name === "") return;
         const val = value || checked;
-        details[name] = val;
+        details[name] = val || "";
         const disabled = !this.hasAnEmpty(details);
         this.setState({ details, disabled });
     };
-    startSubmit = e => {
+    startSubmit = async e => {
+        const { target } = e;
         e.preventDefault();
+        target.blur();
+        await this.setState({ btnLoading: true });
         const { details } = this.state;
         const { data } = this.props;
         const body = data.map(row => {
@@ -63,84 +64,59 @@ class Matcher extends Component {
     };
 
     handleSubmit = async lots => {
-        const { id } = this.props;
-        const url = `${API_URL}/roasters/${id}/lots/upload_lot_csv`;
-        const cookie = decodeURIComponent(readCookie("X-CSRF-Token"));
-        let response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": cookie
-            },
-            body: JSON.stringify({ lots, roaster_profile_id: id })
-        });
-        let respJSON = await response.json();
-        if (response.ok) {
-            window.location.href = await respJSON.redirect_url;
-        } else {
-            if (respJSON.redirect) {
-                window.location.href = await respJSON.redirect_url;
+        const { userId } = this.props;
+        const url = `${roasterUrl(userId)}/lots/upload_lot_csv`;
+        const response = await requester({ url, body: { lots, roaster_profile_id: userId }});
+        this.afterSubmit(response);
+    };
+    
+    afterSubmit = response => {
+        const { updateContext, resetParent } = this.props;
+        setTimeout( async () => {
+            await this.setState({ btnLoading: false });
+            if (response instanceof Error) {
+                this.setState({ errors: [response.response.data] });
             } else {
-                this.getLotData(id);
+                if (response.redirect) {
+                    window.location = await response.redirect_url;
+                } else {
+                    updateContext({ lots: response.data });
+                    await this.setState({ errors: ["Lots Imported!"], positiveMessage: true });
+                    setTimeout(resetParent, 800);
+                }
             }
-        }
-    };
+        }, 400);
+    }
 
-    // only called after successful submit
-    getLotData = async id => {
-        const url = `${API_URL}/roasters/${id}/lots`;
-        const { updateContext } = this.props;
-        const response = await fetch(url);
-        const { data } = await response.json();
-        if (data instanceof Error) {
-            // eslint-disable-next-line
-            console.log("there was an error", data.response);
-        } else {
-            // TODO Add success/error messaging before closing
-            updateContext({ lots: data });
-        }
-    };
     render() {
         const { dbKeys, data } = this.props;
-        const { disabled, details } = this.state;
+        const { disabled, details, errors, positiveMessage, btnLoading } = this.state;
+        const options = this.createOptions(Object.keys(data[0]));
         return (
             <div>
                 <p>
                     Your import was parsed correctly! Now, we need to map the columns in your import to the fields in
                     our database! Please select the header from the dropdown that aligns with our database field.
                 </p>
-                <Header as="h4">Our Database Fields:</Header>
-                <Form onSubmit={this.startSubmit}>
+                <Header as="h4" content="Our Database Fields:" />
+                <Form>
                     {dbKeys.map(item => {
-                        const options = this.createOptions(Object.keys(data[0]));
-
                         return (
                             <Input
                                 key={item.name}
                                 inputType="select"
-                                label={(
-                                    <label
-                                        style={
-                                            {
-                                                /* width: 160, textAlign: "right", fontWeight: "bold" */
-                                            }
-                                        }
-                                    >
-                                        {humanize(item.name.replace("key_", ""))}
-                                    </label>
-                                )}
+                                label={humanize(item.name.replace("key_", ""))}
                                 name={item.name}
                                 onChange={this.handleInputChange}
                                 options={options}
                                 defaultValue={details[item.name]}
-                                inline={false}
-                                fluid={false}
                                 clearable
                                 search
                             />
                         );
                     })}
-                    <Button content="Import Lots" disabled={disabled} primary />
+                    <ErrorHandler errors={errors} negative={!positiveMessage} positive={positiveMessage} />
+                    <Button content="Import Lots" disabled={disabled} primary loading={btnLoading} onClick={this.startSubmit} />
                 </Form>
             </div>
         );
@@ -151,8 +127,9 @@ const { array, string, oneOfType, number, func } = PropTypes;
 Matcher.propTypes = {
     data: array,
     dbKeys: array,
-    id: oneOfType([string, number]),
-    updateContext: func
+    userId: oneOfType([string, number]),
+    updateContext: func,
+    resetParent: func
 };
 
-export default Wrapper;
+export default withContext(Matcher);

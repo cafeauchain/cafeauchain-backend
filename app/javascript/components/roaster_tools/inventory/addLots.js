@@ -58,7 +58,7 @@ class AddLots extends Component {
         }
     };
     resetState = e => {
-        e.preventDefault();
+        if( e ) e.preventDefault();
         this.setState({ file: "", data: {} });
     };
 
@@ -114,7 +114,7 @@ class AddLots extends Component {
 
                 {file && (
                     <Segment>
-                        <Matcher data={data} dbKeys={keys} id={id} />
+                        <Matcher data={data} dbKeys={keys} id={id} resetParent={this.resetState} />
                     </Segment>
                 )}
             </Segment.Group>
