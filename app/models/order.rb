@@ -21,6 +21,7 @@
 class Order < ApplicationRecord
   belongs_to :wholesale_profile
   has_one :customer_profile, through: :wholesale_profile
+  has_one :roaster_profile, through: :wholesale_profile
   has_many :order_items
   has_one :invoice
   has_one :order_shipping_method
@@ -38,14 +39,6 @@ class Order < ApplicationRecord
 
   def total_line_items
     order_items.length
-  end
-
-  def shipping
-    '%.2f' % (18.63)
-  end
-
-  def order_total
-    '%.2f' % (order_items.sum { |oi| oi.product_variant.price_in_cents.to_f/100.0 * oi.quantity } + shipping.to_f)
   end
 
   def total_items

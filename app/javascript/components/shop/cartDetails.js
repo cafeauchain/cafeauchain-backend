@@ -45,16 +45,16 @@ class CartDetails extends React.Component {
         this.setState( obj );
     }
 
-    handleSubmit = async e => {
+    handleSubmit = async ( e, item ) => {
         const { target } = e;
         e.preventDefault();
         target.blur();
-        const { cart } = this.props;
-        // eslint-disable-next-line
-        console.log(cart);
+        const { cart: { id } } = this.props;
         const url = `${API_URL}/orders`;
-        // TODO Allow payment type to be  changed
-        const body = { id: cart.id, payment_type: "terms_with_vendor" };
+        const { payment_type, payment_source, shipping } = this.state;
+        const tax = item["data-tax"];
+        const total = item["data-total"];
+        const body = { id, payment_type, payment_source, shipping, tax, total };
         const response = await requester({ url, body });
         if (response instanceof Error) {
             this.setState({ errors: response.response.data });
