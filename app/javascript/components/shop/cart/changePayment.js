@@ -38,9 +38,9 @@ class CartChangePayment extends React.Component {
         const { selected } = this.state;
         const { cards, updateCartDetails, successClose, closeModal } = this.props;
         const card = cards.find( card => card.stripe_card_id.toString() === selected.toString() );
-        const payment = card ? 'card_on_file' : 'terms_with_vendor';
+        const payment_type = card ? 'card_on_file' : 'terms_with_vendor';
         const payment_source = card ? card.stripe_card_id : undefined;
-        await updateCartDetails({ payment_source, payment });
+        await updateCartDetails({ payment_source, payment_type });
         if( successClose ){
             successClose('Payment Updated!');
         } else if (closeModal) {

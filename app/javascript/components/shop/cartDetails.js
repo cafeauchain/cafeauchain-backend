@@ -36,7 +36,7 @@ class CartDetails extends React.Component {
         this.state = {
             errors: [],
             shipping: defaultRate,
-            payment: terms ? "terms_with_vendor" : "card_on_file",
+            payment_type: terms ? "terms_with_vendor" : "card_on_file",
             payment_source: !terms ? payment_source : undefined
         };
     }
@@ -79,7 +79,7 @@ class CartDetails extends React.Component {
             stripeApiKey
         } = this.props;
         const { primary_address: { street_1, street_2, city, state, postal_code } } = profileAttrs; 
-        const { errors, shipping, payment, payment_source } = this.state;
+        const { errors, shipping, payment_type, payment_source } = this.state;
         const speed = Number(shipping.est_delivery_days);
         const speedString = speed ? pluralize(speed, ' day') : "Unknown";
         
@@ -186,12 +186,12 @@ class CartDetails extends React.Component {
                 </Card.Content>
                 <Card.Content>
                     <p><strong>Payment</strong></p>
-                    {payment === "terms_with_vendor" && (
+                    {payment_type === "terms_with_vendor" && (
                         <div>
                             {profileAttrs.terms}
                         </div>
                     )}
-                    {payment === "card_on_file" && (
+                    {payment_type === "card_on_file" && (
                         <div>
                             <MiniCard card={card} />
                         </div>
