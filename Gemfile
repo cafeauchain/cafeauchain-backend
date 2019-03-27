@@ -14,7 +14,7 @@ gem 'coffee-rails'
 gem 'jbuilder', '~> 2.5'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'pg', '~> 0.18'
-gem 'devise'
+gem "devise", ">= 4.6.0"
 gem 'high_voltage'
 gem 'font_awesome5_rails'
 gem 'friendly_id', '~> 5.1.0'
