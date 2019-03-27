@@ -379,11 +379,11 @@ Rails.application.routes.draw do
     get "/register" => "devise/registrations#new"
   end
 
-  constraints(!ValidSubdomain) do
+  constraints(ValidSubdomain) do
     root 'high_voltage/pages#show', id: 'home'
   end
 
-  constraints(ValidSubdomain) do
+  constraints(!ValidSubdomain) do
     get 'cart', to: 'carts#index'
     resources :orders
     root 'shop/shop#index'
