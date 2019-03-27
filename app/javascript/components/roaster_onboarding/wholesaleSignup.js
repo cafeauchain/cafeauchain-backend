@@ -7,10 +7,12 @@ import steps from "roaster_onboarding/wholesaleSteps";
 import Flex from "shared/flex";
 import Input from "shared/input";
 import Addresses from "shared/addresses";
+import FileUpload from "shared/fileUpload";
+import ErrorHandler from "shared/errorHandler";
 
 import fields from "defs/forms/wholesaleSignup";
 
-import { namespacer, underscorer } from "utilities";
+import { namespacer, underscorer, jsonToFormData } from "utilities";
 import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 
 import withContext from "contexts/withContext";
@@ -18,51 +20,51 @@ import withContext from "contexts/withContext";
 
 const defaults = {
     business: {
-        tax_id: "000000000",
-        phone: "7065551234",
-        routing: "110000000",
-        account: "000123456789",
-        account_confirm: "000123456789"
+        tax_id: "",
+        phone: "",
+        routing: "",
+        account: "",
+        account_confirm: ""
     },
     owner: {
-        first_name: "Kyle",
-        last_name: "Sullivan",
-        title: "Owner",
-        email: "a@cac.com",
-        phone: "7065551234",
-        percent_ownership: "100",
-        ssn_last_4: "1234",
+        first_name: "",
+        last_name: "",
+        title: "",
+        email: "",
+        phone: "",
+        percent_ownership: "",
+        ssn_last_4: "",
         dob: {
-            dob_day: "9",
-            dob_month: "9",
-            dob_year: "1990"
+            dob_day: "",
+            dob_month: "",
+            dob_year: ""
         },
         address: {
-            street_1: "123 Any St",
+            street_1: "",
             street_2: "",
-            city: "Athens",
-            state: "GA",
-            postal_code: "30601"
+            city: "",
+            state: "",
+            postal_code: ""
         }
     },
     account_opener: {
-        first_name: "Jordan",
-        last_name: "Burke",
-        title: "Production Manager",
-        email: "b@cac.com",
-        phone: "7065554321",
-        ssn_last_4: "4321",
+        first_name: "",
+        last_name: "",
+        title: "",
+        email: "",
+        phone: "",
+        ssn_last_4: "",
         dob: {
-            dob_day: "6",
-            dob_month: "12",
-            dob_year: "1986"
+            dob_day: "",
+            dob_month: "",
+            dob_year: ""
         },
         address: {
-            street_1: "456 Market St",
+            street_1: "",
             street_2: "",
-            city: "Athens",
-            state: "GA",
-            postal_code: "30606"
+            city: "",
+            state: "",
+            postal_code: ""
         }
     }
 };
@@ -85,7 +87,8 @@ class WholesaleSignup extends React.Component {
         owner.email = propsOwner.email;
         this.state = {
             details,
-            loading: false
+            loading: false,
+            errors: []
         };
     }
 
@@ -93,28 +96,24 @@ class WholesaleSignup extends React.Component {
         const { target } = e;
         e.preventDefault();
         target.blur();
-        await this.setState({ loading: true });
+        await this.setState({ loading: true, errors: [] });
         const { details } = this.state;
+        var form_data = jsonToFormData(details);
         const { userId } = this.props;
         const url = ROASTER_URL(userId) + "/wholesale_signup";
-        const response = await requester({ url, body: details });
+        const response = await requester({ url, body: form_data, noContentType: true });
+
         setTimeout(async () => {
             if (response instanceof Error) {
                 this.setState({ errors: response.response.data, loading: false });
-                // eslint-disable-next-line
-                console.log(response);
             } else {
                 if (response.redirect) {
                     window.location.href = await response.redirect_url;
                 } else {
                     this.setState({ loading: false });
-                    // eslint-disable-next-line
-                    console.log(response);
                 }
             }
         }, 400);
-        // eslint-disable-next-line
-        console.log(this.state, this.props);
     };
 
     handleInputChange = (event, { value, name, checked, ...rest }) => {
@@ -128,8 +127,6 @@ class WholesaleSignup extends React.Component {
         } else {
             details[name] = val;
         }
-        // eslint-disable-next-line
-        console.log(details);
         this.setState({ details });
     };
 
@@ -138,7 +135,8 @@ class WholesaleSignup extends React.Component {
     render() {
         const {
             loading,
-            details: { owner, account_opener, business }
+            details: { owner, account_opener, business, ...details },
+            errors
         } = this.state;
 
         const Input = this.renderInput;
@@ -150,13 +148,6 @@ class WholesaleSignup extends React.Component {
                         <Loader size="large">Processing</Loader>
                     </Dimmer>
                     <Header as="h2">Wholesale Signup</Header>
-                    <Segment>
-                        Tax ID: 000000000
-                        <br />
-                        Routing #: 110000000
-                        <br />
-                        Acct #: 000123456789
-                    </Segment>
                     <Divider />
                     <Form>
                         <Segment>
@@ -225,6 +216,35 @@ class WholesaleSignup extends React.Component {
                                             this.handleInputChange(e, { ...item, "data-namespace": "owner/address" })
                                         }
                                     />
+                                    <p><strong>Owner Verification ID (required)</strong></p>
+                                    <p>
+                                        In order to receive payouts, you will need to verify your identity with a state-issued ID or passport. 
+                                        Please upload an image of a valid ID.
+
+                                    </p>
+                                    <Flex spacing="10">
+                                        <div flex="50">
+                                            <p><strong>Front</strong></p>
+                                            <FileUpload
+                                                handleChange={this.handleInputChange}
+                                                name="owner_verification_front"
+                                                fileType="fileImage"
+                                                id="owner_verification_front"
+                                                files={details["owner_verification_front"] || []}
+                                            />
+                                        </div>
+                                        <div flex="50">
+                                            <p><strong>Back</strong></p>
+                                            <FileUpload
+                                                handleChange={this.handleInputChange}
+                                                name="owner_verification_back"
+                                                fileType="fileImage"
+                                                id="owner_verification_back"
+                                                files={details["owner_verification_back"] || []}
+                                            />
+                                        </div>
+                                    </Flex>
+                                    
                                 </Segment>
                             </div>
                             <div flex="50">
@@ -274,12 +294,40 @@ class WholesaleSignup extends React.Component {
                                             })
                                         }
                                     />
+                                    <p><strong>Opener Verification ID (required)</strong></p>
+                                    <p>
+                                        In order to receive payouts, you will need to verify your identity with a state-issued ID or passport.
+                                        Please upload an image of a valid ID.
+
+                                    </p>
+                                    <Flex spacing="10">
+                                        <div flex="50">
+                                            <p><strong>Front</strong></p>
+                                            <FileUpload
+                                                handleChange={this.handleInputChange}
+                                                name="opener_verification_front"
+                                                fileType="fileImage"
+                                                id="opener_verification_front"
+                                                files={details["opener_verification_front"] || []}
+                                            />
+                                        </div>
+                                        <div flex="50">
+                                            <p><strong>Back</strong></p>
+                                            <FileUpload
+                                                handleChange={this.handleInputChange}
+                                                name="opener_verification_back"
+                                                fileType="fileImage"
+                                                id="opener_verification_back"
+                                                files={details["opener_verification_back"] || []}
+                                            />
+                                        </div>
+                                    </Flex>
                                 </Segment>
                             </div>
                         </Flex>
                         <br />
                         <Divider />
-
+                        <ErrorHandler errors={errors} />
                         <Flex spacing="20" spacebetween>
                             <div />
                             <div>

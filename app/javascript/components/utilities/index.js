@@ -9,6 +9,7 @@ import fileToImage from "./fileToImage";
 import getTextFromChildren from "./getTextFromChildren";
 import getTimePeriod from "./getTimePeriod";
 import humanize from "./humanize";
+import jsonToFormData from "./jsonToFormData";
 import noEmpties from "./noEmpties";
 import params from "./params";
 import pluralize from "./pluralize";
@@ -33,6 +34,7 @@ export {
     getTextFromChildren,
     getTimePeriod,
     humanize,
+    jsonToFormData,
     noEmpties,
     params,
     pluralize,

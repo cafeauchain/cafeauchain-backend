@@ -54,6 +54,15 @@ module StripeServices
       Stripe.api_key = Rails.application.credentials.stripe_secret_key
       @roaster_profile = RoasterProfile.find(roaster_profile_id)
 
+      def self.verifyPerson( file )
+        if file.present?
+          Stripe::File.create({
+            purpose:'identity_document',
+            file: file["0"]
+          })
+        end
+      end
+
       business_profile = {
         mcc: 5812, # Merchant code for restaurant/bar - best guess for coffee roasters
         name: @roaster_profile.name,
@@ -97,6 +106,12 @@ module StripeServices
           owner: true,
           percent_ownership: params[:owner][:percent_ownership],
           title: params[:owner][:title]
+        },
+        verification: {
+          document: {
+            front: self.verifyPerson(params[:owner_verification_front]),
+            back: self.verifyPerson(params[:owner_verification_back])
+          }
         }
       }
       # ao_first_name, ao_last_name = params[:account_opener][:name].split(' ')
@@ -122,8 +137,13 @@ module StripeServices
         relationship: {
           account_opener: true,
           title: params[:account_opener][:title]
+        },
+        verification: {
+          document: {
+            front: self.verifyPerson(params[:opener_verification_front]),
+            back: self.verifyPerson(params[:opener_verification_back])
+          }
         }
-
       }
 
       external_account = {
