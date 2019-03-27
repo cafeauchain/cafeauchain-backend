@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_roaster
-    if SubdomainRoutes
+    if ValidSubdomain.matches?(request)
       @current_roaster = RoasterProfile.find_by(subdomain: request.subdomain)
     end
   end
