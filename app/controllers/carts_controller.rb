@@ -8,12 +8,18 @@ class CartsController < ApplicationController
     # TODO Once shipping is working correctly, handle the customers default setting
     # shipping_method = ShippingMethod.find(wp.shipping)
     @rates = ShippingServices::GetRates.get_rate_estimates(@cart.id, wp.id)
+    @local_rates = ShippingServices::GetLocalRates.get_rates(current_roaster)
+    @all_rates = (@rates + @local_rates).sort_by{|ar| ar[:retail_rate].to_f}
     @profile = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer, scope: current_roaster)
+    @cards = @customer.cards
 
     render "manage/primary", locals: {
       profile: @profile,
-      rates: @rates,
+      rates: @all_rates,
+      cards: @cards,
       header_info: {url: current_roaster.logo_image_url, name: current_roaster.name},
+      stripeApiKey: Rails.application.credentials.stripe_api_key,
+      scripts: ["https://js.stripe.com/v3/"],
       roaster: current_roaster,
       title: 'Products',
       component: 'shop/cart',

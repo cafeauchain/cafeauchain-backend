@@ -11,7 +11,10 @@ import Modal from "shared/modal";
 import ShippingOptions from "shop/shipping/options"
 import CustomerAddresses from "shop/customer/addresses";
 
-import { humanize } from "utilities";
+import CartChangePayment from "shop/cart/changePayment";
+import MiniCard from "payments/miniCard";
+
+import { humanize, pluralize } from "utilities";
 import { url as API_URL, requester } from "utilities/apiUtils";
 import withContext from "contexts/withContext";
 /* eslint-enable */
@@ -26,12 +29,15 @@ class CartDetails extends React.Component {
     };
     constructor(props) {
         super(props);
-        const { rates } = props;
+        const { rates, cards, profile: { attributes: { terms } } } = props;
         const defaultRate = rates.find( rate => rate.service === "Priority" ) || rates[0];
-        
+        const card = cards.find( card => card.default );
+        const payment_source = card.stripe_card_id; 
         this.state = {
             errors: [],
-            shipping: defaultRate
+            shipping: defaultRate,
+            payment_type: terms ? "terms_with_vendor" : "card_on_file",
+            payment_source: !terms ? payment_source : undefined
         };
     }
 
@@ -39,16 +45,16 @@ class CartDetails extends React.Component {
         this.setState( obj );
     }
 
-    handleSubmit = async e => {
+    handleSubmit = async ( e, item ) => {
         const { target } = e;
         e.preventDefault();
         target.blur();
-        const { cart } = this.props;
-        // eslint-disable-next-line
-        console.log(cart);
+        const { cart: { id } } = this.props;
         const url = `${API_URL}/orders`;
-        // TODO Allow payment type to be  changed
-        const body = { id: cart.id, payment_type: "terms_with_vendor" };
+        const { payment_type, payment_source, shipping } = this.state;
+        const tax = item["data-tax"];
+        const total = item["data-total"];
+        const body = { id, payment_type, payment_source, shipping, tax, total };
         const response = await requester({ url, body });
         if (response instanceof Error) {
             this.setState({ errors: response.response.data });
@@ -68,11 +74,21 @@ class CartDetails extends React.Component {
         const {
             cart: { attributes },
             profile: { attributes: profileAttrs },
-            rates
+            rates,
+            cards,
+            stripeApiKey
         } = this.props;
         const { primary_address: { street_1, street_2, city, state, postal_code } } = profileAttrs; 
-        const { errors, shipping } = this.state;
-        const cartTotal = Number(attributes.total_price) + Number(shipping.retail_rate);
+        const { errors, shipping, payment_type, payment_source } = this.state;
+        const speed = Number(shipping.est_delivery_days);
+        const speedString = speed ? pluralize(speed, ' day') : "Unknown";
+        
+        // TODO Consider moving these calculations to the backend
+        const cartTotal = (Number(attributes.total_price) + Number(shipping.retail_rate)).toFixed(2);
+        const tax_due = (Number(profileAttrs.wholesale_profile.tax_rate) * Number(cartTotal) / 100).toFixed(2);
+        const orderTotal = (Number(cartTotal) + Number(tax_due)).toFixed(2);
+
+        const card = cards.find( card => card.stripe_card_id === payment_source );
         return (
             <Card fluid>
                 <ErrorHandler errors={errors} />
@@ -112,6 +128,14 @@ class CartDetails extends React.Component {
                     </Flex>
                 </Card.Content>
                 <Card.Content>
+                    <Flex spacebetween spacing="10">
+                        <span>Subtotal: </span>
+                        <span>
+                            <Money>{attributes.total_price}</Money>
+                        </span>
+                    </Flex>
+                </Card.Content>
+                <Card.Content>
                     <p><strong>Shipping</strong></p>
                     <Flex spacebetween spacing="10">
                         <span>Service: </span>
@@ -122,7 +146,7 @@ class CartDetails extends React.Component {
                     <Flex spacebetween spacing="10">
                         <span>Shipping Estimate: </span>
                         <span>
-                            {shipping.est_delivery_days ? shipping.est_delivery_days + " days" : "Unknown"}
+                            {speedString}
                         </span>
                     </Flex>
                     <Flex spacebetween spacing="10">
@@ -146,20 +170,55 @@ class CartDetails extends React.Component {
                     />
                 </Card.Content>
                 <Card.Content>
-                    
+                    <p><strong>Taxes</strong></p>
                     <Flex spacebetween spacing="10">
-                        <span>Subtotal: </span>
+                        <span>Rate: </span>
                         <span>
-                            <Money>{attributes.total_price}</Money>
+                            {profileAttrs.wholesale_profile.tax_rate + "%"}
                         </span>
                     </Flex>
+                    <Flex spacebetween spacing="10">
+                        <span>Tax Due: </span>
+                        <span>
+                            <Money>{tax_due}</Money>
+                        </span>
+                    </Flex>
+                </Card.Content>
+                <Card.Content>
+                    <p><strong>Payment</strong></p>
+                    {payment_type === "terms_with_vendor" && (
+                        <div>
+                            {profileAttrs.terms}
+                        </div>
+                    )}
+                    {payment_type === "card_on_file" && (
+                        <div>
+                            <MiniCard card={card} />
+                        </div>
+                        
+                    )}
+                    <Modal
+                        text="Change"
+                        title="Change Payment Method"
+                        unstyled
+                        className="link"
+                        component={(
+                            <CartChangePayment 
+                                cards={cards}
+                                updateCartDetails={this.updateCartDetails}
+                                payment_source={payment_source}
+                                terms={profileAttrs.terms}
+                                stripeApiKey={stripeApiKey}
+                            />
+                        )}
+                    />
                 </Card.Content>
                 <Card.Content>
                     <Flex spacebetween centercross spacing="10">
                         <Statistic size="mini">
                             <Statistic.Label>Total</Statistic.Label>
                             <Statistic.Value>
-                                <Money type="postive">{cartTotal}</Money>
+                                <Money type="postive">{orderTotal}</Money>
                             </Statistic.Value>
                         </Statistic>
                         <div>
@@ -169,6 +228,9 @@ class CartDetails extends React.Component {
                                 icon="right arrow"
                                 labelPosition="right"
                                 onClick={this.handleSubmit}
+                                data-shipping={shipping.retail_rate}
+                                data-tax={tax_due}
+                                data-total={orderTotal}
                             />
                         </div>
                     </Flex>

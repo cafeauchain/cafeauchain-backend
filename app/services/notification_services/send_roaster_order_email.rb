@@ -19,7 +19,7 @@ module NotificationServices
       mail.subject = "You've received a new order from #{customer.company_name}"
       mail.template_id = 'd-5aef885aa5504c9c9cec748938ad3d0d'
       personalization = Personalization.new
-      personalization.add_to Email.new(email: recipient.email, name: recipient.roaster_profile.name)
+      personalization.add_to Email.new(email: recipient.owner.email, name: recipient.name)
       
       personalization.add_dynamic_template_data({
         total: "$#{'%.2f' % order.order_total}",
@@ -42,8 +42,8 @@ module NotificationServices
 
       })
       mail.add_personalization(personalization)
-      sg = SendGrid::API.new(api_key: Rails.application.credentials.sendgrid_api_key)
-      response = sg.client.mail._('send').post(request_body: mail.to_json)
+      # sg = SendGrid::API.new(api_key: Rails.application.credentials.sendgrid_api_key)
+      # response = sg.client.mail._('send').post(request_body: mail.to_json)
       
     end
   end  

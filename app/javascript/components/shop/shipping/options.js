@@ -6,7 +6,7 @@ import { Segment, Button, Label } from "semantic-ui-react";
 /* eslint-disable */
 import Flex from "shared/flex";
 import { Money } from "shared/textFormatters";
-import { humanize } from "utilities";
+import { humanize, pluralize } from "utilities";
 /* eslint-enable */
 
 class ShippingOptions extends React.Component {
@@ -43,6 +43,8 @@ class ShippingOptions extends React.Component {
         return (
             <div>
                 {rates.map( rate => {
+                    const speed = Number(rate.est_delivery_days);
+                    const speedString = speed ? pluralize(speed, ' day') : "Unknown";
                     return (
                         <Segment key={rate.id}>
                             {current.id === rate.id && (
@@ -61,7 +63,7 @@ class ShippingOptions extends React.Component {
                                 </div>
                                 <div flex="25"><strong>Speed: </strong></div>
                                 <div flex="75">
-                                    {rate.est_delivery_days ? rate.est_delivery_days + " days" : "Unknown"}
+                                    {speedString}
                                 </div>
                             </Flex> 
                             <br />
