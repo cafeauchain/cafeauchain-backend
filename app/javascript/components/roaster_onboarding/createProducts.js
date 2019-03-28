@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Segment, Header, Step, Container } from "semantic-ui-react";
+import { Segment, Header, Step, Container, Divider, Icon } from "semantic-ui-react";
 
 /* eslint-disable */
 import CreateProduct from "wholesale/actions/createProduct";
@@ -11,9 +11,9 @@ import Products from "wholesale/productInventory";
 import steps from "roaster_onboarding/wholesaleSteps";
 import OnboardFooter from "roaster_onboarding/footer";
 
-import Flex from "shared/flex";
+import Modal from "shared/modal";
 
-import { fetcher, roasterUrl } from "utilities/apiUtils";
+import { roasterUrl } from "utilities/apiUtils";
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
@@ -59,7 +59,17 @@ class CreateProducts extends React.Component {
                     {size.length > 0 && options.length > 0 && (
                         <React.Fragment>
                             <Header as="h2" content="Create Products" />
-                            <CreateProduct />
+                            <Modal 
+                                text="Add New Product"
+                                btnProps={{
+                                    icon: <Icon name="plus circle" inverted />,
+                                    size: "large"
+                                }}
+                                title="Add Product"
+                                icon="coffee"
+                                component={<CreateProduct />}
+                            />
+                            <Divider />
                             <Products noEdit />
                             <br />
                             <OnboardFooter left={leftBtn} right={rightBtn} userId={userId} />
