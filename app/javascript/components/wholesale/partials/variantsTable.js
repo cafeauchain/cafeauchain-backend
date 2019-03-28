@@ -25,9 +25,9 @@ const Variants = ({ variants, fields, handleChange, btn: RemoveButton }) => (
                 <Flex spacing="10" centercross>
                     {fields.map(({ name, label, inputType, flex, width, ...rest }, fieldIdx) => {
                         const value = name ? item[name] : Weights({ content: item["size"] });
-                        const showRemoveBtn = fields.length === fieldIdx + 1 && variants.length > 1;
+                        const showRemoveBtn = fields.length === fieldIdx + 1;
                         return (
-                            <div key={name} flex={flex} style={{ width: showRemoveBtn ? width + 65 : width }}>
+                            <div key={name} flex={flex} style={{ width: width }}>
                                 <Input
                                     key={name}
                                     name={name}
@@ -43,7 +43,7 @@ const Variants = ({ variants, fields, handleChange, btn: RemoveButton }) => (
                                     {...rest}
                                 >
                                     <input />
-                                    {showRemoveBtn && <RemoveButton idx={idx} remover="variants" />}
+                                    {showRemoveBtn && <RemoveButton idx={idx} remover="variants" disabled={variants.length <= 1} />}
                                 </Input>
                             </div>
                         );

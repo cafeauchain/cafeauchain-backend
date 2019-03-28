@@ -69,7 +69,7 @@ class Options extends Component {
         const { addedOption, selected } = this.state;
         return (
             <div style={{ marginBottom: 5 }}>
-                <Header as="h3" content="Product Options" style={{ marginBottom: 10 }} />
+                <Header as="h3" content="Product Options" style={{ marginBottom: 38 }} />
                 {options.map(item => {
                     return (
                         <Input

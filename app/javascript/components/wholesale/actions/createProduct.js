@@ -189,7 +189,7 @@ class CreateProduct extends Component {
                 </Segment>
                 <Segment style={{ background: "#efefef" }}>
                     <Flex spacing="10">
-                        <div flex="fill">
+                        <div flex="auto">
                             <Variants
                                 variants={variants}
                                 fields={fields.variants}
