@@ -30,7 +30,7 @@ class ModalWithTrigger extends Component {
         this.setState({ isOpen: true });
     };
     render() {
-        let { text, showBtn, isOpen, closeModal, unstyled, className = "", ...rest } = this.props;
+        let { text, showBtn, isOpen, closeModal, unstyled, btnProps, className = "", ...rest } = this.props;
         const { success, isOpen: isOpenState } = this.state;
         if (unstyled) className += " unstyled";
         return (
@@ -48,6 +48,7 @@ class ModalWithTrigger extends Component {
                             disabled={!showBtn}
                             content={text}
                             className={className}
+                            {...btnProps}
                         />
                     ) : (
                         undefined
@@ -58,14 +59,15 @@ class ModalWithTrigger extends Component {
     }
 }
 
-const { string, node, bool, func } = PropTypes;
+const { string, node, bool, func, object } = PropTypes;
 ModalWithTrigger.propTypes = {
     text: string,
     showBtn: bool,
     closeModal: func,
     isOpen: bool,
     unstyled: bool,
-    className: string
+    className: string,
+    btnProps: object
 };
 
 ModalWithTrigger.defaultProps = {
