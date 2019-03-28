@@ -5,9 +5,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     if resource.save
       sign_in(resource, scope: resource_name)
-      if resource.roaster_profile.nil? && !ValidSubdomain.matches?(request)
+      if resource.roaster_profile.nil? && SubdomainRoutes.matches?(request)
         render json: {"redirect":true,"redirect_url": onboarding_profile_path}, status: 200
-      else ValidSubdomain.matches?(request)
+      else !SubdomainRoutes.matches?(request)
         cp = CustomerProfile.create(owner_id: resource.id)
         cp.users << resource
         wp = cp.wholesale_profiles.create(roaster_profile: current_roaster)

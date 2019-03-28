@@ -4,11 +4,11 @@ class Users::SessionsController < Devise::SessionsController
     resource = warden.authenticate!(:scope => resource_name, :recall => "#{controller_path}#failure")
     puts "Logged in!"
     puts current_user
-    if resource.roaster_profile.nil? && !ValidSubdomain.matches?(request)
+    if resource.roaster_profile.nil? && SubdomainRoutes.matches?(request)
       render json: {"redirect":true,"redirect_url": onboarding_profile_path}, status: 200
-    elsif !resource.roaster_profile.nil? && !ValidSubdomain.matches?(request)
+    elsif !resource.roaster_profile.nil? && SubdomainRoutes.matches?(request)
       render json: {"redirect":true,"redirect_url": manage_dashboard_path}, status: 200
-    elsif ValidSubdomain.matches?(request)
+    elsif !SubdomainRoutes.matches?(request)
       customer = current_user.customer_profile
       wholesale = customer.wholesale_profiles.find_by(roaster_profile: current_roaster)
       isProfileComplete = wholesale.onboard_status == 'approved'

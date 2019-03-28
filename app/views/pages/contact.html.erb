@@ -1,22 +1,17 @@
-<% content_for :title, "Contact Us" %>
-<%= react_component "main", props = {
-    loggedIn: user_signed_in?,
-    roaster: current_user ? current_user.roaster_profile : nil,
-    header_info: current_roaster ? {url: current_roaster.logo_image_url, name: current_roaster.name} : nil,
-    component: 'empty',
-    static: true
-} %>
-<div class="width-wrapper">
-    <div class="segment ui">
-        <h1>Contact Us</h1>
-        <div style="margin: 0 auto; max-width: 500px;">
-            <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/shell.js"></script>
-            <script>
-                hbspt.forms.create({
-                    portalId: "5365116",
-                    formId: "c76d3a88-9fb4-48c5-916d-bf30a8e47407"
-                });
-            </script>
-        </div>
+<div class="ui grid container">
+
+  <div class='ui column segment eight wide centered'>
+    <div class="ui row">
+      <div class="ui column centered">
+        <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/shell.js"></script>
+        <script>
+          hbspt.forms.create({
+            portalId: "5365116",
+            formId: "c76d3a88-9fb4-48c5-916d-bf30a8e47407"
+          });
+        </script>
+      </div>
     </div>
+  </div>
+
 </div>

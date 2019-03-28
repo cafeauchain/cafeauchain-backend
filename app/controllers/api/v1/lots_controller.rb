@@ -34,7 +34,7 @@ module Api::V1
     def create
       @lot = InventoryServices::CreateLot.new(@roaster.id, params[:lotDetails][:crop_id], params)
       if @lot.call
-        render json: @lot, status: 200
+        render json: {"redirect":false,"redirect_url": manage_inventory_roaster_profile_path(@roaster)}, status: 200
       else
         render @lot.errors, status: 422
       end
@@ -59,7 +59,7 @@ module Api::V1
         end
       end
       if @errors.empty?
-        render json: @roaster.lots, status: 200
+        render json: {"redirect":false,"redirect_url": manage_inventory_roaster_profile_path(@roaster)}, status: 200
       else
         render @errors, status: 422
       end

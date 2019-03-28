@@ -1,2 +1,0 @@
-jekyll build
-rsync -va _site/ ../cafeauchain-backend/public/blog

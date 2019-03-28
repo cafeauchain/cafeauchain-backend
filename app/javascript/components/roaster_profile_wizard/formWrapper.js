@@ -9,7 +9,7 @@ import IconHeader from "shared/IconHeader";
 const WizardWrapper = props => {
     const { prevFunc, prevText, nextFunc, nextText, renderErrors, children, headerText, loading } = props;
     return (
-        <Segment>
+        <Segment style={{ overflow: "hidden", paddingBottom: "2em" }}>
             <Form>
                 <IconHeader iconName="coffee" header={headerText} />
                 {renderErrors()}

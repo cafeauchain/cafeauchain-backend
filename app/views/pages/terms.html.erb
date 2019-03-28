@@ -1,14 +1,1 @@
-<% content_for :title, "Terms" %>
-<%= react_component "main", props = {
-    loggedIn: user_signed_in?,
-    roaster: current_user ? current_user.roaster_profile : nil,
-    header_info: current_roaster ? {url: current_roaster.logo_image_url, name: current_roaster.name} : nil,
-    component: 'empty',
-    static: true
-} %>
-<div class="width-wrapper">
-    <div class="segment ui">
-        <h1>This is the terms page</h1>
-    </div>
-</div>
-
+<div>This is the terms page</div>
