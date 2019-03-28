@@ -89,9 +89,8 @@ class CreateProduct extends Component {
                 const success = details.name + " was created successfully!";
                 await this.setState({ btnLoading: false });
                 await resetForm();
-                getCtxData("products");
-                getCtxData("variants");
-                getCtxData("inventory");
+                await getCtxData("products");
+                await getCtxData("variants");
                 if (successClose) {
                     successClose(success);
                 } else if (closeModal) {
