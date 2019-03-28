@@ -29,12 +29,20 @@ class CreateDefaults extends Component {
     };
     // TODO Handle existing defaults
 
+    buildOptions = options => options.reduce( (arr, { value }) => {
+        if( value ){
+            return [ ...arr, value ];
+        } else {
+            return arr;
+        }
+    }, [])
+
     handleSubmit = async ev => {
         ev.preventDefault();
         await this.setState({ btnLoading: true });
         const { options } = this.state;
         const { userId, updateContext } = this.props;
-        const body = { title: "Size", options: options.map(({ value }) => value) };
+        const body = { title: "Size", options: this.buildOptions(options) };
         const url = `${ROASTER_URL(userId)}/default_options`;
         const response = await requester({ url, body });
         if (response instanceof Error) {
