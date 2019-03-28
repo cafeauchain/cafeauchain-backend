@@ -88,7 +88,6 @@ class CreateProduct extends Component {
             } else {
                 const success = details.name + " was created successfully!";
                 await this.setState({ btnLoading: false });
-                await resetForm();
                 await getCtxData("products");
                 await getCtxData("variants");
                 if (successClose) {
@@ -96,6 +95,7 @@ class CreateProduct extends Component {
                 } else if (closeModal) {
                     setTimeout(closeModal, 900);
                 }
+                await resetForm();
             }
         }
     }
@@ -128,17 +128,39 @@ class CreateProduct extends Component {
         return (
             <Form>
                 <ErrorHandler errors={errors} />
-                {fields.base.map(({ name, label, inputType }) => (
-                    <Input
-                        key={name}
-                        name={name}
-                        label={label}
-                        inputType={inputType}
-                        onChange={handleInputChange}
-                        value={details[name]}
-                        autoComplete="off"
-                    />
-                ))}
+                <Flex spacing="10" wrap>
+                    <div flex="75">
+                        {fields.base.map(({ name, label, inputType }) => (
+                            <Input
+                                key={name}
+                                name={name}
+                                label={label}
+                                inputType={inputType}
+                                onChange={handleInputChange}
+                                value={details[name]}
+                                autoComplete="off"
+                            />
+
+                        ))}
+                    </div>
+                    <div flex="25">
+                        <Segment>
+                            <p><strong>Product Status</strong></p>
+                            {fields.status.map(({ label, value }) => (
+                                <Input
+                                    key={label}
+                                    inputType="checkbox"
+                                    name="status"
+                                    label={label}
+                                    value={value}
+                                    checked={details["status"] === value}
+                                    onChange={handleInputChange}
+                                />
+                            ))}
+                        </Segment>
+                    </div>
+                </Flex>
+                
                 {current && details.product_image_urls.map( (url,idx) => 
                     (
                         <React.Fragment key={url.id}>

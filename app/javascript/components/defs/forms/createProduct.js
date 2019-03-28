@@ -1,7 +1,13 @@
 const fields = {
     base: [
-        { name: "name", label: "Product Name" },
-        { name: "description", label: "Product Description", inputType: "markdown" }
+        { name: "name", label: "Product Name", flex: "100" },
+        { name: "description", label: "Product Description", inputType: "markdown", flex: "75" }
+    ],
+    status: [
+        { label: "Draft", value: "draft" },
+        { label: "Live", value: "live" },
+        { label: "Out of Season", value: "out_of_season" },
+        { label: "Coming Soon", value: "coming_soon" }
     ],
     composition: [
         { name: "inventory_item_id", label: "Choose Inventory Item", inputType: "select" },
