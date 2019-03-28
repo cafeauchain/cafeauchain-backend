@@ -7,13 +7,29 @@ import Table from "shared/table";
 
 import tableDefs from "defs/tables/openContracts";
 
-import withContext from "contexts/withContext";
+import Context from "contexts/main";
 /* eslint-enable */
+
+const Wrapper = props => (
+    <Context>
+        {ctx => (
+            <OpenContracts
+                {...props}
+                lots={ctx.lots}
+                loading={ctx.loading}
+                userId={ctx.userId}
+                getCtxData={ctx.getData}
+            />
+        )}
+    </Context>
+);
 
 class OpenContracts extends Component {
     componentDidMount() {
-        const { lots, getData } = this.props;
-        if (lots === undefined) getData("lots");
+        const { lots, getCtxData } = this.props;
+        if (lots === undefined) {
+            getCtxData("lots");
+        }
     }
     render() {
         let { lots = [], limit = 5 } = this.props;
@@ -46,8 +62,8 @@ const { array, bool, func, oneOfType, number, string } = PropTypes;
 OpenContracts.propTypes = {
     lots: array,
     loading: bool,
-    getData: func,
+    getCtxData: func,
     limit: oneOfType([number, string])
 };
 
-export default withContext(OpenContracts);
+export default Wrapper;

@@ -60,7 +60,7 @@ class Login extends Component {
         details = { ...details };
         if (name === "") return;
         const val = value || checked;
-        details[name] = val || "";
+        details[name] = val;
         this.setState({ details });
     };
 
@@ -72,7 +72,6 @@ class Login extends Component {
                 onChange={this.handleInputChange}
                 iconPosition="left"
                 labelPosition="left"
-                autoComplete="off"
             />
         ));
 

@@ -46,7 +46,8 @@ class App extends Component {
         let roaster_profile = { ...profile };
         if (name === "") return;
         const val = value || checked;
-        roaster_profile[name] = val || "";
+        roaster_profile[name] = val;
+        console.log(roaster_profile);
         this.setState({ roaster_profile });
     };
 
@@ -116,7 +117,7 @@ class App extends Component {
             break;
         case 4:
             settings.headerText = "Confirm your profile info";
-            settings.nextText = "Save Profile";
+            settings.nextText = "Complete Registration";
             break;
         }
         return settings;
