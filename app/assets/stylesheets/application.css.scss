@@ -36,14 +36,22 @@
     z-index: -1;
 }
 body {
-    background: image-url("bg-1.jpg"),
-        linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) no-repeat center center fixed;
+    background: image-url("bg-1.jpg"), linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) no-repeat center center fixed;
     background-blend-mode: overlay;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
     background-size: cover;
     background-attachment: fixed;
+    &.customer {
+        background-image: image-url("coffee-imgs/coffee-img-26.jpg");
+        &:before {
+            content: "";
+            height: 100%;
+            width: 100%;
+            background: rgba(255,255,255,0.5);
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    }
 }
 
 .jumbotron {

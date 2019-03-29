@@ -1,5 +1,6 @@
 <% content_for :title, defined?(title) ? title : "This is the title" %>
-<% props = local_assigns.except(:title, :scripts) %>
+<% content_for :body_class, defined?(body_class) ? body_class : "" %>
+<% props = local_assigns.except(:title, :scripts, :body_class) %>
 <% props["loggedIn"] = user_signed_in? %>
 <%= react_component "main", props %>
 <% if defined?(scripts) %>

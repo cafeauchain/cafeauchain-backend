@@ -11,6 +11,8 @@ module Shop
       render "manage/primary", locals: {
         roaster: @roaster,
         products: @products,
+        header_info: {url: @roaster_profile.logo_image_url, name: @roaster_profile.name},
+        body_class: "customer",
         title: 'Products',
         component: 'shop',
         cart: @serialized_cart
