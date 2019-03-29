@@ -18,7 +18,7 @@ const About = () => {
                         Let your customers know more about them.
                     </p>
                 </div>
-                <div flex="50" style={{ margin: "0 auto" }}>
+                <div flex="50" className="home-img-container">
                     <Image src={img} rounded bordered />
                 </div>
             </Flex>

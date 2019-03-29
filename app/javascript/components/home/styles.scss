@@ -34,14 +34,30 @@ $heroBackground: $brown;
 
 section.ui.segment {
     background: $offwhite;
-    padding: 8em 0;
+    padding: 4em 0;
+    @media screen and (min-width: 600px) {
+        padding: 8em 0;
+    }
+    
     &:nth-of-type(even) {
         background: $lightgray;
     }
     .home-section-container {
-        padding: 0 60px;
+        padding: 0 30px;
         max-width: 1200px;
         margin: 0 auto;
+        @media screen and (min-width: 600px) {
+            padding: 0 60px;    
+        }
+        @media screen and (max-width: 990px) {
+            .flex-child__50 {
+                flex-basis: 100%;
+            }
+            .home-img-container {
+                max-width: 600px;
+                margin: 40px auto 0;
+            }
+        }
     }
 }
 
@@ -78,7 +94,11 @@ section.ui.segment {
         }
     }
     &.home-section-header {
-        font-size: 2.5em;
+        font-size: 1.7em;
+        @media screen and (min-width: 600px) {
+            font-size: 2.5em;   
+        }
+        
     }
 }
 
@@ -94,5 +114,8 @@ section.ui.segment {
 }
 
 .home-section-text {
-    font-size: 1.3em;
+    font-size: 1.15em;
+    @media screen and (min-width: 600px) {
+        font-size: 1.3em;   
+    }
 }

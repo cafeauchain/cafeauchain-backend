@@ -33,7 +33,7 @@ const General = () => {
                         the context you need to make better decisions, support your partners, and improve your product.
                     </p>
                 </div>
-                <div flex="50">
+                <div flex="50" className="home-img-container">
                     <Image bordered rounded src={img} />
                 </div>
                 <div flex="100" className="text-centered">

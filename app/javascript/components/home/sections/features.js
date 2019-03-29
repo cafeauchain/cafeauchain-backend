@@ -1,9 +1,9 @@
 import React from "react";
-import { Container, Header, Button, Divider } from "semantic-ui-react";
+import { Header, Button, Divider } from "semantic-ui-react";
 
 const Features = () => {
     return (
-        <Container text>
+        <div className="home-section-container">
             <Header as="h3" className="home-section-header">
                 Do Customers Care About Your Coffee&apos;s Sustainability?
             </Header>
@@ -30,7 +30,7 @@ const Features = () => {
             <Button as="a" size="large">
                 Learn More
             </Button>
-        </Container>
+        </div>
     );
 };
 
