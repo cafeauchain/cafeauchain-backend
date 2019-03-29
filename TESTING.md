@@ -2,6 +2,12 @@
 
 Testing the user experience is vital to the success of the Cafe au Chain platform. 
 
+Test URL for roasters: [http://demo.proofofperk.com](http://demo.proofofperk.com)
+
+Test URL for customers (for provisional roaster): [http://pendragon-coffee.proofofperk.com](http://pendragon-coffee.proofofperk.com)
+
+To test roasters you create, go to the subdomain you create for that roaster on proofofperk.com. For example, if you create a roaster called Daybreak Coffee with the subdomain `daybreak-coffee`, the URL to test the customer-facing side for that roaster's products is [http://daybreak-coffee.proofofperk.com](http://daybreak-coffee.proofofperk.com)
+
 ## Test account numbers, credentials, etc
 
 Credit card: 4242 4242 4242 4242
