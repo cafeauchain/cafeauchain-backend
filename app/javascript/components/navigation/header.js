@@ -27,7 +27,8 @@ const { object, bool } = PropTypes;
 Header.propTypes = {
     cart: object,
     loggedIn: bool,
-    roaster: object
+    roaster: object,
+    header_info: object
 };
 
 export default Header;

@@ -12,7 +12,7 @@ const links = {
             content: <Button className="login-btn">Login</Button>,
             key: "login",
             href: "/login",
-            className: "no-border",
+            className: "no-border nav-btn",
             fitted: true
         },
         {
@@ -20,7 +20,7 @@ const links = {
             content: <Button className="register-btn">Register</Button>,
             key: "register",
             href: "/register",
-            className: "no-border"
+            className: "no-border nav-btn"
         }
     ]
 };

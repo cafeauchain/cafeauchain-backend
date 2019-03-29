@@ -71,7 +71,7 @@ const links = user => {
                 content: <Button className="logout-btn">Logout</Button>,
                 key: "logout",
                 href: "/logout",
-                className: "no-border"
+                className: "no-border nav-btn"
             }
         ]
     };
