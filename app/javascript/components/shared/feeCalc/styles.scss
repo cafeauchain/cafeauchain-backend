@@ -5,4 +5,16 @@ $thumb-radius: 50%;
     padding-right: 10px !important;
     border: 0 !important;
 }
+.roasted-calc {
+    text-align: center;
+    @media screen and (max-width: 540px) {
+        flex-basis: 100%;
+    }
+}
+.calc-image {
+    @media screen and (max-width: 400px) {
+        width: 100px !important;
+    }
+    margin: 0 0 20px 20px !important;
+}
 @import "~input-range-scss";
