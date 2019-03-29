@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Container, Input, Header, Card, Statistic, Grid, Image } from "semantic-ui-react";
+import { Container, Input, Header, Card, Statistic, Image } from "semantic-ui-react";
 import Commafy from "commafy";
 
 import "./styles.scss";
