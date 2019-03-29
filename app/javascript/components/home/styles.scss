@@ -38,6 +38,11 @@ section.ui.segment {
     &:nth-of-type(even) {
         background: $lightgray;
     }
+    .home-section-container {
+        padding: 0 60px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
 }
 
 .home {
@@ -72,6 +77,9 @@ section.ui.segment {
             margin-top: 0.5em;
         }
     }
+    &.home-section-header {
+        font-size: 2.5em;
+    }
 }
 
 .home-hero-text {
@@ -81,6 +89,10 @@ section.ui.segment {
     margin-left: auto;
     margin-right: auto;
     @media screen and (min-width: 600px) {
-            font-size: 1.25em;
-        }
+        font-size: 1.25em;
+    }
+}
+
+.home-section-text {
+    font-size: 1.3em;
 }
