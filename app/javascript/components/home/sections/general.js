@@ -38,7 +38,7 @@ const General = () => {
                 </div>
                 <div flex="100" className="text-centered">
                     <br />
-                    <Button size="huge" primary>Check Out Our Tools</Button>
+                    <Button size="huge" primary as="a" href="/register">Check Out Our Tools</Button>
                 </div>
             </Flex>
         </div>
