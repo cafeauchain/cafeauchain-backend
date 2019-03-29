@@ -18,6 +18,12 @@ class FileInput extends Component {
         };
     }
 
+    shouldComponentUpdate(props, state){
+        const { files, image } = props;
+        const { files: oldFiles, image: oldImage } = this.props;
+        return ( files.length !== oldFiles.length || image !== oldImage || state !== this.state );
+    }
+
     uploadFile = async event => {
         const { handleChange, name, fileType, multiple } = this.props;
         const files = event.target.files;

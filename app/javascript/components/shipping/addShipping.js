@@ -16,18 +16,14 @@ import withContext from "contexts/withContext";
 const acctFields = {
     ups: [
         { name: "username", label: "UPS Username" },
-        { name: "password_field", label: "UPS Password", type: "password" },
+        { name: "password", label: "UPS Password", type: "password" },
         { name: "account_id", label: "UPS Account Id" },
         { name: "access_license_number", label: "UPS Access License Number" }
     ],
-    usps: [
-        { name: "username", label: "USPS Username" },
-        { name: "password_field", label: "USPS Password" },
-        { name: "account_id", label: "USPS Account Id" }
-    ],
+    usps: [],
     fedex: [
         { name: "username", label: "FedEx Username" },
-        { name: "password_field", label: "FedEx Password" },
+        { name: "password", label: "FedEx Password", type: "password" },
         { name: "account_id", label: "FedEx Account Id" },
         { name: "meter_number", label: "FedEx Meter Number (Optional)" }
     ],

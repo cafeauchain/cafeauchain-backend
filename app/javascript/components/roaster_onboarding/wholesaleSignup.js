@@ -123,9 +123,9 @@ class WholesaleSignup extends React.Component {
         if (name === "") return;
         const val = value || checked;
         if (rest["data-namespace"]) {
-            namespacer(rest["data-namespace"], details)[name] = val;
+            namespacer(rest["data-namespace"], details)[name] = val || "";
         } else {
-            details[name] = val;
+            details[name] = val || "";
         }
         this.setState({ details });
     };

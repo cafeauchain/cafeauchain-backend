@@ -15,6 +15,7 @@ const variantsDefault = (variant = "") => ({ size: variant, price_in_dollars: ""
 const defaultDetails = {
     name: "",
     description: "",
+    status: "draft",
     categories: [],
     product_images: [],
     composition: [compositionDefault()],
