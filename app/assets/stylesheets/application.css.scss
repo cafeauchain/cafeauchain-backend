@@ -41,16 +41,7 @@ body {
     background-size: cover;
     background-attachment: fixed;
     &.customer {
-        background-image: image-url("coffee-imgs/coffee-img-26.jpg");
-        &:before {
-            content: "";
-            height: 100%;
-            width: 100%;
-            background: rgba(255,255,255,0.5);
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
+        background-image: image-url("coffee-imgs/coffee-img-26.jpg"), linear-gradient(rgba(255, 255, 255, 0.5), rgba(149, 101, 74, 5));
     }
 }
 
