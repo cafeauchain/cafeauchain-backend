@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Segment, Container, Grid, Header, List, Image, Divider } from "semantic-ui-react";
+import { Segment, Container, Header, List, Image, Divider } from "semantic-ui-react";
 /* eslint-disable */
 import logo from "images/cac-unofficial-logo.png";
 import Flex from "shared/flex";
@@ -24,11 +24,14 @@ const Footer = ({ loggedIn }) => {
                                             <List.Item as="a" href="/">
                                                     Home
                                             </List.Item>
-                                            <List.Item as="a" href="/about">
+                                            <List.Item as="a" href="http://www.cafeauchain.com/blog/about">
                                                     About
                                             </List.Item>
                                             <List.Item as="a" href="/contact">
                                                     Contact
+                                            </List.Item>
+                                            <List.Item as="a" href="http://www.cafeauchain.com/blog">
+                                                Blog
                                             </List.Item>
                                             <List.Item as="a" href="/login">
                                                     Login
