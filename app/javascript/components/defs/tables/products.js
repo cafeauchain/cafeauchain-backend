@@ -39,6 +39,7 @@ const VariantHandler = props => {
 const tableDefinition = {
     fields: [
         { name: "title", namespace: "attributes", style: { minWidth: 200 } },
+        { name: "status", namespace: "attributes" },
         {
             name: "product_options",
             namespace: "attributes",

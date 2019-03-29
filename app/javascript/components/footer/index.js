@@ -1,8 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Segment, Container, Grid, Header, List, Image, Divider } from "semantic-ui-react";
-// eslint-disable-next-line
+import { Segment, Container, Header, List, Image, Divider } from "semantic-ui-react";
+/* eslint-disable */
 import logo from "images/cac-unofficial-logo.png";
+import Flex from "shared/flex";
+/* eslint-enable */
 
 const Footer = ({ loggedIn }) => {
     return (
@@ -14,39 +16,46 @@ const Footer = ({ loggedIn }) => {
             <Container textAlign="center">
                 {!loggedIn && (
                     <React.Fragment>
-                        <Grid columns={2} divided stackable inverted>
-                            <Grid.Row>
-                                <Grid.Column>
-                                    <Header inverted as="h4" content="Navigation" />
-                                    <List link inverted>
-                                        <List.Item as="a" href="/">
-                                            Home
-                                        </List.Item>
-                                        <List.Item as="a" href="/about">
-                                            About
-                                        </List.Item>
-                                        <List.Item as="a" href="/contact">
-                                            Contact
-                                        </List.Item>
-                                        <List.Item as="a" href="/login">
-                                            Login
-                                        </List.Item>
-                                    </List>
-                                </Grid.Column>
-                                <Grid.Column>
+                        <div style={{ margin: "20px 0", position: "relative" }}>
+                            <Flex spacing="20" wrap centermain>
+                                <div flex="50" className="footer-nav">
+                                    <Flex column centermain className="footer-nav-inner">
+                                        <List horizontal link inverted>
+                                            <List.Item as="a" href="/">
+                                                    Home
+                                            </List.Item>
+                                            <List.Item as="a" href="http://www.cafeauchain.com/blog/about">
+                                                    About
+                                            </List.Item>
+                                            <List.Item as="a" href="/contact">
+                                                    Contact
+                                            </List.Item>
+                                            <List.Item as="a" href="http://www.cafeauchain.com/blog">
+                                                Blog
+                                            </List.Item>
+                                            <List.Item as="a" href="/login">
+                                                    Login
+                                            </List.Item>
+                                        </List>
+                                    </Flex>
+                                    
+                                </div>
+                                <div flex="50" className="footer-tag">
                                     <Header inverted as="h4" content="Cafe au Chain | Proof of Perk" />
                                     <p>
                                         Blockchain-backed roaster management tools for Roasters that want to make an
                                         impact.
                                     </p>
-                                </Grid.Column>
-                            </Grid.Row>
-                        </Grid>
+                                </div>
+                            </Flex>                        
+                        </div>
+                        
                         <Divider inverted section />
                     </React.Fragment>
                 )}
 
                 <Image src={logo} centered size="mini" />
+                <p className="small-text poweredby">Powered by Cafe au Chain</p>
                 <List horizontal inverted={!loggedIn} divided link size="small">
                     <List.Item as="a" href="/site-map">
                         Site Map

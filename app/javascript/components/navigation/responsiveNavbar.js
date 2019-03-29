@@ -31,7 +31,7 @@ class NavBar extends Component {
     logoLoaded = () => {
         let { menuHeight } = this.state;
         if (this.menuRef.current) {
-            let el = this.menuRef.current.getElementsByClassName("right-side-menu")[0];
+            let el = this.menuRef.current.getElementsByClassName("header-menu")[0];
             if (menuHeight !== el.offsetHeight) {
                 this.setState({ menuHeight: el.offsetHeight });
             }
@@ -66,13 +66,13 @@ class NavBar extends Component {
         return (
             <div className="navbar-spacer" ref={this.menuRef} style={{ paddingTop: menuHeight }}>
                 <Menu fixed="top">
-                    <Menu.Item className={"no-left-border" + logoBorder} as="a" href="/">
+                    <Menu.Item className={"header-menu no-left-border" + logoBorder} as="a" href="/">
                         <Image size="mini" src={header_info ? header_info.url : logo} onLoad={this.logoLoaded} />
                         <h2 style={{ margin: "0 0 0 20px" }}>{header_info ? header_info.name : "Cafe au Chain"}</h2>
                     </Menu.Item>
                     {screenSize === "tablet" && (
                         <F>
-                            <Menu.Item onClick={this.handleToggle} className="no-border">
+                            <Menu.Item onClick={this.handleToggle} className="no-border" position="right">
                                 <Icon name="sidebar" />
                             </Menu.Item>
                             <Sidebar.Pushable
@@ -90,16 +90,18 @@ class NavBar extends Component {
                                     animation="overlay"
                                     vertical
                                     visible={visible}
-                                    content={menuItemBuilder(rightItems)}
+                                    content={menuItemBuilder(rightItems.concat(buttons))}
                                 />
                             </Sidebar.Pushable>
                         </F>
                     )}
-                    <Menu.Menu
-                        position="right"
-                        content={menuItemBuilder(screenSize === "tablet" ? buttons : rightItems.concat(buttons))}
-                        className="right-side-menu"
-                    />
+                    {screenSize === "desktop" && (
+                        <Menu.Menu
+                            position="right"
+                            content={menuItemBuilder(rightItems.concat(buttons))}
+                        />
+                    )}
+                    
                 </Menu>
             </div>
         );

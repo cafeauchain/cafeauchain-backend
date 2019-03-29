@@ -1,28 +1,29 @@
 import React from "react";
-import { Grid, Header, Image } from "semantic-ui-react";
-// eslint-disable-next-line
+import { Header, Image } from "semantic-ui-react";
+/* eslint-disable */
+import Flex from "shared/flex";
 import img from "images/coffee-imgs/coffee-img-31.jpg";
+/* eslint-enable */
 
 const About = () => {
     return (
-        <Grid divided columns="equal" stackable container>
-            <Grid.Row textAlign="center">
-                <Grid.Column verticalAlign="middle" style={{ paddingBottom: "5em", paddingTop: "5em" }}>
-                    <Header as="h3" style={{ fontSize: "2em" }}>
+        <div className="home-section-container">
+            <Flex spacing="40" wrap centercross>
+                <div flex="50">
+                    <Header as="h3" className="home-section-header" textAlign="center">
                         Show Where Your Coffee Comes From
                     </Header>
-                    <p style={{ fontSize: "1.33em" }}>
+                    <p className="home-section-text text-centered">
                         You spend time developing relationships with coffee producers.
                         Let your customers know more about them.
                     </p>
-                </Grid.Column>
-                <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
-                    <p style={{ fontSize: "1.33em" }}>
-                        <Image src={img} />
-                    </p>
-                </Grid.Column>
-            </Grid.Row>
-        </Grid>
+                </div>
+                <div flex="50" className="home-img-container">
+                    <Image src={img} rounded bordered />
+                </div>
+            </Flex>
+        </div>
+        
     );
 };
 

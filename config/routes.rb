@@ -343,6 +343,7 @@ Rails.application.routes.draw do
     get "wholesale", to: "primary#wholesale"
     get "subscription", to: "primary#subscription"
     resources :lots, only: [:show, :index]
+    resources :products, only: [:index]
   end
 
   namespace :onboarding do

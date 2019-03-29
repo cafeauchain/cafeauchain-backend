@@ -20,13 +20,7 @@
 .hidden {
     display: none;
 }
-.roaster-wizard.form {
-    // position: relative;
-    // background: rgb(255, 255, 255);
-    // box-shadow: rgb(204, 204, 204) 0px 1px 2px;
-    // padding: 3em 2em;
-    // margin: 1em 0;
-}
+
 .input-file {
     width: 0.1px;
     height: 0.1px;
@@ -36,14 +30,13 @@
     z-index: -1;
 }
 body {
-    background: image-url("bg-1.jpg"),
-        linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) no-repeat center center fixed;
+    background: image-url("bg-1.jpg"), linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) no-repeat center center fixed;
     background-blend-mode: overlay;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
     background-size: cover;
     background-attachment: fixed;
+    &.customer {
+        background-image: image-url("coffee-imgs/coffee-img-26.jpg"), linear-gradient(rgba(255, 255, 255, 0.5), rgba(149, 101, 74, 5));
+    }
 }
 
 .jumbotron {
@@ -76,6 +69,9 @@ body {
         max-width: 1600px;
         margin: 0 auto;
         width: 100%;
+    }
+    .text-wrapper {
+        max-width: 850px;
     }
     // Roaster/admin nav
     .roaster-container {

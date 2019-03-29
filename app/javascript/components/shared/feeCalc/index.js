@@ -1,36 +1,38 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Container, Input, Header, Card, Statistic, Grid, Image } from "semantic-ui-react";
+import { Container, Input, Header, Card, Statistic, Image } from "semantic-ui-react";
 import Commafy from "commafy";
-
-// eslint-disable-next-line
-import img from "images/coffee-imgs/coffee-img-10.jpg";
 
 import "./styles.scss";
 
 /* eslint-disable */
+import img from "images/coffee-imgs/coffee-img-10.jpg";
 import roasterCostCalc from "utilities/roasterCostCalc";
+import Flex from "shared/flex"
 
 import { Money } from "shared/textFormatters";
 
-const description =
-    "At Cafe au Chain, your cost is completely determined by how much you roast per month. We don't arbitrarily limit the capabilities of the platform based on how big or small of a roaster you are. No limits on employees or accounts or locations. The amount you roast determines the amount you pay. The base package includes up to 500 pounds roasted per month. After that, its $2 per 100 pounds. Use the slider below to estimate your monthly bill.";
+const description = `At Cafe au Chain, your cost is completely determined by how much you roast per month. 
+    We don't arbitrarily limit the capabilities of the platform based on how big or small of a roaster you are. 
+    No limits on employees or accounts or locations. The amount you roast determines the amount you pay. 
+    The base package includes up to 500 pounds roasted per month. After that, its $2 per 100 pounds. 
+    Use the slider below to estimate your monthly bill.`;
 /* eslint-enable */
 
 const FeeGrid = props => {
     const { poundage, price } = props;
     return (
-        <Grid divided columns="equal">
-            <Grid.Column textAlign="center">
+        <Flex spacing="20" wrap centermain>
+            <div flex="50" className="roasted-calc">
                 <Statistic value={Commafy(poundage)} label="pounds roasted" />
-            </Grid.Column>
-            <Grid.Column textAlign="center">
+            </div>
+            <div flex="50" className="roasted-calc">
                 <Statistic
                     value={<Statistic.Value content={<Money type="positive">{price}</Money>} />}
                     label="Total Cost"
                 />
-            </Grid.Column>
-        </Grid>
+            </div>
+        </Flex>
     );
 };
 
@@ -41,7 +43,7 @@ const CardImage = () => (
         src={img}
         rounded
         bordered
-        style={{ marginBottom: 20, marginLeft: 60, marginRight: 20 }}
+        className="calc-image"
     />
 );
 

@@ -1,6 +1,17 @@
 @import "../../../assets/stylesheets/variables";
 
 .ui.menu {
+    &.sidebar {
+        .item.nav-btn {
+            padding: 0;
+            > .button {
+                &:not(.unstyled) {
+                    width: calc( 100% - 20px );
+                    margin: 10px 10px 0;
+                }
+            }
+        }        
+    }
     .item {
         &.no-border {
             &:before {
@@ -10,6 +21,7 @@
         &.no-left-border {
             border: 0 !important;
         }
+        
         > .button {
             &:not(.unstyled) {
                 box-shadow: 0 0 0 2px inset $lightgreen;
