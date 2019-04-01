@@ -4,6 +4,7 @@ import { Button, Form, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
 import IconHeader from "shared/IconHeader";
+import Flex from "shared/flex";
 /* eslint-enable */
 
 const WizardWrapper = props => {
@@ -14,27 +15,33 @@ const WizardWrapper = props => {
                 <IconHeader iconName="coffee" header={headerText} />
                 {renderErrors()}
                 {children}
-                {prevFunc && (
-                    <Button
-                        type="button"
-                        onClick={prevFunc}
-                        icon="left arrow"
-                        labelPosition="left"
-                        content={prevText}
-                    />
-                )}
-                {nextFunc && (
-                    <Button
-                        type="submit"
-                        onClick={nextFunc}
-                        primary
-                        floated="right"
-                        icon="right arrow"
-                        labelPosition="right"
-                        content={nextText}
-                        loading={loading}
-                    />
-                )}
+                <Flex spacing="10" spacebetween flexend>
+                    {prevFunc && (
+                        <div flex="50">
+                            <Button
+                                type="button"
+                                onClick={prevFunc}
+                                icon="left arrow"
+                                labelPosition="left"
+                                content={prevText}
+                            />
+                        </div>
+                        
+                    )}
+                    {nextFunc && (
+                        <div flex="auto">
+                            <Button
+                                type="submit"
+                                onClick={nextFunc}
+                                primary
+                                icon="right arrow"
+                                labelPosition="right"
+                                content={nextText}
+                                loading={loading}
+                            />
+                        </div>
+                    )}
+                </Flex>  
             </Form>
         </Segment>
     );

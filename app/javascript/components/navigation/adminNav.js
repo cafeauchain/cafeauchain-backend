@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Menu } from "semantic-ui-react";
+import { Menu, Icon } from "semantic-ui-react";
 
 /* eslint-disable */
 import Modal from "shared/modal";
@@ -11,6 +11,35 @@ import SingleContract from "roaster_tools/inventory/singleContract";
 import CreateInventory from "wholesale/actions/createInventory";
 import CreateProduct from "wholesale/actions/createProduct";
 /* eslint-enable */
+
+const ItemWithIcon = ({text}) => {
+    return (
+        <React.Fragment>
+            <span>{`${text} `}</span>
+            <Icon name="external" fitted />
+        </React.Fragment>
+    );
+};
+ItemWithIcon.propTypes = {
+    text: PropTypes.string
+};
+
+const ModalLink = ({ text, title, component}) => {
+    return (
+        <Modal
+            text={text}
+            title={title || text}
+            btnProps={{ content: <ItemWithIcon text={text} /> }}
+            unstyled
+            component={component}
+        />
+    );
+};
+ModalLink.propTypes = {
+    text: PropTypes.string,
+    title: PropTypes.string,
+    component: PropTypes.node
+};
 
 class AdminNav extends Component {
     constructor(props) {
@@ -26,28 +55,19 @@ class AdminNav extends Component {
             { href: `/manage/lots`, content: "Open Lots" },
             {
                 key: "startbatch",
-                content: <Modal text="Start a Batch" title="Start a Batch" unstyled component={<StartBatch />} />
+                content: <ModalLink text="Start a Batch" component={<StartBatch />} />
             },
             {
                 key: "acceptdelivery",
-                content: (
-                    <Modal text="Accept Delivery" title="Accept Delivery" unstyled component={<AcceptDelivery />} />
-                )
+                content: <ModalLink text="Accept Delivery" component={<AcceptDelivery />} />
             },
             {
                 key: "newcontract",
-                content: <Modal text="New Contract" title="New Contract" unstyled component={<SingleContract />} />
+                content: <ModalLink text="Add New Contract" component={<SingleContract />} />
             },
             {
                 key: "createinventoryitems",
-                content: (
-                    <Modal
-                        text="Create Inventory Items"
-                        title="Create Inventory Items"
-                        unstyled
-                        component={<CreateInventory />}
-                    />
-                )
+                content: <ModalLink text="Add Roast Profile" component={<CreateInventory />} />
             }
         ];
         const profile = [
@@ -58,9 +78,7 @@ class AdminNav extends Component {
         const products = [
             {
                 key: "addnewproducts",
-                content: (
-                    <Modal text="Add New Products" title="Add New Products" unstyled component={<CreateProduct />} />
-                )
+                content: <ModalLink text="Add New Product" component={<CreateProduct />} />
             },
             { href: "/manage/wholesale", content: "View/Edit Pricing Table*" }
         ];
@@ -87,7 +105,7 @@ class AdminNav extends Component {
                 </Menu.Item>
 
                 <Menu.Item>
-                    <Menu.Header as="a" href="/manage/inventory" content="Products*" />
+                    <Menu.Header as="a" href="/manage/products" content="Products" />
                     <Menu.Menu content={buildItems(products)} />
                 </Menu.Item>
 

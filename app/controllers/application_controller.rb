@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   before_action :current_roaster
   before_action :set_raven_context
   before_action :set_cart, if: :current_roaster
+  before_action :onboard_validation
   after_action :set_csrf_cookie
 
   helper_method :current_roaster
@@ -39,4 +40,38 @@ class ApplicationController < ActionController::Base
       @cart = nil
     end
   end
+
+  def onboard_validation
+    if user_signed_in?
+      if ValidSubdomain.matches?(request)
+        # Customer Side
+        customer = current_user.customer_profile
+        if customer.present?
+          wholesale = customer.wholesale_profiles.find_by(roaster_profile: current_roaster)
+          if wholesale.present?
+            if !(self.class.parent == Api::V1 || self.class.parent == HighVoltage || self.class.parent == Devise || self.class.parent == Users)
+              if wholesale.onboard_status != "approved"
+               if params["controller"] != "shop/onboard"
+                redirect_to send("shop_onboard_#{wholesale.onboard_status}_path") 
+               end
+              end
+            end
+          end
+        end
+      else
+        # Roaster side
+        if current_user.roaster_profile.present?
+          profile = current_user.roaster_profile
+          if profile.onboard_status != "onboard_completed"
+            if !(self.class.parent == Api::V1 || self.class.parent == HighVoltage || self.class.parent == Devise || self.class.parent == Users)
+              if params["controller"] != "onboarding/onboarding" 
+                redirect_to send("onboarding_#{profile.onboard_status}_path")
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+  
 end

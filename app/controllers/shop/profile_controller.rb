@@ -6,7 +6,7 @@ module Shop
     def index
       customer = current_user.customer_profile
       @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster_profile)
-      render "manage/primary", locals: {
+      render "customer/base", locals: {
         roaster: @roaster_profile,
         profile: @customer,
         cart: @cart,

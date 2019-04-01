@@ -11,9 +11,6 @@ class Api::V1::InventoryItemsController < ApplicationController
     @inventory_item = InventoryServices::CreateInventory.create(@lot.id, params[:name], params[:par_level], params[:quantity])
     if @inventory_item.errors.full_messages.empty?
       render json: {
-        "redirect":false,
-        "refresh_parent": true,
-        "redirect_url": manage_inventory_roaster_profile_path(@roaster),
         "item": @inventory_item
       }, status: 200
     else

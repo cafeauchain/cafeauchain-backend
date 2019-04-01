@@ -1,7 +1,7 @@
 module Api::V1
   class RoasterProfilesController < ApplicationController
-    before_action :load_roaster_profile_wizard, except: [:validate_step, :update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options, :wholesale_signup, :update_onboard_status, :update_wholesale_status]
-    before_action :set_roaster, only: [:update, :crops, :cards, :set_as_default, :remove_card, :subscriptions, :default_options, :wholesale_signup, :update_onboard_status, :update_wholesale_status]
+    before_action :load_roaster_profile_wizard, only: [:create]
+    before_action :set_roaster, except: [:create]
 
     def validate_step
       current_step = params[:current_step]
@@ -24,8 +24,11 @@ module Api::V1
       if @roaster_profile_wizard.roaster_profile.save!
         logo = (params[:roaster_profile][:logo])
         roaster_profile = @roaster_profile_wizard.roaster_profile
-        roaster_profile.addresses.create!(location_label: "Office", primary_location: true, street_1: params[:roaster_profile][:street_1], street_2: params[:roaster_profile][:street_2],
-          city: params[:roaster_profile][:city], state: params[:roaster_profile][:state], postal_code: params[:roaster_profile][:postal_code], country: "United States of America")
+        address = address_params
+        address["location_label"] = "Office"
+        address["primary_location"] = true
+        address["country"] = "United States of America"
+        roaster_profile.addresses.create!(address)
         roaster_profile.users << current_user
         roaster_profile.set_owner
         if !logo.blank?
@@ -160,9 +163,12 @@ module Api::V1
       @roaster_profile = RoasterProfile.friendly.find(params[:roaster_profile_id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
     def roaster_profile_params
-      params.require(:roaster_profile).permit(:name, :address_1, :address_2, :zip_code, :city, :state, :about, :slug, :url, :twitter, :facebook)
+      params.require(:roaster_profile).permit(:name, :about, :slug, :url, :twitter, :facebook)
+    end
+
+    def address_params
+      params.require(:roaster_profile).permit(:street_1, :street_2, :city, :state, :postal_code)
     end
 
     class InvalidStep < StandardError; end

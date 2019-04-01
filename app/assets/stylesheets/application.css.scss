@@ -65,13 +65,17 @@ body {
         margin-top: auto;
     }
     .width-wrapper {
-        padding: 4em;
+        padding: 20px;
         max-width: 1600px;
         margin: 0 auto;
         width: 100%;
+        @media screen and (min-width: 540px) {
+            padding: 4em;
+        }
     }
     .text-wrapper {
         max-width: 850px;
+        margin: 0 auto;
     }
     // Roaster/admin nav
     .roaster-container {

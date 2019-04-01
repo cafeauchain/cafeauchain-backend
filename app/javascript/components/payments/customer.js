@@ -17,7 +17,6 @@ class CustomerPayment extends Component {
         super(props);
         const { profile: { id: profileId } } = props;
         this.state = {
-            cards: props.cards || [],
             errors: {},
             loading: false
         };
@@ -55,7 +54,8 @@ class CustomerPayment extends Component {
         this.updateCards(respJSON);
     };
 
-    updateCards = data => {
+    updateCards = async data => {
+        const { updateContext } = this.props;
         if (data instanceof Error) {
             // eslint-disable-next-line
             console.log("there was an error", data.response);
@@ -64,7 +64,8 @@ class CustomerPayment extends Component {
             // eslint-disable-next-line
             console.log("success", data);
             const cards = this.sortCards(data);
-            this.setState({ cards, loading: false });
+            await this.setState({ loading: false });
+            updateContext({ cards });
         }
     };
 
@@ -92,8 +93,8 @@ class CustomerPayment extends Component {
     };
 
     render() {
-        const { cards, loading } = this.state;
-        const { stripeApiKey, profile: { attributes: { company_name } } } = this.props;
+        const { loading } = this.state;
+        const { stripeApiKey, profile: { attributes: { company_name } }, cards = [] } = this.props;
 
         return (
             <StripeProvider apiKey={stripeApiKey}>
@@ -126,11 +127,12 @@ class CustomerPayment extends Component {
     }
 }
 
-const { array, object, string } = PropTypes;
+const { array, object, string, func } = PropTypes;
 CustomerPayment.propTypes = {
     stripeApiKey: string,
     cards: array,
-    profile: object
+    profile: object,
+    updateContext: func
 };
 
 export default withContext(CustomerPayment);

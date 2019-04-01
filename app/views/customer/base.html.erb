@@ -1,0 +1,13 @@
+<% content_for :title, defined?(title) ? title : "This is the title" %>
+<% content_for :body_class, defined?(body_class) ? body_class : "customer" %>
+<% props = local_assigns.except(:title, :scripts, :body_class) %>
+<% props["loggedIn"] = user_signed_in? %>
+<% props["header_info"] = {} %>
+<% props["header_info"]["url"] = current_roaster.logo_image_url %>
+<% props["header_info"]["name"] = current_roaster.name %>
+<%= react_component "main", props %>
+<% if defined?(scripts) %>
+    <% scripts.each do |s| %>
+    <script src=<%= s %>></script>
+    <% end %>
+<% end %>

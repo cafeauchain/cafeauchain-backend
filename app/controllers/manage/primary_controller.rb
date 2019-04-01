@@ -1,5 +1,6 @@
 module Manage
   class PrimaryController < ApplicationController
+    before_action :authenticate_user!
     before_action :set_roaster
 
     def dashboard
