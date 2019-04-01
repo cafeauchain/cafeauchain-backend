@@ -21,7 +21,7 @@ module Api::V1
         )
       end
       if @order.update(status: :processing)
-        # @cart.cart_items.destroy_all
+        @cart.cart_items.destroy_all
         OrderServices::ProcessOrder.process(@order.id, params)
       end
       render json: {redirect_url: order_path(@order), redirect: true}, status: 200
