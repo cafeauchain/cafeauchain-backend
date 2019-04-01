@@ -1,12 +1,12 @@
 const messaging = {
     login: {
-        heading: "Log in to you account",
+        heading: "Log In to Your Account",
         message: "Need an Account?",
         url: "/register",
         linkText: "Sign Up!"
     },
     register: {
-        heading: "Create an account",
+        heading: "Create an Account",
         message: "Already signed up?",
         url: "/login",
         linkText: "Log In!"
