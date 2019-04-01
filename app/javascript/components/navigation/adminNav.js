@@ -24,6 +24,23 @@ ItemWithIcon.propTypes = {
     text: PropTypes.string
 };
 
+const ModalLink = ({ text, title, component}) => {
+    return (
+        <Modal
+            text={text}
+            title={title || text}
+            btnProps={{ content: <ItemWithIcon text={text} /> }}
+            unstyled
+            component={component}
+        />
+    );
+};
+ModalLink.propTypes = {
+    text: PropTypes.string,
+    title: PropTypes.string,
+    component: PropTypes.node
+};
+
 class AdminNav extends Component {
     constructor(props) {
         super(props);
@@ -38,47 +55,19 @@ class AdminNav extends Component {
             { href: `/manage/lots`, content: "Open Lots" },
             {
                 key: "startbatch",
-                content: <Modal 
-                    text="Start a Batch"
-                    title="Start a Batch"
-                    btnProps={{ content: <ItemWithIcon text="Start a Batch" /> }}
-                    unstyled
-                    component={<StartBatch />}
-                />
+                content: <ModalLink text="Start a Batch" component={<StartBatch />} />
             },
             {
                 key: "acceptdelivery",
-                content: (
-                    <Modal 
-                        text="Accept Delivery"
-                        title="Accept Delivery"
-                        btnProps={{ content: <ItemWithIcon text="Accept Delivery" /> }}
-                        unstyled
-                        component={<AcceptDelivery />}
-                    />
-                )
+                content: <ModalLink text="Accept Delivery" component={<AcceptDelivery />} />
             },
             {
                 key: "newcontract",
-                content: <Modal 
-                    text="Add New Contract"
-                    title="Add New Contract"
-                    btnProps={{ content: <ItemWithIcon text="Add New Contract" /> }}
-                    unstyled
-                    component={<SingleContract />}
-                />
+                content: <ModalLink text="Add New Contract" component={<SingleContract />} />
             },
             {
                 key: "createinventoryitems",
-                content: (
-                    <Modal
-                        text="Add Roast Profile"
-                        title="Add Roast Profile"
-                        btnProps={{ content: <ItemWithIcon text="Add Roast Profile" /> }}
-                        unstyled
-                        component={<CreateInventory />}
-                    />
-                )
+                content: <ModalLink text="Add Roast Profile" component={<CreateInventory />} />
             }
         ];
         const profile = [
@@ -89,15 +78,7 @@ class AdminNav extends Component {
         const products = [
             {
                 key: "addnewproducts",
-                content: (
-                    <Modal 
-                        text="Add New Product"
-                        title="Add New Product"
-                        btnProps={{ content: <ItemWithIcon text="Add New Product" /> }}
-                        unstyled
-                        component={<CreateProduct />}
-                    />
-                )
+                content: <ModalLink text="Add New Product" component={<CreateProduct />} />
             },
             { href: "/manage/wholesale", content: "View/Edit Pricing Table*" }
         ];
@@ -124,7 +105,7 @@ class AdminNav extends Component {
                 </Menu.Item>
 
                 <Menu.Item>
-                    <Menu.Header as="a" href="/manage/inventory" content="Products*" />
+                    <Menu.Header as="a" href="/manage/products" content="Products" />
                     <Menu.Menu content={buildItems(products)} />
                 </Menu.Item>
 
