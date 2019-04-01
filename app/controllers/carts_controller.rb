@@ -13,11 +13,10 @@ class CartsController < ApplicationController
     @profile = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer, scope: current_roaster)
     @cards = @customer.cards
 
-    render "manage/primary", locals: {
+    render "customer/base", locals: {
       profile: @profile,
       rates: @all_rates,
       cards: @cards,
-      header_info: {url: current_roaster.logo_image_url, name: current_roaster.name},
       stripeApiKey: Rails.application.credentials.stripe_api_key,
       scripts: ["https://js.stripe.com/v3/"],
       roaster: current_roaster,
