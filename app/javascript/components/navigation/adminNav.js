@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Menu } from "semantic-ui-react";
+import { Menu, Icon } from "semantic-ui-react";
 
 /* eslint-disable */
 import Modal from "shared/modal";
@@ -11,6 +11,18 @@ import SingleContract from "roaster_tools/inventory/singleContract";
 import CreateInventory from "wholesale/actions/createInventory";
 import CreateProduct from "wholesale/actions/createProduct";
 /* eslint-enable */
+
+const ItemWithIcon = ({text}) => {
+    return (
+        <React.Fragment>
+            <span>{`${text} `}</span>
+            <Icon name="external" fitted />
+        </React.Fragment>
+    );
+};
+ItemWithIcon.propTypes = {
+    text: PropTypes.string
+};
 
 class AdminNav extends Component {
     constructor(props) {
@@ -26,24 +38,43 @@ class AdminNav extends Component {
             { href: `/manage/lots`, content: "Open Lots" },
             {
                 key: "startbatch",
-                content: <Modal text="Start a Batch" title="Start a Batch" unstyled component={<StartBatch />} />
+                content: <Modal 
+                    text="Start a Batch"
+                    title="Start a Batch"
+                    btnProps={{ content: <ItemWithIcon text="Start a Batch" /> }}
+                    unstyled
+                    component={<StartBatch />}
+                />
             },
             {
                 key: "acceptdelivery",
                 content: (
-                    <Modal text="Accept Delivery" title="Accept Delivery" unstyled component={<AcceptDelivery />} />
+                    <Modal 
+                        text="Accept Delivery"
+                        title="Accept Delivery"
+                        btnProps={{ content: <ItemWithIcon text="Accept Delivery" /> }}
+                        unstyled
+                        component={<AcceptDelivery />}
+                    />
                 )
             },
             {
                 key: "newcontract",
-                content: <Modal text="New Contract" title="New Contract" unstyled component={<SingleContract />} />
+                content: <Modal 
+                    text="Add New Contract"
+                    title="Add New Contract"
+                    btnProps={{ content: <ItemWithIcon text="Add New Contract" /> }}
+                    unstyled
+                    component={<SingleContract />}
+                />
             },
             {
                 key: "createinventoryitems",
                 content: (
                     <Modal
-                        text="Create Inventory Items"
-                        title="Create Inventory Items"
+                        text="Add Roast Profile"
+                        title="Add Roast Profile"
+                        btnProps={{ content: <ItemWithIcon text="Add Roast Profile" /> }}
                         unstyled
                         component={<CreateInventory />}
                     />
@@ -59,7 +90,13 @@ class AdminNav extends Component {
             {
                 key: "addnewproducts",
                 content: (
-                    <Modal text="Add New Products" title="Add New Products" unstyled component={<CreateProduct />} />
+                    <Modal 
+                        text="Add New Product"
+                        title="Add New Product"
+                        btnProps={{ content: <ItemWithIcon text="Add New Product" /> }}
+                        unstyled
+                        component={<CreateProduct />}
+                    />
                 )
             },
             { href: "/manage/wholesale", content: "View/Edit Pricing Table*" }
