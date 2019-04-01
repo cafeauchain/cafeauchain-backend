@@ -1,5 +1,0 @@
-<% content_for :body_class, 'login-img-body' %>
-<div class="ui container">
-    <% @profile = render(template: 'roaster_profiles/_roaster_profile.json', locals: {roaster_profile: @roaster_profile}) %>
-    <%= react_component "roaster_profile/edit", props = {profile: JSON.parse( @profile )} %>
-</div>
