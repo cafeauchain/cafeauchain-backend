@@ -45,6 +45,19 @@ class ApplicationController < ActionController::Base
     if user_signed_in?
       if ValidSubdomain.matches?(request)
         # Customer Side
+        customer = current_user.customer_profile
+        if customer.present?
+          wholesale = customer.wholesale_profiles.find_by(roaster_profile: current_roaster)
+          if wholesale.present?
+            if !(self.class.parent == Api::V1 || self.class.parent == HighVoltage || self.class.parent == Devise || self.class.parent == Users)
+              if wholesale.onboard_status != "approved"
+               if params["controller"] != "shop/onboard"
+                redirect_to send("shop_onboard_#{wholesale.onboard_status}_path") 
+               end
+              end
+            end
+          end
+        end
       else
         # Roaster side
         if current_user.roaster_profile.present?
