@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Button, Form, Grid, Header, Image, Message, Segment } from "semantic-ui-react";
+import { Button, Form, Header, Image, Message, Segment } from "semantic-ui-react";
 
 /* eslint-disable */
 import fields from "defs/forms/login";
 import messaging from "./messaging";
 
 import Input from "shared/input";
+import Flex from "shared/flex";
 
-import { readCookie, capitalize, humanize } from "utilities";
+import { capitalize, humanize } from "utilities";
+import { requester } from "utilities/apiUtils";
 
 import logo from "images/cac-unofficial-logo.png";
 /* eslint-enable */
@@ -38,20 +40,11 @@ class Login extends Component {
         const body = {
             user: { ...details }
         };
-        const token = decodeURIComponent(readCookie("X-CSRF-Token"));
-        let response = await fetch(url, {
-            method: "POST",
-            body: JSON.stringify(body),
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": token
-            }
-        });
-        let respJSON = await response.json();
-        if (response.ok) {
-            window.location.href = await respJSON.redirect_url;
+        const response = await requester({ url, body });
+        if( response instanceof Error ){
+            this.setState({ error: response.response.error });
         } else {
-            this.setState({ error: respJSON.error });
+            window.location.href = await response.redirect_url;
         }
     };
 
@@ -93,38 +86,33 @@ class Login extends Component {
         const { fieldType } = this.props;
         const text = messaging[fieldType];
         return (
-            <Grid
-                textAlign="center"
-                style={{ height: "100%", margin: "auto 0", padding: "4em 0" }}
-                verticalAlign="middle"
-            >
-                <Grid.Column style={{ maxWidth: 450 }}>
-                    <Header
-                        as="h2"
-                        textAlign="center"
-                        style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-                    >
-                        <Image src={logo} style={{ marginRight: 10 }} />
-                        <span>{text.heading}</span>
-                    </Header>
-                    {this.renderErrors()}
-                    <Form size="large" onSubmit={this.handleSubmit} style={{ textAlign: "left" }}>
-                        <Segment>
-                            {this.renderInputs(fields[fieldType])}
-                            <Button fluid size="large" primary>
-                                {capitalize(fieldType)}
-                            </Button>
-                        </Segment>
-                    </Form>
-                    <Message>
-                        <span>
-                            {text.message}
-                            {' '}
-                        </span>
-                        <a href={text.url}>{text.linkText}</a>
-                    </Message>
-                </Grid.Column>
-            </Grid>
+            <div className="text-wrapper">
+                <Segment>
+                    <Flex spacing="10" wrap centerboth>
+                        <div>
+                            <Image src={logo} size="mini" />
+                        </div>
+                        <div>
+                            <Header as="h2" textAlign="center">
+                                {text.heading}
+                            </Header>
+                        </div>
+                    </Flex>
+                </Segment>
+                {this.renderErrors()}
+                <Form size="large" onSubmit={this.handleSubmit} style={{ textAlign: "left" }}>
+                    <Segment>
+                        {this.renderInputs(fields[fieldType])}
+                        <Button fluid size="large" primary>
+                            {capitalize(fieldType)}
+                        </Button>
+                    </Segment>
+                </Form>
+                <Message className="text-centered">
+                    <span>{`${text.message} `}</span>
+                    <a href={text.url}>{text.linkText}</a>
+                </Message>
+            </div>
         );
     }
 }

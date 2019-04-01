@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
-  before_action :set_cart
   before_action :authenticate_user!
+  before_action :set_cart
   before_action :set_order, only: [:show]
   before_action :serialize_cart
 

@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-03-25T15:59:52.337756 #64122]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-04-01T08:51:46.257265 #32978]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                         Prefix Verb   URI Pattern                                                                              Controller#Action
 #      upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                 api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -146,22 +146,10 @@
 #                                                PUT    /admin/producers/:id(.:format)                                                           admin/producer_profiles#update
 #                                                DELETE /admin/producers/:id(.:format)                                                           admin/producer_profiles#destroy
 #                                admin_dashboard GET    /admin/dashboard(.:format)                                                               admin/dashboard#index
-#                           roaster_profile_lots GET    /roasters/:roaster_profile_id/lots(.:format)                                             lots#index
-#                            roaster_profile_lot GET    /roasters/:roaster_profile_id/lots/:id(.:format)                                         lots#show
-#                      dashboard_roaster_profile GET    /roasters/:id/dashboard(.:format)                                                        roaster_profiles#dashboard
-#            manage_subscription_roaster_profile GET    /roasters/:id/manage_subscription(.:format)                                              roaster_profiles#manage_subscription
-#               manage_inventory_roaster_profile GET    /roasters/:id/manage_inventory(.:format)                                                 roaster_profiles#manage_inventory
-#                                    roast_index GET    /roasters/:id/roast(.:format)                                                            roast#index
-#                      wholesale_roaster_profile GET    /roasters/:id/wholesale(.:format)                                                        roaster_profiles#wholesale
-#                           shop_roaster_profile GET    /roasters/:id/shop(.:format)                                                             roaster_profiles#shop
 #                               roaster_profiles GET    /roasters(.:format)                                                                      roaster_profiles#index
-#                                                POST   /roasters(.:format)                                                                      roaster_profiles#create
 #                            new_roaster_profile GET    /roasters/new(.:format)                                                                  roaster_profiles#new
 #                           edit_roaster_profile GET    /roasters/:id/edit(.:format)                                                             roaster_profiles#edit
 #                                roaster_profile GET    /roasters/:id(.:format)                                                                  roaster_profiles#show
-#                                                PATCH  /roasters/:id(.:format)                                                                  roaster_profiles#update
-#                                                PUT    /roasters/:id(.:format)                                                                  roaster_profiles#update
-#                                                DELETE /roasters/:id(.:format)                                                                  roaster_profiles#destroy
 #                               manage_dashboard GET    /manage/dashboard(.:format)                                                              manage/primary#dashboard
 #                               manage_inventory GET    /manage/inventory(.:format)                                                              manage/primary#inventory
 #                                  manage_orders GET    /manage/orders(.:format)                                                                 manage/orders#index
@@ -172,6 +160,7 @@
 #                            manage_subscription GET    /manage/subscription(.:format)                                                           manage/primary#subscription
 #                                    manage_lots GET    /manage/lots(.:format)                                                                   manage/lots#index
 #                                     manage_lot GET    /manage/lots/:id(.:format)                                                               manage/lots#show
+#                                manage_products GET    /manage/products(.:format)                                                               manage/products#index
 #                             onboarding_profile GET    /onboarding/profile(.:format)                                                            onboarding/onboarding#profile
 #                                onboarding_lots GET    /onboarding/lots(.:format)                                                               onboarding/onboarding#lots
 #                      onboarding_roast_profiles GET    /onboarding/roast-profiles(.:format)                                                     onboarding/onboarding#roast_profiles
@@ -229,7 +218,6 @@
 #                                          login GET    /login(.:format)                                                                         devise/sessions#create
 #                                         signup GET    /signup(.:format)                                                                        devise/registrations#new
 #                                       register GET    /register(.:format)                                                                      devise/registrations#new
-#                                           root GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
 #                                           cart GET    /cart(.:format)                                                                          carts#index
 #                                         orders GET    /orders(.:format)                                                                        orders#index
 #                                                POST   /orders(.:format)                                                                        orders#create
@@ -239,7 +227,8 @@
 #                                                PATCH  /orders/:id(.:format)                                                                    orders#update
 #                                                PUT    /orders/:id(.:format)                                                                    orders#update
 #                                                DELETE /orders/:id(.:format)                                                                    orders#destroy
-#                                                GET    /                                                                                        shop/shop#index
+#                                           root GET    /                                                                                        shop/shop#index
+#                                                GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
 #                                           home GET    /home(.:format)                                                                          redirect(301, /)
 #                                                GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
 #                                           page GET    /*id                                                                                     high_voltage/pages#show
@@ -319,21 +308,7 @@ Rails.application.routes.draw do
     get 'dashboard', to: 'dashboard#index'
   end
 
-  resources :roaster_profiles, path: "roasters" do
-    # TODO These can probably all be deleted
-    resources :lots, only: [:show, :index]
-    # resources :orders, only: [:show]
-    member do
-      get :dashboard
-      get :manage_subscription
-      get :manage_inventory
-      resources :roast, only: [:index]
-      get :wholesale
-      get :shop do
-        resources :products
-      end
-    end
-  end
+  resources :roaster_profiles, path: "roasters", only: [:index, :new, :show, :edit]
 
   namespace :manage do
     get "dashboard", to: "primary#dashboard"

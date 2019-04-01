@@ -1,4 +1,5 @@
 <% content_for :title, "Terms" %>
+<% content_for :body_class, current_roaster ? "customer" : "" %>
 <%= react_component "main", props = {
     loggedIn: user_signed_in?,
     roaster: current_user ? current_user.roaster_profile : nil,

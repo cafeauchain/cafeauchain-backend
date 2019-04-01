@@ -1,5 +1,6 @@
 module Onboarding
   class OnboardingController < ApplicationController
+    before_action :authenticate_user!
     before_action :set_roaster
 
     def profile

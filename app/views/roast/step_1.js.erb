@@ -1,5 +1,0 @@
-<% if @crop.nil? %>
-  $('#producer').html("<%= escape_javascript(render partial: 'new_crop', locals: { producer: @producer, producers: @producers }) %>");
-<% else %>
-  $('#producer').html("<%= escape_javascript(render partial: 'crop', locals: { crop: @crop, producers: @producers }) %>");
-<% end %>

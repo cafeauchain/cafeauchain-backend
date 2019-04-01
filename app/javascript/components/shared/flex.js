@@ -16,12 +16,15 @@ class Flex extends Component {
         );
     flexChildren = (children, spacing) => {
         return React.Children.map(children, child => {
-            const { className: kidClasses = "", flex, ...rest } = child.props;
-            let flexString = "";
-            if (flex) flexString = " flex-child__" + flex;
-            if (spacing) rest.style = { ...rest.style, padding: "2px " + spacing + "px" };
-            let newKid = React.cloneElement(child, { ...rest, className: kidClasses + flexString });
-            return newKid;
+            if( child ){
+                const { className: kidClasses = "", flex, ...rest } = child.props;
+                let flexString = "";
+                if (flex) flexString = " flex-child__" + flex;
+                if (spacing) rest.style = { ...rest.style, padding: "2px " + spacing + "px" };
+                let newKid = React.cloneElement(child, { ...rest, className: kidClasses + flexString });
+                return newKid;
+            }
+            return null;
         });
     };
     buildFlexClasses = (className = "", bools) => {

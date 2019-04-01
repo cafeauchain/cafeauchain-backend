@@ -8,10 +8,9 @@ module Shop
       @roaster = @roaster_profile
       @products = ActiveModel::SerializableResource.new(@roaster.products, each_serializer: ProductSerializer)
       @serialized_cart = ActiveModel::SerializableResource.new(@cart, each_serializer: CartSerializer)
-      render "manage/primary", locals: {
+      render "customer/base", locals: {
         roaster: @roaster,
         products: @products,
-        header_info: {url: @roaster_profile.logo_image_url, name: @roaster_profile.name},
         body_class: "customer",
         title: 'Products',
         component: 'shop',

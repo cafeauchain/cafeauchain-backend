@@ -1,4 +1,5 @@
 class LotsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_lot, only: [:show]
   before_action :set_roaster_profile, only: [:show, :index]
 
