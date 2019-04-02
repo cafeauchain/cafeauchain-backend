@@ -5,6 +5,7 @@ import NavBar from "./responsiveNavbar";
 import base from "./links/base";
 import customer from "./links/customer";
 import roaster from "./links/roaster";
+import AdminNav from "./adminNav";
 import "./nav.scss";
 
 class Header extends Component {
@@ -19,7 +20,7 @@ class Header extends Component {
         const { cart, roaster: roasterProfile, loggedIn, header_info } = this.props;
         const links = loggedIn ? (cart ? customer({ cart }) : roaster(roasterProfile)) : base;
         const { right = [], buttons } = links;
-        return <NavBar rightItems={right} buttons={buttons} header_info={header_info} />;
+        return <NavBar rightItems={right} buttons={buttons} header_info={header_info}><AdminNav /></NavBar>;
     }
 }
 
