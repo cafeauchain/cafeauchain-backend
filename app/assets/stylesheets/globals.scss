@@ -1,5 +1,9 @@
-.primary-text {
+.primary-text,
+.positive-text {
     color: $primary !important;
+}
+.negative-text {
+    color: $negative !important;
 }
 
 .small-text {
