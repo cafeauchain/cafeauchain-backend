@@ -24,6 +24,8 @@ Business Tax Id: 000000000
 
 SSN: 000000000
 
+Verification Image - needed for wholesale setup: [https://stripe.com/img/docs/connect/success.png](https://stripe.com/img/docs/connect/success.png)
+
 ## Using the issue tracker
 
 The issue tracker is the preferred channel for [bug reports](#bugs).
