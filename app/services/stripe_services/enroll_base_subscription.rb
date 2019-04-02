@@ -12,7 +12,7 @@ module StripeServices
       if @emails.include?(@user.email)
         stripe_customer_id = @customers.find{ |customer| customer["id"] if customer["email"] == @user.email }["id"]
       else
-        stripe_customer_id = Stripe::Customer.create(description: "Account for #{@user.roaster_profile.name}")['id']
+        stripe_customer_id = Stripe::Customer.create(email: @user.email, description: "Account for #{@user.roaster_profile.name}")['id']
       end
       stripe_customer = Stripe::Customer.retrieve(stripe_customer_id)
       # stripe_customer.coupon = 'yzjn1Zzr'

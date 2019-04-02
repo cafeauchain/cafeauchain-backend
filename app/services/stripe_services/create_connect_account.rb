@@ -177,6 +177,8 @@ module StripeServices
         account_opener
       )
       @roaster_profile.update(stripe_account_id: account.id)
+      StripeServices::EnrollWholesaleSubscription.new(@roaster_profile.owner.subscription.id).enroll
+      return @roaster_profile
     end
 
   end

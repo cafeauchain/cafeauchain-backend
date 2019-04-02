@@ -20,7 +20,7 @@ p3 = Plan.create!(stripe_plan_id: 'plan_EdJPS9KT8YVr8b',
 
 u2 = User.create!(name: 'Arthur Pendragon', email: 'pendragondevelopment@gmail.com', password: 'changeme', password_confirmation: 'changeme', admin: false)
 puts "#{u2.name} created."
-roaster = RoasterProfile.create(name: "Pendragon Coffee", subdomain: 'pendragon-coffee', url: 'pendragoncoffee.com', about: "Good coffee, round table.")
+roaster = RoasterProfile.create(name: "Pendragon Coffee", subdomain: 'pendragon-coffee', url: 'pendragoncoffee.com', about: "Good coffee, round table.", onboard_status: :lots, wholesale_status: 'not_enrolled')
 puts "#{roaster.name} created."
 roaster.users << u2
 roaster.set_owner
