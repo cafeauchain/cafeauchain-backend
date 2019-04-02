@@ -10,8 +10,14 @@ const fields = {
         { label: "Coming Soon", value: "coming_soon" }
     ],
     composition: [
-        { name: "inventory_item_id", label: "Choose Inventory Item", inputType: "select" },
-        { name: "pct", label: "Composition %", type: "number", min: 0, max: 100 }
+        { 
+            name: "inventory_item_id", 
+            label: "Choose Inventory Item", 
+            inputType: "select", 
+            flex: "fill", 
+            width: "calc(100% - 240px)"
+        },
+        { name: "pct", label: "Composition %", type: "number", min: 0, max: 100, flex: "auto", width: 100 }
     ],
     variants: [
         { name: "size", label: "Size (in ounces)", placeholder: "oz", step: 0.1, flex: "auto", width: 120 },

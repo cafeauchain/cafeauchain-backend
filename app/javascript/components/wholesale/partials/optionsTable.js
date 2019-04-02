@@ -1,15 +1,14 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { Header, Button } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
-import Flex from "shared/flex";
 
 import { humanize, underscorer } from "utilities";
 /* eslint-enable */
 
-class Options extends Component {
+class Options extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {

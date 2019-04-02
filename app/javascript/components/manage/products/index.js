@@ -6,8 +6,6 @@ import CreateProduct from "wholesale/actions/createProduct";
 import Products from "wholesale/productInventory";
 
 import Modal from "shared/modal";
-
-import withContext from "contexts/withContext";
 /* eslint-enable */
 
 // eslint-disable-next-line react/prefer-stateless-function
@@ -34,4 +32,4 @@ class CreateProducts extends React.PureComponent {
     }
 }
 
-export default withContext(CreateProducts);
+export default CreateProducts;
