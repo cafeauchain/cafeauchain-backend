@@ -36,17 +36,16 @@ const VariantHandler = props => {
     return strings;
 };
 
+// eslint-disable-next-line react/prop-types
+const Status = ({content}) => {
+    let value = content ? humanize(content) : "";
+    let className = content === "live" ? "positive-text" : "negative-text";
+    return <span className={className}>{value}</span>;
+};
+
 const tableDefinition = {
     fields: [
         { name: "title", namespace: "attributes", style: { minWidth: 200 } },
-        { name: "status", namespace: "attributes" },
-        {
-            name: "product_options",
-            namespace: "attributes",
-            formatter: ArrayHandler,
-            label: "Product Options",
-            style: { minWidth: 200 }
-        },
         {
             name: "variants",
             namespace: "attributes",
@@ -54,6 +53,14 @@ const tableDefinition = {
             label: "Sizes",
             style: { minWidth: 120 }
         },
+        {
+            name: "product_options",
+            namespace: "attributes",
+            formatter: ArrayHandler,
+            label: "Product Options",
+            style: { minWidth: 200 }
+        },
+        { name: "status", namespace: "attributes", formatter: Status },
         {
             name: "composition",
             namespace: "attributes",

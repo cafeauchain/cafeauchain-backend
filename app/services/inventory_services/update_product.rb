@@ -10,7 +10,7 @@ module InventoryServices
           ProductInventoryItem.create(product: @product, inventory_item_id: comp[:inventory_item_id], percentage_of_product: comp[:pct])
         end
       end
-      @product.update(title: params[:name], description: params[:description])
+      @product.update(title: params[:name], description: params[:description], status: params[:status])
       return @product
     end
   end

@@ -54,6 +54,10 @@ class ApplicationController < ActionController::Base
                if params["controller"] != "shop/onboard"
                 redirect_to send("shop_onboard_#{wholesale.onboard_status}_path") 
                end
+              else
+                if params["controller"] == "shop/onboard"
+                  redirect_to root_path
+                end
               end
             end
           end
@@ -63,7 +67,7 @@ class ApplicationController < ActionController::Base
         if current_user.roaster_profile.present?
           profile = current_user.roaster_profile
           if profile.onboard_status != "onboard_completed"
-            if !(self.class.parent == Api::V1 || self.class.parent == HighVoltage || self.class.parent == Devise || self.class.parent == Users || self.class.parent == Manage)
+            if !(self.class.parent == Api::V1 || self.class.parent == HighVoltage || self.class.parent == Devise || self.class.parent == Users)
               if params["controller"] != "onboarding/onboarding" 
                 redirect_to send("onboarding_#{profile.onboard_status}_path")
               end

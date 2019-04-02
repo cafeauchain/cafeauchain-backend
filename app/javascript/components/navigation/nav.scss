@@ -51,6 +51,16 @@
     }
 }
 
+.responsive-sidebar-items {
+    .header {
+        color: $darkgreen;
+    }
+    > a.item {
+        font-weight: bold !important;
+        color: $darkgreen !important;
+    }
+}
+
 /* Pulsing the Cart Badge */
 @keyframes pulse {
     0% {

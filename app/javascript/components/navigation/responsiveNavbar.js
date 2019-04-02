@@ -40,7 +40,7 @@ class NavBar extends Component {
 
     getScreenSize = () => {
         const width = window.innerWidth;
-        const size = width > 600 ? "desktop" : "tablet";
+        const size = width > 999 ? "desktop" : (width < 600 ? "mobile" : "tablet");
         return size;
     };
 
@@ -59,7 +59,7 @@ class NavBar extends Component {
         });
 
     render() {
-        const { rightItems, buttons, header_info } = this.props;
+        const { rightItems, buttons, header_info, children } = this.props;
         const { visible, screenSize, menuHeight } = this.state;
         let logoBorder = " no-border";
 
@@ -70,9 +70,19 @@ class NavBar extends Component {
                         <Image size="mini" src={header_info ? header_info.url : logo} onLoad={this.logoLoaded} />
                         <h2 style={{ margin: "0 0 0 20px" }}>{header_info ? header_info.name : "Cafe au Chain"}</h2>
                     </Menu.Item>
-                    {screenSize === "tablet" && (
+                    {screenSize !== "mobile" && (
+                        <Menu.Menu
+                            content={menuItemBuilder(rightItems.concat(buttons))}
+                            style={{ marginLeft: 'auto' }}
+                        />
+                    )}
+                    {screenSize !== "desktop" && (
                         <F>
-                            <Menu.Item onClick={this.handleToggle} className="no-border" position="right">
+                            <Menu.Item 
+                                onClick={this.handleToggle}
+                                className="no-border"
+                                style={{marginLeft: screenSize === "mobile" ? "auto" : 0}}
+                            >
                                 <Icon name="sidebar" />
                             </Menu.Item>
                             <Sidebar.Pushable
@@ -90,29 +100,35 @@ class NavBar extends Component {
                                     animation="overlay"
                                     vertical
                                     visible={visible}
-                                    content={menuItemBuilder(rightItems.concat(buttons))}
+                                    content={(
+                                        <div className={children ? "responsive-sidebar-items" : ""}>
+                                            {screenSize === "mobile" && (
+                                                <React.Fragment>
+                                                    {menuItemBuilder(rightItems)}
+                                                    {children}
+                                                    {menuItemBuilder(buttons)}
+                                                </React.Fragment>
+                                            )}
+                                            {screenSize === "tablet" && children}
+                                        </div>
+                                    )}
+                                    style={{ paddingBottom: 100 }}
                                 />
                             </Sidebar.Pushable>
                         </F>
-                    )}
-                    {screenSize === "desktop" && (
-                        <Menu.Menu
-                            position="right"
-                            content={menuItemBuilder(rightItems.concat(buttons))}
-                        />
-                    )}
-                    
+                    )}   
                 </Menu>
             </div>
         );
     }
 }
 
-const { array, object } = PropTypes;
+const { array, object, node } = PropTypes;
 NavBar.propTypes = {
     rightItems: array,
     buttons: array,
-    header_info: object
+    header_info: object,
+    children: node
 };
 
 export default NavBar;

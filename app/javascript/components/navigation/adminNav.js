@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Menu, Icon } from "semantic-ui-react";
 
@@ -10,6 +10,7 @@ import AcceptDelivery from "roaster_tools/inventory/acceptDelivery";
 import SingleContract from "roaster_tools/inventory/singleContract";
 import CreateInventory from "wholesale/actions/createInventory";
 import CreateProduct from "wholesale/actions/createProduct";
+import withContext from "contexts/withContext";
 /* eslint-enable */
 
 const ItemWithIcon = ({text}) => {
@@ -41,11 +42,7 @@ ModalLink.propTypes = {
     component: PropTypes.node
 };
 
-class AdminNav extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
+class AdminNav extends PureComponent {
     render() {
         const {
             roaster: { id }
@@ -94,11 +91,7 @@ class AdminNav extends Component {
         const buildItems = array => array.map(item => <Menu.Item as="a" key={item.key || item.content} {...item} />);
 
         return (
-            <Menu vertical inverted fluid borderless>
-                <Menu.Item>
-                    <Menu.Header as="a" href="/manage/dashboard" content="Dashboard" />
-                </Menu.Item>
-
+            <React.Fragment>
                 <Menu.Item>
                     <Menu.Header as="a" href="/manage/inventory" content="Green Inventory" />
                     <Menu.Menu content={buildItems(inventory)} />
@@ -125,7 +118,7 @@ class AdminNav extends Component {
 
                     <Menu.Menu content={buildItems(support)} />
                 </Menu.Item>
-            </Menu>
+            </React.Fragment>
         );
     }
 }
@@ -134,4 +127,4 @@ AdminNav.propTypes = {
     roaster: object
 };
 
-export default AdminNav;
+export default withContext(AdminNav);

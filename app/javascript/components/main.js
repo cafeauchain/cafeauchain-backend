@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Menu } from "semantic-ui-react";
 
 /* eslint-disable */
 import HeaderNav from "navigation/header";
@@ -28,7 +29,9 @@ const Main = ({ component, ...rest }) => (
                         <React.Fragment>
                             {!ctx.static && !ctx.cart && (
                                 <NavPortal mountNode="main-nav">
-                                    <AdminNav {...ctx} />
+                                    <Menu vertical inverted fluid borderless>
+                                        <AdminNav />
+                                    </Menu>
                                 </NavPortal>
                             )}
                             <NavPortal mountNode="header-nav">
