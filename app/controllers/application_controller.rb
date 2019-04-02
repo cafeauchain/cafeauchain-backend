@@ -54,6 +54,10 @@ class ApplicationController < ActionController::Base
                if params["controller"] != "shop/onboard"
                 redirect_to send("shop_onboard_#{wholesale.onboard_status}_path") 
                end
+              else
+                if params["controller"] == "shop/onboard"
+                  redirect_to root_path
+                end
               end
             end
           end
