@@ -4,6 +4,7 @@
 #
 #  id                 :uuid             not null, primary key
 #  custom_options     :jsonb
+#  inactive           :boolean          default(FALSE)
 #  price_in_cents     :integer
 #  production_options :string           default([]), is an Array
 #  quantity           :integer
