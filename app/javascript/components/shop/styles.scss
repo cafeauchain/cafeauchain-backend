@@ -36,3 +36,12 @@
         background: #eaeaea;
     }
 }
+
+.cart-sidebar {
+    min-width: 300px;
+    margin-top: 40px;
+    @media screen and (min-width: 1055px) {
+        max-width: 420px;
+        margin-top: 0;
+    }
+}
