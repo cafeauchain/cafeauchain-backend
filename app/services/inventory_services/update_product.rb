@@ -10,16 +10,33 @@ module InventoryServices
           ProductInventoryItem.create(product: @product, inventory_item_id: comp[:inventory_item_id], percentage_of_product: comp[:pct])
         end
       end
-      variants_changed = @product.compare_variants(params[:variants])
-      if variants_changed
-        params[:variants].each do |variant|
-          # TODO Decide how to handle deletes and additions
-          @product.product_variants.find(variant[:id]).update(
-            price_in_cents: variant[:price_in_dollars].to_f * 100, 
-            custom_options: {"size": variant[:size]}
-          )
+
+      variants_changed = @product.compare_variants(params[:variants], @product.product_variants)
+      if !variants_changed[:added_variants].empty?
+        variants_changed[:added_variants].each do |av|
+          variant = params[:variants].detect {|v| v[:id] == av }
+          @variant = ProductVariant.new(product: @product, price_in_cents: (variant[:price_in_dollars].to_f * 100).to_i )
+          @variant.custom_options = variant.except(:price_in_dollars, :id, :price_in_cents)
+          @variant.save
         end
       end
+
+      if !variants_changed[:changed_variants].empty?
+        variants_changed[:changed_variants].each do |cv|
+          ProductVariant.find( cv ).update(inactive: true)
+          variant = params[:variants].detect {|v| v[:id] == cv }
+          @variant = ProductVariant.new(product: @product, price_in_cents: (variant[:price_in_dollars].to_f * 100).to_i )
+          @variant.custom_options = variant.except(:price_in_dollars, :id, :price_in_cents)
+          @variant.save
+        end
+      end
+
+      if !variants_changed[:removed_variants].empty?
+        variants_changed[:removed_variants].each do |dv|
+          ProductVariant.find( dv ).update(inactive: true)
+        end
+      end
+      
       @product.update(title: params[:name], description: params[:description], status: params[:status])
       return @product
     end
