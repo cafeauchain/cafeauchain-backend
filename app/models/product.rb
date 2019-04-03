@@ -50,6 +50,17 @@ class Product < ApplicationRecord
     return !changed_inventory_items.empty?
   end
 
+  def compare_variants(variant_array)
+    changed_variants = []
+    variant_array.each do |variant|
+      pv = ProductVariant.find(variant[:id])
+      if !pv.nil? && (pv.price_in_cents.to_i != variant[:price_in_dollars].to_f * 100 || pv.custom_options["size"].to_s != variant[:size].to_s)
+        changed_variants << variant[:id]
+      end
+    end
+    return !changed_variants.empty?
+  end
+
   def product_image_urls
     self.product_images.map{ |pi| 
       {

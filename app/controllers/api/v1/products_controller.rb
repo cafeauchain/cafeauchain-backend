@@ -26,8 +26,13 @@ class Api::V1::ProductsController < ApplicationController
   end
 
   def variants
-    @variants = ProductVariant.all
-    render json: @variants, status: 200
+    @variants = []
+    @roaster.products.each do |product|
+      product.product_variants.each do |variant|
+        @variants << variant
+      end
+    end
+    render json: @variants, status: 200, each_serializer: ProductVariantSerializer
   end
 
   def add_images

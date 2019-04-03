@@ -10,6 +10,16 @@ module InventoryServices
           ProductInventoryItem.create(product: @product, inventory_item_id: comp[:inventory_item_id], percentage_of_product: comp[:pct])
         end
       end
+      variants_changed = @product.compare_variants(params[:variants])
+      if variants_changed
+        params[:variants].each do |variant|
+          # TODO Decide how to handle deletes and additions
+          @product.product_variants.find(variant[:id]).update(
+            price_in_cents: variant[:price_in_dollars].to_f * 100, 
+            custom_options: {"size": variant[:size]}
+          )
+        end
+      end
       @product.update(title: params[:name], description: params[:description], status: params[:status])
       return @product
     end
