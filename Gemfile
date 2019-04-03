@@ -34,6 +34,7 @@ gem 'active_model_serializers', '~> 0.10.0'
 gem 'acts-as-taggable-on', '~> 6.0'
 gem "sentry-raven"
 gem "easypost"
+gem 'aws-sdk-s3'
 
 
 group :development do
