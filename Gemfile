@@ -35,6 +35,7 @@ gem 'acts-as-taggable-on', '~> 6.0'
 gem "sentry-raven"
 gem "easypost"
 gem 'aws-sdk', '~> 3'
+gem 'aws-sdk-s3'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
