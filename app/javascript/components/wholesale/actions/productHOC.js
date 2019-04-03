@@ -143,16 +143,7 @@ function withProductForm(WrappedComponent) {
             );
         };
 
-        resetForm = () => {
-            let defaults = { ...defaultDetails };
-            // const { defaults: ctxDefaults } = this.context;
-            defaults.composition = [compositionDefault()];
-            // defaults.variants = ctxDefaults.size.map(variantsDefault);
-            // defaults.product_options = ctxDefaults.options;
-            // this.setState({ details: defaults });
-        };
-
-        updateHOCstate = obj => this.setState(obj);
+        updateHOCState = obj => this.setState(obj);
 
         render() {
             const funcs = {
@@ -164,9 +155,8 @@ function withProductForm(WrappedComponent) {
                 setOptions: this.setOptions,
                 buildDefaultVariants: this.buildDefaultVariants,
                 buildDefaultOptions: this.buildDefaultOptions,
-                resetForm: this.resetForm,
                 onRemove: this.onRemove,
-                updateHOCstate: this.updateHOCstate
+                updateHOCState: this.updateHOCState
             };
 
             return (

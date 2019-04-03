@@ -20,9 +20,8 @@ import fields from "defs/forms/createProduct";
 import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 /* eslint-enable */
 
-class CreateProduct extends React.Component {
+class CreateProduct extends Component {
     componentDidMount() {
-        console.log( 'create product mounted');
         const {
             inventory,
             getData,
@@ -45,31 +44,22 @@ class CreateProduct extends React.Component {
         
     }
 
-    handleSubmit = async ev => {
+    handleSubmit = async (ev, { method }) => {
         ev.preventDefault();
-        const { details, userId, updateHOCState } = this.props;
+        const { details, userId, funcs: { updateHOCState } } = this.props;
         await updateHOCState({ btnLoading: true });
-        const url = `${ROASTER_URL(userId)}/products`;
+        const productId = method === "PUT" ? "/" + details.id : "";
+        const url = `${ROASTER_URL(userId)}/products${ productId }`;
         const body = { ...details };
-        const response = await requester({ url, body });
-        this.afterSubmit( response, url );
+        const response = await requester({ url, body, method });
+        setTimeout(() => this.afterSubmit(response, url), 400);
     };
-
-    handleUpdate = async ev => {
-        ev.preventDefault();
-        const { details, userId, updateHOCState } = this.props;
-        await updateHOCState({ btnLoading: true });
-        const url = `${ROASTER_URL(userId)}/products/` + details.id;
-        const body = { ...details };
-        const response = await requester({ url, body, method: 'PUT' });
-        this.afterSubmit(response, url);
-    }
 
     afterSubmit = async (response, url) => {
         const { 
             details, 
             getData,
-            funcs: { resetForm, updateHOCState },
+            funcs: { updateHOCState },
             closeModal,
             successClose
         } = this.props;
@@ -83,14 +73,12 @@ class CreateProduct extends React.Component {
             } else {
                 const success = details.name + " was created successfully!";
                 await updateHOCState({ btnLoading: false });
-                await getData("products");
-                await getData("variants");
+                getData("products");
                 if (successClose) {
                     successClose(success);
                 } else if (closeModal) {
                     setTimeout(closeModal, 900);
                 }
-                // await resetForm();
             }
         }
     }
@@ -226,7 +214,8 @@ class CreateProduct extends React.Component {
                     fluid
                     loading={btnLoading}
                     disabled={current ? false : !btnActive}
-                    onClick={current ? this.handleUpdate : this.handleSubmit}
+                    onClick={this.handleSubmit}
+                    method={current ? "PUT" : "POST"}
                     content={current ? "Update Product" : "Create Product"}
                 />
             </Form>
@@ -244,7 +233,6 @@ CreateProduct.propTypes = {
     closeModal: func,
     successClose: func,
     current: object,
-    updateHOCState: func,
     btnLoading: bool,
     errors: array
 };
