@@ -63,6 +63,10 @@ class NavBar extends Component {
         const { visible, screenSize, menuHeight } = this.state;
         let logoBorder = " no-border";
 
+        let modRightItems = Array.isArray(rightItems) ? 
+            rightItems : screenSize === "mobile" ? 
+                rightItems.mobile : rightItems.desktop;
+
         return (
             <div className="navbar-spacer" ref={this.menuRef} style={{ paddingTop: menuHeight }}>
                 <Menu fixed="top">
@@ -82,7 +86,7 @@ class NavBar extends Component {
                     </Menu.Item>
                     {screenSize !== "mobile" && (
                         <Menu.Menu
-                            content={menuItemBuilder(rightItems.concat(buttons))}
+                            content={menuItemBuilder(modRightItems.concat(buttons))}
                             style={{ marginLeft: 'auto' }}
                         />
                     )}
@@ -114,7 +118,7 @@ class NavBar extends Component {
                                         <div className={children ? "responsive-sidebar-items" : ""}>
                                             {screenSize === "mobile" && (
                                                 <React.Fragment>
-                                                    {menuItemBuilder(rightItems)}
+                                                    {menuItemBuilder(modRightItems)}
                                                     {children}
                                                     {menuItemBuilder(buttons)}
                                                 </React.Fragment>
@@ -133,9 +137,9 @@ class NavBar extends Component {
     }
 }
 
-const { array, object, node, bool } = PropTypes;
+const { array, object, node, bool, oneOfType } = PropTypes;
 NavBar.propTypes = {
-    rightItems: array,
+    rightItems: oneOfType([array, object]),
     buttons: array,
     header_info: object,
     children: node,
