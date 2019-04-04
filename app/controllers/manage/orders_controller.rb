@@ -20,7 +20,7 @@ module Manage
     end
 
     def index
-      orders = Order.all
+      orders = current_user.roaster_profile.orders
       @orders = ActiveModel::SerializableResource.new(orders, each_serializer: OrderSerializer)
       render "manage/primary", locals: {
         roaster: current_user.roaster_profile,
