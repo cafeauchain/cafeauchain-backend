@@ -18,24 +18,18 @@ import DeleteImage from "wholesale/actions/deleteImages";
 import fields from "defs/forms/createProduct";
 
 import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
-
-import withContext from "contexts/withContext";
 /* eslint-enable */
 
 class CreateProduct extends Component {
-    state = {
-        btnLoading: false,
-        errors: []
-    };
     componentDidMount() {
         const {
             inventory,
-            getCtxData,
+            getData,
             userId,
             funcs: { buildDefaultVariants, buildDefaultOptions },
             current
         } = this.props;
-        if (inventory === undefined) getCtxData("inventory");
+        if (inventory === undefined) getData("inventory");
         if( !current ){
             fetch(ROASTER_URL(userId) + "/default_options")
                 .then(response => response.json())
@@ -50,36 +44,27 @@ class CreateProduct extends Component {
         
     }
 
-    handleSubmit = async ev => {
+    handleSubmit = async (ev, { method }) => {
         ev.preventDefault();
-        await this.setState({ btnLoading: true });
-        const { details, userId } = this.props;
-        const url = `${ROASTER_URL(userId)}/products`;
+        const { details, userId, funcs: { updateHOCState } } = this.props;
+        await updateHOCState({ btnLoading: true });
+        const productId = method === "PUT" ? "/" + details.id : "";
+        const url = `${ROASTER_URL(userId)}/products${ productId }`;
         const body = { ...details };
-        const response = await requester({ url, body });
-        this.afterSubmit( response, url );
+        const response = await requester({ url, body, method });
+        setTimeout(() => this.afterSubmit(response, url), 400);
     };
-
-    handleUpdate = async ev => {
-        ev.preventDefault();
-        await this.setState({ btnLoading: true });
-        const { details, userId } = this.props;
-        const url = `${ROASTER_URL(userId)}/products/` + details.id;
-        const body = { ...details };
-        const response = await requester({ url, body, method: 'PUT' });
-        this.afterSubmit(response, url);
-    }
 
     afterSubmit = async (response, url) => {
         const { 
             details, 
-            getCtxData,
-            funcs: { resetForm },
+            getData,
+            funcs: { updateHOCState },
             closeModal,
             successClose
         } = this.props;
         if (response instanceof Error) {
-            this.setState({ errors: response.response.data, btnLoading: false });
+            updateHOCState({ errors: response.response.data, btnLoading: false });
         } else {
             const { id: productId } = response.data;
             await this.handleImages(details, url + "/" + productId);
@@ -87,15 +72,13 @@ class CreateProduct extends Component {
                 window.location.href = await response.redirect_url;
             } else {
                 const success = details.name + " was created successfully!";
-                await this.setState({ btnLoading: false });
-                await getCtxData("products");
-                await getCtxData("variants");
+                await updateHOCState({ btnLoading: false });
+                getData("products");
                 if (successClose) {
                     successClose(success);
                 } else if (closeModal) {
                     setTimeout(closeModal, 900);
                 }
-                await resetForm();
             }
         }
     }
@@ -110,8 +93,7 @@ class CreateProduct extends Component {
     }
 
     render() {
-        const { inventory = [], funcs, details, current } = this.props;
-        const { btnLoading, errors } = this.state;
+        const { inventory = [], funcs, details, current, btnLoading, errors } = this.props;
         const {
             handleInputChange,
             validateInputs,
@@ -119,10 +101,8 @@ class CreateProduct extends Component {
             addVariant,
             addInventoryItem,
             setOptions,
-            buildInventoryOptions,
             onRemove
         } = funcs;
-        const inventoryOptions = buildInventoryOptions(inventory);
         const { composition, variants, product_options: options } = details;
         const btnActive = validateInputs(details);
         return (
@@ -202,7 +182,7 @@ class CreateProduct extends Component {
                     <CompositionTable
                         composition={composition}
                         fields={fields.composition}
-                        inventoryOptions={inventoryOptions}
+                        inventory={inventory}
                         handleChange={handleInputChange}
                         btn={removeButton}
                     />
@@ -234,7 +214,8 @@ class CreateProduct extends Component {
                     fluid
                     loading={btnLoading}
                     disabled={current ? false : !btnActive}
-                    onClick={current ? this.handleUpdate : this.handleSubmit}
+                    onClick={this.handleSubmit}
+                    method={current ? "PUT" : "POST"}
                     content={current ? "Update Product" : "Create Product"}
                 />
             </Form>
@@ -242,16 +223,18 @@ class CreateProduct extends Component {
     }
 }
 
-const { array, object, func, string, number, oneOfType } = PropTypes;
+const { array, object, func, string, number, oneOfType, bool } = PropTypes;
 CreateProduct.propTypes = {
     userId: oneOfType([string, number]),
     inventory: array,
     details: object,
     funcs: object,
-    getCtxData: func,
+    getData: func,
     closeModal: func,
     successClose: func,
-    current: object
+    current: object,
+    btnLoading: bool,
+    errors: array
 };
 
-export default withContext(withProductForm(CreateProduct));
+export default withProductForm(CreateProduct);

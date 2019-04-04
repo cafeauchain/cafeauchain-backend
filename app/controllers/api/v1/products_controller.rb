@@ -10,7 +10,7 @@ class Api::V1::ProductsController < ApplicationController
   def create
     @product = InventoryServices::CreateProduct.new(@roaster.id, params).call
     if @product.errors.full_messages.empty?
-      render json: {"redirect":false, data: @product}, status: 200
+      render json: @product, status: 200
     else
       render json: { data: @product.errors.full_messages }, status: 422
     end
@@ -19,15 +19,20 @@ class Api::V1::ProductsController < ApplicationController
   def update
     @product = InventoryServices::UpdateProduct.call(@product.id, params)
     if @product.errors.full_messages.empty?
-      render json: {"redirect":false, data: @product}, status: 200
+      render json: @product, status: 200
     else
       render json: { data: @product.errors.full_messages }, status: 422
     end
   end
 
   def variants
-    @variants = ProductVariant.all
-    render json: @variants, status: 200
+    @variants = []
+    @roaster.products.each do |product|
+      product.product_variants.select{ |pv| !pv.inactive? }.each do |variant|
+        @variants << variant
+      end
+    end
+    render json: @variants, status: 200, each_serializer: ProductVariantSerializer
   end
 
   def add_images

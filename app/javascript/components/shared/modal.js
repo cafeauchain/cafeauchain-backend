@@ -1,11 +1,12 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Modal, Header, Button, Dimmer, Icon } from "semantic-ui-react";
 
 /* eslint-disable */
 /* eslint-enable */
+/* eslint-disable react/no-multi-comp */
 
-class ModalWithTrigger extends Component {
+class ModalWithTrigger extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -29,8 +30,19 @@ class ModalWithTrigger extends Component {
         e.preventDefault();
         this.setState({ isOpen: true });
     };
+
+    buildInner = iprops => {
+        const { component } = this.props;
+        return (React.cloneElement(component, {
+            ...iprops,
+            closeModal: this.closeModal,
+            successClose: this.successClose
+        }));
+    };
+
     render() {
         let { text, showBtn, isOpen, closeModal, unstyled, btnProps, className = "", ...rest } = this.props;
+        const Inner = this.buildInner;
         const { success, isOpen: isOpenState } = this.state;
         if (unstyled) className += " unstyled";
         return (
@@ -54,7 +66,9 @@ class ModalWithTrigger extends Component {
                         undefined
                     )
                 }
-            />
+            >
+                <Inner />
+            </FormattedModal>
         );
     }
 }
@@ -67,32 +81,36 @@ ModalWithTrigger.propTypes = {
     isOpen: bool,
     unstyled: bool,
     className: string,
-    btnProps: object
+    btnProps: object,
+    component: node
 };
 
 ModalWithTrigger.defaultProps = {
     showBtn: true
 };
-const FormattedModal = props => {
-    const { title, component, size, centered, icon, isOpen, success, closeModal, successClose, ...rest } = props;
-    const Inner = iprops => React.cloneElement(component, { ...iprops, closeModal, successClose });
-    return (
-        <Modal {...rest} closeIcon size={size} centered={centered} open={isOpen} onClose={closeModal}>
-            <Header icon={icon} content={title} />
-            <Modal.Content scrolling style={{ minHeight: "50vw" }}>
-                <Inner />
-                {success && (
-                    <Dimmer active inverted>
-                        <Header as="h2" icon className="primary-text">
-                            <Icon name="check" />
-                            {success}
-                        </Header>
-                    </Dimmer>
-                )}
-            </Modal.Content>
-        </Modal>
-    );
-};
+
+// eslint-disable-next-line react/prefer-stateless-function
+class FormattedModal extends PureComponent {
+    render() {
+        const { title, children, size, centered, icon, isOpen, success, closeModal, successClose, ...rest } = this.props;
+        return (
+            <Modal {...rest} closeIcon size={size} centered={centered} open={isOpen} onClose={closeModal}>
+                <Header icon={icon} content={title} />
+                <Modal.Content scrolling style={{ minHeight: "50vw" }}>
+                    {children}
+                    {success && (
+                        <Dimmer active inverted>
+                            <Header as="h2" icon className="primary-text">
+                                <Icon name="check" />
+                                {success}
+                            </Header>
+                        </Dimmer>
+                    )}
+                </Modal.Content>
+            </Modal>
+        );
+    }
+}
 
 FormattedModal.propTypes = {
     title: string,
@@ -103,7 +121,8 @@ FormattedModal.propTypes = {
     isOpen: bool,
     success: string,
     closeModal: func,
-    successClose: func
+    successClose: func,
+    children: node
 };
 FormattedModal.defaultProps = {
     size: "small",

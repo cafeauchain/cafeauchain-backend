@@ -5,9 +5,8 @@ import { Button } from "semantic-ui-react";
 
 /* eslint-disable */
 import { noEmpties } from "utilities";
-import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
 
 const compositionDefault = () => ({ inventory_item_id: "", pct: "", id: shortid.generate() });
@@ -80,15 +79,6 @@ function withProductForm(WrappedComponent) {
             this.setState({ details, errors: [] });
         };
 
-        buildInventoryOptions = inventory =>
-            inventory.map(({ id, attributes: { name, lot_name } }) => ({
-                value: id,
-                text: name + " (" + lot_name + ")",
-                key: id,
-                id,
-                name
-            }));
-
         addInventoryItem = () => {
             let { details } = this.state;
             const comp = compositionDefault();
@@ -153,17 +143,9 @@ function withProductForm(WrappedComponent) {
             );
         };
 
-        resetForm = () => {
-            let defaults = { ...defaultDetails };
-            const { defaults: ctxDefaults } = this.context;
-            defaults.composition = [compositionDefault()];
-            defaults.variants = ctxDefaults.size.map(variantsDefault);
-            defaults.product_options = ctxDefaults.options;
-            this.setState({ details: defaults });
-        };
+        updateHOCState = obj => this.setState(obj);
 
         render() {
-            const { updateContext, getData: getCtxData } = this.context;
             const funcs = {
                 handleInputChange: this.handleInputChange,
                 validateInputs: this.validateInputs,
@@ -171,32 +153,24 @@ function withProductForm(WrappedComponent) {
                 addVariant: this.addVariant,
                 addInventoryItem: this.addInventoryItem,
                 setOptions: this.setOptions,
-                buildInventoryOptions: this.buildInventoryOptions,
                 buildDefaultVariants: this.buildDefaultVariants,
                 buildDefaultOptions: this.buildDefaultOptions,
-                resetForm: this.resetForm,
-                onRemove: this.onRemove
+                onRemove: this.onRemove,
+                updateHOCState: this.updateHOCState
             };
 
             return (
-                <WrappedComponent
-                    {...this.props}
-                    funcs={funcs}
-                    {...this.state}
-                    updateContext={updateContext}
-                    getCtxData={getCtxData}
-                />
+                <WrappedComponent {...this.props} funcs={funcs} {...this.state} />
             );
         }
     }
-    WithProductForm.contextType = Context;
 
     const { object } = PropTypes;
     WithProductForm.propTypes = {
         current: object
     };
 
-    return WithProductForm;
+    return withContext(WithProductForm);
 }
 
 export default withProductForm;

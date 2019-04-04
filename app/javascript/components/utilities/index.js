@@ -11,6 +11,7 @@ import getTimePeriod from "./getTimePeriod";
 import humanize from "./humanize";
 import jsonToFormData from "./jsonToFormData";
 import noEmpties from "./noEmpties";
+import objectEqual from "./objectEqual";
 import params from "./params";
 import pluralize from "./pluralize";
 import readCookie from "./readCookie";
@@ -36,6 +37,7 @@ export {
     humanize,
     jsonToFormData,
     noEmpties,
+    objectEqual,
     params,
     pluralize,
     readCookie,

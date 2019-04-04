@@ -37,7 +37,7 @@ class ProductSerializer < ActiveModel::Serializer
   end
 
   def variants
-    self.object.product_variants.map do |pv|
+    self.object.product_variants.select {|pv| !pv.inactive? }.sort_by{|pv| pv[:custom_options]["size"].to_i }.map do |pv|
       {
         size: pv.custom_options["size"],
         price_in_dollars: '%.2f' % (pv.price_in_cents.to_i/100.0),

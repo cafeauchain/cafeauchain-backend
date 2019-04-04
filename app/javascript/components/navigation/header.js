@@ -20,7 +20,7 @@ class Header extends Component {
         const { cart, roaster: roasterProfile, loggedIn, header_info } = this.props;
         const links = loggedIn ? (cart ? customer({ cart }) : roaster(roasterProfile)) : base;
         const { right = [], buttons } = links;
-        return <NavBar rightItems={right} buttons={buttons} header_info={header_info}><AdminNav /></NavBar>;
+        return <NavBar rightItems={right} buttons={buttons} header_info={header_info}>{loggedIn && !cart && <AdminNav />}</NavBar>;
     }
 }
 
