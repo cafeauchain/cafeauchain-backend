@@ -5,6 +5,8 @@ git_source(:github) do |repo_name|
 end
 
 ruby '2.4.5'
+gem 'aws-sdk', '~> 3'
+gem 'aws-sdk-s3'
 gem 'rails', '~> 5.2'
 gem 'bootsnap'
 gem 'puma', '~> 3.7'
@@ -34,7 +36,6 @@ gem 'active_model_serializers', '~> 0.10.0'
 gem 'acts-as-taggable-on', '~> 6.0'
 gem "sentry-raven"
 gem "easypost"
-
 
 group :development do
   gem 'web-console', '>= 3.3.0'
