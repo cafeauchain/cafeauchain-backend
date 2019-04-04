@@ -49,7 +49,8 @@ group :development do
   gem 'annotate'
   gem "binding_of_caller"
   gem 'hirb'
-  gem 'lol_dba'
+  # TODO Dont forget to reable this
+  # gem 'lol_dba'
   gem 'rack-mini-profiler', require: false
   gem 'bullet'
   gem 'flamegraph'
