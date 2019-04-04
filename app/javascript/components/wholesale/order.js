@@ -5,9 +5,8 @@ import moment from "moment";
 
 /* eslint-disable */
 import Flex from "shared/flex";
-import { Money, Weights } from "shared/textFormatters";
+import { Money } from "shared/textFormatters";
 import Table from "shared/table";
-import randomCoffeeImage from "shared/randomCoffeeImage";
 
 import { humanize, sortBy } from "utilities";
 
@@ -15,30 +14,8 @@ import OrderFulfillment from "wholesale/orderFulfillment";
 
 import tableDefs from "defs/tables/orderLineItems";
 
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
-
-const Wrapper = ({ order, ...props }) => {
-    return (
-        <div>
-            <Context>
-                {ctx => (
-                    <Order
-                        {...props}
-                        order={ctx.order || order.data}
-                        loading={ctx.loading}
-                        userId={ctx.userId}
-                        getCtxData={ctx.getData}
-                    />
-                )}
-            </Context>
-        </div>
-    );
-};
-
-Wrapper.propTypes = {
-    order: PropTypes.object
-};
 
 class Order extends React.Component {
     static propTypes = () => {
@@ -55,17 +32,18 @@ class Order extends React.Component {
     render() {
         const {
             order: { attributes = {}, id },
-            roaster = {},
-            user = {}
+            profile: { attributes: roasterAtts },
+            customer: { attributes: customerAtts }
         } = this.props;
         const order_items = attributes ? attributes.order_items : [];
-        const roasterLogo = roaster.roaster_img_url || randomCoffeeImage();
-        const customerLogo = user.img_url || randomCoffeeImage();
+        const roasterLogo = roasterAtts.logo_image_url;
+        const customerLogo = customerAtts.logo_url;
         const sorted =
             order_items && order_items.length
                 ? sortBy({ collection: order_items, id: "size", sorts: [{ name: "name" }, { name: "size" }] })
                 : [];
-        const closed = attributes.status === "complete";
+        const closed = attributes.status === "fulfilled";
+
         return (
             <div>
                 <Segment>
@@ -87,18 +65,18 @@ class Order extends React.Component {
                                     <Item>
                                         <Item.Image size="tiny" src={roasterLogo} />
                                         <Item.Content verticalAlign="top">
-                                            <Item.Header as="a">{roaster.name}</Item.Header>
+                                            <Item.Header as="a">{roasterAtts.name}</Item.Header>
                                             <Item.Description>
                                                 <p>
-                                                    {roaster.address_1}
+                                                    {roasterAtts.primary_address.street_1}
                                                     <br />
-                                                    {roaster.address_2 && (
+                                                    {roasterAtts.primary_address.street_2 && (
                                                         <F>
-                                                            {roaster.address_2}
+                                                            {roasterAtts.primary_address.street_2}
                                                             <br />
                                                         </F>
                                                     )}
-                                                    {`${roaster.city}, ${roaster.state} ${roaster.zip_code}`}
+                                                    {`${roasterAtts.primary_address.city}, ${roasterAtts.primary_address.state} ${roasterAtts.primary_address.postal_code}`}
                                                 </p>
                                             </Item.Description>
                                         </Item.Content>
@@ -111,12 +89,19 @@ class Order extends React.Component {
                                     <Item>
                                         <Item.Image size="tiny" src={customerLogo} />
                                         <Item.Content verticalAlign="top">
-                                            <Item.Header as="a">{attributes.company_name}</Item.Header>
+                                            <Item.Header as="a">{customerAtts.company_name}</Item.Header>
                                             <Item.Description>
                                                 <p>
-                                                    123 Any Street
+                                                    {customerAtts.primary_address.street_1}
                                                     <br />
-                                                    Somewhere, AL 30606
+                                                    {customerAtts.primary_address.street_2 && (
+                                                        <F>
+                                                            {customerAtts.primary_address.street_2}
+                                                            <br />
+                                                        </F>
+                                                    )}
+                                                    {`${customerAtts.primary_address.city}, 
+                                                    ${customerAtts.primary_address.state} ${customerAtts.primary_address.postal_code}`}
                                                 </p>
                                             </Item.Description>
                                         </Item.Content>
@@ -164,7 +149,7 @@ class Order extends React.Component {
                                         <strong>Tax:</strong>
                                     </div>
                                     <div flex="50">
-                                        <Money>0</Money>
+                                        <Money>{attributes.taxes}</Money>
                                     </div>
                                     <div flex="50">
                                         <strong>Shipping:</strong>
@@ -197,4 +182,4 @@ class Order extends React.Component {
     }
 }
 
-export default Wrapper;
+export default withContext(Order);

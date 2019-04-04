@@ -7,29 +7,8 @@ import { requester, url as API_URL } from "utilities/apiUtils";
 
 import ErrorHandler from "shared/errorHandler";
 
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
-
-const Wrapper = ({ ...props }) => {
-    return (
-        <Context>
-            {ctx => (
-                <OrderFulfillment
-                    {...props}
-                    order={ctx.order || props.order}
-                    loading={ctx.loading}
-                    userId={ctx.userId}
-                    getCtxData={ctx.getData}
-                    updateContext={ctx.updateContext}
-                />
-            )}
-        </Context>
-    );
-};
-
-Wrapper.propTypes = {
-    order: PropTypes.object
-};
 
 class OrderFulfillment extends React.Component {
     static propTypes = () => {
@@ -72,10 +51,11 @@ class OrderFulfillment extends React.Component {
     render() {
         const { errors, btnLoading } = this.state;
         const steps = [
-            { name: "processing", icon: "unordered list", title: "Received", index: 0 },
-            { name: "awaiting_payment", icon: "payment", title: "Paid", index: 1 },
-            { name: "fulfilled", icon: "coffee", title: "Roasted", index: 2 },
-            { name: "complete", icon: "truck", title: "Shipped", index: 3 }
+            { name: "draft", icon: "unordered list", title: "Draft", index: 0 },
+            { name: "processing", icon: "unordered list", title: "Processing", index: 1 },
+            { name: "awaiting_payment", icon: "payment", title: "Awaiting Payment", index: 2 },
+            { name: "paid_in_full", icon: "payment", title: "Paid in Full", index: 3 },
+            { name: "fulfilled", icon: "coffee", title: "Fulfilled", index: 4 }
         ];
         const { status } = this.props;
         const statusIdx = steps.find(step => step.name === status);
@@ -104,4 +84,4 @@ class OrderFulfillment extends React.Component {
     }
 }
 
-export default Wrapper;
+export default withContext(OrderFulfillment);

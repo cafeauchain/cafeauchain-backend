@@ -13,24 +13,8 @@ import { sortBy } from "utilities";
 
 import { requester, url as API_URL } from "utilities/apiUtils";
 
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
-
-const Wrapper = props => {
-    return (
-        <Context>
-            {ctx => (
-                <Orders
-                    {...props}
-                    orders={ctx.orders}
-                    loading={ctx.loading}
-                    userId={ctx.userId}
-                    getCtxData={ctx.getData}
-                />
-            )}
-        </Context>
-    );
-};
 
 class Orders extends Component {
     constructor(props) {
@@ -47,7 +31,7 @@ class Orders extends Component {
         e.preventDefault();
         target.blur();
         await this.setState({ loading: true });
-        const { getCtxData } = this.props;
+        const { getData } = this.props;
         const url = API_URL + "/orders/" + item["data-id"];
         const response = await requester({ url, body: { status: 4 }, method: "PUT" });
         setTimeout(async () => {
@@ -57,7 +41,7 @@ class Orders extends Component {
                 if (response.redirect) {
                     window.location.href = await response.redirect_url;
                 } else {
-                    await getCtxData("orders");
+                    await getData("orders");
                     this.setState({ loading: false });
                 }
             }
@@ -66,7 +50,7 @@ class Orders extends Component {
     actions = ({ item }) => {
         const { orders } = this.props;
         const order = orders.find(order => order.id === item.id);
-        if (order.attributes.status === "complete") {
+        if (order.attributes.status === "fulfilled") {
             return <Icon key={item.id} name="circle check" color="green" />;
         }
         return (
@@ -115,7 +99,7 @@ class Orders extends Component {
 const { array, func } = PropTypes;
 Orders.propTypes = {
     orders: array,
-    getCtxData: func
+    getData: func
 };
 
-export default Wrapper;
+export default withContext(Orders);
