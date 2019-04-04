@@ -9,19 +9,16 @@ const links = {
     ],
     buttons: [
         {
-            as: "a",
-            content: <Button className="login-btn">Login</Button>,
+            content: <Button className="login-btn" content="Login" as="a" href="/login" />,
             key: "login",
-            href: "/login",
             className: "no-border nav-btn",
             fitted: true
         },
         {
-            as: "a",
-            content: <Button className="register-btn">Register</Button>,
+            content: <Button className="register-btn" content="Register" as="a" href="/register" />,
             key: "register",
-            href: "/register",
-            className: "no-border nav-btn"
+            className: "no-border nav-btn",
+            fitted: true
         }
     ]
 };

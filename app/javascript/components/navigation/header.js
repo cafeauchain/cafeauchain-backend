@@ -19,8 +19,13 @@ class Header extends Component {
     render() {
         const { cart, roaster: roasterProfile, loggedIn, header_info } = this.props;
         const links = loggedIn ? (cart ? customer({ cart }) : roaster(roasterProfile)) : base;
+        const loggedInRoaster = loggedIn && !cart;
         const { right = [], buttons } = links;
-        return <NavBar rightItems={right} buttons={buttons} header_info={header_info}>{loggedIn && !cart && <AdminNav />}</NavBar>;
+        return (
+            <NavBar rightItems={right} buttons={buttons} header_info={header_info} loggedInRoaster={loggedInRoaster}>
+                {loggedInRoaster && <AdminNav />}
+            </NavBar>
+        );
     }
 }
 

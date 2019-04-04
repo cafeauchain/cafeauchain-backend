@@ -40,7 +40,7 @@ class NavBar extends Component {
 
     getScreenSize = () => {
         const width = window.innerWidth;
-        const size = width > 999 ? "desktop" : (width < 600 ? "mobile" : "tablet");
+        const size = width > 999 ? "desktop" : (width < 660 ? "mobile" : "tablet");
         return size;
     };
 
@@ -59,16 +59,26 @@ class NavBar extends Component {
         });
 
     render() {
-        const { rightItems, buttons, header_info, children } = this.props;
+        const { rightItems, buttons, header_info, loggedInRoaster, children } = this.props;
         const { visible, screenSize, menuHeight } = this.state;
         let logoBorder = " no-border";
 
         return (
             <div className="navbar-spacer" ref={this.menuRef} style={{ paddingTop: menuHeight }}>
                 <Menu fixed="top">
-                    <Menu.Item className={"header-menu no-left-border" + logoBorder} as="a" href="/">
-                        <Image size="mini" src={header_info ? header_info.url : logo} onLoad={this.logoLoaded} />
-                        <h2 style={{ margin: "0 0 0 20px" }}>{header_info ? header_info.name : "Cafe au Chain"}</h2>
+                    <Menu.Item className={"header-menu no-left-border" + logoBorder}>
+                        <Image 
+                            size="mini"
+                            src={header_info ? header_info.url : logo}
+                            onLoad={this.logoLoaded}
+                            as="a"
+                            href="/"
+                        />
+                        <h2 style={{ margin: 0 }}>
+                            <a href="/" style={{ paddingLeft: 20, color: "black", display: "block" }}>
+                                {header_info ? header_info.name : "Cafe au Chain"}
+                            </a>
+                        </h2>
                     </Menu.Item>
                     {screenSize !== "mobile" && (
                         <Menu.Menu
@@ -76,11 +86,11 @@ class NavBar extends Component {
                             style={{ marginLeft: 'auto' }}
                         />
                     )}
-                    {screenSize !== "desktop" && (
+                    {(screenSize === "mobile" || (screenSize === "tablet" && loggedInRoaster)) && (
                         <F>
                             <Menu.Item 
                                 onClick={this.handleToggle}
-                                className="no-border"
+                                className="no-border menu-trigger"
                                 style={{marginLeft: screenSize === "mobile" ? "auto" : 0}}
                             >
                                 <Icon name="sidebar" />
@@ -123,12 +133,13 @@ class NavBar extends Component {
     }
 }
 
-const { array, object, node } = PropTypes;
+const { array, object, node, bool } = PropTypes;
 NavBar.propTypes = {
     rightItems: array,
     buttons: array,
     header_info: object,
-    children: node
+    children: node,
+    loggedInRoaster: bool
 };
 
 export default NavBar;

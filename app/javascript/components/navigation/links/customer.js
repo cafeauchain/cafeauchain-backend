@@ -19,9 +19,7 @@ const links = ({ cart }) => {
                 ),
                 key: "dropdown",
                 fitted: true
-            }
-        ],
-        buttons: [
+            },
             {
                 as: "a",
                 content: (
@@ -44,12 +42,13 @@ const links = ({ cart }) => {
                 key: "cart",
                 href: "/cart"
             },
+        ],
+        buttons: [
             {
-                as: "a",
-                content: <Button className="logout-btn">Logout</Button>,
+                content: <Button className="logout-btn" content="Logout" as="a" href="/logout" />,
                 key: "logout",
-                href: "/logout",
-                className: "no-border nav-btn"
+                className: "no-border nav-btn",
+                fitted: true
             }
         ]
     };
