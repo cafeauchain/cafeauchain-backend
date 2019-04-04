@@ -9,7 +9,7 @@ const links = ({ cart }) => {
         { href: "/shop/profile", content: "Profile", key: "profile" },
         { href: "/shop/profile/payment", content: "Payment", key: "payment" },
         { href: "/shop/profile/addresses", content: "Addresses", key: "addresses" },
-        { href: "/orders", content: "Orders", key: "orders" }
+        { href: "/shop/orders", content: "Orders", key: "orders" }
     ];
     return {
         right: {
