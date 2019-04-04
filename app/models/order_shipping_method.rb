@@ -4,7 +4,7 @@
 #
 #  id         :bigint(8)        not null, primary key
 #  carrier    :string
-#  final_rate :integer
+#  final_rate :float
 #  service    :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

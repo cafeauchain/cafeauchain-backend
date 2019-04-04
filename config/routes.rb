@@ -331,15 +331,6 @@ Rails.application.routes.draw do
     get "products", to: "onboarding#products"
   end
 
-  namespace :shop do
-    resources :profile, only: [:index]
-    get "onboard/profile", to: "onboard#profile"
-    get "onboard/addresses", to: "onboard#addresses"
-    get "onboard/payment", to: "onboard#payment"
-    get "onboard/shipping", to: "onboard#shipping"
-    get "onboard/onboard_completed", to: "onboard#onboard_completed"
-  end
-
   resources :producer_profiles, path: "producers" do
     resources :crops
     resources :lots
@@ -356,8 +347,21 @@ Rails.application.routes.draw do
   end
 
   constraints(ValidSubdomain) do
+    # Customer 'View' Routes
     get 'cart', to: 'carts#index'
-    resources :orders
+    namespace :shop do
+      resources :profile, only: [:index]
+      get "profile/payment", to: "profile#payment"
+      get "profile/addresses", to: "profile#addresses"
+      resources :orders, only: [:index, :show]
+
+      # Customer Onboarding Routes
+      get "onboard/profile", to: "onboard#profile"
+      get "onboard/addresses", to: "onboard#addresses"
+      get "onboard/payment", to: "onboard#payment"
+      get "onboard/shipping", to: "onboard#shipping"
+      get "onboard/onboard_completed", to: "onboard#onboard_completed"
+    end
     root 'shop/shop#index'
   end
 

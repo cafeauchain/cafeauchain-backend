@@ -24,7 +24,7 @@ module Api::V1
         @cart.cart_items.destroy_all
         OrderServices::ProcessOrder.process(@order.id, params)
       end
-      render json: {redirect_url: order_path(@order), redirect: true}, status: 200
+      render json: {redirect_url: shop_order_path(@order), redirect: true}, status: 200
     end
 
     def show

@@ -1,8 +1,18 @@
 @import "../../../assets/stylesheets/variables";
 
+.header-menu {
+    flex: 1 0 170px !important;
+}
+
 .ui.menu {
+    .menu-trigger {
+        transform: translate(-10px,0)
+    }
     &.sidebar {
         .item.nav-btn {
+            &:first-of-type {
+                border-top: 1px solid rgba(34, 36, 38, 0.1);
+            }
             padding: 0;
             > .button {
                 &:not(.unstyled) {
@@ -13,10 +23,18 @@
         }        
     }
     .item {
+        &.nav-btn {
+            @media screen and (min-width: 660px) {
+                margin: 0 0 0 10px;
+                &:last-of-type {
+                    margin-right: 20px;
+                }   
+            }   
+        }
         &.no-border {
             &:before {
                 content: none;
-            }
+            }   
         }
         &.no-left-border {
             border: 0 !important;

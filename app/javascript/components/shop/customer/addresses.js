@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Segment, Header, Container, Button } from 'semantic-ui-react';
+import { Header, Button } from 'semantic-ui-react';
 
 /* eslint-disable */
 import Address from "shop/customer/address";
@@ -24,7 +24,7 @@ class Addresses extends Component {
         };
     }
 
-    addAddress = e => {
+    addAddress = () => {
         this.setState({ adding: true }); 
     }
     resetStatus = () => {
@@ -38,7 +38,7 @@ class Addresses extends Component {
         return (
             <React.Fragment>
                 <Header as="h2" content="Addresses" dividing />
-                <Container text>
+                <div className="text-wrapper">
                     <p>Add multiple addresses and set a primary address.</p>
                     {addresses.map(address => (
                         <Address
@@ -58,7 +58,7 @@ class Addresses extends Component {
                         />
                     )}
                     {!adding && <Button content="Add Address" color="blue" onClick={this.addAddress} />}
-                </Container>
+                </div>
             </React.Fragment>
         );
     }

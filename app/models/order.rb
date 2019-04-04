@@ -49,6 +49,10 @@ class Order < ApplicationRecord
     order_shipping_method.final_rate.to_f
   end
 
+  def taxes
+    invoice.tax.to_i
+  end
+
   def total_items
     order_items.sum { |oi| oi.quantity }
   end

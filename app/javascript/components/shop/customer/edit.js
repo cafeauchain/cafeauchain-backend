@@ -121,7 +121,7 @@ class EditCustomer extends Component {
                     <Addresses details={address} onChange={this.handleInputChange} />
                     {!onboard && (
                         <React.Fragment>
-                            <a href="/shop/manage-addresses" style={{ fontSize: 12 }}>
+                            <a href="/shop/profile/addresses" style={{ fontSize: 12 }}>
                             Manage Addresses
                             </a>
                             <br />
