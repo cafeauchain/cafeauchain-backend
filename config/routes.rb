@@ -333,6 +333,10 @@ Rails.application.routes.draw do
 
   namespace :shop do
     resources :profile, only: [:index]
+    get "profile/payment", to: "profile#payment"
+    get "profile/addresses", to: "profile#addresses"
+
+
     get "onboard/profile", to: "onboard#profile"
     get "onboard/addresses", to: "onboard#addresses"
     get "onboard/payment", to: "onboard#payment"
