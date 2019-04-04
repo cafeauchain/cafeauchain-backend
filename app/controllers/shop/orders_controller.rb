@@ -7,9 +7,12 @@ module Shop
 
     def show
       @order = ActiveModel::SerializableResource.new(@order, serializer: OrderSerializer::SingleOrderSerializer)
-      render "manage/primary", locals: {
-        roaster: current_roaster,
+      @roaster = ActiveModel::SerializableResource.new(current_roaster, serializer: RoasterSerializer)
+      @customer = ActiveModel::SerializableResource.new(current_user.customer_profile, serializer: CustomerSerializer, scope: current_roaster)
+      render "customer/base", locals: {
+        roaster: @roaster,
         order: @order,
+        customer: @customer,
         cart: @serialized_cart,
         title: 'Order',
         component: 'shop/order'
