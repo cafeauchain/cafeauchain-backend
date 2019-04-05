@@ -44,8 +44,8 @@ module NotificationServices
 
       })
       mail.add_personalization(personalization)
-      # sg = SendGrid::API.new(api_key: Rails.application.credentials.sendgrid_api_key)
-      # response = sg.client.mail._('send').post(request_body: mail.to_json)
+      sg = SendGrid::API.new(api_key: Rails.application.credentials[Rails.env.to_sym][:sendgrid_api_key])
+      response = sg.client.mail._('send').post(request_body: mail.to_json)
       
     end
   end  

@@ -4,7 +4,7 @@ module StripeServices
   class EnrollBaseSubscription
 
     def self.initial_enroll(user_id)
-      Stripe.api_key = Rails.application.credentials.stripe_secret_key
+      Stripe.api_key = Rails.application.credentials[Rails.env.to_sym][:stripe_secret_key]
       @plan = Plan.find_by(name: 'Proof of Perk Base')
       @user = User.find(user_id)
       @customers = Stripe::Customer.list

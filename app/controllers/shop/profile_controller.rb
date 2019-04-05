@@ -22,7 +22,7 @@ module Shop
         roaster: @roaster_profile,
         profile: @customer,
         cart: @cart,
-        stripeApiKey: Rails.application.credentials.stripe_api_key,
+        stripeApiKey: Rails.application.credentials[Rails.env.to_sym][:stripe_api_key],
         cards: customer.cards,
         scripts: ["https://js.stripe.com/v3/"],
         component: "shop/customer/paymentWrapper",

@@ -50,7 +50,7 @@ module Manage
         roasterId: @roaster.id,
         title: 'Manage Subscription',
         component: 'payments/App',
-        stripeApiKey: Rails.application.credentials.stripe_api_key,
+        stripeApiKey: Rails.application.credentials[Rails.env.to_sym][:stripe_api_key],
         cards: @cards,
         subscription: @subscription,
         scripts: ["https://js.stripe.com/v3/"]
