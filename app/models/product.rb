@@ -70,7 +70,7 @@ class Product < ApplicationRecord
   def product_image_urls
     self.product_images.map{ |pi| 
       {
-        url: url_for(pi),
+        url: Rails.application.routes.url_helpers.rails_blob_path(pi, only_path: true),
         id: pi.id
       }
     }

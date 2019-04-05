@@ -2,7 +2,7 @@ module StripeServices
   class CreateInvoiceCharge
     
     def self.charge(invoice, payment_source)
-      Stripe.api_key = Rails.application.credentials.stripe_secret_key
+      Stripe.api_key = Rails.application.credentials[Rails.env.to_sym][:stripe_secret_key]
 
       account = invoice.order.wholesale_profile.roaster_profile.stripe_account_id
       customer_id = invoice.order.customer_profile.stripe_customer_id

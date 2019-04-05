@@ -51,7 +51,7 @@ module StripeServices
     ################################################
 
     def self.account_create(roaster_profile_id, params)
-      Stripe.api_key = Rails.application.credentials.stripe_secret_key
+      Stripe.api_key = Rails.application.credentials[Rails.env.to_sym][:stripe_secret_key]
       @roaster_profile = RoasterProfile.find(roaster_profile_id)
 
       def self.verifyPerson( file )

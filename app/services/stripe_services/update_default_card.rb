@@ -2,7 +2,7 @@ module StripeServices
   class UpdateDefaultCard
 
     def self.call(subscription_id, customer_profile_id, stripe_card_id)
-      Stripe.api_key = Rails.application.credentials.stripe_secret_key
+      Stripe.api_key = Rails.application.credentials[Rails.env.to_sym][:stripe_secret_key]
 
       if !subscription_id.nil?
         @chargeable = Subscription.find(subscription_id)

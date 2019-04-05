@@ -18,6 +18,18 @@ test:
   password: password
   template: template0
 
+demo:
+  adapter: postgresql
+  encoding: unicode
+  database: <%= ENV['RDS_DB_NAME'] %>
+  username: <%= ENV['RDS_USERNAME'] %>
+  password: <%= ENV['RDS_PASSWORD'] %>
+  host: <%= ENV['RDS_HOSTNAME'] %>
+  port: <%= ENV['RDS_PORT'] %>
+  template: template0
+  pool:     5
+  encoding: unicode
+
 production:
   adapter: postgresql
   encoding: unicode
