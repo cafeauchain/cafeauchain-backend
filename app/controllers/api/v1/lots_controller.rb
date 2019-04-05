@@ -46,7 +46,7 @@ module Api::V1
       else
         @lot.update(lot_params)
       end
-      render json: {"redirect":false,"redirect_url": dashboard_roaster_profile_path(@roaster)}, status: 200
+      render json: {"redirect":false,"redirect_url": manage_dashboard_path}, status: 200
     end
 
     def upload_lot_csv

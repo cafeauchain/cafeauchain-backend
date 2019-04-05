@@ -18,7 +18,7 @@ module Api::V1
       if @batch.errors.full_messages.empty?
         subscription = @roaster.owner.subscription
         StripeServices::UpdateQuantifiedSubscription.update(@roaster.owner.id, subscription.id)
-        render json: {"redirect":false,"refresh_parent": true,"redirect_url": manage_inventory_roaster_profile_path(@roaster)}, status: 200
+        render json: {"redirect":false,"refresh_parent": true,"redirect_url": manage_inventory_path}, status: 200
       else
         render json: { data: @batch.errors.full_messages }, status: 422
       end
@@ -32,7 +32,7 @@ module Api::V1
           render json: {
             "redirect":false,
             "refresh_parent": true,
-            "redirect_url": manage_inventory_roaster_profile_path(@roaster),
+            "redirect_url": manage_inventory_path,
             "batch": @batch,
             "inventory_item": @inventory_item
           }, status: 200
