@@ -1020,6 +1020,10 @@ GEM
       rack (~> 2.0)
       rack-protection (= 2.0.5)
       tilt (~> 2.0)
+    skylight (3.1.5)
+      skylight-core (= 3.1.5)
+    skylight-core (3.1.5)
+      activesupport (>= 4.2.0)
     spring (2.0.2)
       activesupport (>= 4.2)
     spring-commands-rspec (1.0.4)
@@ -1118,6 +1122,7 @@ DEPENDENCIES
   semantic-ui-sass
   sendgrid-ruby
   sentry-raven
+  skylight
   spring
   spring-commands-rspec
   spring-watcher-listen (~> 2.0.0)
