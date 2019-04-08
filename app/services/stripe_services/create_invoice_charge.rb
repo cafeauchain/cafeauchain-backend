@@ -9,7 +9,7 @@ module StripeServices
       customer  = Stripe::Customer.retrieve(customer_id)
       # TODO Should this actually be (invoice.total_in_cents * .05) - (invoice.total_in_cents * 0.029 + 30)
       # if we are charging a flat 5% on all transactions?
-      application_fee = (invoice.total_in_cents * 0.02).to_i
+      application_fee = ((invoice.total_in_cents * 0.05) - (invoice.total_in_cents * 0.029 + 30)).to_i
       source = payment_source || customer.default_source
 
       charge = Stripe::Charge.create({
