@@ -178,8 +178,19 @@ module StripeServices
       )
       @roaster_profile.update(stripe_account_id: account.id)
       StripeServices::EnrollWholesaleSubscription.new(@roaster_profile.owner.subscription.id).enroll
-      external_account_id = account.external_accounts.first.id
-      Stripe::Customer.update(@roaster_profile.owner.subscription.stripe_customer_id, {default_source: external_account_id})
+      token = Stripe::Token.create(
+        {
+          bank_account: {
+            country: 'US',
+            currency: 'usd',
+            account_holder_name: @roaster_profile.name,
+            account_holder_type: 'company',
+            routing_number: params[:business][:routing],
+            account_number: params[:business][:account],
+          }
+        }
+      )
+      Stripe::Customer.create_source(@roaster_profile.owner.subscription.stripe_customer_id, {source: token})
       return @roaster_profile
     end
 
