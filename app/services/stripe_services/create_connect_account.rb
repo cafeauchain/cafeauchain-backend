@@ -178,6 +178,8 @@ module StripeServices
       )
       @roaster_profile.update(stripe_account_id: account.id)
       StripeServices::EnrollWholesaleSubscription.new(@roaster_profile.owner.subscription.id).enroll
+      external_account_id = account.external_accounts.first.id
+      Stripe::Customer.update(@roaster_profile.owner.subscription.stripe_customer_id, {default_source: external_account_id})
       return @roaster_profile
     end
 
