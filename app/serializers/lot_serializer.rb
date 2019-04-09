@@ -32,13 +32,18 @@
 #
 
 class LotSerializer < ActiveModel::Serializer
-  attributes :id, :label, :crop_name, :name, :pounds_of_coffee, :price_per_pound, :harvest_year, :on_hand, :contract_value, :total_amount_roasted, :in_warehouse, :low_on_hand, :low_remaining
+  attributes :id, :label, :crop_name, :name, :pounds_of_coffee, :price_per_pound, :harvest_year, :on_hand, 
+  :contract_value, :on_hand_value, :total_amount_roasted, :in_warehouse, :low_on_hand, :low_remaining
 
   belongs_to :crop
   # belongs_to :roaster_profile
 
   def on_hand
     self.object.coffee_on_hand
+  end
+
+  def on_hand_value
+    '%.2f' % (self.object.coffee_on_hand.to_f * self.object.price_per_pound.to_f)
   end
 
   def in_warehouse

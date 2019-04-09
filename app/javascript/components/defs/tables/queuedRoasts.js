@@ -20,7 +20,13 @@ const tableDefinition = {
     fields: [
         { name: "inventory_item_name", namespace: "attributes", label: "Roast Profile" },
         { name: "lot_name", namespace: "attributes" },
-        { name: "target_weight", namespace: "attributes", formatter: AsNumber, label: "Target (lbs)", textAlign: "right" },
+        { 
+            name: "target_weight", 
+            namespace: "attributes", 
+            formatter: AsNumber, 
+            label: "Target (lbs)", 
+            textAlign: "right" 
+        },
         { name: "roast_date", namespace: "attributes", formatter: FormattedDate }
     ],
     props: {
