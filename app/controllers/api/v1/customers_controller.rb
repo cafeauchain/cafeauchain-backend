@@ -5,7 +5,7 @@ module Api::V1
 
     def index
       @customers = @roaster.customer_profiles
-      render json: @customers, status: 200, each_serializer: CustomerSerializer
+      render json: @customers, status: 200, each_serializer: CustomerSerializer, scope: @roaster
     end
 
     def show
@@ -13,6 +13,34 @@ module Api::V1
     end
 
     def create
+      exisiting_user = User.find_by(email: params[:email])
+      exisiting_customer = CustomerProfile.find_by(email: params[:email])
+      
+      if exisiting_user.blank?
+        user = User.create(email: params[:email], name: params[:name], roaster_profile: @roaster, password: @roaster.slug)
+      else
+        user = exisiting_user
+      end
+
+      if exisiting_customer.blank?
+        customer = CustomerProfile.create(owner: user, email: params[:email], company_name: params[:company_name])
+      else
+        customer = exisiting_customer
+      end
+      
+      exisiting_wholesale = WholesaleProfile.find_by(roaster_profile: @roaster, customer_profile: customer)
+      if exisiting_wholesale.blank?
+        user.update(customer_profile: customer)
+        wp = customer.wholesale_profiles.create(roaster_profile: @roaster)
+        wp.create_cart
+        wp.update(onboard_status: 'profile')
+
+        @customers = @roaster.customer_profiles
+        render json: @customers, status: 200, each_serializer: CustomerSerializer, scope: @roaster
+      else
+        customer.errors.add(:customer, "already exists")
+        render json: customer.errors.full_messages, status: 409
+      end
     end
 
     def update

@@ -6,27 +6,21 @@ import { AsNumber } from "shared/textFormatters";
 /* eslint-enable */
 
 class FormattedDate extends PureComponent {
-    render() {
+    render(){
         const { content } = this.props;
-        return moment(content).format("MMM D");
+        return moment(content).format( "MMM D" );
     }
 }
 const { object, number, string, oneOfType } = PropTypes;
 FormattedDate.propTypes = {
-    content: oneOfType([object, number, string])
+    content: oneOfType([ object, number, string ])
 };
 
 const tableDefinition = {
     fields: [
         { name: "inventory_item_name", namespace: "attributes", label: "Roast Profile" },
         { name: "lot_name", namespace: "attributes" },
-        { 
-            name: "starting_amount", 
-            namespace: "attributes", 
-            formatter: AsNumber, 
-            label: "Green (lbs)", 
-            textAlign: "right"
-        },
+        { name: "target_weight", namespace: "attributes", formatter: AsNumber, label: "Target (lbs)", textAlign: "right" },
         { name: "roast_date", namespace: "attributes", formatter: FormattedDate }
     ],
     props: {

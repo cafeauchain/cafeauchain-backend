@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Segment, Header } from "semantic-ui-react";
+import { Segment, Header, Icon } from "semantic-ui-react";
 
 /* eslint-disable */
 import Table from "shared/table";
 import ErrorHandler from "shared/errorHandler";
+import Modal from "shared/modal";
+
+import CreateCustomer from "manage/customers/add";
 
 import tableDefs from "defs/tables/manageCustomersTable";
 
@@ -13,7 +16,7 @@ import { sortBy } from "utilities";
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
-class Orders extends Component {
+class Customers extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -25,7 +28,7 @@ class Orders extends Component {
         window.location = "/manage/customers/" + item.id;
     };
     render() {
-        const { customers } = this.props;
+        const { customers, updateContext } = this.props;
         const { errors, loading } = this.state;
         const sorted = sortBy({
             collection: customers,
@@ -38,14 +41,26 @@ class Orders extends Component {
                 <Header as="h2" content="All Customers" dividing />
                 <ErrorHandler errors={errors} />
                 <Table tableDefs={tableDefs} data={sorted} loading={loading} onClick={this.onClick} />
+                <br />
+                <Modal
+                    text="Add New Customer"
+                    btnProps={{
+                        icon: <Icon name="plus circle" inverted />,
+                        size: "large"
+                    }}
+                    title="Add Customer"
+                    icon="user"
+                    component={<CreateCustomer updateContext={updateContext} />}
+                />
             </Segment>
         );
     }
 }
 
-const { array } = PropTypes;
-Orders.propTypes = {
-    customers: array
+const { array, func } = PropTypes;
+Customers.propTypes = {
+    customers: array,
+    updateContext: func
 };
 
-export default withContext(Orders);
+export default withContext(Customers);
