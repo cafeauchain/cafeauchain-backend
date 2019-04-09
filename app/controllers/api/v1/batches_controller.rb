@@ -5,7 +5,23 @@ module Api::V1
     before_action :set_lot, only: [:create]
 
     def index
-      @batches = @roaster.batches.where(status: :roast_in_progress)
+      if params[:status].present?
+        case params[:status]
+        when "queued"
+          status = 0
+        when "in_progress"
+          status = 1
+        when "completed"
+          status = 2
+        when "bagged"
+          status = 3
+        else
+          status = 1
+        end
+        @batches = @roaster.batches.where(status: status)
+      else
+        @batches = @roaster.batches
+      end
       render json: @batches, status: 200
     end
 
@@ -25,22 +41,27 @@ module Api::V1
     end
 
     def update
-      @batch = InventoryServices::FinishBatchRoast.finish(@batch.id, params[:ending_amount])
-      @inventory_item = InventoryServices::AddRoastToInventory.call(@batch.lot_id, params[:ending_amount])
-      if @inventory_item.errors.full_messages.empty?
-        if @batch.errors.full_messages.empty?
-          render json: {
-            "redirect":false,
-            "refresh_parent": true,
-            "redirect_url": manage_inventory_path,
-            "batch": @batch,
-            "inventory_item": @inventory_item
-          }, status: 200
+      if !params[:finish_batch].nil?
+        @batch = InventoryServices::FinishBatchRoast.finish(@batch.id, params[:ending_amount])
+        @inventory_item = InventoryServices::AddRoastToInventory.call(@batch.lot_id, params[:ending_amount])
+        if @inventory_item.errors.full_messages.empty?
+          if @batch.errors.full_messages.empty?
+            render json: {
+              "batch": @batch,
+              "inventory_item": @inventory_item
+            }, status: 200
+          else
+            render json: @batch.errors.full_messages, status: 422
+          end
         else
-          render json: @batch.errors.full_messages, status: 422
+          render json: @inventory_item.errors.full_messages, status: 422
         end
       else
-        render json: @inventory_item.errors.full_messages, status: 422
+        if @batch.update!(batch_params)
+          render json: @batch, status: 200
+        else
+          render json: @customer.errors.full_messages, status: 422
+        end
       end
     end
 
@@ -57,6 +78,10 @@ module Api::V1
 
     def set_batch
       @batch = Batch.find(params[:id])
+    end
+
+    def batch_params
+      params.permit(:roast_date, :starting_amount, :ending_amount, :target_weight, :status)
     end
   end
 end

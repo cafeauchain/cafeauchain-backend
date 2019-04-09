@@ -6,6 +6,7 @@ import Budgeter from "roaster_tools/budgeter";
 import RoastLog from "roaster_tools/roastLog";
 import OpenContracts from "roaster_tools/openContracts";
 import OpenRoasts from "roaster_tools/openRoasts";
+import QueuedRoasts from "roaster_tools/queuedRoasts";
 /* eslint-enable */
 
 import QuickActions from "./quickActions";
@@ -19,7 +20,8 @@ const Dashboard = () => (
         {true && <Notifier />}
         <Grid doubling>
             <Grid.Column width={10} stretched>
-                {true && <QuickActions />}
+                {false && <QuickActions />}
+                <Segment>{true && <QueuedRoasts />}</Segment>
                 <Segment>{true && <OpenRoasts />}</Segment>
             </Grid.Column>
             <Grid.Column width={6} stretched>

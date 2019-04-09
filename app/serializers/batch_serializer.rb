@@ -21,7 +21,8 @@
 #
 
 class BatchSerializer < ActiveModel::Serializer
-  attributes :id, :starting_amount, :ending_amount, :lot_name, :lot_label, :roast_date, :inventory_item_id, :inventory_item_name, :crop_name, :lot_id
+  attributes :id, :starting_amount, :ending_amount, :lot_name, :lot_label, 
+  :roast_date, :inventory_item_id, :inventory_item_name, :crop_name, :lot_id, :status, :target_weight
 
   def inventory_item_name
     if self.object.inventory_item.present?
