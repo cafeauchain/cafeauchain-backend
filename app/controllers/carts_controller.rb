@@ -17,7 +17,7 @@ class CartsController < ApplicationController
       profile: @profile,
       rates: @all_rates,
       cards: @cards,
-      stripeApiKey: Rails.application.credentials.stripe_api_key,
+      stripeApiKey: Rails.application.credentials[Rails.env.to_sym][:stripe_api_key],
       scripts: ["https://js.stripe.com/v3/"],
       roaster: current_roaster,
       title: 'Products',

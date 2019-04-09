@@ -51,7 +51,7 @@ module StripeServices
     ################################################
 
     def self.account_create(roaster_profile_id, params)
-      Stripe.api_key = Rails.application.credentials.stripe_secret_key
+      Stripe.api_key = Rails.application.credentials[Rails.env.to_sym][:stripe_secret_key]
       @roaster_profile = RoasterProfile.find(roaster_profile_id)
 
       def self.verifyPerson( file )
@@ -178,6 +178,19 @@ module StripeServices
       )
       @roaster_profile.update(stripe_account_id: account.id)
       StripeServices::EnrollWholesaleSubscription.new(@roaster_profile.owner.subscription.id).enroll
+      token = Stripe::Token.create(
+        {
+          bank_account: {
+            country: 'US',
+            currency: 'usd',
+            account_holder_name: @roaster_profile.name,
+            account_holder_type: 'company',
+            routing_number: params[:business][:routing],
+            account_number: params[:business][:account],
+          }
+        }
+      )
+      Stripe::Customer.create_source(@roaster_profile.owner.subscription.stripe_customer_id, {source: token})
       return @roaster_profile
     end
 

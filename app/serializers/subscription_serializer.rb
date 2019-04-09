@@ -39,7 +39,7 @@ class SubscriptionSerializer < ActiveModel::Serializer
   end
 
   def balance_details
-    Stripe.api_key = Rails.application.credentials.stripe_secret_key
+    Stripe.api_key = Rails.application.credentials[Rails.env.to_sym][:stripe_secret_key]
     Stripe::Invoice.upcoming(customer: object.stripe_customer_id)
   end
 
@@ -48,7 +48,7 @@ class SubscriptionSerializer < ActiveModel::Serializer
   end
 
   def sub_details
-    Stripe.api_key = Rails.application.credentials.stripe_secret_key
+    Stripe.api_key = Rails.application.credentials[Rails.env.to_sym][:stripe_secret_key]
     @stripe_customer = Stripe::Customer.retrieve(object.stripe_customer_id)
     subscriptions = @stripe_customer.subscriptions
   end

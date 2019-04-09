@@ -49,7 +49,7 @@ module ShippingServices
     # ]
 
     def self.get_rate_estimates(cart_id, wholesale_profile_id)
-      EasyPost.api_key = Rails.application.credentials.easypost_api_key
+      EasyPost.api_key = Rails.application.credentials[Rails.env.to_sym][:easypost_api_key]
 
       cart = Cart.find(cart_id)
       wholesale_profile = WholesaleProfile.find(wholesale_profile_id) 

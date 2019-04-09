@@ -35,7 +35,7 @@ class CustomerProfile < ApplicationRecord
 
   def logo_url
     if logo.attached?
-      url_for(logo)
+      Rails.application.routes.url_helpers.rails_blob_path(logo, only_path: true)
     end
   end
 

@@ -4,7 +4,7 @@ module ShippingServices
   class AddCarrierAccount
 
     def initialize(params, roaster_id)
-      EasyPost.api_key = Rails.application.credentials.easypost_api_key
+      EasyPost.api_key = Rails.application.credentials[Rails.env.to_sym][:easypost_api_key]
       @account_id = params[:account_id] # account id for carrier
       @username = params[:username]     # username for carrier
       @password = params[:password]     # password for carrier - not stored
