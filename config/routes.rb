@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-04-01T08:51:46.257265 #32978]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-04-09T14:00:58.633805 #6284]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                         Prefix Verb   URI Pattern                                                                              Controller#Action
 #      upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                 api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -168,12 +168,6 @@
 #                    onboarding_wholesale_signup GET    /onboarding/wholesale-signup(.:format)                                                   onboarding/onboarding#wholesale_signup
 #                            onboarding_shipping GET    /onboarding/shipping(.:format)                                                           onboarding/onboarding#shipping
 #                            onboarding_products GET    /onboarding/products(.:format)                                                           onboarding/onboarding#products
-#                             shop_profile_index GET    /shop/profile(.:format)                                                                  shop/profile#index
-#                           shop_onboard_profile GET    /shop/onboard/profile(.:format)                                                          shop/onboard#profile
-#                         shop_onboard_addresses GET    /shop/onboard/addresses(.:format)                                                        shop/onboard#addresses
-#                           shop_onboard_payment GET    /shop/onboard/payment(.:format)                                                          shop/onboard#payment
-#                          shop_onboard_shipping GET    /shop/onboard/shipping(.:format)                                                         shop/onboard#shipping
-#                 shop_onboard_onboard_completed GET    /shop/onboard/onboard_completed(.:format)                                                shop/onboard#onboard_completed
 #                         producer_profile_crops GET    /producers/:producer_profile_id/crops(.:format)                                          crops#index
 #                                                POST   /producers/:producer_profile_id/crops(.:format)                                          crops#create
 #                      new_producer_profile_crop GET    /producers/:producer_profile_id/crops/new(.:format)                                      crops#new
@@ -219,14 +213,16 @@
 #                                         signup GET    /signup(.:format)                                                                        devise/registrations#new
 #                                       register GET    /register(.:format)                                                                      devise/registrations#new
 #                                           cart GET    /cart(.:format)                                                                          carts#index
-#                                         orders GET    /orders(.:format)                                                                        orders#index
-#                                                POST   /orders(.:format)                                                                        orders#create
-#                                      new_order GET    /orders/new(.:format)                                                                    orders#new
-#                                     edit_order GET    /orders/:id/edit(.:format)                                                               orders#edit
-#                                          order GET    /orders/:id(.:format)                                                                    orders#show
-#                                                PATCH  /orders/:id(.:format)                                                                    orders#update
-#                                                PUT    /orders/:id(.:format)                                                                    orders#update
-#                                                DELETE /orders/:id(.:format)                                                                    orders#destroy
+#                             shop_profile_index GET    /shop/profile(.:format)                                                                  shop/profile#index
+#                           shop_profile_payment GET    /shop/profile/payment(.:format)                                                          shop/profile#payment
+#                         shop_profile_addresses GET    /shop/profile/addresses(.:format)                                                        shop/profile#addresses
+#                                    shop_orders GET    /shop/orders(.:format)                                                                   shop/orders#index
+#                                     shop_order GET    /shop/orders/:id(.:format)                                                               shop/orders#show
+#                           shop_onboard_profile GET    /shop/onboard/profile(.:format)                                                          shop/onboard#profile
+#                         shop_onboard_addresses GET    /shop/onboard/addresses(.:format)                                                        shop/onboard#addresses
+#                           shop_onboard_payment GET    /shop/onboard/payment(.:format)                                                          shop/onboard#payment
+#                          shop_onboard_shipping GET    /shop/onboard/shipping(.:format)                                                         shop/onboard#shipping
+#                 shop_onboard_onboard_completed GET    /shop/onboard/onboard_completed(.:format)                                                shop/onboard#onboard_completed
 #                                           root GET    /                                                                                        shop/shop#index
 #                                                GET    /                                                                                        high_voltage/pages#show {:id=>"home"}
 #                                           home GET    /home(.:format)                                                                          redirect(301, /)
