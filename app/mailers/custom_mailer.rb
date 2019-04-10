@@ -4,8 +4,9 @@ class CustomMailer < Devise::Mailer
   def reset_password_instructions(record, token, options={})
    if !record.customer_profile_id.blank?
      options[:template_name] = 'customer_reset_password_instructions'
-     @subdomain = record.roaster_profile.subdomain
-     @roaster = record.roaster_profile
+     @roaster = RoasterProfile.find(record[:roaster_profile_id])
+     record[:roaster_profile_id] = nil
+     record.save
    else
      options[:template_name] = 'reset_password_instructions'
    end

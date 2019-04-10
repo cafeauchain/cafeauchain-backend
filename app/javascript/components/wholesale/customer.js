@@ -14,7 +14,7 @@ import ApproveCustomer from "wholesale/actions/approveCustomer";
 import tableDefs from "defs/tables/customerOrdersTable";
 
 import { sortBy, humanize } from "utilities";
-import { url as API_URL, fetcher } from "utilities/apiUtils";
+import { url as API_URL, requester } from "utilities/apiUtils";
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
@@ -43,20 +43,23 @@ class Customer extends React.PureComponent {
         e.preventDefault();
         target.blur();
         await this.setState({ btnLoading: true });
-        const { customer: { id } } = this.props;
-        const url = API_URL + "/customers/" + id + "/password_reset";
-        const response = await fetch( url );
+        const { customer: { id: customer_profile_id }, userId: roaster_profile_id } = this.props;
+        const url = API_URL + "/password_reset";
+        const body = { customer_profile_id, roaster_profile_id };
+        const response = await requester({ url, body  });
         this.afterSubmit(response);
     }
 
     afterSubmit = async response => {
         setTimeout( async () => {
-            if( response.ok ){
-                this.setState({ btnLoading: false, messages: ["Password Reset Sent"] });
+            if( response instanceof Error ){
+                this.setState({
+                    btnLoading: false,
+                    errors: ["There was an error resetting your password. Please try again later."]
+                });
             } else {
-                this.setState({ 
-                    btnLoading: false, 
-                    errors: ["There was an error resetting your password. Please try again later."] });
+                this.setState({ btnLoading: false, messages: ["Password Reset Sent"] });
+                
             }
         }, 400);
     }

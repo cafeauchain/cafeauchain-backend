@@ -291,11 +291,11 @@ Rails.application.routes.draw do
         delete :remove_card
         put :update_onboard_status
         put :set_shipping_default
-        get :password_reset
         member do
           post :add_logo
         end
       end
+      post :password_reset, to: "password#password_reset"
     end
   end
 
