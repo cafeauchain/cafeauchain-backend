@@ -10,6 +10,12 @@ const messaging = {
         message: "Already signed up?",
         url: "/login",
         linkText: "Log In!"
+    },
+    reset_password: {
+        heading: "Reset Password",
+        message: "Remember your password?",
+        url: "/login",
+        linkText: "Log In!"
     }
 };
 

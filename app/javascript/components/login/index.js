@@ -35,12 +35,13 @@ class Login extends Component {
 
     handleSubmit = async e => {
         e.preventDefault();
-        const { url } = this.props;
+        const { url, token } = this.props;
         const { details } = this.state;
-        const body = {
-            user: { ...details }
-        };
-        const response = await requester({ url, body });
+        const method = token ? "PUT" : "POST";
+        let body = { user: { ...details } };
+        if (token) body = {...details, token};
+        
+        const response = await requester({ url, body, method });
         if( response instanceof Error ){
             this.setState({ error: response.response.error });
         } else {
@@ -104,7 +105,7 @@ class Login extends Component {
                     <Segment>
                         {this.renderInputs(fields[fieldType])}
                         <Button fluid size="large" primary>
-                            {capitalize(fieldType)}
+                            {capitalize(humanize(fieldType))}
                         </Button>
                     </Segment>
                 </Form>
@@ -119,7 +120,8 @@ class Login extends Component {
 const { string } = PropTypes;
 Login.propTypes = {
     url: string,
-    fieldType: string
+    fieldType: string,
+    token: string
 };
 
 export default Login;

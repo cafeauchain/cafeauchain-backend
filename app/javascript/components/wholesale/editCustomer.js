@@ -92,7 +92,6 @@ class EditCustomer extends Component {
                         <Input label="Tax Rate" value={tax_rate} />
                     </Segment>
                     <Form.Button content="Update Customer Profile" primary />
-                    <br />
                 </Form>
             </div>
         );

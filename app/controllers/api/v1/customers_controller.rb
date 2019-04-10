@@ -13,27 +13,32 @@ module Api::V1
     end
 
     def create
-      exisiting_user = User.find_by(email: params[:email])
-      exisiting_customer = CustomerProfile.find_by(email: params[:email])
+      existing_user = User.find_by(email: params[:email])
+      existing_customer = CustomerProfile.find_by(email: params[:email])
       
-      if exisiting_user.blank?
-        user = User.create(email: params[:email], name: params[:name], roaster_profile: @roaster, password: @roaster.slug)
+      if existing_user.blank?
+        user = User.create(email: params[:email], name: params[:name], password: @roaster.slug)
       else
-        user = exisiting_user
+        user = existing_user
       end
 
-      if exisiting_customer.blank?
+      if existing_customer.blank?
         customer = CustomerProfile.create(owner: user, email: params[:email], company_name: params[:company_name])
       else
-        customer = exisiting_customer
+        customer = existing_customer
       end
       
-      exisiting_wholesale = WholesaleProfile.find_by(roaster_profile: @roaster, customer_profile: customer)
-      if exisiting_wholesale.blank?
+      existing_wholesale = WholesaleProfile.find_by(roaster_profile: @roaster, customer_profile: customer)
+      if existing_wholesale.blank?
         user.update(customer_profile: customer)
         wp = customer.wholesale_profiles.create(roaster_profile: @roaster)
         wp.create_cart
         wp.update(onboard_status: 'profile')
+
+        # Send Welcome Email
+        user[:roaster_profile_id] = @roaster.id
+        user.send_reset_password_instructions
+        # End Send Welcome Email
 
         @customers = @roaster.customer_profiles
         render json: @customers, status: 200, each_serializer: CustomerSerializer, scope: @roaster
