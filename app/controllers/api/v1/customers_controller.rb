@@ -179,6 +179,12 @@ module Api::V1
       render json: {success: true}, status: 200
     end
 
+    def password_reset
+      owner = @customer.owner
+      owner.send_reset_password_instructions
+      render json: owner, status: 200
+    end
+
     private
 
     def set_roaster

@@ -291,6 +291,7 @@ Rails.application.routes.draw do
         delete :remove_card
         put :update_onboard_status
         put :set_shipping_default
+        get :password_reset
         member do
           post :add_logo
         end
@@ -333,7 +334,7 @@ Rails.application.routes.draw do
   end
 
   get 'dashboard', to: 'dashboard#index'
-  devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations" }
+  devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations", passwords: "users/passwords" }
 
   devise_scope :user do
     get "/logout" => "devise/sessions#destroy"

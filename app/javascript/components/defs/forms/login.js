@@ -31,6 +31,18 @@ const fields = {
             icon: "lock",
             type: "password"
         }
+    ],
+    reset_password: [
+        {
+            label: "Password",
+            icon: "lock",
+            type: "password"
+        },
+        {
+            label: "Password Confirmation",
+            icon: "lock",
+            type: "password"
+        }
     ]
 };
 
