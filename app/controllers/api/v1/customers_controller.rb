@@ -17,7 +17,7 @@ module Api::V1
       exisiting_customer = CustomerProfile.find_by(email: params[:email])
       
       if exisiting_user.blank?
-        user = User.create(email: params[:email], name: params[:name], roaster_profile: @roaster, password: @roaster.slug)
+        user = User.create(email: params[:email], name: params[:name], password: @roaster.slug)
       else
         user = exisiting_user
       end
@@ -34,6 +34,11 @@ module Api::V1
         wp = customer.wholesale_profiles.create(roaster_profile: @roaster)
         wp.create_cart
         wp.update(onboard_status: 'profile')
+
+        # Send Welcome Email
+        user[:roaster_profile_id] = @roaster.id
+        user.send_reset_password_instructions
+        # End Send Welcome Email
 
         @customers = @roaster.customer_profiles
         render json: @customers, status: 200, each_serializer: CustomerSerializer, scope: @roaster
