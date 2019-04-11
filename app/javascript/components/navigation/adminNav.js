@@ -84,7 +84,8 @@ class AdminNav extends PureComponent {
         ];
         const wholesale = [
             { href: "/manage/customers", content: "View Customers" },
-            { href: "/manage/orders", content: "View Orders" }
+            { href: "/manage/orders", content: "View Orders" },
+            { href: "/manage/production", content: "Production Queue" }
         ];
         const support = [
             // { href: "/manage/customers", content: "Email Support**" },
