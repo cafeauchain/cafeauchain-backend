@@ -1,16 +1,23 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Segment, Header, Item, Label } from "semantic-ui-react";
+import { Segment, Header, Item, Label, Button } from "semantic-ui-react";
 import moment from "moment";
 
 /* eslint-disable */
 import Flex from "shared/flex";
 import { Money } from "shared/textFormatters";
 import Table from "shared/table";
+import Modal from "shared/modal";
+import ErrorHandler from "shared/errorHandler";
 
 import { humanize, sortBy } from "utilities";
 
 import tableDefs from "defs/tables/orderLineItems";
+
+import CartChangePayment from "shop/cart/changePayment";
+import MiniCard from "payments/miniCard";
+
+import { url as API_URL, requester } from "utilities/apiUtils";
 
 import withContext from "contexts/withContext";
 /* eslint-enable */
@@ -24,15 +31,50 @@ class Order extends React.Component {
     };
     constructor(props) {
         super(props);
-        this.state = {};
+        const { cards } = this.props;
+        const card = cards.find(card => card.default);
+        const payment_source = card.stripe_card_id; 
+        this.state = {
+            payment_source,
+            btnLoading: false,
+            errors: []
+        };
     }
+
+    payInvoice = async e => {
+        const { target } = e;
+        e.preventDefault();
+        target.blur();
+        await this.setState({ btnLoading: true });
+        const { invoice: { id } } = this.props;
+        const { payment_source } = this.state;
+        const url = API_URL + "/invoices/" + id;
+        const response = await requester({ url, body: { payment_source }, method: 'PUT' });
+        this.afterSubmit(response);
+    }
+
+    afterSubmit = async response => {
+        setTimeout(() => {
+            if( response instanceof Error ){
+                this.setState({ btnLoading: false, errors: [response.response.data] });
+            } else {
+                this.setState({ btnLoading: false, });
+                // TODO Refetch/update invoice status
+            }
+        }, 400);
+    }
+
 
     render() {
         const {
             order: { attributes = {}, id },
             roaster: { attributes: roasterAtts },
-            customer: { attributes: customerAtts }
+            customer: { attributes: customerAtts },
+            cards,
+            stripeApiKey
         } = this.props;
+        const { payment_source, btnLoading, errors } = this.state;
+        const card = cards.find(card => card.stripe_card_id === payment_source);
         const order_items = attributes ? attributes.order_items : [];
         const roasterLogo = roasterAtts.logo_image_url;
         const customerLogo = customerAtts.logo_url;
@@ -44,9 +86,37 @@ class Order extends React.Component {
             <div>
                 <Segment>
                     <Header as="h2" content="Order Details" dividing />
-                    <p>
-                        <a href="/shop/orders">Back to All Orders</a>
-                    </p>
+                    <Flex spacing="20" spacebetween>
+                        <div flex="50">
+                            <a href="/shop/orders">Back to All Orders</a>
+                        </div>
+                        {attributes.status === 'awaiting_payment' && (
+                            <div flex="auto">
+                                <div>
+                                    <ErrorHandler errors={errors} />
+                                    <MiniCard card={card} />
+                                    <br />
+                                    <Modal
+                                        text="Change"
+                                        title="Change Payment Method"
+                                        unstyled
+                                        className="link"
+                                        component={(
+                                            <CartChangePayment
+                                                cards={cards}
+                                                updateCartDetails={this.updateCartDetails}
+                                                payment_source={payment_source}
+                                                stripeApiKey={stripeApiKey}
+                                            />
+                                        )}
+                                    />
+                                    <br />
+                                    <br />
+                                </div>
+                                <Button primary content="Pay Invoice" onClick={this.payInvoice} loading={btnLoading} />
+                            </div>
+                        )}
+                    </Flex>
                     <Segment style={{ maxWidth: 900, margin: "40px auto" }}>
                         <Label size="large" ribbon="right" content="Open" color="green" />
                         <Flex spacing="30" spacebetween>
@@ -156,15 +226,19 @@ class Order extends React.Component {
                                 </Flex>
                             </div>
                         </Flex>
-                        <br />
-                        <p>
-                            <strong>Notes:</strong>
-                        </p>
-                        <Segment secondary>These are notes. Should they be editable?</Segment>
-                        <p>
-                            <strong>Terms:</strong>
-                        </p>
-                        <Segment secondary>These are full terms. Should they be editable?</Segment>
+                        {false && (
+                            <React.Fragment>
+                                <br />
+                                <p>
+                                    <strong>Notes:</strong>
+                                </p>
+                                <Segment secondary>These are notes. Should they be editable?</Segment>
+                                <p>
+                                    <strong>Terms:</strong>
+                                </p>
+                                <Segment secondary>These are full terms. Should they be editable?</Segment>
+                            </React.Fragment>
+                        )}
                     </Segment>
                 </Segment>
             </div>
