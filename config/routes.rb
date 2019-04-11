@@ -316,6 +316,7 @@ Rails.application.routes.draw do
     get "subscription", to: "primary#subscription"
     resources :lots, only: [:show, :index]
     resources :products, only: [:index]
+    resources :production, only: [:index]
   end
 
   namespace :onboarding do

@@ -65,6 +65,23 @@ class RoasterProfile < ApplicationRecord
   before_validation :sanitize_subdomain
   before_save :set_subdomain, if: :new_record?
 
+  def open_order_items
+    items = self.orders.where.not(status: :fulfilled).collect do |o|
+      o.order_items.map do |oi|
+        {
+          size: oi.product_variant.custom_options["size"],
+          customer: oi.order.customer_profile.company_name,
+          quantity: oi.quantity,
+          product: oi.product_variant.product.title,
+          options: oi.product_options[0],
+          order: oi.order.id,
+          id: oi.id
+        }
+      end
+    end
+    items.flatten
+  end
+
   def primary_address
     self.addresses.find_by(primary_location: true)
   end

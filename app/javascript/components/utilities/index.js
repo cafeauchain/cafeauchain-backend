@@ -8,6 +8,7 @@ import fileReader from "./fileReader";
 import fileToImage from "./fileToImage";
 import getTextFromChildren from "./getTextFromChildren";
 import getTimePeriod from "./getTimePeriod";
+import groupBy from "./groupBy";
 import humanize from "./humanize";
 import jsonToFormData from "./jsonToFormData";
 import noEmpties from "./noEmpties";
@@ -34,6 +35,7 @@ export {
     fileToImage,
     getTextFromChildren,
     getTimePeriod,
+    groupBy,
     humanize,
     jsonToFormData,
     noEmpties,
