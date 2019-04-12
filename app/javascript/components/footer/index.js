@@ -56,17 +56,20 @@ const Footer = ({ loggedIn }) => {
 
                 <Image src={logo} centered size="mini" />
                 <p className="small-text poweredby">Powered by Cafe au Chain</p>
-                <List horizontal inverted={!loggedIn} divided link size="small">
-                    <List.Item as="a" href="/site-map">
-                        Site Map
-                    </List.Item>
-                    <List.Item as="a" href="/terms">
-                        Terms and Conditions
-                    </List.Item>
-                    <List.Item as="a" href="/privacy">
-                        Privacy Policy
-                    </List.Item>
-                </List>
+                {false && (
+                    <List horizontal inverted={!loggedIn} divided link size="small">
+                        <List.Item as="a" href="/site-map">
+                            Site Map
+                        </List.Item>
+                        <List.Item as="a" href="/terms">
+                            Terms and Conditions
+                        </List.Item>
+                        <List.Item as="a" href="/privacy">
+                            Privacy Policy
+                        </List.Item>
+                    </List>
+                )}
+                
             </Container>
         </Segment>
     );

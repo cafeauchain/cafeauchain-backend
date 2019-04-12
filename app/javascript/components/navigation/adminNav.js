@@ -77,23 +77,26 @@ class AdminNav extends PureComponent {
                 key: "addnewproducts",
                 content: <ModalLink text="Add New Product" component={<CreateProduct />} />
             },
-            { href: "/manage/wholesale", content: "View/Edit Pricing Table*" }
+            {
+                content: "View Products",
+                href: "/manage/products"
+            }
         ];
         const wholesale = [
-            { href: "/manage/customers", content: "Add Customers**" },
             { href: "/manage/customers", content: "View Customers" },
-            { href: "/manage/orders", content: "View Orders" }
+            { href: "/manage/orders", content: "View Orders" },
+            { href: "/manage/production", content: "Production Queue" }
         ];
         const support = [
-            { href: "/manage/customers", content: "Email Support**" },
-            { href: "/manage/customers", content: "FAQ**" }
+            // { href: "/manage/customers", content: "Email Support**" },
+            // { href: "/manage/customers", content: "FAQ**" }
         ];
         const buildItems = array => array.map(item => <Menu.Item as="a" key={item.key || item.content} {...item} />);
 
         return (
             <React.Fragment>
                 <Menu.Item>
-                    <Menu.Header as="a" href="/manage/inventory" content="Green Inventory" />
+                    <Menu.Header as="a" href="/manage/dashboard" content="Green Inventory" />
                     <Menu.Menu content={buildItems(inventory)} />
                 </Menu.Item>
 
@@ -114,7 +117,7 @@ class AdminNav extends PureComponent {
                 </Menu.Item>
 
                 <Menu.Item>
-                    <Menu.Header as="a" href="/manage/dashboard" content="Support**" />
+                    <Menu.Header as="a" href="/contact" content="Support" />
 
                     <Menu.Menu content={buildItems(support)} />
                 </Menu.Item>

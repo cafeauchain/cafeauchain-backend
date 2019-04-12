@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-04-09T14:00:58.633805 #6284]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-04-11T15:22:00.321036 #45682]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                         Prefix Verb   URI Pattern                                                                              Controller#Action
 #      upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                 api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -129,6 +129,9 @@
 #                                                PATCH  /api/v1/customers/:id(.:format)                                                          api/v1/customers#update
 #                                                PUT    /api/v1/customers/:id(.:format)                                                          api/v1/customers#update
 #                                                DELETE /api/v1/customers/:id(.:format)                                                          api/v1/customers#destroy
+#                          api_v1_password_reset POST   /api/v1/password_reset(.:format)                                                         api/v1/password#password_reset
+#                                 api_v1_invoice PATCH  /api/v1/invoices/:id(.:format)                                                           api/v1/invoices#update
+#                                                PUT    /api/v1/invoices/:id(.:format)                                                           api/v1/invoices#update
 #                                    admin_plans GET    /admin/plans(.:format)                                                                   admin/plans#index
 #                                                POST   /admin/plans(.:format)                                                                   admin/plans#create
 #                                 new_admin_plan GET    /admin/plans/new(.:format)                                                               admin/plans#new
@@ -161,6 +164,7 @@
 #                                    manage_lots GET    /manage/lots(.:format)                                                                   manage/lots#index
 #                                     manage_lot GET    /manage/lots/:id(.:format)                                                               manage/lots#show
 #                                manage_products GET    /manage/products(.:format)                                                               manage/products#index
+#                        manage_production_index GET    /manage/production(.:format)                                                             manage/production#index
 #                             onboarding_profile GET    /onboarding/profile(.:format)                                                            onboarding/onboarding#profile
 #                                onboarding_lots GET    /onboarding/lots(.:format)                                                               onboarding/onboarding#lots
 #                      onboarding_roast_profiles GET    /onboarding/roast-profiles(.:format)                                                     onboarding/onboarding#roast_profiles
@@ -196,11 +200,11 @@
 #                               new_user_session GET    /users/sign_in(.:format)                                                                 users/sessions#new
 #                                   user_session POST   /users/sign_in(.:format)                                                                 users/sessions#create
 #                           destroy_user_session DELETE /users/sign_out(.:format)                                                                users/sessions#destroy
-#                              new_user_password GET    /users/password/new(.:format)                                                            devise/passwords#new
-#                             edit_user_password GET    /users/password/edit(.:format)                                                           devise/passwords#edit
-#                                  user_password PATCH  /users/password(.:format)                                                                devise/passwords#update
-#                                                PUT    /users/password(.:format)                                                                devise/passwords#update
-#                                                POST   /users/password(.:format)                                                                devise/passwords#create
+#                              new_user_password GET    /users/password/new(.:format)                                                            users/passwords#new
+#                             edit_user_password GET    /users/password/edit(.:format)                                                           users/passwords#edit
+#                                  user_password PATCH  /users/password(.:format)                                                                users/passwords#update
+#                                                PUT    /users/password(.:format)                                                                users/passwords#update
+#                                                POST   /users/password(.:format)                                                                users/passwords#create
 #                       cancel_user_registration GET    /users/cancel(.:format)                                                                  users/registrations#cancel
 #                          new_user_registration GET    /users/sign_up(.:format)                                                                 users/registrations#new
 #                         edit_user_registration GET    /users/edit(.:format)                                                                    users/registrations#edit
@@ -296,6 +300,7 @@ Rails.application.routes.draw do
         end
       end
       post :password_reset, to: "password#password_reset"
+      resources :invoices, only: [:update]
     end
   end
 
@@ -316,6 +321,7 @@ Rails.application.routes.draw do
     get "subscription", to: "primary#subscription"
     resources :lots, only: [:show, :index]
     resources :products, only: [:index]
+    resources :production, only: [:index]
   end
 
   namespace :onboarding do

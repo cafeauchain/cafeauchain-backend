@@ -12,12 +12,14 @@ const Features = () => {
                 it&apos;s vital for their livelihood. But do your customers actually care?
                 What drives their decisions to buy from you?
             </p>
-            <Button as="a" size="large">
-                Read More
-            </Button>
-
+            {false && (
+                <Button as="a" size="large">
+                    Read More
+                </Button>
+            )}
             <Divider as="h4" className="header" horizontal style={{ margin: "3em 0em", textTransform: "uppercase" }}>
-                <a href="/">Case Studies</a>
+                {false && <a href="/">Case Studies</a>}
+                Case Studies
             </Divider>
 
             <Header as="h3" className="home-section-header">
@@ -27,9 +29,11 @@ const Features = () => {
                 With coffee farmers getting older and shrinking wages, the median age of coffee farmers is increasing 
                 to where there will potentially be a shortage of workers in the next few decades.
             </p>
-            <Button as="a" size="large">
-                Learn More
-            </Button>
+            {false && (
+                <Button as="a" size="large">
+                    Learn More
+                </Button>
+            )}
         </div>
     );
 };
