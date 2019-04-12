@@ -5,7 +5,7 @@ module Api::V1
     before_action :set_invoice
 
     def update
-      @charge = StripeServices::CreateInvoiceCharge.charge(@invoice, payment_source)
+      @charge = StripeServices::CreateInvoiceCharge.charge(@invoice, params[:payment_source])
       render json: {payment_processed: true}, status: 200
     end
 

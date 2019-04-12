@@ -117,7 +117,7 @@ class AdminNav extends PureComponent {
                 </Menu.Item>
 
                 <Menu.Item>
-                    <Menu.Header as="a" href="/blog/contact" content="Support" />
+                    <Menu.Header as="a" href="/contact" content="Support" />
 
                     <Menu.Menu content={buildItems(support)} />
                 </Menu.Item>
