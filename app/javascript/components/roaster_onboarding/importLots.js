@@ -19,7 +19,7 @@ class ImportLots extends React.Component {
     state = {};
     render() {
         const { lots = [], userId } = this.props;
-        const rightBtn = { text: "Set Up Roast Profiles", href: "roast-profiles", disabled: !lots.length };
+        const rightBtn = { text: "Set Up Roast Profiles", href: "roast_profiles", disabled: !lots.length };
         return (
             <F>
                 <Step.Group fluid items={steps("addlots")} />

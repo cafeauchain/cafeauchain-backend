@@ -63,7 +63,7 @@ class WholesaleSetup extends React.Component {
                                 <Button
                                     content="Continue with Wholesale"
                                     onClick={this.handleStatusUpdate}
-                                    data-status="wholesale-signup"
+                                    data-status="wholesale_signup"
                                     data-type="onboard"
                                     icon="right arrow"
                                     labelPosition="right"

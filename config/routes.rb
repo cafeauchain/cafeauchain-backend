@@ -327,9 +327,9 @@ Rails.application.routes.draw do
   namespace :onboarding do
     get "profile", to: "onboarding#profile"
     get "lots", to: "onboarding#lots"
-    get "roast-profiles", to: "onboarding#roast_profiles"
-    get "wholesale-details", to: "onboarding#wholesale_details"
-    get "wholesale-signup", to: "onboarding#wholesale_signup"
+    get "roast_profiles", to: "onboarding#roast_profiles"
+    get "wholesale_details", to: "onboarding#wholesale_details"
+    get "wholesale_signup", to: "onboarding#wholesale_signup"
     get "shipping", to: "onboarding#shipping"
     get "products", to: "onboarding#products"
   end
