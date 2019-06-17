@@ -17,6 +17,8 @@ import { url as API_URL, requester, roasterUrl, fetcher } from "utilities/apiUti
 import Context from "contexts/main";
 /* eslint-enable */
 
+const customFormatter = props => props.content > 0 ? AsNumber(props) : "-";
+
 const Wrapper = props => (
     <Context>
         {ctx => (
@@ -111,7 +113,7 @@ class RoastLog extends Component {
             let { crop_name, name, label } = lot.attributes;
             const title = name || crop_name;
             label = label || abbreviator(title, exclude, true);
-            return { name: "lot_" + lot.id, label, formatter: AsNumber, title };
+            return { name: "lot_" + lot.id, label, formatter: customFormatter, title };
         });
         fields = [...fields, ...newFields];
         return { ...rest, fields };
