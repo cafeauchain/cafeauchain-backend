@@ -8,12 +8,12 @@ import Input from "shared/input";
 import ErrorHandler from "shared/errorHandler";
 import { Weights } from "shared/textFormatters";
 
-import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
+import { roasterUrl as ROASTER_URL, requester, fetcher } from "utilities/apiUtils";
 
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
-const newDefault = () => ({ value: "", id: shortid.generate() });
+const newDefault = (val) => ({ value: val || "", id: shortid.generate() });
 class CreateDefaults extends Component {
     static propTypes = () => {
         const { oneOfType, string, number, func } = PropTypes;
@@ -27,6 +27,15 @@ class CreateDefaults extends Component {
         options: [newDefault()],
         btnLoading: false
     };
+
+    async componentDidMount(){
+        const { userId: id } = this.props;
+        let response = await fetch(ROASTER_URL(id) + "/default_options");
+        response = await response.json();
+        const defaults = response.reverse().find( item => item.title === "Size" );
+        const options = defaults.options.map( item => newDefault(item));
+        this.setState({ options, optionId: defaults.id });
+    }
     // TODO Handle existing defaults
 
     buildOptions = options => options.reduce( (arr, { value }) => {
@@ -40,11 +49,12 @@ class CreateDefaults extends Component {
     handleSubmit = async ev => {
         ev.preventDefault();
         await this.setState({ btnLoading: true });
-        const { options } = this.state;
-        const { userId, updateContext } = this.props;
-        const body = { title: "Size", options: this.buildOptions(options) };
-        const url = `${ROASTER_URL(userId)}/default_options`;
-        const response = await requester({ url, body });
+        const { options, optionId } = this.state;
+        const { userId, updateContext, defaults, successClose, closeModal } = this.props;
+        const body = { title: "Size", options: this.buildOptions(options).sort() };
+        let url = `${ROASTER_URL(userId)}/default_options`;
+        if( optionId ) url += "/" + optionId;
+        const response = await requester({ url, body, method: optionId ? 'PUT' : 'POST' });
         if (response instanceof Error) {
             this.setState({ errors: response.response.data, btnLoading: false });
         } else {
@@ -52,7 +62,18 @@ class CreateDefaults extends Component {
                 window.location.href = await response.redirect_url;
             } else {
                 await this.setState({ btnLoading: false });
-                updateContext({ defaults: { size: body.options } });
+                const update = { defaults: { ...defaults, size: body.options } };
+                if( optionId ){
+                    const success = "Defaults Updated!";
+                    if (successClose) {
+                        successClose(success, updateContext, update);
+                    } else if (closeModal) {
+                        closeModal();
+                        updateContext(update);
+                    }
+                } else {
+                    updateContext(update);
+                }
             }
         }
     };
