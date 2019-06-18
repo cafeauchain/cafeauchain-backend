@@ -260,6 +260,7 @@ Rails.application.routes.draw do
         collection do
           post :validate_step
         end
+        put :update_logo
         get :lots_by_date, to: 'lots#lots_by_date'
         get :earliest_batch, to: 'lots#earliest'
         put :update_onboard_status

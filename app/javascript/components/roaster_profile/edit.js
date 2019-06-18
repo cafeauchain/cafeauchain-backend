@@ -1,50 +1,81 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form, Header, Divider, Dimmer, Loader } from "semantic-ui-react";
+import { Form, Header, Divider, Dimmer, Loader, Segment } from "semantic-ui-react";
 
-import usStates from "../utilities/usStates";
-import Input from "../shared/input";
-import ImageChange from "../shared/ImageChange";
+/* eslint-disable*/
+import Input from "shared/input";
+import ErrorHandler from "shared/errorHandler";
+import Addresses from "shared/addresses";
+import FileUpload from "shared/fileUpload";
+import Flex from "shared/flex";
 
-import readCookie from "../utilities/readCookie";
-import API_URL from "../utilities/apiUtils/url";
+import { requester, roasterUrl } from "utilities/apiUtils"
 
-class App extends Component {
+import withContext from "contexts/withContext";
+/* eslint-enable */
+
+class EditRoasterProfile extends Component {
     constructor(props) {
         super(props);
+        const { attributes, id } = props.profile;
         this.state = {
-            details: props.roaster,
-            loading: false
+            details: this.profileDefaults( attributes, id ),
+            loading: false,
+            errors: [],
+            logo_url: attributes.logo_image_url
         };
     }
 
-    startSubmit = e => {
-        e.preventDefault();
-        this.setState({ loading: true }, this.handleSubmit);
+    profileDefaults = (attributes, id) => {
+        const primaryAddress = attributes.primary_address;
+        return {
+            id: id,
+            name: attributes.name || "",
+            about: attributes.about || "",
+            facebook: attributes.facebook || "",
+            twitter: attributes.twitter || "",
+            url: attributes.url || "",
+            street_1: primaryAddress ? primaryAddress.street_1 : "",
+            street_2: primaryAddress ? primaryAddress.street_2 : "",
+            city: primaryAddress ? primaryAddress.city : "",
+            state: primaryAddress ? primaryAddress.state : "",
+            postal_code: primaryAddress ? primaryAddress.postal_code : ""
+        };
     };
 
-    handleSubmit = async () => {
+    handleSubmit = async e => {
+        e.preventDefault();
+        const { target } = e;
+        target.blur();
+        await this.setState({ loading: true });
         const { details } = this.state;
-        const url = `${API_URL}/roasters/${details.id}`;
-        const params = {
+        const url = roasterUrl(details.id);
+        const body = {
             roaster_profile: details
         };
-        const token = decodeURIComponent(readCookie("X-CSRF-Token"));
-        let response = await fetch(url, {
-            method: "PUT",
-            body: JSON.stringify(params),
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": token
-            }
-        });
-        if (response.status === 200) {
-            setTimeout(() => this.setState({ loading: false }), 600);
-        } else {
-            // eslint-disable-next-line
-            console.log("error", response);
+        const response = await requester({ url, body, method: "PUT" });
+        if( details.hasOwnProperty("logo") && details.logo.length > 0 ){
+            this.handleImage(details.logo[0], url);
         }
+        
+        this.afterSubmit(response);
     };
+
+    handleImage = async (logo, url) => {
+        let formData = new FormData();
+        formData.append("logo", logo);
+        await requester({ url: url + "/update_logo", body: formData, method: "PUT", noContentType: true });
+    }
+
+    afterSubmit = response => {
+        setTimeout(() => {
+            if (response instanceof Error) {
+                this.setState({ errors: [response.response.data], loading: false });
+            } else {
+                this.setState({ loading: false });
+            }
+        }, 600 );
+    }
 
     handleInputChange = (event, { value, name, checked }) => {
         let { details } = this.state;
@@ -58,67 +89,54 @@ class App extends Component {
     renderInput = props => <Input {...props} onChange={this.handleInputChange} />;
 
     render() {
-        const { details, loading } = this.state;
-        const {
-            name,
-            about,
-            address_1,
-            address_2,
-            city,
-            facebook,
-            // eslint-disable-next-line
-            id,
-            state,
-            twitter,
-            url,
-            zip_code,
-            img_url
-        } = details;
+        const { details, loading, errors, logo_url } = this.state;
+        const { name, about, facebook, twitter, url, logo = [], ...address } = details;
 
         const Input = this.renderInput;
         return (
-            <div className="form roaster-wizard">
+            <Segment className="form roaster-wizard">
+                <ErrorHandler errors={errors} />
                 <Dimmer active={loading} inverted>
                     <Loader size="large">Saving</Loader>
                 </Dimmer>
                 <Header as="h2">Roaster Profile</Header>
-                <div>
-                    <ImageChange src={img_url} id={id} />
-                </div>
                 <Divider />
-                <Form onSubmit={this.startSubmit}>
-                    <Input label="Name" value={name} />
-
-                    <Form.Group inline widths="equal">
-                        <Input label="Address 1" value={address_1} />
-                        <Input label="Address 2" value={address_2} />
-                    </Form.Group>
-
-                    <Form.Group inline widths="equal">
-                        <Input label="City" value={city} />
-                        <Input label="Zip" value={zip_code} name="zip_code" />
-                        <Input inputType="select" label="State" defaultValue={state} options={usStates} />
-                    </Form.Group>
-
+                <Form onSubmit={this.handleSubmit}>
+                    <Flex spacing="20">
+                        <div flex="66">
+                            <Input label="Name" value={name} />
+                            <Input inputType="markdown" label="About" value={about} />
+                        </div>
+                        <div flex="33">
+                            <Header as="h4" content="Company Logo" />
+                            <FileUpload
+                                name="logo"
+                                handleChange={this.handleInputChange}
+                                headerText="No Logo Added"
+                                fileType="fileImage"
+                                files={logo}
+                                image={logo_url}
+                                textAlign="center"
+                            />
+                        </div>
+                    </Flex>
+                    <Divider />
+                    <Addresses details={address} onChange={this.handleInputChange} />
                     <Form.Group inline widths="equal">
                         <Input label="Twitter" value={twitter} />
                         <Input label="Facebook" value={facebook} />
                     </Form.Group>
-
                     <Input label="Website URL" name="url" value={url} />
-
-                    <Input inputType="textarea" label="About" defaultValue={about} />
-
                     <Form.Button>Submit</Form.Button>
                 </Form>
-            </div>
+            </Segment>
         );
     }
 }
 
 const { object } = PropTypes;
-App.propTypes = {
-    roaster: object.isRequired
+EditRoasterProfile.propTypes = {
+    profile: object.isRequired
 };
 
-export default App;
+export default withContext(EditRoasterProfile);
