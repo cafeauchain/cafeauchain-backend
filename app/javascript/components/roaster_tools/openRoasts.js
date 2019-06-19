@@ -53,7 +53,8 @@ class OpenRoasts extends Component {
             details: {
                 ending_amount: (Number(attributes.starting_amount) * 0.9).toFixed(2),
                 starting_amount: attributes.starting_amount,
-                inventory_item_id: attributes.inventory_item_id
+                inventory_item_id: attributes.inventory_item_id,
+                roast_date: attributes.roast_date
             }
         });
     };
@@ -142,6 +143,13 @@ class OpenRoasts extends Component {
         return (
             <Form>
                 <F>
+                    <Input
+                        name="roast_date"
+                        label="Roast Date"
+                        onChange={this.handleInputChange}
+                        type="date"
+                        value={details.roast_date}
+                    />
                     <Input
                         inputType="select"
                         name="inventory_item_id"

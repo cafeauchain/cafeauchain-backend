@@ -10,10 +10,12 @@
 #  low_on_hand        :integer
 #  low_remaining      :integer
 #  name               :string
+#  on_hand_alert      :boolean          default(FALSE)
 #  pounds_of_coffee   :float
 #  price_per_pound    :float
 #  roasted_on_import  :integer
 #  status             :integer
+#  warehouse_alert    :boolean          default(FALSE)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  crop_id            :bigint(8)
@@ -32,8 +34,10 @@
 #
 
 class LotSerializer < ActiveModel::Serializer
-  attributes :id, :label, :crop_name, :name, :pounds_of_coffee, :price_per_pound, :harvest_year, :on_hand, 
-  :contract_value, :on_hand_value, :total_amount_roasted, :in_warehouse, :low_on_hand, :low_remaining
+  attributes :id, :label, :name, :crop_name, :harvest_year, :pounds_of_coffee, :price_per_pound, :contract_value, 
+  :roasted_on_import, :roasted_on_platform, :total_amount_roasted, 
+  :on_hand, :on_hand_value, :low_on_hand, :on_hand_alert,
+  :in_warehouse, :warehouse_value, :low_remaining, :warehouse_alert
 
   belongs_to :crop
   # belongs_to :roaster_profile
@@ -44,6 +48,10 @@ class LotSerializer < ActiveModel::Serializer
 
   def on_hand_value
     '%.2f' % (self.object.coffee_on_hand.to_f * self.object.price_per_pound.to_f)
+  end
+
+  def warehouse_value
+    '%.2f' % (self.object.coffee_in_warehouse.to_f * self.object.price_per_pound.to_f)
   end
 
   def in_warehouse
@@ -59,6 +67,10 @@ class LotSerializer < ActiveModel::Serializer
   end
 
   def total_amount_roasted
+    self.object.amount_roasted + self.object.roasted_on_import
+  end
+
+  def roasted_on_platform
     self.object.amount_roasted
   end
 

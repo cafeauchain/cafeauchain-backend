@@ -34,8 +34,10 @@ class RoasterProfilesController < ApplicationController
   end
 
   def edit
+    roaster = ActiveModel::SerializableResource.new(@roaster_profile, serializer: RoasterSerializer)
     render "manage/primary", locals: {
       roaster: @roaster_profile,
+      profile: roaster,
       title: 'Edit Profile',
       component: 'roaster_profile/edit'
     }

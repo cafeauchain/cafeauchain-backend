@@ -41,12 +41,12 @@ module Api::V1
     end
 
     def update
-      if params[:lotDetails][:accept_delivery].present?
+      if params[:lotDetails].present? && params[:lotDetails][:accept_delivery].present?
         LedgerServices::AssetDeliveryTransaction.new(params[:lotDetails][:quantity], @lot.id, @roaster.id).call
       else
         @lot.update(lot_params)
       end
-      render json: {"redirect":false,"redirect_url": manage_dashboard_path}, status: 200
+      render json: @lot, status: 200, serializer: LotSerializer::SingleLotSerializer
     end
 
     def upload_lot_csv
@@ -74,5 +74,10 @@ module Api::V1
     def set_lot
       @lot = Lot.find(params[:id])
     end
+
+    def lot_params
+      params.permit(:name, :label, :pounds_of_coffee, :price_per_pound, :low_on_hand, :low_remaining, :on_hand_alert, :warehouse_alert)
+    end
+    
   end
 end

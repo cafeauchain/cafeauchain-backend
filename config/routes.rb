@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-04-11T15:22:00.321036 #45682]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-06-18T17:43:58.828514 #73004]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                         Prefix Verb   URI Pattern                                                                              Controller#Action
 #      upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                 api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -37,6 +37,7 @@
 #                                                DELETE /api/v1/producers/:id(.:format)                                                          api/v1/producer_profiles#destroy
 #                                         api_v1 DELETE /api/v1/delete_image/:id(.:format)                                                       api/v1/products#delete_image
 #          validate_step_api_v1_roaster_profiles POST   /api/v1/roasters/validate_step(.:format)                                                 api/v1/roaster_profiles#validate_step
+#             api_v1_roaster_profile_update_logo PUT    /api/v1/roasters/:roaster_profile_id/update_logo(.:format)                               api/v1/roaster_profiles#update_logo
 #            api_v1_roaster_profile_lots_by_date GET    /api/v1/roasters/:roaster_profile_id/lots_by_date(.:format)                              api/v1/lots#lots_by_date
 #          api_v1_roaster_profile_earliest_batch GET    /api/v1/roasters/:roaster_profile_id/earliest_batch(.:format)                            api/v1/lots#earliest
 #   api_v1_roaster_profile_update_onboard_status PUT    /api/v1/roasters/:roaster_profile_id/update_onboard_status(.:format)                     api/v1/roaster_profiles#update_onboard_status
@@ -88,6 +89,8 @@
 #                api_v1_roaster_profile_variants GET    /api/v1/roasters/:roaster_profile_id/variants(.:format)                                  api/v1/products#variants
 #         api_v1_roaster_profile_default_options GET    /api/v1/roasters/:roaster_profile_id/default_options(.:format)                           api/v1/default_options#index
 #                                                POST   /api/v1/roasters/:roaster_profile_id/default_options(.:format)                           api/v1/default_options#create
+#          api_v1_roaster_profile_default_option PATCH  /api/v1/roasters/:roaster_profile_id/default_options/:id(.:format)                       api/v1/default_options#update
+#                                                PUT    /api/v1/roasters/:roaster_profile_id/default_options/:id(.:format)                       api/v1/default_options#update
 #           api_v1_roaster_profile_subscriptions GET    /api/v1/roasters/:roaster_profile_id/subscriptions(.:format)                             api/v1/roaster_profiles#subscriptions
 #                   api_v1_roaster_profile_cards POST   /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#cards
 #                                                DELETE /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#remove_card
@@ -167,9 +170,9 @@
 #                        manage_production_index GET    /manage/production(.:format)                                                             manage/production#index
 #                             onboarding_profile GET    /onboarding/profile(.:format)                                                            onboarding/onboarding#profile
 #                                onboarding_lots GET    /onboarding/lots(.:format)                                                               onboarding/onboarding#lots
-#                      onboarding_roast_profiles GET    /onboarding/roast-profiles(.:format)                                                     onboarding/onboarding#roast_profiles
-#                   onboarding_wholesale_details GET    /onboarding/wholesale-details(.:format)                                                  onboarding/onboarding#wholesale_details
-#                    onboarding_wholesale_signup GET    /onboarding/wholesale-signup(.:format)                                                   onboarding/onboarding#wholesale_signup
+#                      onboarding_roast_profiles GET    /onboarding/roast_profiles(.:format)                                                     onboarding/onboarding#roast_profiles
+#                   onboarding_wholesale_details GET    /onboarding/wholesale_details(.:format)                                                  onboarding/onboarding#wholesale_details
+#                    onboarding_wholesale_signup GET    /onboarding/wholesale_signup(.:format)                                                   onboarding/onboarding#wholesale_signup
 #                            onboarding_shipping GET    /onboarding/shipping(.:format)                                                           onboarding/onboarding#shipping
 #                            onboarding_products GET    /onboarding/products(.:format)                                                           onboarding/onboarding#products
 #                         producer_profile_crops GET    /producers/:producer_profile_id/crops(.:format)                                          crops#index
@@ -260,6 +263,7 @@ Rails.application.routes.draw do
         collection do
           post :validate_step
         end
+        put :update_logo
         get :lots_by_date, to: 'lots#lots_by_date'
         get :earliest_batch, to: 'lots#earliest'
         put :update_onboard_status
@@ -278,7 +282,7 @@ Rails.application.routes.draw do
           end
         end
         get :variants, to: 'products#variants'
-        resources :default_options, only: [:index, :create]
+        resources :default_options, only: [:index, :create, :update]
         get :subscriptions
         post :cards
         delete :cards, to: "roaster_profiles#remove_card"
