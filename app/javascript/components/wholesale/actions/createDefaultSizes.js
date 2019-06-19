@@ -8,7 +8,7 @@ import Input from "shared/input";
 import ErrorHandler from "shared/errorHandler";
 import { Weights } from "shared/textFormatters";
 
-import { roasterUrl as ROASTER_URL, requester, fetcher } from "utilities/apiUtils";
+import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 
 import withContext from "contexts/withContext";
 /* eslint-enable */
