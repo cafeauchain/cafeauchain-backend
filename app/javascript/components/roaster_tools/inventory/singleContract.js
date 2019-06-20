@@ -63,6 +63,7 @@ class SingleContract extends Component {
         if (name === "harvest_year") {
             lotDetails.name = crop_name + " " + value;
         }
+        console.log( lotDetails );
         this.setState({ lotDetails });
     };
 
