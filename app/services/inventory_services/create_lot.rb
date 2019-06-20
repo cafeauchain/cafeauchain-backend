@@ -22,6 +22,7 @@ module InventoryServices
         label: @params[:label],
         name: @params[:name],
         harvest_year: @params[:harvest_year],
+        origin: @params[:origin]
         pounds_of_coffee: pounds_of_coffee,
         price_per_pound: @params[:price_per_pound].to_f,
         crop: @crop,

@@ -9,6 +9,7 @@ import Input from "shared/input";
 import Flex from "shared/flex";
 
 import fields from "defs/forms/addSingleContract";
+import { origin } from "utilities";
 
 import { url as API_URL, roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 
@@ -25,8 +26,10 @@ const defaults = {
         low_on_hand: "",
         low_remaining: "",
         on_hand: 0,
-        roasted: 0
+        roasted: 0,
+        origin: ""
     },
+    countries: origin,
     hiddenFields: true,
     btnLoading: false,
     crop_name: "",
@@ -108,8 +111,14 @@ class SingleContract extends Component {
         return arr;
     };
 
+    handleAddition = (e, { value }) => {
+        this.setState(prevState => ({
+            countries: [{ text: value, value }, ...prevState.countries],
+        }));
+    }
+
     render() {
-        const { producerId, lotDetails, hiddenFields, btnLoading, successMsg } = this.state;
+        const { producerId, lotDetails, hiddenFields, btnLoading, successMsg, countries } = this.state;
         return (
             <Form>
                 {/* eslint-disable */}
@@ -135,8 +144,22 @@ class SingleContract extends Component {
                                 onChange={this.handleInputChange}
                             />
                         )}
-                        <Divider />
                         {lotDetails.harvest_year && (
+                            <Form.Dropdown
+                                name="origin"
+                                options={countries}
+                                placeholder='Select Country'
+                                search
+                                selection
+                                fluid
+                                allowAdditions
+                                value={lotDetails.origin}
+                                onAddItem={this.handleAddition}
+                                onChange={this.handleInputChange}
+                            />
+                        )}
+                        <Divider />
+                        {lotDetails.origin && (
                             <F>
                                 <Flex spacing="20" wrap>
                                     {fields.map(field => (

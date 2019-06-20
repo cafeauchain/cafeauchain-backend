@@ -11,6 +11,7 @@
 #  low_remaining      :integer
 #  name               :string
 #  on_hand_alert      :boolean          default(FALSE)
+#  origin             :string
 #  pounds_of_coffee   :float
 #  price_per_pound    :float
 #  roasted_on_import  :integer
