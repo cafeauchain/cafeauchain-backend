@@ -45,18 +45,18 @@ class Lot < ApplicationRecord
   enum status: [:open, :delivered_in_full, :roasted_in_full]
 
   def contract_value
-    return self.price_per_pound.to_f * self.pounds_of_coffee.to_f
+    return (self.price_per_pound.to_f * self.pounds_of_coffee.to_f).round(2)
   end
 
   def coffee_on_hand
     roasted = self.batches.pluck(:starting_amount).map{|sa| sa.to_f}.sum + self.roasted_on_import.to_f
     delivered = self.transactions.where(trans_type: :asset_delivery).pluck(:quantity).map{|q| q.to_f}.sum
-    return (delivered - roasted)
+    return (delivered - roasted).round(2)
   end
 
   def coffee_in_warehouse
     delivered = self.transactions.where(trans_type: :asset_delivery).pluck(:quantity).map{|q| q.to_f}.sum
-    return (self.pounds_of_coffee.to_f - delivered)
+    return (self.pounds_of_coffee.to_f - delivered).round(2)
   end
 
   def amount_roasted

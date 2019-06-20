@@ -44,7 +44,7 @@ class RoastedInventory extends React.Component {
         const limitData = () => data.slice(0, limit);
         return (
             <F>
-                <Header as="h2" content="Roast Profile Inventory Levels" />
+                <Header as="h2" content="Roasted Inventory Levels" />
                 <Table tableDefs={tableDefs} data={limitData()} loading={loading} onClick={onClick} />
                 {data.length > limit && (
                     <F>

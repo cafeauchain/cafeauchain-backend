@@ -6,6 +6,8 @@
 #  name       :string
 #  par_level  :float
 #  quantity   :float
+#  roast_size :integer
+#  shrinkage  :float
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  lot_id     :uuid

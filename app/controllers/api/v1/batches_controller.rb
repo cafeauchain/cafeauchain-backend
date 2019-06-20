@@ -30,7 +30,7 @@ module Api::V1
     end
 
     def create
-      @batch = InventoryServices::StartBatchRoast.start(@lot.id, params[:starting_amount], params[:roast_date], params[:inventory_item_id])
+      @batch = InventoryServices::StartBatchRoast.start(@lot.id, params[:starting_amount], params[:roast_date], params[:inventory_item_id], params[:roast_count], params[:roast_size])
       if @batch.errors.full_messages.empty?
         subscription = @roaster.owner.subscription
         StripeServices::UpdateQuantifiedSubscription.update(@roaster.owner.id, subscription.id)

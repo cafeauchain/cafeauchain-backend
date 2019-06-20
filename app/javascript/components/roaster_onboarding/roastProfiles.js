@@ -36,7 +36,7 @@ class RoastProfiles extends React.Component {
                         <div flex="50">
                             <CreateInventory />
                         </div>
-                        <div flex="50">
+                        <div flex="50" style={{ maxWidth: "50%"}}>
                             <RoastProfileInventory />
                         </div>
                     </Flex>

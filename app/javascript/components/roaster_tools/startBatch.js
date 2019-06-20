@@ -12,29 +12,17 @@ import { noEmpties } from "utilities";
 
 import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
 
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
 
-const Wrapper = props => (
-    <Context>
-        {ctx => (
-            <StartBatch
-                {...props}
-                id={ctx.userId}
-                updateContext={ctx.updateContext}
-                lotData={ctx.lots}
-                inventory={ctx.inventory}
-                getCtxData={ctx.getData}
-            />
-        )}
-    </Context>
-);
 class StartBatch extends Component {
     constructor(props) {
         super(props);
         this.state = {
             lotDetails: {
                 starting_amount: "",
+                roast_count: 1,
+                roast_size: 0,
                 roast_date: moment().format("YYYY-MM-DD")
             },
             btnLoading: false,
@@ -42,12 +30,12 @@ class StartBatch extends Component {
         };
     }
     componentDidMount() {
-        const { lotData, inventory, getCtxData } = this.props;
-        if (lotData === undefined) {
-            getCtxData("lots");
+        const { lots, inventory, getData } = this.props;
+        if (lots === undefined) {
+            getData("lots");
         }
         if (inventory === undefined) {
-            getCtxData("inventory");
+            getData("inventory");
         }
     }
 
@@ -64,10 +52,18 @@ class StartBatch extends Component {
 
     handleInputChange = (event, { value, name, checked }) => {
         let { lotDetails } = this.state;
+        const { inventory } = this.props;
         lotDetails = { ...lotDetails };
         if (name === "") return;
         const val = value || checked;
-        lotDetails[name] = val;
+        lotDetails[name] = val || "";
+        if( name === "inventory_item_id" ){
+            const item = inventory.find( ii => ii.id === lotDetails[name] );
+            lotDetails["roast_size"] = item.attributes.roast_size;
+        }
+        if( name === "roast_count" || name === "roast_size" || name === "inventory_item_id" ){
+            lotDetails["starting_amount"] = (lotDetails["roast_count"] * lotDetails["roast_size"]).toFixed(2);
+        }
         this.setState({ lotDetails, errors: [] });
     };
 
@@ -78,7 +74,7 @@ class StartBatch extends Component {
 
     handleSubmit = async () => {
         const { lotDetails } = this.state;
-        const { id } = this.props;
+        const { userId: id } = this.props;
         // TODO Move this validation to the backend
         // const { id, activity } = this.props;
         // const { attributes } = activity;
@@ -139,16 +135,16 @@ class StartBatch extends Component {
         lots.map(({ id, attributes: { name } }) => ({ value: id, text: name, key: id, id, name }));
 
     render() {
-        let { id, lotData, inventory } = this.props;
-        if (lotData === undefined) lotData = [];
+        let { userId: id, lots, inventory } = this.props;
+        if (lots === undefined) lots = [];
         if (inventory === undefined) inventory = [];
-        const lotOptions = this.buildLotOptions(lotData);
+        const lotOptions = this.buildLotOptions(lots);
         const { lotDetails, btnLoading, errors } = this.state;
         const isLotSelected = lotDetails.lot_id;
         let on_hand = "?";
         let inventoryItems = [];
         if (isLotSelected) {
-            const lot = lotData.find(lot => lot.id === lotDetails.lot_id);
+            const lot = lots.find(lot => lot.id === lotDetails.lot_id);
             on_hand = lot.attributes.on_hand;
             inventoryItems = this.buildInventoryOptions(inventory, lotDetails.lot_id);
         }
@@ -184,11 +180,28 @@ class StartBatch extends Component {
                             onChange={this.handleInputChange}
                             name="inventory_item_id"
                         />
+                        <Input 
+                            name="roast_count"
+                            label="Number of Roasts"
+                            type="number"
+                            onChange={this.handleInputChange}
+                            value={lotDetails.roast_count}
+                        />
+                        <Input 
+                            name="roast_size"
+                            label="Roast Size"
+                            type="number"
+                            onChange={this.handleInputChange}
+                            value={lotDetails.roast_size}
+                        />
+
                         <Input
                             name="starting_amount"
                             label="Amount to be Roasted (in lbs)"
                             onChange={this.handleInputChange}
                             type="number"
+                            disabled
+                            value={lotDetails.starting_amount}
                         />
                         <Button size="small" primary fluid loading={btnLoading} disabled={!btnActive}>
                             Start a Batch
@@ -202,12 +215,12 @@ class StartBatch extends Component {
 
 const { oneOfType, string, number, func, object, array } = PropTypes;
 StartBatch.propTypes = {
-    id: oneOfType([number, string]),
+    userId: oneOfType([number, string]),
     closeModal: func,
     updateContext: func,
-    lotData: array,
+    lots: array,
     inventory: array,
-    getCtxData: func
+    getData: func
 };
 
-export default Wrapper;
+export default withContext(StartBatch);
