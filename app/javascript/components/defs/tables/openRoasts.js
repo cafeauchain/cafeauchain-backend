@@ -27,6 +27,7 @@ const tableDefinition = {
             label: "Green (lbs)", 
             textAlign: "right"
         },
+        { name: "roast_count", namespace: "# of Roasts", formatter: AsNumber, textAlign: "right" },
         { name: "roast_date", namespace: "attributes", formatter: FormattedDate }
     ],
     props: {
