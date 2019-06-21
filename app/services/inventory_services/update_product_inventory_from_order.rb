@@ -28,7 +28,7 @@ module InventoryServices
           remaining_quantity_available = inventory_item.quantity.to_f - amount_needed_for_order
           remaining_quantity_needed = inventory_item.quantity_needed.to_f - amount_needed_for_order
         
-          inventory_item.update( quantity_needed:  remaining_quantity_needed, quantity: remaining_quantity_available )
+          inventory_item.update( quantity_needed: remaining_quantity_needed, quantity: remaining_quantity_available )
         end
       end
     end
