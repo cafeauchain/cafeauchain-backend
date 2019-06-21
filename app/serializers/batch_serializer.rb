@@ -23,7 +23,7 @@
 #
 
 class BatchSerializer < ActiveModel::Serializer
-  attributes :id, :starting_amount, :ending_amount, :lot_name, :lot_label, :roast_size, :roast_count,
+  attributes :id, :starting_amount, :ending_amount, :lot_name, :lot_label, :roast_size, :roast_count, :shrinkage,
   :roast_date, :inventory_item_id, :inventory_item_name, :crop_name, :lot_id, :status, :target_weight
 
   def inventory_item_name
@@ -32,6 +32,10 @@ class BatchSerializer < ActiveModel::Serializer
     else
       "Not Found"
     end
+  end
+
+  def shrinkage
+    self.object.inventory_item.shrinkage
   end
 
   def lot_name
