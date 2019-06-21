@@ -12,14 +12,17 @@ const tableDefinition = {
             name: "quantity",
             namespace: "attributes",
             formatter: TwoDecimals,
-            label: "Amount Available (lbs)",
+            label: "Amount On Hand",
             textAlign: "right"
         },
+        { name: "par_level", namespace: "attributes", formatter: AsNumber, textAlign: "right" },
+        { name: "roast_size", namespace: "attributes", formatter: TwoDecimals, textAlign: "right" },
         { 
-            name: "quantity_needed", 
+            name: "shrinkage", 
+            label: "Skrinkage (%)", 
             namespace: "attributes", 
             formatter: TwoDecimals, 
-            label: "Amount Needed for Open Orders" 
+            textAlign: "right"
         }
     ],
     props: {
