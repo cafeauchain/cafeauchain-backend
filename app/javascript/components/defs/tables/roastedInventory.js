@@ -20,6 +20,11 @@ const tableDefinition = {
             namespace: "attributes", 
             formatter: TwoDecimals, 
             label: "Amount Needed for Open Orders" 
+        },
+        {
+            name: "amount_to_roast",
+            namespace: "attributes",
+            formatter: TwoDecimals
         }
     ],
     props: {
