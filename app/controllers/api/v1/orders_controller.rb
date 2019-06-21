@@ -35,6 +35,9 @@ module Api::V1
 
     def update
       @order.update(status: params[:status])
+      if @order.status == "fulfilled"
+        InventoryServices::UpdateProductInventoryFromOrder.fulfill(@order)
+      end
       @order = ActiveModel::SerializableResource.new(@order, serializer: OrderSerializer::SingleOrderSerializer)
       render json: {"redirect":false, data: @order}, status: 200
     end

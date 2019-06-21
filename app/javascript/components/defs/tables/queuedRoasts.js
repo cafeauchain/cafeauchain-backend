@@ -30,6 +30,7 @@ const tableDefinition = {
         { 
             name: "roast_count",
             namespace: "attributes",
+            label: "# of Roasts",
             formatter: AsNumber,
             textAlign: "right"
         },
