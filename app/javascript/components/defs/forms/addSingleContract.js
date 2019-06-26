@@ -1,7 +1,3 @@
-// TODO can 'on_hand' and 'roasted' be defaulted to 0? or removed? or in some way opted in?
-// Since the only time they should be used is when onboarding
-// Possibly a prop to omit/hide/defualt to 0 when added from quick actions?
-
 const fields = [
     { name: "name", label: "Lot Name" },
     { name: "label", label: "Lot Abbreviation (for Roast Log)" },

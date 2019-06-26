@@ -10,6 +10,7 @@ module ImportServices
       pounds_roasted = json_object["key_pounds_roasted_to_date"].to_f
       @lot = @roaster.lots.create(
         harvest_year: json_object["key_harvest_year"],
+        origin: json_object["origin"],
         pounds_of_coffee: pounds_of_coffee,
         price_per_pound: json_object["key_price_per_pound"].to_f,
         roasted_on_import: pounds_roasted,

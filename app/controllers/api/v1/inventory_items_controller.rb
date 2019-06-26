@@ -8,7 +8,7 @@ class Api::V1::InventoryItemsController < ApplicationController
   end
 
   def create
-    @inventory_item = InventoryServices::CreateInventory.create(@lot.id, params[:name], params[:par_level], params[:quantity])
+    @inventory_item = InventoryServices::CreateInventory.create(@lot.id, params)
     if @inventory_item.errors.full_messages.empty?
       render json: {
         "item": @inventory_item

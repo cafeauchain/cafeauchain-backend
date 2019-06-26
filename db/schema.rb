@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_18_170239) do
+ActiveRecord::Schema.define(version: 2019_06_21_173611) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,8 @@ ActiveRecord::Schema.define(version: 2019_06_18_170239) do
     t.float "target_weight"
     t.uuid "lot_id"
     t.uuid "inventory_item_id"
+    t.float "roast_size"
+    t.integer "roast_count"
     t.index ["created_at"], name: "index_batches_on_created_at"
     t.index ["inventory_item_id"], name: "index_batches_on_inventory_item_id"
     t.index ["lot_id"], name: "index_batches_on_lot_id"
@@ -150,6 +152,10 @@ ActiveRecord::Schema.define(version: 2019_06_18_170239) do
     t.datetime "updated_at", null: false
     t.string "name"
     t.uuid "lot_id"
+    t.integer "roast_size"
+    t.float "shrinkage"
+    t.float "quantity_needed", default: 0.0
+    t.float "amount_to_roast", default: 0.0
     t.index ["created_at"], name: "index_inventory_items_on_created_at"
     t.index ["lot_id"], name: "index_inventory_items_on_lot_id"
   end
@@ -185,6 +191,7 @@ ActiveRecord::Schema.define(version: 2019_06_18_170239) do
     t.integer "roasted_on_import"
     t.boolean "on_hand_alert", default: false
     t.boolean "warehouse_alert", default: false
+    t.string "origin"
     t.index ["created_at"], name: "index_lots_on_created_at"
     t.index ["crop_id"], name: "index_lots_on_crop_id"
     t.index ["roaster_profile_id"], name: "index_lots_on_roaster_profile_id"

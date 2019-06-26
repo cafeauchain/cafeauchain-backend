@@ -4,7 +4,7 @@ import { Segment, Header, Step } from "semantic-ui-react";
 
 /* eslint-disable */
 import CreateInventory from "wholesale/actions/createInventory";
-import RoastProfileInventory from "wholesale/inventory";
+import RoastProfileInventory from "roaster_onboarding/views/roastProfiles";
 
 import OnboardFooter from "roaster_onboarding/footer";
 import steps from "roaster_onboarding/steps";
@@ -36,7 +36,7 @@ class RoastProfiles extends React.Component {
                         <div flex="50">
                             <CreateInventory />
                         </div>
-                        <div flex="50">
+                        <div flex="50" style={{ maxWidth: "50%"}}>
                             <RoastProfileInventory />
                         </div>
                     </Flex>

@@ -4,7 +4,9 @@
 #
 #  id                :uuid             not null, primary key
 #  ending_amount     :float
+#  roast_count       :integer
 #  roast_date        :date
+#  roast_size        :float
 #  starting_amount   :float
 #  status            :integer
 #  target_weight     :float
@@ -21,7 +23,7 @@
 #
 
 class BatchSerializer < ActiveModel::Serializer
-  attributes :id, :starting_amount, :ending_amount, :lot_name, :lot_label, 
+  attributes :id, :starting_amount, :ending_amount, :lot_name, :lot_label, :roast_size, :roast_count, :shrinkage,
   :roast_date, :inventory_item_id, :inventory_item_name, :crop_name, :lot_id, :status, :target_weight
 
   def inventory_item_name
@@ -30,6 +32,10 @@ class BatchSerializer < ActiveModel::Serializer
     else
       "Not Found"
     end
+  end
+
+  def shrinkage
+    self.object.inventory_item.shrinkage
   end
 
   def lot_name

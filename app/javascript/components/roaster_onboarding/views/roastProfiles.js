@@ -5,12 +5,12 @@ import { Header } from "semantic-ui-react";
 /* eslint-disable */
 import Table from "shared/table";
 
-import tableDefs from "defs/tables/roastedInventory";
+import tableDefs from "defs/tables/roastProfiles";
 
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
-class RoastedInventory extends React.Component {
+class RoastProfiles extends React.Component {
     componentDidMount() {
         const { inventory, getData } = this.props;
         if (inventory === undefined) {
@@ -27,7 +27,7 @@ class RoastedInventory extends React.Component {
         };
         return (
             <F>
-                <Header as="h2" content="Roasted Inventory Levels" />
+                <Header as="h2" content="Roast Profiles" />
                 <Table tableDefs={tableDefs} data={inventory} loading={loading} onClick={onClick} />
             </F>
         );
@@ -35,10 +35,10 @@ class RoastedInventory extends React.Component {
 }
 
 const { array, bool, func } = PropTypes;
-RoastedInventory.propTypes = {
+RoastProfiles.propTypes = {
     inventory: array,
     loading: bool,
     getData: func
 };
 
-export default withContext(RoastedInventory);
+export default withContext(RoastProfiles);

@@ -4,7 +4,9 @@
 #
 #  id                :uuid             not null, primary key
 #  ending_amount     :float
+#  roast_count       :integer
 #  roast_date        :date
+#  roast_size        :float
 #  starting_amount   :float
 #  status            :integer
 #  target_weight     :float

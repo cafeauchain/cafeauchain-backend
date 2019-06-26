@@ -30,7 +30,7 @@ module Api::V1
     end
 
     def create
-      @batch = InventoryServices::StartBatchRoast.start(@lot.id, params[:starting_amount], params[:roast_date], params[:inventory_item_id])
+      @batch = InventoryServices::StartBatchRoast.start(@lot.id, params[:starting_amount], params[:roast_date], params[:inventory_item_id], params[:roast_count], params[:roast_size])
       if @batch.errors.full_messages.empty?
         subscription = @roaster.owner.subscription
         StripeServices::UpdateQuantifiedSubscription.update(@roaster.owner.id, subscription.id)
@@ -41,9 +41,10 @@ module Api::V1
     end
 
     def update
+      # Finish Batch
       if !params[:finish_batch].nil?
-        @batch = InventoryServices::FinishBatchRoast.finish(@batch.id, params[:ending_amount])
-        @inventory_item = InventoryServices::AddRoastToInventory.call(@batch.lot_id, params[:ending_amount])
+        @batch = InventoryServices::FinishBatchRoast.finish(@batch.id, batch_params)
+        @inventory_item = InventoryServices::AddRoastToInventory.call(@batch.inventory_item, params[:ending_amount])
         if @inventory_item.errors.full_messages.empty?
           if @batch.errors.full_messages.empty?
             render json: {
@@ -56,11 +57,12 @@ module Api::V1
         else
           render json: @inventory_item.errors.full_messages, status: 422
         end
+      # Update Batch
       else
         if @batch.update!(batch_params)
           render json: @batch, status: 200
         else
-          render json: @customer.errors.full_messages, status: 422
+          render json: @batch.errors.full_messages, status: 422
         end
       end
     end
@@ -81,7 +83,7 @@ module Api::V1
     end
 
     def batch_params
-      params.permit(:roast_date, :starting_amount, :ending_amount, :target_weight, :status)
+      params.permit(:roast_date, :starting_amount, :ending_amount, :target_weight, :status, :roast_size, :roast_count)
     end
   end
 end

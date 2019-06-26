@@ -11,24 +11,8 @@ import tableDefs from "defs/tables/openRoasts";
 
 import { url as API_URL, requester } from "utilities/apiUtils";
 
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
-
-const Wrapper = props => (
-    <Context>
-        {ctx => (
-            <OpenRoasts
-                {...props}
-                batches={ctx.batches}
-                loading={ctx.loading}
-                updateContext={ctx.updateContext}
-                inventory={ctx.inventory}
-                userId={ctx.userId}
-                getCtxData={ctx.getData}
-            />
-        )}
-    </Context>
-);
 
 class OpenRoasts extends Component {
     state = {
@@ -38,23 +22,29 @@ class OpenRoasts extends Component {
     };
 
     componentDidMount() {
-        const { batches, inventory, getCtxData } = this.props;
-        if (batches === undefined) getCtxData("batches");
-        if (inventory === undefined) getCtxData("inventory");
+        const { batches, inventory, getData } = this.props;
+        if (batches === undefined) getData("batches");
+        if (inventory === undefined) getData("inventory");
     }
 
     closeModal = () => this.setState({ isOpen: false, current: {}, details: {} });
 
     onClick = (e, item) => {
         const { attributes } = item;
+        const start = Number(attributes.starting_amount);
+        const pct = (1 - Number(attributes.shrinkage)/100);
+        const end = Number((start * pct).toFixed(2));
         this.setState({
             isOpen: true,
             current: item,
             details: {
-                ending_amount: (Number(attributes.starting_amount) * 0.9).toFixed(2),
-                starting_amount: attributes.starting_amount,
+                ending_amount: end,
+                starting_amount: start,
                 inventory_item_id: attributes.inventory_item_id,
-                roast_date: attributes.roast_date
+                roast_date: attributes.roast_date,
+                roast_size: attributes.roast_size,
+                roast_count: attributes.roast_count,
+                shrinkage: attributes.shrinkage
             }
         });
     };
@@ -65,13 +55,19 @@ class OpenRoasts extends Component {
         if (name === "") return;
         const val = value || checked;
         details[name] = val;
+        if (name === "roast_count" || name === "roast_size" ) {
+            const start = (details["roast_count"] * details["roast_size"]).toFixed(2);
+            const pct = 1 - Number(details["shrinkage"]) / 100;
+            details["starting_amount"] = Number(start);
+            details["ending_amount"] = Number((Number(pct) * Number(start)).toFixed(2));
+        }
         this.setState({ details });
     };
 
     handleSubmit = async (ev, isFinished) => {
         ev.preventDefault();
         const { details, current } = this.state;
-        const { id, attributes } = current;
+        const { id } = current;
         const { userId } = this.props;
         const url = `${API_URL}/roasters/${userId}/batches/${id}`;
         if (isFinished) {
@@ -80,7 +76,7 @@ class OpenRoasts extends Component {
         const body = { ...details };
         const method = "PUT";
         // TODO probably need to add in better error handler/input validation
-        if (Number(details.ending_amount) > Number(attributes.starting_amount)) {
+        if (Number(details.ending_amount) > Number(details.starting_amount)) {
             alert("Your ending amount is more than your green coffee weight.");
             return;
         }
@@ -155,8 +151,22 @@ class OpenRoasts extends Component {
                         name="inventory_item_id"
                         label="Roast Profile"
                         onChange={this.handleInputChange}
-                        defaultValue={details.inventory_item_id.toString()}
+                        value={details.inventory_item_id.toString()}
                         options={this.buildInventoryOptions(inventory, attributes.lot_id)}
+                    />
+                    <Input 
+                        name="roast_count"
+                        label="Number of Roasts"
+                        onChange={this.handleInputChange}
+                        value={details.roast_count}
+                        type="number"
+                    />
+                    <Input 
+                        name="roast_size"
+                        label="Roast Size"
+                        onChange={this.handleInputChange}
+                        value={details.roast_size}
+                        type="number"
                     />
 
                     <Input
@@ -164,7 +174,7 @@ class OpenRoasts extends Component {
                         label="Starting Weight (in lbs)"
                         onChange={this.handleInputChange}
                         type="number"
-                        defaultValue={details.starting_amount}
+                        value={details.starting_amount}
                     />
 
                     <Input
@@ -173,7 +183,7 @@ class OpenRoasts extends Component {
                         label="Roasted Yield (in lbs)"
                         onChange={this.handleInputChange}
                         type="number"
-                        defaultValue={details.ending_amount}
+                        value={details.ending_amount}
                         step={0.1}
                     />
                     <Flex spacebetween>
@@ -217,7 +227,7 @@ OpenRoasts.propTypes = {
     updateContext: func,
     userId: oneOfType([string, number]),
     inventory: array,
-    getCtxData: func
+    getData: func
 };
 
-export default Wrapper;
+export default withContext(OpenRoasts);
