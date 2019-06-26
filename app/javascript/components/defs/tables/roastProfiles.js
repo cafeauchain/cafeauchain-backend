@@ -19,7 +19,7 @@ const tableDefinition = {
         { name: "roast_size", namespace: "attributes", formatter: TwoDecimals, textAlign: "right" },
         { 
             name: "shrinkage", 
-            label: "Skrinkage (%)", 
+            label: "Shrinkage (%)", 
             namespace: "attributes", 
             formatter: TwoDecimals, 
             textAlign: "right"
