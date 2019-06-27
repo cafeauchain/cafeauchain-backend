@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_21_173611) do
+ActiveRecord::Schema.define(version: 2019_06_26_203925) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -131,6 +131,18 @@ ActiveRecord::Schema.define(version: 2019_06_21_173611) do
     t.string "email"
     t.string "company_name"
     t.index ["owner_id"], name: "index_customer_profiles_on_owner_id"
+  end
+
+  create_table "cutoffs", force: :cascade do |t|
+    t.bigint "roaster_profile_id"
+    t.time "day_0", precision: 0
+    t.time "day_1", precision: 0
+    t.time "day_2", precision: 0
+    t.time "day_3", precision: 0
+    t.time "day_4", precision: 0
+    t.time "day_5", precision: 0
+    t.time "day_6", precision: 0
+    t.index ["roaster_profile_id"], name: "index_cutoffs_on_roaster_profile_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
@@ -472,6 +484,7 @@ ActiveRecord::Schema.define(version: 2019_06_21_173611) do
   add_foreign_key "cart_items", "carts"
   add_foreign_key "carts", "wholesale_profiles"
   add_foreign_key "crops", "producer_profiles"
+  add_foreign_key "cutoffs", "roaster_profiles"
   add_foreign_key "invoices", "orders"
   add_foreign_key "lots", "crops"
   add_foreign_key "lots", "roaster_profiles"

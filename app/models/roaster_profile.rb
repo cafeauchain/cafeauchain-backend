@@ -64,6 +64,8 @@ class RoasterProfile < ApplicationRecord
 
   before_validation :sanitize_subdomain
   before_save :set_subdomain, if: :new_record?
+  
+  has_one :cutoff
 
   def open_order_items
     items = self.orders.where.not(status: :fulfilled).collect do |o|
