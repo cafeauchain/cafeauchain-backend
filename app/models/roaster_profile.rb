@@ -123,6 +123,11 @@ class RoasterProfile < ApplicationRecord
     InventoryServices::GetAmountsNeeded.process(orders)
   end
 
+  def getOpenOrderAmountsByDate
+    orders = self.orders.where.not(status: [:draft, :fulfilled])
+    InventoryServices::GetAmountsNeeded.process(orders, true)
+  end
+
   private
 
   def sanitize_subdomain

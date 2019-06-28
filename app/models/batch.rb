@@ -34,9 +34,14 @@ class Batch < ApplicationRecord
   end
 
   def target_weight
-    all_amounts = self.lot.roaster_profile.getOpenOrderAmounts
-    target = all_amounts.find{ |item| item["ii_id"] == self.inventory_item_id and self.roast_date == item["roast_date"]}
-    target.present? ? target["weight"] : 0
+    all_amounts = self.lot.roaster_profile.getOpenOrderAmountsByDate
+    all_amounts_for_item = all_amounts.select{ |item| item["ii_id"] == self.inventory_item_id}
+    # earliest_date = all_amounts_for_item.map{|aafm| aafm["roast_date"]}.min
+    earliest_date = all_amounts_for_item.min_by{|aafm| aafm["roast_date"]}["roast_date"]
+    current_inventory = earliest_date == self.roast_date ? self.inventory_item.quantity.to_f : 0
+
+    target = all_amounts_for_item.find{ |item| self.roast_date == item["roast_date"]}
+    target.present? ? target["weight"] - current_inventory : 0
   end
 
   def roast_count

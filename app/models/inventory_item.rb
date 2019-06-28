@@ -33,11 +33,7 @@ class InventoryItem < ApplicationRecord
   end
 
   def quantity_needed
-    totaled_inventory_item = self.lot.roaster_profile.getOpenOrderAmounts.group_by{|item| item.values_at('ii_id')}.map {|key, hashes|
-      result = hashes[0].clone
-      result["weight"] = hashes.inject(0){ |total, item| total + item["weight"].to_f }
-      result
-    }.find{ |ii| ii["ii_id"] == self.id }
+    totaled_inventory_item = self.lot.roaster_profile.getOpenOrderAmounts.find{ |ii| ii["ii_id"] == self.id }
     totaled_inventory_item.present? ? totaled_inventory_item["weight"] : 0
   end
 

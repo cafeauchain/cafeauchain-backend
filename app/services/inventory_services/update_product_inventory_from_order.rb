@@ -3,14 +3,13 @@ module InventoryServices
     def self.update(order)
       current_order = InventoryServices::GetAmountsNeeded.process([order])
       all_open_orders = order.customer_profile.orders.where.not(status: [:draft, :fulfilled])
-      all_orders_for_date = all_open_orders.select{|ao|ao.estimated_roast_date == order.estimated_roast_date}
-      all_orders = InventoryServices::GetAmountsNeeded.process(all_orders_for_date)
+      all_orders = InventoryServices::GetAmountsNeeded.process(all_open_orders)
 
       current_order.each{ |co|
         inventory_item = InventoryItem.find(co["ii_id"])
         amount_available = inventory_item.quantity.to_f
         par = inventory_item.par_level.to_f
-        overall = all_orders.find{ |ao| ao["ii_id"] == co["ii_id"] and ao["roast_date"] == co["roast_date"] }
+        overall = all_orders.find{ |ao| ao["ii_id"] == co["ii_id"]}
         amount_needed_overall = overall["weight"]
         amount_remaining = amount_available - amount_needed_overall - par
 

@@ -1,6 +1,6 @@
 module InventoryServices
   class GetAmountsNeeded
-    def self.process(orders)
+    def self.process(orders, byDate = false)
       item_quantities = []
       quantities = orders.each do |o|
         order_items = o.order_items.each do |oi|
@@ -18,7 +18,12 @@ module InventoryServices
         end
       end
 
-      item_quantities = item_quantities.group_by{|iq| iq.values_at('ii_id', 'roast_date')}.map {|key, hashes|
+      grouper = ['ii_id']
+      if byDate
+        grouper = ['ii_id', 'roast_date']
+      end
+
+      item_quantities = item_quantities.group_by{|iq| iq.values_at(*grouper)}.map {|key, hashes|
         result = hashes[0].clone
         result["weight"] = hashes.inject(0){ |total, item| total + item["weight"].to_f }
         result
