@@ -16,7 +16,7 @@ const Dashboard = ({ orders, roaster }) => (
         {true && <QuickActions />}
         {true && (
             <Segment>
-                <Orders orders={orders} roaster={roaster} />
+                <Orders type="open" />
             </Segment>
         )}
         {true && (

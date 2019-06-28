@@ -30,12 +30,12 @@ module Manage
 
     def wholesale
       @wholesale_profiles = @roaster.wholesale_profiles
-      orders = @roaster.orders
+      orders = @roaster.orders.where.not(status: [:draft, :fulfilled])
       @orders = ActiveModel::SerializableResource.new(orders, each_serializer: OrderSerializer)
       render "manage/primary", locals: {
         roaster: @roaster,
         wholesalers: @wholesale_profiles,
-        orders: @orders,
+        open_orders: @orders,
         title: 'Wholesale Dashboard',
         component: 'wholesale'
       }
