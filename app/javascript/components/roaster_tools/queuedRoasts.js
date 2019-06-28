@@ -6,6 +6,8 @@ import { Header } from "semantic-ui-react";
 import Table from "shared/table";
 import Modal from "shared/modal";
 
+import { sortBy } from "utilities";
+
 import QueuedRoast from "roaster_tools/actions/queuedRoast";
 
 import tableDefs from "defs/tables/queuedRoasts";
@@ -39,6 +41,12 @@ class QueuedRoasts extends Component {
         const { isOpen, current } = this.state;
         const { attributes } = current;
         const title = attributes ? attributes.inventory_item_name + " (" + attributes.lot_name + ")": "";
+
+        const sorted = sortBy({
+            collection: queued,
+            sorts: [{ name: "roast_date" }, { name: "name" }],
+            namespace: "attributes"
+        });
         return (
             <F>
                 {isOpen && (
@@ -51,7 +59,7 @@ class QueuedRoasts extends Component {
                     />
                 )}
                 <Header as="h2" content="Queued Roasts" />
-                <Table tableDefs={tableDefs} data={queued} loading={loading} onClick={this.onClick} />
+                <Table tableDefs={tableDefs} data={sorted} loading={loading} onClick={this.onClick} />
             </F>
         );
     }

@@ -119,7 +119,7 @@ class RoasterProfile < ApplicationRecord
   end
 
   def getOpenOrderAmounts
-    orders = self.orders.where.not(status: (:draft||:fulfilled))
+    orders = self.orders.where.not(status: [:draft, :fulfilled])
     InventoryServices::GetAmountsNeeded.process(orders)
   end
 

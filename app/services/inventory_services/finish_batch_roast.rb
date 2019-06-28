@@ -13,7 +13,7 @@ module InventoryServices
         starting_amount: @starting_amount, 
         inventory_item_id: @inventory_item_id,
         roast_size: params[:roast_size],
-        roast_count: params[:roast_count]
+        # roast_count: params[:roast_count]
       )
       return @batch
     end

@@ -2,7 +2,7 @@ module InventoryServices
   class UpdateProductInventoryFromOrder
     def self.update(order)
       current_order = InventoryServices::GetAmountsNeeded.process([order])
-      all_open_orders = order.customer_profile.orders.where.not(status: (:draft||:fulfilled))
+      all_open_orders = order.customer_profile.orders.where.not(status: [:draft, :fulfilled])
       all_orders_for_date = all_open_orders.select{|ao|ao.estimated_roast_date == order.estimated_roast_date}
       all_orders = InventoryServices::GetAmountsNeeded.process(all_orders_for_date)
 
@@ -22,17 +22,12 @@ module InventoryServices
     end
     
     def self.fulfill(order)
-      order.order_items.each do |order_item|
-        product = order_item.product_variant.product.product_inventory_items.select{ |pii| !pii.inactive }.map do |pii|
-          order_item_weight_in_oz = order_item.product_variant.custom_options["size"].to_i * order_item.quantity.to_i * pii.percentage_of_product.to_i / 100
-          amount_needed_for_order = order_item_weight_in_oz / 16
-          inventory_item = pii.inventory_item
-          remaining_quantity_available = inventory_item.quantity.to_f - amount_needed_for_order
-          remaining_quantity_needed = inventory_item.quantity_needed.to_f - amount_needed_for_order
-        
-          inventory_item.update( quantity_needed: remaining_quantity_needed, quantity: remaining_quantity_available )
-        end
-      end
+      current_order = InventoryServices::GetAmountsNeeded.process([order]).each{|co|
+        inventory_item = InventoryItem.find(co["ii_id"])
+        amount_available = inventory_item.quantity.to_f
+        new_amount_available = amount_available - co["weight"].to_f
+        inventory_item.update(quantity: new_amount_available)
+      }
     end
   end
 end
