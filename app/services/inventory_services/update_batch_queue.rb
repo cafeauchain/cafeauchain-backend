@@ -9,8 +9,8 @@ module InventoryServices
           lot: inventory_item.lot, 
           roast_date: roast_date
         )
-      else
-        batch = inventory_item.batches.where({status: :in_queue, roast_date: roast_date}).first
+      # else
+      #   batch = inventory_item.batches.where({status: :in_queue, roast_date: roast_date}).first
       end
     end
   end
