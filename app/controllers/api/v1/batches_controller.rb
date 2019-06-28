@@ -9,7 +9,7 @@ module Api::V1
         case params[:status]
         when "queued"
           status = 0
-        when "in_progress"
+        when "roast_in_progress"
           status = 1
         when "completed"
           status = 2
@@ -20,7 +20,7 @@ module Api::V1
         end
         @batches = @roaster.batches.where(status: status)
       else
-        @batches = @roaster.batches
+        @batches = @roaster.batches.where(status: :roast_in_progress)
       end
       render json: @batches, status: 200
     end
