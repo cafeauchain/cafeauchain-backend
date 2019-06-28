@@ -2,17 +2,15 @@
 #
 # Table name: inventory_items
 #
-#  id              :uuid             not null, primary key
-#  amount_to_roast :float            default(0.0)
-#  name            :string
-#  par_level       :float
-#  quantity        :float
-#  quantity_needed :float            default(0.0)
-#  roast_size      :integer
-#  shrinkage       :float
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  lot_id          :uuid
+#  id         :uuid             not null, primary key
+#  name       :string
+#  par_level  :float
+#  quantity   :float
+#  roast_size :integer
+#  shrinkage  :float
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  lot_id     :uuid
 #
 # Indexes
 #
@@ -32,5 +30,19 @@ class InventoryItem < ApplicationRecord
 
   def lot_name
     lot.name
+  end
+
+  def quantity_needed
+    totaled_inventory_item = self.lot.roaster_profile.getOpenOrderAmounts.group_by{|item| item.values_at('ii_id')}.map {|key, hashes|
+      result = hashes[0].clone
+      result["weight"] = hashes.inject(0){ |total, item| total + item["weight"].to_f }
+      result
+    }.find{ |ii| ii["ii_id"] == self.id }
+    totaled_inventory_item.present? ? totaled_inventory_item["weight"] : 0
+  end
+
+  def amount_to_roast
+    amount_check = self.quantity.to_f - self.quantity_needed - self.par_level.to_f
+    amount_check < 0 ? amount_check.abs : 0
   end
 end

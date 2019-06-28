@@ -16,7 +16,7 @@ module InventoryServices
 
         roast_needed = amount_remaining < 0
         if roast_needed.present?
-          InventoryServices::UpdateBatchQueue.load_queue(inventory_item, amount_remaining.abs, co["roast_date"])
+          InventoryServices::UpdateBatchQueue.load_queue(inventory_item, co["roast_date"])
         end
       }
     end

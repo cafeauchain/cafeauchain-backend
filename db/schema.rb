@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_26_203925) do
+ActiveRecord::Schema.define(version: 2019_06_28_003348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,11 +63,9 @@ ActiveRecord::Schema.define(version: 2019_06_26_203925) do
     t.datetime "updated_at", null: false
     t.integer "status"
     t.date "roast_date"
-    t.float "target_weight"
     t.uuid "lot_id"
     t.uuid "inventory_item_id"
     t.float "roast_size"
-    t.integer "roast_count"
     t.index ["created_at"], name: "index_batches_on_created_at"
     t.index ["inventory_item_id"], name: "index_batches_on_inventory_item_id"
     t.index ["lot_id"], name: "index_batches_on_lot_id"
@@ -166,8 +164,6 @@ ActiveRecord::Schema.define(version: 2019_06_26_203925) do
     t.uuid "lot_id"
     t.integer "roast_size"
     t.float "shrinkage"
-    t.float "quantity_needed", default: 0.0
-    t.float "amount_to_roast", default: 0.0
     t.index ["created_at"], name: "index_inventory_items_on_created_at"
     t.index ["lot_id"], name: "index_inventory_items_on_lot_id"
   end

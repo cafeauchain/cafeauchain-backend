@@ -83,7 +83,7 @@ module Api::V1
     end
 
     def batch_params
-      params.permit(:roast_date, :starting_amount, :ending_amount, :target_weight, :status, :roast_size, :roast_count)
+      params.permit(:roast_date, :starting_amount, :ending_amount, :status, :roast_size)
     end
   end
 end

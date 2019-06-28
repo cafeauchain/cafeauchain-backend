@@ -4,12 +4,10 @@
 #
 #  id                :uuid             not null, primary key
 #  ending_amount     :float
-#  roast_count       :integer
 #  roast_date        :date
 #  roast_size        :float
 #  starting_amount   :float
 #  status            :integer
-#  target_weight     :float
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  inventory_item_id :uuid
