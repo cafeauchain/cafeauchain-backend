@@ -292,7 +292,7 @@ Rails.application.routes.draw do
         delete :cards, to: "roaster_profiles#remove_card"
         put :set_as_default
         resources :shipping_methods, only: [:index, :create]
-        resources :cutoffs, only: [:index, :create, :update]
+        resources :cutoffs, only: [:index, :update]
       end
       get :get_rates, to: "shipping_methods#get_rates"
       resources :carts

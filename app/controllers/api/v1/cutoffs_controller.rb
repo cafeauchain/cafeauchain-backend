@@ -7,11 +7,6 @@ module Api::V1
       render json: @cutoff, status: 200
     end
 
-    def create
-      @cutoff = Cutoff.create(cutoff_params)
-      render json: @cutoff, status: 200
-    end
-
     def update
       @cutoff = Cutoff.find(params[:id]).tap{|c| c.update(cutoff_params)}
       render json: @cutoff, status: 200
