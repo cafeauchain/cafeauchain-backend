@@ -4,12 +4,10 @@
 #
 #  id                :uuid             not null, primary key
 #  ending_amount     :float
-#  roast_count       :integer
 #  roast_date        :date
 #  roast_size        :float
 #  starting_amount   :float
 #  status            :integer
-#  target_weight     :float
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  inventory_item_id :uuid
@@ -33,5 +31,20 @@ class Batch < ApplicationRecord
 
   def batch_cost # starting weight
     starting_amount * lot.price_per_pound
+  end
+
+  def target_weight
+    all_amounts = self.lot.roaster_profile.getOpenOrderAmountsByDate
+    all_amounts_for_item = all_amounts.select{ |item| item["ii_id"] == self.inventory_item_id}
+    # earliest_date = all_amounts_for_item.map{|aafm| aafm["roast_date"]}.min
+    earliest_date = all_amounts_for_item.min_by{|aafm| aafm["roast_date"]}["roast_date"]
+    current_inventory = earliest_date == self.roast_date ? self.inventory_item.quantity.to_f : 0
+
+    target = all_amounts_for_item.find{ |item| self.roast_date == item["roast_date"]}
+    target.present? ? target["weight"] - current_inventory : 0
+  end
+
+  def roast_count
+    (self.target_weight / (self.inventory_item.roast_size * (1 - (self.inventory_item.shrinkage/100)))).ceil
   end
 end

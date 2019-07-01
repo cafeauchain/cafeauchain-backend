@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_21_173611) do
+ActiveRecord::Schema.define(version: 2019_06_28_003348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,11 +63,9 @@ ActiveRecord::Schema.define(version: 2019_06_21_173611) do
     t.datetime "updated_at", null: false
     t.integer "status"
     t.date "roast_date"
-    t.float "target_weight"
     t.uuid "lot_id"
     t.uuid "inventory_item_id"
     t.float "roast_size"
-    t.integer "roast_count"
     t.index ["created_at"], name: "index_batches_on_created_at"
     t.index ["inventory_item_id"], name: "index_batches_on_inventory_item_id"
     t.index ["lot_id"], name: "index_batches_on_lot_id"
@@ -133,6 +131,18 @@ ActiveRecord::Schema.define(version: 2019_06_21_173611) do
     t.index ["owner_id"], name: "index_customer_profiles_on_owner_id"
   end
 
+  create_table "cutoffs", force: :cascade do |t|
+    t.bigint "roaster_profile_id"
+    t.time "day_0", precision: 0
+    t.time "day_1", precision: 0
+    t.time "day_2", precision: 0
+    t.time "day_3", precision: 0
+    t.time "day_4", precision: 0
+    t.time "day_5", precision: 0
+    t.time "day_6", precision: 0
+    t.index ["roaster_profile_id"], name: "index_cutoffs_on_roaster_profile_id"
+  end
+
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string "slug", null: false
     t.integer "sluggable_id", null: false
@@ -154,8 +164,6 @@ ActiveRecord::Schema.define(version: 2019_06_21_173611) do
     t.uuid "lot_id"
     t.integer "roast_size"
     t.float "shrinkage"
-    t.float "quantity_needed", default: 0.0
-    t.float "amount_to_roast", default: 0.0
     t.index ["created_at"], name: "index_inventory_items_on_created_at"
     t.index ["lot_id"], name: "index_inventory_items_on_lot_id"
   end
@@ -472,6 +480,7 @@ ActiveRecord::Schema.define(version: 2019_06_21_173611) do
   add_foreign_key "cart_items", "carts"
   add_foreign_key "carts", "wholesale_profiles"
   add_foreign_key "crops", "producer_profiles"
+  add_foreign_key "cutoffs", "roaster_profiles"
   add_foreign_key "invoices", "orders"
   add_foreign_key "lots", "crops"
   add_foreign_key "lots", "roaster_profiles"

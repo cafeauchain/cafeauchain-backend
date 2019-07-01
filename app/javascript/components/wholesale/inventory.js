@@ -7,6 +7,8 @@ import Table from "shared/table";
 
 import tableDefs from "defs/tables/roastedInventory";
 
+import { sortBy } from "utilities";
+
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
@@ -20,6 +22,11 @@ class RoastedInventory extends React.Component {
     render() {
         const { loading } = this.props;
         let { inventory = [] } = this.props;
+        const sorted = sortBy({
+            collection: inventory,
+            sorts: [{ name: "name" }],
+            namespace: "attributes"
+        });
         const onClick = (e, item) => {
             // eslint-disable-next-line
             console.log(item);
@@ -28,7 +35,7 @@ class RoastedInventory extends React.Component {
         return (
             <F>
                 <Header as="h2" content="Roasted Inventory Levels" />
-                <Table tableDefs={tableDefs} data={inventory} loading={loading} onClick={onClick} />
+                <Table tableDefs={tableDefs} data={sorted} loading={loading} onClick={onClick} />
             </F>
         );
     }

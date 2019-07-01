@@ -6,6 +6,7 @@ import CreateInventory from "wholesale/actions/createInventory";
 import CreateProduct from "wholesale/actions/createProduct";
 import DefaultSizes from "wholesale/actions/createDefaultSizes";
 import DefaultOptions from "wholesale/actions/createDefaultOptions";
+import ManageCutoff from "wholesale/actions/manageCutoff";
 
 import Flex from "shared/flex";
 import Modal from "shared/modal";
@@ -33,6 +34,12 @@ const QuickActions = () => (
                 title="Manage Default Options"
                 icon="clipboard list"
                 component={<DefaultOptions />}
+            />
+            <Modal
+                text="Manage Order Cutoff"
+                title="Manage Order Cutoff Times"
+                icon="clipboard list"
+                component={<ManageCutoff />}
             />
         </Flex>
     </Segment>

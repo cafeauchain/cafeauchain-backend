@@ -4,7 +4,6 @@ import { Segment, Header, Button, Icon } from "semantic-ui-react";
 
 /* eslint-disable */
 import Table from "shared/table";
-import Input from "shared/input";
 import ErrorHandler from "shared/errorHandler";
 
 import tableDefs from "defs/tables/manageOrdersTable";
@@ -31,7 +30,7 @@ class Orders extends Component {
         e.preventDefault();
         target.blur();
         await this.setState({ loading: true });
-        const { getData } = this.props;
+        const { getData, type } = this.props;
         const url = API_URL + "/orders/" + item["data-id"];
         const response = await requester({ url, body: { status: 4 }, method: "PUT" });
         setTimeout(async () => {
@@ -41,16 +40,18 @@ class Orders extends Component {
                 if (response.redirect) {
                     window.location.href = await response.redirect_url;
                 } else {
-                    await getData("orders");
+                    await getData(type === "open" ? "open_orders" : "orders");
+                    await getData("inventory");
                     this.setState({ loading: false });
                 }
             }
         }, 400);
     };
     actions = ({ item }) => {
-        const { orders } = this.props;
+        let { orders, type, open_orders } = this.props;
+        if( type === "open" ) orders = open_orders;
         const order = orders.find(order => order.id === item.id);
-        if (order.attributes.status === "fulfilled") {
+        if (orders.length && order.attributes.status === "fulfilled") {
             return <Icon key={item.id} name="circle check" color="green" />;
         }
         return (
@@ -78,17 +79,22 @@ class Orders extends Component {
         return inner;
     };
     render() {
-        const { orders } = this.props;
+        let { orders, type, open_orders } = this.props;
+        let title = "All Orders";
+        if (type === "open") {
+            orders = open_orders;
+            title = "Open Orders";
+        }
         const { errors, loading } = this.state;
         const sorted = sortBy({
             collection: orders,
             id: "order_date",
-            sorts: [{ name: "order_total" }],
+            sorts: [{ name: "order_date" }],
             namespace: "attributes"
         });
         return (
             <Segment>
-                <Header as="h2" content="All Orders" dividing />
+                <Header as="h2" content={title} dividing />
                 <ErrorHandler errors={errors} />
                 <Table tableDefs={this.tableDefs} data={sorted} loading={loading} />
             </Segment>
@@ -96,10 +102,12 @@ class Orders extends Component {
     }
 }
 
-const { array, func } = PropTypes;
+const { array, func, string } = PropTypes;
 Orders.propTypes = {
+    open_orders: array,
     orders: array,
-    getData: func
+    getData: func,
+    type: string
 };
 
 export default withContext(Orders);

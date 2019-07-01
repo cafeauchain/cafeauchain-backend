@@ -9,7 +9,7 @@ module Api::V1
         case params[:status]
         when "queued"
           status = 0
-        when "in_progress"
+        when "roast_in_progress"
           status = 1
         when "completed"
           status = 2
@@ -20,7 +20,7 @@ module Api::V1
         end
         @batches = @roaster.batches.where(status: status)
       else
-        @batches = @roaster.batches
+        @batches = @roaster.batches.where(status: :roast_in_progress)
       end
       render json: @batches, status: 200
     end
@@ -30,7 +30,7 @@ module Api::V1
     end
 
     def create
-      @batch = InventoryServices::StartBatchRoast.start(@lot.id, params[:starting_amount], params[:roast_date], params[:inventory_item_id], params[:roast_count], params[:roast_size])
+      @batch = InventoryServices::StartBatchRoast.start(@lot.id, batch_params)
       if @batch.errors.full_messages.empty?
         subscription = @roaster.owner.subscription
         StripeServices::UpdateQuantifiedSubscription.update(@roaster.owner.id, subscription.id)
@@ -83,7 +83,7 @@ module Api::V1
     end
 
     def batch_params
-      params.permit(:roast_date, :starting_amount, :ending_amount, :target_weight, :status, :roast_size, :roast_count)
+      params.permit(:roast_date, :starting_amount, :ending_amount, :status, :roast_size)
     end
   end
 end

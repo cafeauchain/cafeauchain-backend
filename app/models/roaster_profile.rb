@@ -64,6 +64,8 @@ class RoasterProfile < ApplicationRecord
 
   before_validation :sanitize_subdomain
   before_save :set_subdomain, if: :new_record?
+  
+  has_one :cutoff
 
   def open_order_items
     items = self.orders.where.not(status: :fulfilled).collect do |o|
@@ -114,6 +116,16 @@ class RoasterProfile < ApplicationRecord
     if logo.attached?
       Rails.application.routes.url_helpers.rails_blob_path(logo, only_path: true)
     end
+  end
+
+  def getOpenOrderAmounts
+    orders = self.orders.where.not(status: [:draft, :fulfilled])
+    InventoryServices::GetAmountsNeeded.process(orders)
+  end
+
+  def getOpenOrderAmountsByDate
+    orders = self.orders.where.not(status: [:draft, :fulfilled])
+    InventoryServices::GetAmountsNeeded.process(orders, true)
   end
 
   private

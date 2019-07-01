@@ -29,7 +29,19 @@ module Api::V1
     end
 
     def index
-      @orders = Order.all
+      if params[:status].present?
+        case params[:status]
+        when "open"
+          status = [:processing, :awaiting_payment, :paid_in_full]
+        # TODO Right now, I'm only getting open orders
+        # Revisit later
+        else
+          status = [:processing, :awaiting_payment, :paid_in_full]
+        end
+        @orders = Order.where(status: status)
+      else
+        @orders = Order.all
+      end
       render json: @orders, status: 200
     end
 

@@ -24,6 +24,7 @@ module Api::V1
       if @roaster_profile_wizard.roaster_profile.save!
         logo = (params[:roaster_profile][:logo])
         roaster_profile = @roaster_profile_wizard.roaster_profile
+        roaster_profile.cutoff.create(day_1: '00:00', day_2: '00:00', day_3: '00:00', day_4: '00:00', day_5: '00:00')
         address = address_params
         address["location_label"] = "Office"
         address["primary_location"] = true
