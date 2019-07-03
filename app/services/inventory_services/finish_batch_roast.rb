@@ -13,9 +13,14 @@ module InventoryServices
         starting_amount: @starting_amount, 
         inventory_item_id: @inventory_item_id,
         roast_size: params[:roast_size],
-        # roast_count: params[:roast_count]
       )
-      return @batch
+
+      if @batch.save
+        @tx = LedgerServices::RoastTransaction.new(starting_amount, @batch.id, @batch.lot.roaster_profile.id).call
+        return @batch
+      else
+        return @batch
+      end
     end
   end
 end

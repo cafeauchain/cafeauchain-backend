@@ -1,7 +1,7 @@
 module Api::V1
   class BatchesController < ApplicationController
     before_action :set_roaster
-    before_action :set_batch, only: [:show, :update]
+    before_action :set_batch, only: [:show, :update, :destroy]
     before_action :set_lot, only: [:create]
 
     def index
@@ -32,8 +32,6 @@ module Api::V1
     def create
       @batch = InventoryServices::StartBatchRoast.start(@lot.id, batch_params)
       if @batch.errors.full_messages.empty?
-        subscription = @roaster.owner.subscription
-        StripeServices::UpdateQuantifiedSubscription.update(@roaster.owner.id, subscription.id)
         render json: {"redirect":false,"refresh_parent": true,"redirect_url": manage_inventory_path}, status: 200
       else
         render json: { data: @batch.errors.full_messages }, status: 422
@@ -47,6 +45,8 @@ module Api::V1
         @inventory_item = InventoryServices::AddRoastToInventory.call(@batch.inventory_item, params[:ending_amount])
         if @inventory_item.errors.full_messages.empty?
           if @batch.errors.full_messages.empty?
+            subscription = @roaster.owner.subscription
+            StripeServices::UpdateQuantifiedSubscription.update(@roaster.owner.id, subscription.id)
             render json: {
               "batch": @batch,
               "inventory_item": @inventory_item
@@ -67,6 +67,15 @@ module Api::V1
       end
     end
 
+    def destroy
+      if params[:status] != "roast_completed"
+        
+        if @batch.destroy!
+          render json: @batch, status: 200
+        end
+      end 
+    end
+
 
     private
 
@@ -83,7 +92,7 @@ module Api::V1
     end
 
     def batch_params
-      params.permit(:roast_date, :starting_amount, :ending_amount, :status, :roast_size)
+      params.permit(:roast_date, :starting_amount, :ending_amount, :status, :roast_size, :inventory_item_id)
     end
   end
 end

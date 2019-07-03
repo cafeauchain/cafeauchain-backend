@@ -5,23 +5,17 @@ module InventoryServices
       @lot = Lot.find(lot_id)
       starting_amount = params[:starting_amount]
       roast_date = params[:roast_date]
-      inventory_item_id = params[:inventory_item_id]
+      inventory_item = InventoryItem.find(params[:inventory_item_id])
       roast_size = params[:roast_size]
 
-      @batch = Batch.new(
-        lot: @lot, 
+      @batch = Batch.create(
+        lot: @lot,
+        inventory_item: inventory_item,
         starting_amount: starting_amount, 
         status: :roast_in_progress, 
         roast_date: roast_date, 
-        inventory_item_id: inventory_item_id, 
         roast_size: roast_size
       )
-      if @batch.save
-        @tx = LedgerServices::RoastTransaction.new(starting_amount, @batch.id, @batch.lot.roaster_profile.id).call
-        return @batch
-      else
-        return @batch
-      end
     end
   end
 end

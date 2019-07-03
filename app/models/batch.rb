@@ -37,14 +37,19 @@ class Batch < ApplicationRecord
     all_amounts = self.lot.roaster_profile.getOpenOrderAmountsByDate
     all_amounts_for_item = all_amounts.select{ |item| item["ii_id"] == self.inventory_item_id}
     # earliest_date = all_amounts_for_item.map{|aafm| aafm["roast_date"]}.min
-    earliest_date = all_amounts_for_item.min_by{|aafm| aafm["roast_date"]}["roast_date"]
+    earliest_date = all_amounts_for_item.length > 0 ? all_amounts_for_item.min_by{|aafm| aafm["roast_date"]}["roast_date"] : nil
     current_inventory = earliest_date == self.roast_date ? self.inventory_item.quantity.to_f : 0
 
     target = all_amounts_for_item.find{ |item| self.roast_date == item["roast_date"]}
-    target.present? ? target["weight"] - current_inventory : 0
+    target.present? ? (target["weight"] - current_inventory).round(2) : 0
   end
 
   def roast_count
-    (self.target_weight / (self.inventory_item.roast_size * (1 - (self.inventory_item.shrinkage/100)))).ceil
+    if self.status == "roast_in_progress"
+      (self.starting_amount / self.inventory_item.roast_size).ceil
+    elsif self.status == "in_queue"
+      (target_weight / (self.inventory_item.roast_size * (1 - (self.inventory_item.shrinkage/100)))).ceil
+    end
+    
   end
 end
