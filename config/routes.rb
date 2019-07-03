@@ -257,6 +257,7 @@ Rails.application.routes.draw do
             post :upload_csv
           end
         end
+        resources :roaster_profiles, path: "roasters"
       end
       resources :subscriptions
       resources :producer_profiles, path: "producers" do
