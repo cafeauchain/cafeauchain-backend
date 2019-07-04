@@ -19,10 +19,33 @@ module Api::V1::Admin
     end
 
     def update
-        id = params[:id]
-        roaster_id = params[:roaster_profile_id]
-        User.find(params[:id]).update(roaster_profile_id: roaster_id)
-        render json: { redirect: true, redirect_url: manage_dashboard_path }, status: 200
+      id = params[:id]
+      roaster_id = params[:roaster_profile_id]
+      User.find(params[:id]).update(roaster_profile_id: roaster_id)
+      render json: { redirect: true, redirect_url: manage_dashboard_path }, status: 200
+    end
+
+    def reset_profile
+      @roaster = current_user.roaster_profile
+      @roaster.lots.each{|lot|
+        lot.batches.destroy_all
+        lot.transactions.where(trans_type: :roasted).destroy_all
+        lot.inventory_items.each{|ii| ii.update(quantity: 0)}
+      }
+      @roaster.orders.each{|order|
+        order.order_items.destroy_all
+        order.invoice.destroy
+        order.order_shipping_method.destroy
+        order.destroy
+      }
+      render json: @roaster, status: 200
+    end
+
+    def update_inventory_item_quantities
+      details = params[:details]
+      again = []
+      details.each{|key, val| InventoryItem.find(key).update(quantity: val)}
+      render json: again, status: 200
     end
 
   end

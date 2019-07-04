@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-06-28T16:52:30.710744 #33667]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-07-03T23:18:58.422229 #20077]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                         Prefix Verb   URI Pattern                                                                              Controller#Action
 #      upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                 api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -11,6 +11,15 @@
 #                                                PATCH  /api/v1/admin/producers/:id(.:format)                                                    api/v1/admin/producer_profiles#update
 #                                                PUT    /api/v1/admin/producers/:id(.:format)                                                    api/v1/admin/producer_profiles#update
 #                                                DELETE /api/v1/admin/producers/:id(.:format)                                                    api/v1/admin/producer_profiles#destroy
+#     api_v1_admin_roaster_profile_reset_profile PUT    /api/v1/admin/roasters/:roaster_profile_id/reset_profile(.:format)                       api/v1/admin/roaster_profiles#reset_profile
+#                  api_v1_admin_roaster_profiles GET    /api/v1/admin/roasters(.:format)                                                         api/v1/admin/roaster_profiles#index
+#                                                POST   /api/v1/admin/roasters(.:format)                                                         api/v1/admin/roaster_profiles#create
+#               new_api_v1_admin_roaster_profile GET    /api/v1/admin/roasters/new(.:format)                                                     api/v1/admin/roaster_profiles#new
+#              edit_api_v1_admin_roaster_profile GET    /api/v1/admin/roasters/:id/edit(.:format)                                                api/v1/admin/roaster_profiles#edit
+#                   api_v1_admin_roaster_profile GET    /api/v1/admin/roasters/:id(.:format)                                                     api/v1/admin/roaster_profiles#show
+#                                                PATCH  /api/v1/admin/roasters/:id(.:format)                                                     api/v1/admin/roaster_profiles#update
+#                                                PUT    /api/v1/admin/roasters/:id(.:format)                                                     api/v1/admin/roaster_profiles#update
+#                                                DELETE /api/v1/admin/roasters/:id(.:format)                                                     api/v1/admin/roaster_profiles#destroy
 #                           api_v1_subscriptions GET    /api/v1/subscriptions(.:format)                                                          api/v1/subscriptions#index
 #                                                POST   /api/v1/subscriptions(.:format)                                                          api/v1/subscriptions#create
 #                        new_api_v1_subscription GET    /api/v1/subscriptions/new(.:format)                                                      api/v1/subscriptions#new
@@ -98,7 +107,6 @@
 #        api_v1_roaster_profile_shipping_methods GET    /api/v1/roasters/:roaster_profile_id/shipping_methods(.:format)                          api/v1/shipping_methods#index
 #                                                POST   /api/v1/roasters/:roaster_profile_id/shipping_methods(.:format)                          api/v1/shipping_methods#create
 #                 api_v1_roaster_profile_cutoffs GET    /api/v1/roasters/:roaster_profile_id/cutoffs(.:format)                                   api/v1/cutoffs#index
-#                                                POST   /api/v1/roasters/:roaster_profile_id/cutoffs(.:format)                                   api/v1/cutoffs#create
 #                  api_v1_roaster_profile_cutoff PATCH  /api/v1/roasters/:roaster_profile_id/cutoffs/:id(.:format)                               api/v1/cutoffs#update
 #                                                PUT    /api/v1/roasters/:roaster_profile_id/cutoffs/:id(.:format)                               api/v1/cutoffs#update
 #                        api_v1_roaster_profiles POST   /api/v1/roasters(.:format)                                                               api/v1/roaster_profiles#create
@@ -156,6 +164,7 @@
 #                                                PUT    /admin/producers/:id(.:format)                                                           admin/producer_profiles#update
 #                                                DELETE /admin/producers/:id(.:format)                                                           admin/producer_profiles#destroy
 #                                admin_dashboard GET    /admin/dashboard(.:format)                                                               admin/dashboard#index
+#                               admin_reset_user GET    /admin/reset_user(.:format)                                                              admin/dashboard#reset_user
 #                               roaster_profiles GET    /roasters(.:format)                                                                      roaster_profiles#index
 #                            new_roaster_profile GET    /roasters/new(.:format)                                                                  roaster_profiles#new
 #                           edit_roaster_profile GET    /roasters/:id/edit(.:format)                                                             roaster_profiles#edit
@@ -257,7 +266,10 @@ Rails.application.routes.draw do
             post :upload_csv
           end
         end
-        resources :roaster_profiles, path: "roasters"
+        resources :roaster_profiles, path: "roasters" do
+          put :reset_profile
+          put :update_inventory_item_quantities
+        end
       end
       resources :subscriptions
       resources :producer_profiles, path: "producers" do
@@ -318,6 +330,7 @@ Rails.application.routes.draw do
     resources :plans
     resources :producer_profiles, path: "producers"
     get 'dashboard', to: 'dashboard#index'
+    get 'reset_user', to: 'dashboard#reset_user'
   end
 
   resources :roaster_profiles, path: "roasters", only: [:index, :new, :show, :edit]
