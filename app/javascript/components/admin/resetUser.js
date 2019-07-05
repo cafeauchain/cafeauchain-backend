@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 /* eslint-disable */
 import Input from "shared/input";
 
+import DeleteLots from "admin/deleteLots"
+
 import { url as API_URL,  requester } from "utilities/apiUtils";
 /* eslint-enable */
 
@@ -35,21 +37,22 @@ class ResetUser extends React.Component {
         const { details } = this.state;
         const url = `${API_URL}/admin/roasters/${userId}/update_inventory_item_quantities`;
         const body = { details };
-        const response = await requester({ url, body, method: 'PUT' });
+        await requester({ url, body, method: 'PUT' });
     }
 
     handleReset = async e => {
         e.preventDefault();
         const { userId } = this.props;
         const url = `${API_URL}/admin/roasters/${userId}/reset_profile`;
-        const response = await requester({ url, method: "PUT" });
+        await requester({ url, method: "PUT" });
     }
     render(){
-        const { lots, batches, transactions, inventory_items, orders } = this.props;
+        const { lots, batches, transactions, inventory_items, orders, data } = this.props;
         const { details } = this.state;
         return (
             <Segment>
                 <Header as="h1" content="Reset the User" />
+                <DeleteLots data={data} />
                 <div>
                     <span>Lots: </span>
                     { lots.length }
@@ -98,7 +101,8 @@ ResetUser.propTypes = {
     transactions: array,
     inventory_items: array,
     orders: array,
-    userId: oneOfType([number, string])
+    userId: oneOfType([number, string]),
+    data: array
 };
 
 export default ResetUser;

@@ -32,9 +32,12 @@ class AdminDashboard extends React.Component {
                     return (
                         <div key={roaster.id}>
                             <Button onClick={this.handleRoasterChange} data-id={roaster.id} content={roaster.name} />
+                            <br />
+                            <br />
                         </div>
                     );
                 })}
+                <Button onClick={this.handleRoasterChange} data-id={null} content="unset" />
             </Segment>
         );
     }

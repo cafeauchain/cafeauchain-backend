@@ -48,5 +48,41 @@ module Api::V1::Admin
       render json: again, status: 200
     end
 
+    def delete_lot
+      lot = Lot.find(params[:id])
+      @products = []
+      @product_variants = []
+      @product_inventory_items = []
+      
+      lot.inventory_items.each{|ii|
+        @product_inventory_items << ii.product_inventory_items
+        ii.product_inventory_items.each{|pii| @products << pii.product}
+      }
+      @products = @products.uniq{|prod| prod.id}
+      @products.each{|product| @product_variants << product.product_variants }
+      @product_variants = @product_variants.flatten
+      @product_inventory_items = @product_inventory_items.flatten
+
+      @pv_id = @product_variants.map{|pv| pv.id}
+      @pii_id = @product_inventory_items.map{|pii| pii.id}
+      @product_id = @products.map{|product| product.id}
+
+      lot.transactions.destroy_all
+      ProductVariant.destroy(@pv_id)
+      ProductInventoryItem.destroy(@pii_id)
+      Product.destroy(@product_id)
+      CartItem.where(product_variant_id: @pv_id).destroy_all
+      lot.inventory_items.destroy_all
+      lot.destroy
+
+      render json: {
+        transactions: lot.transactions,
+        pv: @product_variants,
+        pii: @product_inventory_items,
+        products: @products,
+        ii: lot.inventory_items
+      }, status: 200
+    end
+
   end
 end
