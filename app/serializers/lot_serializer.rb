@@ -80,7 +80,7 @@ class LotSerializer < ActiveModel::Serializer
   end
 
   def batches
-    started_batches = self.object.batches.where.not(status: :in_queue).where(roast_date: instance_options[:range])
+    started_batches = self.object.batches.where(status: :roast_completed).where(roast_date: instance_options[:range])
     batches = InventoryServices::BatchGrouping.group(started_batches, instance_options[:period])
   end
 end

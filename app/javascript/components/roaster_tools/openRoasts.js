@@ -9,7 +9,7 @@ import Flex from "shared/flex";
 
 import tableDefs from "defs/tables/openRoasts";
 
-import { url as API_URL, requester } from "utilities/apiUtils";
+import { roasterUrl as ROASTER_URL,  requester } from "utilities/apiUtils";
 
 import withContext from "contexts/withContext";
 /* eslint-enable */
@@ -54,7 +54,7 @@ class OpenRoasts extends Component {
         details = { ...details };
         if (name === "") return;
         const val = value || checked;
-        details[name] = val;
+        details[name] = val || "";
         if (name === "roast_count" || name === "roast_size" ) {
             const start = (details["roast_count"] * details["roast_size"]).toFixed(2);
             const pct = 1 - Number(details["shrinkage"]) / 100;
@@ -66,10 +66,9 @@ class OpenRoasts extends Component {
 
     handleSubmit = async (ev, isFinished) => {
         ev.preventDefault();
-        const { details, current } = this.state;
-        const { id } = current;
+        const { details, current: { id } } = this.state;
         const { userId } = this.props;
-        const url = `${API_URL}/roasters/${userId}/batches/${id}`;
+        const url = `${ ROASTER_URL( userId) }/batches/${ id }`;
         if (isFinished) {
             details.finish_batch = true;
         }
@@ -81,37 +80,44 @@ class OpenRoasts extends Component {
             return;
         }
 
-        let respJSON = await requester({ url, body, method });
-        if (respJSON instanceof Error) {
-            // eslint-disable-next-line
-            console.log("there was an error", respJSON.response);
-        } else {
-            if (respJSON.redirect) {
-                window.location.href = await respJSON.redirect_url;
-            } else {
-                this.getBatchData(userId);
-            }
-        }
+        let response = await requester({ url, body, method });
+        this.afterSubmit({ response, isFinished });
     };
 
     handleFinish = ev => this.handleSubmit(ev, true);
     handleUpdate = ev => this.handleSubmit(ev, false);
 
-    // only called after successful submit
-    getBatchData = async id => {
-        const url = `${API_URL}/roasters/${id}/batches`;
-        const { updateContext } = this.props;
-        const response = await fetch(url);
-        const { data } = await response.json();
-        if (data instanceof Error) {
+    handleDelete = async ev => {
+        ev.preventDefault();
+        const { current: { id } } = this.state;
+        const { userId } = this.props;
+        const url = `${ROASTER_URL(userId)}/batches/${id}`;
+        let response = await requester({ url, method: "DELETE" });
+        this.afterSubmit({ response, isDelete: true });
+    }
+
+    afterSubmit = async ({response, isFinished, isDelete}) => {
+        const { getData } = this.props;
+        if (response instanceof Error) {
             // eslint-disable-next-line
-            console.log("there was an error", data.response);
+            console.log("there was an error", response.response);
         } else {
-            // TODO Add success/error messaging before closing
-            await updateContext({ batches: data });
-            this.closeModal();
+            if (response.redirect) {
+                window.location.href = await response.redirect_url;
+            } else {
+                if( isFinished ){
+                    await getData("batches");
+                    await getData("inventory");
+                    await getData("log");
+                    await getData("activity");
+                }
+                if( isDelete ){
+                    await getData("batches");
+                }
+                this.closeModal();
+            }
         }
-    };
+    }
 
     buildInventoryOptions = (inventory, lot_id) => {
         return inventory.reduce((options, { id, attributes }) => {
@@ -186,6 +192,11 @@ class OpenRoasts extends Component {
                         value={details.ending_amount}
                         step={0.1}
                     />
+                    <Flex spacebetween>
+                        <div />
+                        <Button negative content="Delete Batch" onClick={this.handleDelete} />
+                    </Flex>
+                    <br />
                     <Flex spacebetween>
                         <Button onClick={this.handleUpdate}>Update Batch</Button>
                         <Button primary onClick={this.handleFinish}>
