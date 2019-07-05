@@ -41,6 +41,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # TODO Revisit the validation. Especially for when an admin assumes a roaster
   def onboard_validation
     if user_signed_in?
       if ValidSubdomain.matches?(request)
@@ -64,11 +65,13 @@ class ApplicationController < ActionController::Base
         end
       else
         # Roaster side
-        if current_user.roaster_profile.present?
+        if current_user.admin?
+          # This needs more work/thought
+        elsif current_user.roaster_profile.present?
           profile = current_user.roaster_profile
           if profile.onboard_status != "onboard_completed"
             if !(self.class.parent == Api::V1 || self.class.parent == HighVoltage || self.class.parent == Devise || self.class.parent == Users)
-              if params["controller"] != "onboarding/onboarding" 
+              if params["controller"] != "onboarding/onboarding"
                 redirect_to send("onboarding_#{profile.onboard_status}_path")
               end
             end

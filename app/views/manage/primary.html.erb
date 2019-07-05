@@ -2,6 +2,7 @@
 <% content_for :body_class, defined?(body_class) ? body_class : "" %>
 <% props = local_assigns.except(:title, :scripts, :body_class) %>
 <% props["loggedIn"] = user_signed_in? %>
+<% props["isAdmin"] = current_user.admin %>
 <%= react_component "main", props %>
 <% if defined?(scripts) %>
     <% scripts.each do |s| %>
