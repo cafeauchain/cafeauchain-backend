@@ -22,7 +22,17 @@ module Api::V1::Admin
       id = params[:id]
       roaster_id = params[:roaster_profile_id]
       User.find(params[:id]).update(roaster_profile_id: roaster_id)
-      render json: { redirect: true, redirect_url: manage_dashboard_path }, status: 200
+      if !roaster_id.nil?
+        roaster = RoasterProfile.find(roaster_id)
+        if roaster.onboard_status == "onboard_completed"
+          @redirect_to = manage_dashboard_path
+        else
+          @redirect_to = send("onboarding_#{roaster.onboard_status}_path")
+        end
+      else
+        @redirect_to = admin_dashboard_path
+      end
+      render json: { redirect: true, redirect_url: @redirect_to }, status: 200
     end
 
     def reset_profile
