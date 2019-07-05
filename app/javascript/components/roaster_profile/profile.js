@@ -4,6 +4,9 @@ import { Image, Header, Segment } from "semantic-ui-react";
 import * as Showdown from "showdown";
 
 /* eslint-disable */
+import ManageCutoff from "wholesale/actions/manageCutoff";
+import Modal from "shared/modal";
+
 import { callMeDanger } from "utilities";
 
 import withContext from "contexts/withContext";
@@ -39,6 +42,12 @@ class Profile extends Component {
         return (
             <Segment>
                 <Header as="h2">Roaster Profile</Header>
+                <Modal
+                    text="Manage Order Cutoff"
+                    title="Manage Order Cutoff Times"
+                    icon="clipboard list"
+                    component={<ManageCutoff />}
+                />
                 <Header as="h3">
                     <Image src={logo_image_url} size="huge" verticalAlign="middle" />
                     {name}
