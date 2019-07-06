@@ -1,6 +1,8 @@
 /* eslint-disable */
-import { Money, AsNumber } from "shared/textFormatters";
+import { AsNumber } from "shared/textFormatters";
 /* eslint-enable */
+
+const TwoDecimals = props => AsNumber({ ...props, decimals: 2 });
 
 const tableDefinition = {
     fields: [
@@ -9,11 +11,21 @@ const tableDefinition = {
         {
             name: "quantity",
             namespace: "attributes",
-            formatter: AsNumber,
-            label: "Pounds Available",
+            formatter: TwoDecimals,
+            label: "Amount Available (lbs)",
             textAlign: "right"
         },
-        { name: "par_level", namespace: "attributes", formatter: AsNumber, textAlign: "right" }
+        { 
+            name: "quantity_needed", 
+            namespace: "attributes", 
+            formatter: TwoDecimals, 
+            label: "Amount Needed for Open Orders" 
+        },
+        {
+            name: "amount_to_roast",
+            namespace: "attributes",
+            formatter: TwoDecimals
+        }
     ],
     props: {
         celled: true,

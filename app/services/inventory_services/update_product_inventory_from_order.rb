@@ -1,18 +1,32 @@
 module InventoryServices
   class UpdateProductInventoryFromOrder
     def self.update(order)
-      order.order_items.each do |order_item|
-        product = order_item.product_variant.product.product_inventory_items.select{ |pii| !pii.inactive }.map do |pii|
-          order_item_weight = order_item.product_variant.custom_options["size"].to_i / 16 * order_item.quantity.to_i * pii.percentage_of_product.to_i / 100
-          inventory_item = pii.inventory_item
-          inventory_item_weight = inventory_item.quantity
-          new_ii_weight = inventory_item_weight.to_f - order_item_weight.to_f
-          pii.inventory_item.update( quantity: new_ii_weight)
-          if( inventory_item.quantity.to_f < inventory_item.par_level.to_f)
-            queue = InventoryServices::UpdateBatchQueue.load_queue(inventory_item)
-          end
+      current_order = InventoryServices::GetAmountsNeeded.process([order])
+      all_open_orders = order.customer_profile.orders.where.not(status: [:draft, :fulfilled])
+      all_orders = InventoryServices::GetAmountsNeeded.process(all_open_orders)
+
+      current_order.each{ |co|
+        inventory_item = InventoryItem.find(co["ii_id"])
+        amount_available = inventory_item.quantity.to_f
+        par = inventory_item.par_level.to_f
+        overall = all_orders.find{ |ao| ao["ii_id"] == co["ii_id"]}
+        amount_needed_overall = overall["weight"]
+        amount_remaining = amount_available - amount_needed_overall - par
+
+        roast_needed = amount_remaining < 0
+        if roast_needed.present?
+          InventoryServices::UpdateBatchQueue.load_queue(inventory_item, co["roast_date"])
         end
-      end
+      }
+    end
+    
+    def self.fulfill(order)
+      current_order = InventoryServices::GetAmountsNeeded.process([order]).each{|co|
+        inventory_item = InventoryItem.find(co["ii_id"])
+        amount_available = inventory_item.quantity.to_f
+        new_amount_available = amount_available - co["weight"].to_f
+        inventory_item.update(quantity: new_amount_available)
+      }
     end
   end
 end

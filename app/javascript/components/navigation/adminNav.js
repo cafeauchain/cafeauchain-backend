@@ -45,8 +45,13 @@ ModalLink.propTypes = {
 class AdminNav extends PureComponent {
     render() {
         const {
-            roaster: { id }
+            roaster: { id },
+            isAdmin
         } = this.props;
+
+        const admin = [
+            { href: `/admin/reset_user`, content: "Reset User" }
+        ];
 
         const inventory = [
             { href: `/manage/lots`, content: "Open Lots" },
@@ -95,6 +100,12 @@ class AdminNav extends PureComponent {
 
         return (
             <React.Fragment>
+                {isAdmin && (
+                    <Menu.Item>
+                        <Menu.Header as="a" href="/admin/dashboard" content="Admin Dashboard" />
+                        <Menu.Menu content={buildItems(admin)} />
+                    </Menu.Item>
+                )}
                 <Menu.Item>
                     <Menu.Header as="a" href="/manage/dashboard" content="Green Inventory" />
                     <Menu.Menu content={buildItems(inventory)} />
@@ -125,9 +136,10 @@ class AdminNav extends PureComponent {
         );
     }
 }
-const { object } = PropTypes;
+const { object, bool } = PropTypes;
 AdminNav.propTypes = {
-    roaster: object
+    roaster: object,
+    isAdmin: bool
 };
 
 export default withContext(AdminNav);

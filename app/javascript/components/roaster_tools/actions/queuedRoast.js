@@ -16,17 +16,20 @@ class QueuedRoast extends Component {
     constructor(props){
         super(props);
         const { current: { attributes }, inventory } = props;
-        const starting_amount = parseFloat((Number(attributes.target_weight) / 0.9).toFixed(2));
+        const profile = inventory.find(item => item.id === attributes.inventory_item_id);
+        const { attributes: { roast_size } } = profile;
+        const starting_amount = (Number(roast_size) * Number(attributes.roast_count)).toFixed(2);
         const details = {
             starting_amount,
-            roast_date: attributes.roast_date
+            roast_date: attributes.roast_date,
+            roast_count: attributes.roast_count,
+            roast_size
         };
         this.state = {
             details,
             btnLoading: false,
             errors: []
         };
-        this.roastProfile = inventory.find( item => item.id === attributes.inventory_item_id);
     }
 
     handleInputChange = (event, { value, name, checked }) => {
@@ -35,6 +38,9 @@ class QueuedRoast extends Component {
         if (name === "") return;
         const val = value || checked;
         details[name] = val || "";
+        if (name === "roast_count" || name === "roast_size" || name === "inventory_item_id") {
+            details["starting_amount"] = (details["roast_count"] * details["roast_size"]).toFixed(2);
+        }
         this.setState({ details });
     };
 
@@ -81,27 +87,14 @@ class QueuedRoast extends Component {
 
     render() {
         const { details, btnLoading, errors } = this.state;
-        const { current: { attributes: { target_weight }} } = this.props;
-        const { attributes: { quantity, par_level } } = this.roastProfile;
-        const estimate = parseFloat((Number(target_weight) / 0.9).toFixed(2));
+        const { current: { attributes: { target_weight, shrinkage }} } = this.props;
+        const estimate = parseFloat((Number(details.starting_amount) * (1 - Number(shrinkage)/100)).toFixed(2));
         return (
             <Form>
                 <ErrorHandler errors={errors} />
                 <p>
-                    <strong>Amount Below Par: </strong>
+                    <strong>Amount Needed: </strong>
                     {`${target_weight} lbs`}
-                </p>
-                <p>
-                    <strong>Roasted Amount in Inventory: </strong>
-                    {`${quantity} lbs`}
-                </p>
-                <p>
-                    <strong>Par Level: </strong>
-                    {`${par_level} lbs`}
-                </p>
-                <p>
-                    <strong>Estimated Starting Weight: </strong>
-                    {`${estimate} lbs`}
                 </p>
                 <Input
                     name="roast_date"
@@ -111,12 +104,27 @@ class QueuedRoast extends Component {
                     value={details.roast_date}
                 />
                 <Input
-                    name="starting_amount"
-                    label="Starting Weight (in lbs)"
-                    onChange={this.handleInputChange}
+                    name="roast_count"
+                    label="Number of Roasts"
                     type="number"
-                    value={details.starting_amount}
+                    onChange={this.handleInputChange}
+                    value={details.roast_count}
                 />
+                <Input
+                    name="roast_size"
+                    label="Roast Size"
+                    type="number"
+                    onChange={this.handleInputChange}
+                    value={details.roast_size}
+                />
+                <p>
+                    <strong>Starting Weight: </strong>
+                    {`${details.starting_amount} lbs`}
+                </p>
+                <p>
+                    <strong>Estimated Yield: </strong>
+                    {`${estimate} lbs`}
+                </p>
                 <Flex spacebetween flexend>
                     <Button primary onClick={this.handleSubmit} content="Start Batch" loading={btnLoading} />
                 </Flex>

@@ -24,6 +24,7 @@ module Api::V1
       if @roaster_profile_wizard.roaster_profile.save!
         logo = (params[:roaster_profile][:logo])
         roaster_profile = @roaster_profile_wizard.roaster_profile
+        roaster_profile.cutoff.create(day_1: '00:00', day_2: '00:00', day_3: '00:00', day_4: '00:00', day_5: '00:00')
         address = address_params
         address["location_label"] = "Office"
         address["primary_location"] = true
@@ -46,15 +47,36 @@ module Api::V1
     def update
       if current_user == @roaster_profile.owner
         if @roaster_profile.update(roaster_profile_params)
-          logo = (params[:roaster_profile][:logo])
-          if !logo.blank?
-            ActiveStorageServices::ImageAttachment.new(logo, @roaster_profile.id, "RoasterProfile", "logo").call
+
+          address = address_params
+          if address.present?
+            @roaster_profile.addresses.update(primary_location: false)
+            address["country"] = "USA"
+            address["primary_location"] = true
+            
+            current_address = @roaster_profile.addresses.find_by(street_1: address["street_1"], postal_code: address["postal_code"] )
+            if current_address.present?
+              current_address.update(address)
+            else
+              address["location_label"] = "Office"
+              @roaster_profile.addresses.create(address)
+            end
           end
-          render json: @roaster_profile, status: 200
+
+          # logo = (params[:roaster_profile][:logo])
+          # if !logo.blank?
+          #   ActiveStorageServices::ImageAttachment.new(logo, @roaster_profile.id, "RoasterProfile", "logo").call
+          # end
+          render json: @roaster_profile, status: 200, serializer: RoasterSerializer
         else
           render json: @roaster_profile.errors, status: 422
         end
       end
+    end
+
+    def update_logo
+      @roaster_profile.logo.attach(params[:logo])
+      render json: {data: "success"}, status: 200
     end
 
     def crops
@@ -160,7 +182,8 @@ module Api::V1
     end
 
     def set_roaster
-      @roaster_profile = RoasterProfile.friendly.find(params[:roaster_profile_id])
+      roaster_profile_id = params[:roaster_profile_id] || params[:id]
+      @roaster_profile = RoasterProfile.friendly.find(roaster_profile_id)
     end
 
     def roaster_profile_params

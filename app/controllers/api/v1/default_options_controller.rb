@@ -12,6 +12,11 @@ module Api::V1
       render json: @option, status: 200
     end
 
+    def update
+      @option = VariantOption.find(params[:id]).update(title: params[:title], options: params[:options])
+      render json: @option, status: 200
+    end
+
     private
 
     def set_roaster

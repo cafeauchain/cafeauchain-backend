@@ -10,10 +10,13 @@
 #  low_on_hand        :integer
 #  low_remaining      :integer
 #  name               :string
+#  on_hand_alert      :boolean          default(FALSE)
+#  origin             :string
 #  pounds_of_coffee   :float
 #  price_per_pound    :float
 #  roasted_on_import  :integer
 #  status             :integer
+#  warehouse_alert    :boolean          default(FALSE)
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  crop_id            :bigint(8)

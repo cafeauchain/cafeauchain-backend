@@ -64,6 +64,8 @@ class RoasterProfile < ApplicationRecord
 
   before_validation :sanitize_subdomain
   before_save :set_subdomain, if: :new_record?
+  
+  has_one :cutoff
 
   def open_order_items
     items = self.orders.where.not(status: :fulfilled).collect do |o|
@@ -99,7 +101,7 @@ class RoasterProfile < ApplicationRecord
   def amount_roasted_in_period(subscription_id)
     subscription = Subscription.find(subscription_id)
     date_range = (subscription.next_bill_date - 30.days)..subscription.next_bill_date.end_of_day - 1.days
-    batches = self.batches.where(roast_date: date_range)
+    batches = self.batches.where(roast_date: date_range, status: :roast_completed)
     pounds_roasted_in_period = batches.pluck(:starting_amount).map{|sa| sa.to_f || 0}.sum
   end
 
@@ -114,6 +116,16 @@ class RoasterProfile < ApplicationRecord
     if logo.attached?
       Rails.application.routes.url_helpers.rails_blob_path(logo, only_path: true)
     end
+  end
+
+  def getOpenOrderAmounts
+    orders = self.orders.where.not(status: [:draft, :fulfilled])
+    InventoryServices::GetAmountsNeeded.process(orders)
+  end
+
+  def getOpenOrderAmountsByDate
+    orders = self.orders.where.not(status: [:draft, :fulfilled])
+    InventoryServices::GetAmountsNeeded.process(orders, true)
   end
 
   private

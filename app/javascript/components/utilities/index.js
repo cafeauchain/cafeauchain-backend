@@ -23,6 +23,7 @@ import sortBy from "./sortBy";
 import truncate from "./truncate";
 import underscorer from "./underscorer";
 import usStates from "./usStates";
+import origin from "./origin";
 
 export {
     abbreviator,
@@ -40,6 +41,7 @@ export {
     jsonToFormData,
     noEmpties,
     objectEqual,
+    origin,
     params,
     pluralize,
     readCookie,

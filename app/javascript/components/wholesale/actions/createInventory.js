@@ -5,12 +5,15 @@ import { Form, Button, Header } from "semantic-ui-react";
 /* eslint-disable */
 import Input from "shared/input";
 import ErrorHandler from "shared/errorHandler";
+import Flex from "shared/flex";
 
 import { noEmpties } from "utilities";
 
 import { requester, fetcher, roasterUrl as ROASTER_URL } from "utilities/apiUtils";
 
 import withContext from "contexts/withContext";
+
+import fields from "defs/forms/createInventory";
 /* eslint-enable */
 
 const defaultDetails = {
@@ -94,27 +97,20 @@ class CreateRoastProfiles extends Component {
                     />
                     {isLotSelected && (
                         <F>
-                            <Input
-                                name="name"
-                                label="Roast Profile"
-                                onChange={this.handleInputChange}
-                                autoComplete="off"
-                            />
-                            <Input
-                                name="par_level"
-                                label="Par Level"
-                                onChange={this.handleInputChange}
-                                type="number"
-                                autoComplete="off"
-                            />
-                            <Input
-                                name="quantity"
-                                label="Starting Quantity"
-                                onChange={this.handleInputChange}
-                                defaultValue={0}
-                                type="number"
-                                autoComplete="off"
-                            />
+                            <Flex spacing="20" wrap>
+                                {fields.map(({width, ...field}) => {
+                                    return (
+                                        <div flex={width || "50"} key={field.name} style={{marginBottom: 10}}>
+                                            <Input
+                                                {...field}
+                                                onChange={this.handleInputChange}
+                                                autoComplete="off"
+                                            />
+                                        </div>
+                                    );
+                                })}
+                            </Flex>
+                            
 
                             <Button
                                 size="small"

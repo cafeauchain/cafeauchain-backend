@@ -23,6 +23,7 @@ const keys = [
     { name: "key_producer_name" },
     { name: "key_crop_name" },
     { name: "key_harvest_year" },
+    { name: "key_origin"},
     { name: "key_name" },
     { name: "key_label" },
     { name: "key_pounds_on_contract" },

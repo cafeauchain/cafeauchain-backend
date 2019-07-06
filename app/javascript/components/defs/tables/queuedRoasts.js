@@ -24,8 +24,15 @@ const tableDefinition = {
             name: "target_weight", 
             namespace: "attributes", 
             formatter: AsNumber, 
-            label: "Target (lbs)", 
+            label: "Needed (lbs)", 
             textAlign: "right" 
+        },
+        { 
+            name: "roast_count",
+            namespace: "attributes",
+            label: "# of Roasts",
+            formatter: AsNumber,
+            textAlign: "right"
         },
         { name: "roast_date", namespace: "attributes", formatter: FormattedDate }
     ],

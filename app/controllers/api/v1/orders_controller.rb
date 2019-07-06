@@ -10,12 +10,10 @@ module Api::V1
       @order = Order.create(status: :draft, wholesale_profile_id: @wholesale_profile.id)
       @cart.cart_items.each do |ci|
         pv = ProductVariant.find(ci.product_variant_id)
-        # TODO This is probably a terrible idea and shouldnt be done
         @order.order_items.create(
           product_variant_id: pv.id,
           quantity: ci.quantity,
           line_item_cost: (ci.quantity * pv.price_in_cents),
-          id: SecureRandom.uuid,
           product_options: ci.production_options,
           notes: ci.notes
         )
@@ -31,12 +29,27 @@ module Api::V1
     end
 
     def index
-      @orders = Order.all
+      if params[:status].present?
+        case params[:status]
+        when "open"
+          status = [:processing, :awaiting_payment, :paid_in_full]
+        # TODO Right now, I'm only getting open orders
+        # Revisit later
+        else
+          status = [:processing, :awaiting_payment, :paid_in_full]
+        end
+        @orders = Order.where(status: status)
+      else
+        @orders = Order.all
+      end
       render json: @orders, status: 200
     end
 
     def update
       @order.update(status: params[:status])
+      if @order.status == "fulfilled"
+        InventoryServices::UpdateProductInventoryFromOrder.fulfill(@order)
+      end
       @order = ActiveModel::SerializableResource.new(@order, serializer: OrderSerializer::SingleOrderSerializer)
       render json: {"redirect":false, data: @order}, status: 200
     end

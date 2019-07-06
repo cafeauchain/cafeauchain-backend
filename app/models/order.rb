@@ -72,4 +72,9 @@ class Order < ApplicationRecord
   def terms
     wholesale_profile.terms
   end
+
+  def estimated_roast_date
+    OrderServices::GetRoastDate.process(self)
+  end
+
 end
