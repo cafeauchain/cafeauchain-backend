@@ -27,18 +27,12 @@ class RoastProfiles extends React.Component {
         }
     }
     handleClick = async (e, item) => {
-        console.log( item );
         this.setState({ isOpen: true, current: item });
     }
     closeModal = () => this.setState({ isOpen: false, current: {} })
     render() {
         const { loading } = this.props;
         let { inventory = [] } = this.props;
-        const sorted = sortBy({
-            collection: inventory,
-            sorts: [{ name: "name" }],
-            namespace: "attributes"
-        });
         const { isOpen, current } = this.state;
         return (
             <F>
