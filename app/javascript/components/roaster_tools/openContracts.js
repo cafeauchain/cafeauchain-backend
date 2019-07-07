@@ -10,6 +10,8 @@ import tableDefs from "defs/tables/openContracts";
 
 import EditLot from "lots/edit";
 
+import { sortBy } from "utilities";
+
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
@@ -41,7 +43,12 @@ class OpenContracts extends Component {
         if (limit === "none") {
             limit = undefined;
         }
-        const limitLots = () => lots.slice(0, limit);
+        const sorted = sortBy({
+            collection: lots,
+            sorts: [{ name: "name" }],
+            namespace: "attributes"
+        });
+        const limitLots = () => sorted.slice(0, limit);
         return (
             <F>
                 {isOpen && (
