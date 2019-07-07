@@ -19,5 +19,5 @@
 #
 
 class InventoryItemSerializer < ActiveModel::Serializer
-  attributes :id, :lot_name, :quantity, :par_level, :name, :lot_id, :roast_size, :shrinkage, :quantity_needed, :amount_to_roast
+  attributes :id, :lot_name, :quantity, :par_level, :name, :lot_id, :roast_size, :shrinkage, :quantity_needed, :amount_to_roast, :can_delete
 end

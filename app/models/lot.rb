@@ -62,4 +62,8 @@ class Lot < ApplicationRecord
   def amount_roasted
     roasted = self.batches.where(status: :roast_completed).pluck(:starting_amount).map{|sa| sa.to_f || 0}.sum
   end
+
+  def can_delete
+    self.batches.length == 0 && self.inventory_items.length == 0
+  end
 end

@@ -14,6 +14,10 @@ import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
+const onboardingFields = [
+    { name: "roasted_on_import", label: "Roasted to Date", inputLabel: "lbs", type: "number" }
+];
+
 class EditLot extends Component {
     constructor(props) {
         super(props);
@@ -46,9 +50,19 @@ class EditLot extends Component {
         this.afterSubmit(response);
     };
 
-    afterSubmit = async response => {
-        const { updateContext, successClose, closeModal } = this.props;
-        const success = "Lot Updated!";
+    handleDelete = async ev => {
+        const { target } = ev;
+        ev.preventDefault();
+        target.blur();
+        const { userId, lot } = this.props;
+        const url = `${ROASTER_URL(userId)}/lots/${lot.id}`;
+        let response = await requester({ url, method: 'DELETE' });
+        this.afterSubmit(response, true);
+    }
+
+    afterSubmit = async (response, isDelete) => {
+        const { updateContext, successClose, closeModal, getData } = this.props;
+        const success = isDelete ? "Lot Deleted!" : "Lot Updated!";
         await setTimeout(async () => {
             this.setState({ btnLoading: false });
             if (response instanceof Error) {
@@ -59,10 +73,20 @@ class EditLot extends Component {
                 } else {
                     const update = { lot: response.data };
                     if (successClose) {
-                        successClose(success, updateContext, update);
+                        if( isDelete ){
+                            successClose(success, getData, "lots" );
+                        } else {
+                            await getData("lots");
+                            successClose(success, updateContext, update);
+                        }
                     } else if (closeModal) {
-                        closeModal();
-                        updateContext(update);
+                        if( isDelete ){
+                            await getData("lots");
+                            closeModal();
+                        } else {
+                            closeModal();
+                            updateContext(update);
+                        }
                     }
                 }
             }
@@ -101,11 +125,12 @@ class EditLot extends Component {
     }
 
     render() {
+        const { onboarding } = this.props;
         const { lotDetails, btnLoading, errors } = this.state;
         return (
             <Form>
                 <Flex spacing="20" wrap>
-                    {fields.map(field => (
+                    {fields.concat(onboarding ? onboardingFields : []).map(field => (
                         <div
                             key={field.name}
                             flex="50"
@@ -118,27 +143,43 @@ class EditLot extends Component {
                     ))}
                 </Flex>
                 <ErrorHandler errors={errors} />
-                                
-                <Button 
-                    fluid
-                    size="large"
-                    primary
-                    onClick={this.handleSubmit}
-                    loading={btnLoading}
-                    content="Update Lot"
-                />
+                <Flex spacing="20" centercross spacebetween>
+                    <div flex="auto">
+                        {lotDetails.can_delete && (
+                            <Button
+                                negative
+                                onClick={this.handleDelete}
+                                content="Delete Lot"
+                            />
+                        )}
+                        
+                    </div>
+                    <div flex="auto">
+                        <Button
+                            size="large"
+                            primary
+                            onClick={this.handleSubmit}
+                            loading={btnLoading}
+                            content="Update Lot"
+                        />
+                    </div>
+                    
+                    
+                </Flex>
             </Form>
         );
     }
 }
 
-const { oneOfType, string, number, func, object } = PropTypes;
+const { oneOfType, string, number, func, object, bool } = PropTypes;
 EditLot.propTypes = {
     userId: oneOfType([number, string]),
     updateContext: func,
     lot: object,
     closeModal: func,
-    successClose: func
+    successClose: func,
+    getData: func,
+    onboarding: bool
 };
 
 export default withContext(EditLot);
