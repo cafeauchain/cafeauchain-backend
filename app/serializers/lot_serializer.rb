@@ -35,13 +35,17 @@
 #
 
 class LotSerializer < ActiveModel::Serializer
-  attributes :id, :label, :name, :crop_name, :harvest_year, :pounds_of_coffee, :price_per_pound, :contract_value, 
+  attributes :id, :label, :name, :producer, :crop_name, :harvest_year, :pounds_of_coffee, :price_per_pound, :contract_value, 
   :roasted_on_import, :roasted_on_platform, :total_amount_roasted, 
   :on_hand, :on_hand_value, :low_on_hand, :on_hand_alert,
-  :in_warehouse, :warehouse_value, :low_remaining, :warehouse_alert
+  :in_warehouse, :warehouse_value, :low_remaining, :warehouse_alert, :can_delete
 
   belongs_to :crop
   # belongs_to :roaster_profile
+
+  def producer
+    self.object.crop.producer_profile.name
+  end
 
   def on_hand
     self.object.coffee_on_hand
