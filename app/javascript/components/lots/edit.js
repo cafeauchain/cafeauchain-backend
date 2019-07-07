@@ -76,6 +76,7 @@ class EditLot extends Component {
                         if( isDelete ){
                             successClose(success, getData, "lots" );
                         } else {
+                            await getData("lots");
                             successClose(success, updateContext, update);
                         }
                     } else if (closeModal) {

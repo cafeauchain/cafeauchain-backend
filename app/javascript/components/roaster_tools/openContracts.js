@@ -17,26 +17,26 @@ class OpenContracts extends Component {
     constructor(props){
         super(props);
         this.state = {
-            isOpen: false,
-            current: {}
+            isOpen: false
         };
     }
     componentDidMount() {
         const { lots, getData } = this.props;
         if (lots === undefined) getData("lots");
     }
-    closeModal = () => this.setState({ isOpen: false, current: {} });
-    handleClick = (e, item) => {
-        const { onboarding } = this.props;
+    closeModal = () => this.setState({ isOpen: false });
+    handleClick = async (e, item) => {
+        const { onboarding, updateContext } = this.props;
         if (onboarding) {
-            this.setState({ isOpen: true, current: item });
+            await updateContext({ lot: item });
+            this.setState({ isOpen: true });
         } else {
             window.location = `/manage/lots/${item.id}`;
         }
     }
     render() {
         let { lots = [], limit = 5 } = this.props;
-        const { isOpen, current } = this.state;
+        const { isOpen } = this.state;
         const { loading } = this.props;
         if (limit === "none") {
             limit = undefined;
@@ -50,7 +50,7 @@ class OpenContracts extends Component {
                         closeModal={this.closeModal}
                         title="Edit Lot Details"
                         icon="coffee"
-                        component={<EditLot lot={current} onboarding />}
+                        component={<EditLot onboarding />}
                     />
                 )}
                 
@@ -75,6 +75,7 @@ OpenContracts.propTypes = {
     onboarding: bool,
     loading: bool,
     getData: func,
+    updateContext: func,
     limit: oneOfType([number, string])
 };
 
