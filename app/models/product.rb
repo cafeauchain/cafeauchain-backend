@@ -43,11 +43,22 @@ class Product < ApplicationRecord
     changed_inventory_items = []
     composition_array.each do |comp|
       pii = ProductInventoryItem.find_by(product: self, inventory_item_id: comp[:inventory_item_id])
-      if !pii.nil? && pii.percentage_of_product != comp[:pct]
+      if pii.blank? || (!pii.blank? && pii.percentage_of_product != comp[:pct])
         changed_inventory_items << comp[:inventory_item_id]
       end
     end
     return !changed_inventory_items.empty?
+  end
+
+  def composition
+    self.product_inventory_items.select{ |pii| !pii.inactive }.map do |item|
+      {
+        name: item.inventory_item.lot.label + " " + item.product_name,
+        pct: item.percentage_of_product,
+        inventory_item_id: item.inventory_item.id,
+        id: item.id
+      }
+    end
   end
 
   def compare_variants(variant_array, existing_array)
