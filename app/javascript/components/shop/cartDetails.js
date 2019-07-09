@@ -10,6 +10,7 @@ import Modal from "shared/modal";
 
 import ShippingOptions from "shop/shipping/options"
 import CustomerAddresses from "shop/customer/addresses";
+import MiniDetails from "shop/cartMiniDetails";
 
 import CartChangePayment from "shop/cart/changePayment";
 import MiniCard from "payments/miniCard";
@@ -110,6 +111,9 @@ class CartDetails extends React.Component {
                             component={<CustomerAddresses />}
                         />
                     </Card.Meta>
+                </Card.Content>
+                <Card.Content>
+                    {attributes.cart_items.map(item => <MiniDetails key={item.id} item={item} />)}
                 </Card.Content>
                 <Card.Content extra>
                     <Flex spacebetween spacing="10">
