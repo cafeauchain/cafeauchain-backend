@@ -26,9 +26,9 @@ class ShippingOptions extends React.Component {
     afterSubmit = async id => {
         const { updateCartDetails, closeModal, successClose, rates } = this.props;
         setTimeout(async () => {
-            const newRate = rates.find(rate => rate.id === id);
+            const newRate = rates.findIndex(rate => rate.id === id);
             const success = "Shipping updated!";
-            await updateCartDetails({ shipping: newRate });
+            await updateCartDetails({ shippingIdx: newRate });
             if (successClose) {
                 successClose(success);
             } else if (closeModal) {

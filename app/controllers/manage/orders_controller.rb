@@ -14,9 +14,6 @@ module Manage
         customer = wp.customer_profile
         @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
         @cart = Cart.find_by(wholesale_profile: wp)
-        @rates = ShippingServices::GetRates.get_rate_estimates(@cart.id, wp.id)
-        @local_rates = ShippingServices::GetLocalRates.get_rates(@roaster)
-        @all_rates = (@rates + @local_rates).sort_by{|ar| ar[:retail_rate].to_f}
         @products = ActiveModel::SerializableResource.new(@roaster.products, each_serializer: ProductSerializer)
         @serialized_cart = ActiveModel::SerializableResource.new(@cart, each_serializer: CartSerializer)
         @cards = customer.cards
@@ -26,13 +23,9 @@ module Manage
           products: @products,
           profile: @customer,
           customer: customer,
-          rates: @all_rates,
           cards: @cards,
           stripeApiKey: Rails.application.credentials[Rails.env.to_sym][:stripe_api_key],
           scripts: ["https://js.stripe.com/v3/"],
-          # profile: wp,
-          # cart: @cart,
-          # body_class: "customer",
           title: 'Create Order for Customer',
           component: 'wholesale/orderForm',
           cart: @serialized_cart
