@@ -27,7 +27,7 @@ module Manage
           stripeApiKey: Rails.application.credentials[Rails.env.to_sym][:stripe_api_key],
           scripts: ["https://js.stripe.com/v3/"],
           title: 'Create Order for Customer',
-          component: 'wholesale/orderForm',
+          component: 'wholesale/orders/orderForm',
           cart: @serialized_cart
         }
       end
@@ -46,7 +46,7 @@ module Manage
         profile: @roaster_profile,
         customer: @customer,
         order: @order,
-        component: "wholesale/order",
+        component: "wholesale/orders/order",
         title: "View Order ##{ order.id }"
       }
     end
@@ -59,7 +59,7 @@ module Manage
         roaster: roaster,
         customers: roaster.customer_profiles,
         orders: @orders,
-        component: "wholesale/orders",
+        component: "wholesale/orders/orders",
         title: "View Orders"
       }
     end

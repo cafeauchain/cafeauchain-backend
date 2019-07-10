@@ -7,7 +7,7 @@ import Table from "shared/table";
 import ErrorHandler from "shared/errorHandler";
 import Modal from "shared/modal";
 
-import CreateOrder from "wholesale/createOrderBehalf";
+import CreateOrder from "wholesale/orders/createOrderBehalf";
 
 import tableDefs from "defs/tables/manageOrdersTable";
 

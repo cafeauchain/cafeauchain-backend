@@ -10,7 +10,7 @@ import Table from "shared/table";
 
 import { humanize, sortBy } from "utilities";
 
-import OrderFulfillment from "wholesale/orderFulfillment";
+import OrderFulfillment from "wholesale/orders/orderFulfillment";
 
 import tableDefs from "defs/tables/orderLineItems";
 
