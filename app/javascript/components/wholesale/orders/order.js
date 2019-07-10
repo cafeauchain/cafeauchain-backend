@@ -12,6 +12,7 @@ import { sortBy } from "utilities";
 import OrderFulfillment from "wholesale/orders/orderFulfillment";
 import OrderAddresses from "wholesale/orders/partials/addresses";
 import OrderDetails from "wholesale/orders/partials/details";
+import OrderTotals from "wholesale/orders/partials/totals";
 
 import tableDefs from "defs/tables/orderLineItems";
 
@@ -72,32 +73,7 @@ class Order extends React.Component {
                         <Flex spacing="30" spacebetween>
                             <div flex="66" />
                             <div flex="33" style={{ textAlign: "right" }}>
-                                <Flex spacing="10" spacebetween wrap>
-                                    <div flex="50">
-                                        <strong>Subtotal: </strong>
-                                    </div>
-                                    <div flex="50">
-                                        <Money>{attributes.subtotal}</Money>
-                                    </div>
-                                    <div flex="50">
-                                        <strong>Tax:</strong>
-                                    </div>
-                                    <div flex="50">
-                                        <Money>{attributes.taxes}</Money>
-                                    </div>
-                                    <div flex="50">
-                                        <strong>Shipping:</strong>
-                                    </div>
-                                    <div flex="50">
-                                        <Money>{attributes.shipping}</Money>
-                                    </div>
-                                    <div flex="50">
-                                        <strong>Total:</strong>
-                                    </div>
-                                    <div flex="50">
-                                        <Money type="positive">{attributes.order_total}</Money>
-                                    </div>
-                                </Flex>
+                                <OrderTotals attributes={attributes} />
                             </div>
                         </Flex>
                     </Segment>
