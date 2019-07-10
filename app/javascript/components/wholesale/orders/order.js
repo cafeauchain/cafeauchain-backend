@@ -11,6 +11,7 @@ import Table from "shared/table";
 import { humanize, sortBy } from "utilities";
 
 import OrderFulfillment from "wholesale/orders/orderFulfillment";
+import OrderAddresses from "wholesale/orders/partials/addresses";
 
 import tableDefs from "defs/tables/orderLineItems";
 
@@ -36,8 +37,6 @@ class Order extends React.Component {
             customer: { attributes: customerAtts }
         } = this.props;
         const order_items = attributes ? attributes.order_items : [];
-        const roasterLogo = roasterAtts.logo_image_url;
-        const customerLogo = customerAtts.logo_url;
         const sorted =
             order_items && order_items.length
                 ? sortBy({ collection: order_items, id: "size", sorts: [{ name: "name" }, { name: "size" }] })
@@ -61,52 +60,7 @@ class Order extends React.Component {
                         />
                         <Flex spacing="30" spacebetween>
                             <div flex="66">
-                                <Item.Group>
-                                    <Item>
-                                        <Item.Image size="tiny" src={roasterLogo} />
-                                        <Item.Content verticalAlign="top">
-                                            <Item.Header as="a">{roasterAtts.name}</Item.Header>
-                                            <Item.Description>
-                                                <p>
-                                                    {roasterAtts.primary_address.street_1}
-                                                    <br />
-                                                    {roasterAtts.primary_address.street_2 && (
-                                                        <F>
-                                                            {roasterAtts.primary_address.street_2}
-                                                            <br />
-                                                        </F>
-                                                    )}
-                                                    {`${roasterAtts.primary_address.city}, ${roasterAtts.primary_address.state} ${roasterAtts.primary_address.postal_code}`}
-                                                </p>
-                                            </Item.Description>
-                                        </Item.Content>
-                                    </Item>
-                                    <Item>
-                                        <Item.Content>
-                                            <Item.Meta content="Bill To:" />
-                                        </Item.Content>
-                                    </Item>
-                                    <Item>
-                                        <Item.Image size="tiny" src={customerLogo} />
-                                        <Item.Content verticalAlign="top">
-                                            <Item.Header as="a">{customerAtts.company_name}</Item.Header>
-                                            <Item.Description>
-                                                <p>
-                                                    {customerAtts.primary_address.street_1}
-                                                    <br />
-                                                    {customerAtts.primary_address.street_2 && (
-                                                        <F>
-                                                            {customerAtts.primary_address.street_2}
-                                                            <br />
-                                                        </F>
-                                                    )}
-                                                    {`${customerAtts.primary_address.city}, 
-                                                    ${customerAtts.primary_address.state} ${customerAtts.primary_address.postal_code}`}
-                                                </p>
-                                            </Item.Description>
-                                        </Item.Content>
-                                    </Item>
-                                </Item.Group>
+                                <OrderAddresses roaster={roasterAtts} customer={customerAtts} />
                             </div>
                             <div flex="33" style={{ textAlign: "right" }}>
                                 <Header as="h2">{"Invoice #" + id}</Header>
@@ -166,15 +120,6 @@ class Order extends React.Component {
                                 </Flex>
                             </div>
                         </Flex>
-                        <br />
-                        <p>
-                            <strong>Notes:</strong>
-                        </p>
-                        <Segment secondary>These are notes. Should they be editable?</Segment>
-                        <p>
-                            <strong>Terms:</strong>
-                        </p>
-                        <Segment secondary>These are full terms. Should they be editable?</Segment>
                     </Segment>
                 </Segment>
             </div>
