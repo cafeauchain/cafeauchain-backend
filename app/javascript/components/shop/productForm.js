@@ -86,22 +86,27 @@ class ProductForm extends React.Component {
         e.preventDefault();
         await this.setState({ btnLoading: true });
         let { details } = this.state;
-        const { getData, isAssumedCustomer, customer } = this.props;
+        const { getData, isAssumedCustomer, customer, updateContext } = this.props;
+        await updateContext({ cartLoading: true });
         let url = `${API_URL}/carts`;
         if (method === "PUT") url += "/" + details.id;
         if( isAssumedCustomer ){
             details.customer_profile_id = customer.id;
         }
         const response = await requester({ url, body: details, method });
-        await setTimeout(() => this.setState({ btnLoading: false }), 600);
+        
         if (response instanceof Error) {
+            await setTimeout(async () => this.setState({ btnLoading: false }), 600);
             this.setState({ errors: response.response.data });
         } else {
             if (response.redirect) {
                 window.location.href = await response.redirect_url;
             } else {
-                this.setState({ added: true });
-                getData("cart", isAssumedCustomer ? `?customer_profile_id=${ customer.id }` : "");
+                setTimeout( async() => {
+                    await getData("cart", isAssumedCustomer ? `?customer_profile_id=${customer.id}` : "");
+                    await updateContext({ cartLoading: false });
+                    this.setState({ btnLoading: false, added: true });
+                }, 600 );
             }
         }
     };

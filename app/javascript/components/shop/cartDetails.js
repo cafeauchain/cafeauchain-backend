@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Header, Card, Button, Statistic } from "semantic-ui-react";
+import { Header, Card, Button, Statistic, Loader, Dimmer } from "semantic-ui-react";
 
 /* eslint-disable */
 import Flex from "shared/flex";
@@ -70,7 +70,8 @@ class CartDetails extends React.Component {
             cart: { attributes },
             profile: { attributes: profileAttrs },
             cards,
-            stripeApiKey
+            stripeApiKey,
+            cartLoading
         } = this.props;
         const { primary_address: { street_1, street_2, city, state, postal_code } } = profileAttrs; 
         const { errors, shippingIdx, payment_type, payment_source } = this.state;
@@ -86,6 +87,9 @@ class CartDetails extends React.Component {
         const card = cards.find( card => card.stripe_card_id === payment_source );
         return (
             <Card fluid>
+                <Dimmer active={cartLoading} inverted>
+                    <Loader active={cartLoading} size="large" />
+                </Dimmer>
                 <ErrorHandler errors={errors} />
                 <Header as="h2" content="Cart Details" attached />
                 <Card.Content>
@@ -238,12 +242,13 @@ class CartDetails extends React.Component {
     }
 }
 
-const { object, array, string } = PropTypes;
+const { object, array, string, bool } = PropTypes;
 CartDetails.propTypes = {
     cart: object,
     profile: object,
     cards: array,
-    stripeApiKey: string
+    stripeApiKey: string,
+    cartLoading: bool
 };
 
 export default withContext(CartDetails);

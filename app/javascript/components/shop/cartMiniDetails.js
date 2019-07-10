@@ -34,10 +34,11 @@ class MiniDetails extends React.Component {
     handleSubmit = async e => {
         const { target } = e;
         const { quantity } = this.state;
-        const { item: propItem } = this.props;
+        const { item: propItem, updateContext } = this.props;
         e.preventDefault();
         target.blur;
         await this.setState({ saveLoading: true });
+        await updateContext({ cartLoading: true});
         let url = API_URL + "/carts/" + propItem.variant_id;
         const body = { quantity };
         if( quantity === propItem.quantity ){
@@ -48,25 +49,28 @@ class MiniDetails extends React.Component {
     }
     handleDelete = async e => {
         const { target } = e;
-        const { item: propItem } = this.props;
+        const { item: propItem, updateContext } = this.props;
         e.preventDefault();
         target.blur;
         await this.setState({ removeLoading: true });
+        await updateContext({ cartLoading: true });
         let url = API_URL + "/carts/" + propItem.id;
         let response = await requester({ url, method: "DELETE" });
         this.afterSubmit(response);
     }
     afterSubmit = async response => {
-        const { getData, customer } = this.props;
+        const { getData, customer, updateContext } = this.props;
         setTimeout( async() => {
             if (response instanceof Error) {
+                await updateContext({ cartLoading: false });
                 this.setState({ errors: response.response.data });
             } else {
                 if (response.redirect) {
                     window.location.href = await response.redirect_url;
                 } else {
+                    await getData("cart", "?customer_profile_id=" + customer.id);
+                    await updateContext({ cartLoading: false });
                     this.setState({ isEditable: false, saveLoading: false, removeLoading: false });
-                    getData("cart", "?customer_profile_id=" + customer.id );
                 }
             }
         }, 600);
@@ -143,7 +147,8 @@ const { object, func } = PropTypes;
 MiniDetails.propTypes = {
     item: object,
     customer: object,
-    getData: func
+    getData: func,
+    updateContext: func
 };
 
 export default withContext(MiniDetails);
