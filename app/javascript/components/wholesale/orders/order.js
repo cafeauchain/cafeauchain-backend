@@ -1,17 +1,17 @@
-import React, { Fragment as F } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import { Segment, Header, Item, Label } from "semantic-ui-react";
-import moment from "moment";
+import { Segment, Header, Label } from "semantic-ui-react";
 
 /* eslint-disable */
 import Flex from "shared/flex";
 import { Money } from "shared/textFormatters";
 import Table from "shared/table";
 
-import { humanize, sortBy } from "utilities";
+import { sortBy } from "utilities";
 
 import OrderFulfillment from "wholesale/orders/orderFulfillment";
 import OrderAddresses from "wholesale/orders/partials/addresses";
+import OrderDetails from "wholesale/orders/partials/details";
 
 import tableDefs from "defs/tables/orderLineItems";
 
@@ -63,27 +63,7 @@ class Order extends React.Component {
                                 <OrderAddresses roaster={roasterAtts} customer={customerAtts} />
                             </div>
                             <div flex="33" style={{ textAlign: "right" }}>
-                                <Header as="h2">{"Invoice #" + id}</Header>
-                                <Flex spacing="10" spacebetween wrap>
-                                    <div flex="50">
-                                        <strong>Date: </strong>
-                                    </div>
-                                    <div flex="50">{moment(attributes.order_date).format("MMM D, YYYY")}</div>
-                                    <div flex="50">
-                                        <strong>Terms:</strong>
-                                    </div>
-                                    <div flex="50">{attributes.terms}</div>
-                                    <div flex="50">
-                                        <strong>Status:</strong>
-                                    </div>
-                                    <div flex="50">{humanize(attributes.status)}</div>
-                                    <div flex="50">
-                                        <strong>Balance Due:</strong>
-                                    </div>
-                                    <div flex="50">
-                                        <Money type="positive">{attributes.order_total}</Money>
-                                    </div>
-                                </Flex>
+                                <OrderDetails attributes={attributes} id={id} />
                             </div>
                         </Flex>
                         <br />
