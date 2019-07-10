@@ -31,7 +31,7 @@ const Main = ({ component, ...rest }) => {
                     <Context>
                         {ctx => (
                             <React.Fragment>
-                                {(!ctx.static && !ctx.cart) || (ctx.cart && ctx.isAssumedCustomer) && (
+                                {((!ctx.static && !ctx.cart) || (ctx.cart && ctx.isAssumedCustomer)) && (
                                     <NavPortal mountNode="main-nav">
                                         <Menu vertical inverted fluid borderless>
                                             <AdminNav />
