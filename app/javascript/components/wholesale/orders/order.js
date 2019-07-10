@@ -4,7 +4,6 @@ import { Segment, Header, Label } from "semantic-ui-react";
 
 /* eslint-disable */
 import Flex from "shared/flex";
-import { Money } from "shared/textFormatters";
 import Table from "shared/table";
 
 import { sortBy } from "utilities";
@@ -20,12 +19,6 @@ import withContext from "contexts/withContext";
 /* eslint-enable */
 
 class Order extends React.Component {
-    static propTypes = () => {
-        const { object } = PropTypes;
-        return {
-            order: object
-        };
-    };
     constructor(props) {
         super(props);
         this.state = {};
@@ -82,5 +75,12 @@ class Order extends React.Component {
         );
     }
 }
+
+const { object } = PropTypes;
+Order.propTypes = {
+    order: object,
+    profile: object,
+    customer: object
+};
 
 export default withContext(Order);
