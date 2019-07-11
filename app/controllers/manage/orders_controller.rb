@@ -31,7 +31,6 @@ module Manage
           cart: @serialized_cart
         }
       end
-      
     end
 
     def show
@@ -41,11 +40,13 @@ module Manage
       @order = ActiveModel::SerializableResource.new(order, serializer: OrderSerializer::SingleOrderSerializer)
       @roaster_profile = ActiveModel::SerializableResource.new(roaster, serializer: RoasterSerializer)
       @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer, scope: roaster)
+      products = ActiveModel::SerializableResource.new(roaster.products, each_serializer: ProductSerializer)
       render "manage/primary", locals: {
         roaster: current_user.roaster_profile,
         profile: @roaster_profile,
         customer: @customer,
         order: @order,
+        products: products,
         component: "wholesale/orders/order",
         title: "View Order ##{ order.id }"
       }

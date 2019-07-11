@@ -48,10 +48,18 @@ module ShippingServices
     #   }
     # ]
 
-    def self.get_rate_estimates(cart_id, wholesale_profile_id)
+    def self.get_rate_estimates(cart_id, wholesale_profile_id, isOrder = false)
+      
       EasyPost.api_key = Rails.application.credentials[Rails.env.to_sym][:easypost_api_key]
 
-      cart = Cart.find(cart_id)
+      # isOrder is a bool used to update the shipping quote when editing an order instead of from the cart
+      # cart is only used to get the order weights 
+      if isOrder
+        cart = Order.find(cart_id)
+      else
+        cart = Cart.find(cart_id)
+      end
+      # cart = Cart.find(cart_id)
       wholesale_profile = WholesaleProfile.find(wholesale_profile_id) 
       roaster = wholesale_profile.roaster_profile
       customer = wholesale_profile.customer_profile
