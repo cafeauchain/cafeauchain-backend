@@ -37,20 +37,11 @@ module Api::V1
         else
           status = [:processing, :awaiting_payment, :paid_in_full]
         end
-
-        if current_user.roaster_profile.present?
-          @orders = current_user.roaster_profile.orders
-        else
-          @orders = Order.where(status: status, wholesale_profile: @cart.wholesale_profile)
-        end
-
-        
+      end
+      if current_user.roaster_profile.present?
+        @orders = current_user.roaster_profile.orders
       else
-        if current_user.roaster_profile.present?
-          @orders = current_user.roaster_profile.orders
-        else
-          @orders = Order.where(status: status, wholesale_profile: @cart.wholesale_profile)
-        end
+        @orders = Order.where(status: status, wholesale_profile: @cart.wholesale_profile)
       end
       render json: @orders, status: 200
     end
