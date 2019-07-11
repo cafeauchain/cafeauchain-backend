@@ -5,7 +5,7 @@ import { Header, Segment } from "semantic-ui-react";
 /* eslint-disable */
 import Inventory from "wholesale/inventory";
 import QuickActions from "wholesale/quickActions";
-import Orders from "wholesale/orders";
+import Orders from "wholesale/orders/orders";
 /* eslint-enable */
 
 const Dashboard = ({ orders, roaster }) => (

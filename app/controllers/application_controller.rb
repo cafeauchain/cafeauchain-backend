@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :current_roaster
   before_action :set_raven_context
-  before_action :set_cart, if: :current_roaster
+  before_action :set_cart
   before_action :onboard_validation
   after_action :set_csrf_cookie
 
@@ -37,7 +37,13 @@ class ApplicationController < ActionController::Base
     if user_signed_in? && current_user.roaster_profile.nil?
       @cart = current_user.cart(current_roaster)
     else
-      @cart = nil
+      if params[:customer_profile_id].present?
+        wp = WholesaleProfile.find_by(roaster_profile: current_user.roaster_profile, customer_profile_id: params[:customer_profile_id])
+        @cart = wp.cart
+      else
+        @cart = nil
+      end
+      
     end
   end
 

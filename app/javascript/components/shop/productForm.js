@@ -13,14 +13,14 @@ import ErrorHandler from "shared/errorHandler";
 
 import { requester, url as API_URL } from "utilities/apiUtils";
 
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
 
-const Wrapper = props => (
-    <Context>
-        {ctx => <ProductForm {...props} loading={ctx.loading} userId={ctx.userId} getCtxData={ctx.getData} />}
-    </Context>
-);
+// const Wrapper = props => (
+//     <Context>
+//         {ctx => <ProductForm {...props} loading={ctx.loading} userId={ctx.userId} getCtxData={ctx.getData} />}
+//     </Context>
+// );
 
 class ProductForm extends React.Component {
     static propTypes = () => {
@@ -51,8 +51,8 @@ class ProductForm extends React.Component {
         details = { ...details };
         if (name === "") return;
         const val = value || checked;
-        details[name] = val;
-        this.setState({ details, errors: [] });
+        details[name] = val || "";
+        this.setState({ details, errors: [], added: false });
     };
 
     decrementQty = event => {
@@ -69,7 +69,7 @@ class ProductForm extends React.Component {
         let { details } = this.state;
         details = { ...details };
         details.quantity = Number(details.quantity) + dir;
-        this.setState({ details, errors: [] });
+        this.setState({ details, errors: [], added: false });
     };
 
     handleSubmit = e => {
@@ -85,20 +85,28 @@ class ProductForm extends React.Component {
         target.blur();
         e.preventDefault();
         await this.setState({ btnLoading: true });
-        const { details } = this.state;
-        const { getCtxData } = this.props;
+        let { details } = this.state;
+        const { getData, isAssumedCustomer, customer, updateContext } = this.props;
+        await updateContext({ cartLoading: true });
         let url = `${API_URL}/carts`;
         if (method === "PUT") url += "/" + details.id;
+        if( isAssumedCustomer ){
+            details.customer_profile_id = customer.id;
+        }
         const response = await requester({ url, body: details, method });
-        await setTimeout(() => this.setState({ btnLoading: false }), 600);
+        
         if (response instanceof Error) {
+            await setTimeout(async () => this.setState({ btnLoading: false }), 600);
             this.setState({ errors: response.response.data });
         } else {
             if (response.redirect) {
                 window.location.href = await response.redirect_url;
             } else {
-                this.setState({ added: true });
-                getCtxData("cart");
+                setTimeout( async() => {
+                    await getData("cart", isAssumedCustomer ? `?customer_profile_id=${customer.id}` : "");
+                    await updateContext({ cartLoading: false });
+                    this.setState({ btnLoading: false, added: true });
+                }, 600 );
             }
         }
     };
@@ -109,7 +117,7 @@ class ProductForm extends React.Component {
         e.preventDefault();
         await this.setState({ loading: true });
         const { cartId } = this.props;
-        const { getCtxData } = this.props;
+        const { getData } = this.props;
         const url = `${API_URL}/carts/${cartId}`;
         const response = await requester({ url, method: "DELETE" });
         if (response instanceof Error) {
@@ -118,7 +126,7 @@ class ProductForm extends React.Component {
             if (response.redirect) {
                 window.location.href = await response.redirect_url;
             } else {
-                setTimeout(() => getCtxData("cart"), 600);
+                setTimeout(() => getData("cart"), 600);
             }
         }
     };
@@ -244,4 +252,4 @@ class ProductForm extends React.Component {
     }
 }
 
-export default Wrapper;
+export default withContext(ProductForm);

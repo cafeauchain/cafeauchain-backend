@@ -51,9 +51,9 @@ class ConfigProvider extends React.Component {
         this.setState(stateObj);
     };
 
-    getData = async request => {
+    getData = async (request, params) => {
         const { id } = this.props;
-        const response = await fetch(urls(id)[request]);
+        const response = await fetch(urls(id)[request] + (params || ""));
         const { data } = await response.json();
         // this.setState({ [request]: data });
         this.updateContext({ [request]: data });

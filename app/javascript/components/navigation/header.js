@@ -17,8 +17,8 @@ class Header extends Component {
     }
 
     render() {
-        const { cart, roaster: roasterProfile, loggedIn, header_info } = this.props;
-        const links = loggedIn ? (cart ? customer({ cart }) : roaster(roasterProfile)) : base;
+        const { cart, roaster: roasterProfile, loggedIn, header_info, isAssumedCustomer } = this.props;
+        const links = loggedIn ? (cart && !isAssumedCustomer ? customer({ cart }) : roaster(roasterProfile)) : base;
         const loggedInRoaster = loggedIn && !cart && !!roasterProfile;
         const { right = [], buttons } = links;
         return (
@@ -34,7 +34,8 @@ Header.propTypes = {
     cart: object,
     loggedIn: bool,
     roaster: object,
-    header_info: object
+    header_info: object,
+    isAssumedCustomer: bool
 };
 
 export default Header;
