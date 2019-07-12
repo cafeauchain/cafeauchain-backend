@@ -9,10 +9,12 @@
 
 import * as Sentry from '@sentry/browser';
 // Support component names relative to this directory:
-var componentRequireContext = require.context("components", true)
-var ReactRailsUJS = require("react_ujs")
+var componentRequireContext = require.context("components", true);
+var ReactRailsUJS = require("react_ujs");
 
-ReactRailsUJS.useContext(componentRequireContext)
+ReactRailsUJS.useContext(componentRequireContext);
 // import "@babel/polyfill";
 
-Sentry.init({ dsn: 'https://787afef10ad642f4aa88c40622b6108f@sentry.io/1406268' });
+if( process.env.NODE_ENV !== "development" ){
+    Sentry.init({ dsn: 'https://787afef10ad642f4aa88c40622b6108f@sentry.io/1406268' });
+}

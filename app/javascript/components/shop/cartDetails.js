@@ -43,13 +43,17 @@ class CartDetails extends React.Component {
         const { target } = e;
         e.preventDefault();
         target.blur();
-        const { cart: { id, attributes: { shipping_rates } }, profile: { id: customer_profile_id } } = this.props;
+        const { 
+            cart: { id, attributes: { shipping_rates } }, 
+            profile: { id: customer_profile_id }, 
+            isAssumedCustomer 
+        } = this.props;
         const url = `${API_URL}/orders`;
         const { payment_type, payment_source, shippingIdx } = this.state;
         const shipping = shipping_rates[shippingIdx];
         const tax = item["data-tax"];
         const total = item["data-total"];
-        const body = { id, payment_type, payment_source, shipping, tax, total, customer_profile_id };
+        const body = { id, payment_type, payment_source, shipping, tax, total, customer_profile_id, isAssumedCustomer };
         const response = await requester({ url, body });
         if (response instanceof Error) {
             this.setState({ errors: response.response.data });
@@ -248,7 +252,8 @@ CartDetails.propTypes = {
     profile: object,
     cards: array,
     stripeApiKey: string,
-    cartLoading: bool
+    cartLoading: bool,
+    isAssumedCustomer: bool
 };
 
 export default withContext(CartDetails);
