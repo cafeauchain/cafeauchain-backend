@@ -21,7 +21,11 @@ module Api::V1
         @cart.cart_items.destroy_all
         OrderServices::ProcessOrder.process(@order.id, params)
       end
-      render json: {redirect_url: shop_order_path(@order), redirect: true}, status: 200
+      if params[:isAssumedCustomer].present?
+        render json: {redirect_url: manage_order_path(@order), redirect: true}, status: 200  
+      else
+        render json: {redirect_url: shop_order_path(@order), redirect: true}, status: 200
+      end
     end
 
     def show
