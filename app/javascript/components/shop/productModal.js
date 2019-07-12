@@ -8,8 +8,6 @@ import "./styles.scss";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 
-
-
 /* eslint-disable */
 import Titler from "shared/titler";
 import Flex from "shared/flex";
