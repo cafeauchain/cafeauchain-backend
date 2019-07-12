@@ -23,7 +23,9 @@
 #
 
 class ProductSerializer < ActiveModel::Serializer
-  attributes :id, :title, :description, :slug, :composition, :product_image_urls, :product_options, :status, :variants #, :variant_options
+  attributes :id, :title, :description, :slug, :composition, :product_image_urls, :product_options, :status, :variants,
+  :lots
+   #, :variant_options
 
   def variants
     self.object.product_variants.select {|pv| !pv.inactive? }.sort_by{|pv| pv[:custom_options]["size"].to_i }.map do |pv|

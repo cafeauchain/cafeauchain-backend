@@ -68,7 +68,7 @@ class Products extends React.Component {
             <F>
                 <Flex centermain wrap spacing="20">
                     {sorted.reduce((arr, { attributes, id }) => {
-                        const { product_image_urls: img_urls, title, description, product_options } = attributes;
+                        const { product_image_urls: img_urls, title, description, product_options, lots } = attributes;
                         const img = img_urls.length ? img_urls[0].url : defaultImg;
                         const shortDesc = truncate(description, 200);
                         const variantOptions = this.variantBuilder(variants, id, title);
@@ -80,11 +80,13 @@ class Products extends React.Component {
                             <div key={id} flex="33" style={{ flexGrow: 0, margin: "15px 0" }}>
                                 <Product
                                     img={img}
+                                    imgs={img_urls}
                                     title={title}
                                     description={description}
                                     shortDesc={shortDesc}
                                     variantOptions={variantOptions}
                                     productOptions={productOptions}
+                                    lots={lots}
                                 />
                             </div>
                         ];
