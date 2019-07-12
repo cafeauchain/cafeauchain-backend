@@ -39,6 +39,12 @@ class Product < ApplicationRecord
 
   enum status: [:draft, :out_of_season, :live, :coming_soon]
 
+  def lots
+    self.product_inventory_items.where(inactive: false).map{|pii|
+      pii.inventory_item.lot
+    }
+  end
+
   def compare_composition(composition_array)
     changed_inventory_items = []
     composition_array.each do |comp|
