@@ -18,7 +18,7 @@ module StripeServices
       # stripe_customer.coupon = 'yzjn1Zzr'
       stripe_customer.save
       stripe_sub = Stripe::Subscription.create(customer: stripe_customer_id, items: [
-        {plan: @plan.stripe_plan_id, quantity: 1}
+        { plan: @plan.stripe_plan_id, quantity: 1 }
       ], billing_cycle_anchor: (Time.now.beginning_of_day + 30.days).to_time.to_i, prorate: false)
       period_start = Time.at(stripe_sub["current_period_start"]).beginning_of_day
       period_end = Time.at(stripe_sub["current_period_end"])
@@ -28,6 +28,7 @@ module StripeServices
       StripeServices::UpdateQuantifiedSubscription.update(user_id, @subscription.id)
       # SubscriptionMailer.enroll_and_welcome(@user).deliver_now! # Send welcome email
       return @subscription
+
     end
 
   end

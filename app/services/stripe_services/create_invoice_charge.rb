@@ -18,7 +18,8 @@ module StripeServices
         source: source,
         customer: customer_id,
         application_fee_amount: application_fee,
-        destination: account
+        destination: account,
+        capture: false
       })
 
       invoice.update(status: :paid_in_full, stripe_invoice_id: charge.id)
