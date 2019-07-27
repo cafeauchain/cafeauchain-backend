@@ -825,6 +825,7 @@ GEM
       multi_json (>= 1.3.0)
       rest-client (>= 1.7)
     erubi (1.8.0)
+    excon (0.65.0)
     execjs (2.7.0)
     factory_bot (5.0.2)
       activesupport (>= 4.2.0)
@@ -855,6 +856,7 @@ GEM
     hub (1.12.4)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
+    insensitive_hash (0.3.3)
     interception (0.5)
     jbuilder (2.8.0)
       activesupport (>= 4.2.0)
@@ -875,6 +877,8 @@ GEM
     kaminari-core (1.1.1)
     launchy (2.4.3)
       addressable (~> 2.3)
+    levenshtein-ffi (1.1.0)
+      ffi (~> 1.9)
     libv8 (6.7.288.46.1)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -911,6 +915,7 @@ GEM
     nokogiri (1.10.2)
       mini_portile2 (~> 2.4.0)
     orm_adapter (0.5.0)
+    ox (2.11.0)
     pager_api (0.2.3)
     pg (0.21.0)
     pry (0.12.2)
@@ -1053,6 +1058,11 @@ GEM
       unf_ext
     unf_ext (0.0.7.5)
     uniform_notifier (1.12.1)
+    ups-ruby (0.9.6)
+      excon (~> 0.45, >= 0.45.3)
+      insensitive_hash (~> 0.3.3)
+      levenshtein-ffi (~> 1.1)
+      ox (~> 2.2, >= 2.2.0)
     warden (1.2.8)
       rack (>= 2.0.6)
     web-console (3.7.0)
@@ -1130,6 +1140,7 @@ DEPENDENCIES
   stripe
   tzinfo-data
   uglifier (>= 1.3.0)
+  ups-ruby
   web-console (>= 3.3.0)
   webpacker
 

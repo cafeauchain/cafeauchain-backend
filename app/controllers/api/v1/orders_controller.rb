@@ -46,9 +46,37 @@ module Api::V1
     end
 
     def update
-      @order.update(status: params[:status])
-      if @order.status == "fulfilled"
-        InventoryServices::UpdateProductInventoryFromOrder.fulfill(@order)
+      if params[:update_items].present?
+        @order.order_items.destroy_all
+        params[:line_items].each{|li|
+          @order.order_items.create(
+            product_variant_id: li[:variant_id],
+            quantity: li[:quantity],
+            line_item_cost: (li[:quantity].to_i * li[:unit_price].to_f * 100),
+            product_options: li[:production_options],
+            notes: li[:notes]
+          )
+        }
+
+        wpid = @order.wholesale_profile_id
+        order_shipping_method = @order.order_shipping_method
+        rates = ShippingServices::GetRates.get_rate_estimates(@order.id, wpid, true)
+        rate = rates.find{|rate| rate[:carrier] == order_shipping_method[:carrier] and rate[:service] == order_shipping_method[:service]}
+        order_shipping_method.update(final_rate: rate[:retail_rate])
+        invoice = @order.invoice
+
+        subtotal = @order.subtotal.to_f
+        final_rate = rate[:retail_rate].to_f
+        tax = invoice.tax.to_f
+        total = subtotal + final_rate + tax
+
+        invoice.update(subtotal: subtotal, total: total )
+      elsif params[:status].present?
+        @order.update(status: params[:status])
+        if @order.status == "fulfilled"
+          StripeServices::CaptureCharge.capture(@order)
+          InventoryServices::UpdateProductInventoryFromOrder.fulfill(@order)
+        end
       end
       @order = ActiveModel::SerializableResource.new(@order, serializer: OrderSerializer::SingleOrderSerializer)
       render json: {"redirect":false, data: @order}, status: 200

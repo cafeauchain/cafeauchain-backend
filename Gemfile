@@ -37,6 +37,7 @@ gem 'acts-as-taggable-on', '~> 6.0'
 gem "sentry-raven"
 gem "easypost"
 gem "skylight"
+gem 'ups-ruby'
 
 group :development do
   gem 'web-console', '>= 3.3.0'
