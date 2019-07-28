@@ -96,7 +96,7 @@ class FormattedModal extends PureComponent {
         return (
             <Modal {...rest} closeIcon size={size} centered={centered} open={isOpen} onClose={closeModal}>
                 <Header icon={icon} content={title} />
-                <Modal.Content scrolling style={{ minHeight: "50vw" }}>
+                <Modal.Content scrolling style={{ minHeight: "30vw" }}>
                     {children}
                     {success && (
                         <Dimmer active inverted>

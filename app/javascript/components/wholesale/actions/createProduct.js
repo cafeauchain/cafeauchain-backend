@@ -52,10 +52,10 @@ class CreateProduct extends Component {
         const url = `${ROASTER_URL(userId)}/products${ productId }`;
         const body = { ...details };
         const response = await requester({ url, body, method });
-        setTimeout(() => this.afterSubmit(response, url), 400);
+        setTimeout(() => this.afterSubmit(response, url, method), 400);
     };
 
-    afterSubmit = async (response, url) => {
+    afterSubmit = async (response, url, method) => {
         const { 
             details, 
             getData,
@@ -67,7 +67,8 @@ class CreateProduct extends Component {
             updateHOCState({ errors: response.response.data, btnLoading: false });
         } else {
             const { id: productId } = response.data;
-            await this.handleImages(details, url + "/" + productId);
+            const imgUrl = method === "PUT" ? url : url + "/" + productId;
+            await this.handleImages(details, imgUrl);
             if (response.redirect) {
                 window.location.href = await response.redirect_url;
             } else {

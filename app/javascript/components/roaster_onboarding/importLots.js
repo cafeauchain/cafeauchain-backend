@@ -51,7 +51,7 @@ class ImportLots extends React.Component {
                     </Flex>
                     <Divider />
 
-                    <OpenLots limit="none" />
+                    <OpenLots limit="none" onboarding />
 
                     <OnboardFooter left={{}} right={rightBtn} userId={userId} />
                 </Segment>

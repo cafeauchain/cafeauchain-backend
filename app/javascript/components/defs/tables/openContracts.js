@@ -8,6 +8,9 @@ const PosMoneyNoDecimals = props => <PosMoney {...props} decimals={0} />;
 const tableDefinition = {
     fields: [
         { name: "name", namespace: "attributes", label: "Lot Name", width: 6 },
+        { name: "label", namespace: "attributes", label: "Lot Label" },
+        { name: "producer", namespace: "attributes" },
+        { name: "harvest_year", namespace: "attributes" },
         { name: "on_hand", namespace: "attributes", formatter: AsNumber, label: "On Hand" },
         { name: "low_on_hand", namespace: "attributes", formatter: AsNumber, label: "On Hand Par" },
         { 

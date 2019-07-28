@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-07-05T14:46:27.047492 #32158]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-07-09T15:27:04.213138 #87041]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                                        Prefix Verb   URI Pattern                                                                              Controller#Action
 #                     upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                                api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -174,6 +174,7 @@
 #                                              manage_dashboard GET    /manage/dashboard(.:format)                                                              manage/primary#dashboard
 #                                              manage_inventory GET    /manage/inventory(.:format)                                                              manage/primary#inventory
 #                                                 manage_orders GET    /manage/orders(.:format)                                                                 manage/orders#index
+#                                              new_manage_order GET    /manage/orders/new(.:format)                                                             manage/orders#new
 #                                                  manage_order GET    /manage/orders/:id(.:format)                                                             manage/orders#show
 #                                              manage_customers GET    /manage/customers(.:format)                                                              manage/customers#index
 #                                               manage_customer GET    /manage/customers/:id(.:format)                                                          manage/customers#show
@@ -341,7 +342,7 @@ Rails.application.routes.draw do
   namespace :manage do
     get "dashboard", to: "primary#dashboard"
     get "inventory", to: "primary#inventory"
-    resources :orders, only: [:show, :index]
+    resources :orders, only: [:show, :index, :new]
     resources :customers, only: [:show, :index]
     get "wholesale", to: "primary#wholesale"
     get "subscription", to: "primary#subscription"

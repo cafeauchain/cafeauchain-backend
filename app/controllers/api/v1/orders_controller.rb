@@ -5,7 +5,6 @@ module Api::V1
     before_action :set_order, only: [:show, :update]
 
     def create
-      @roaster = current_roaster
       @wholesale_profile = @cart.wholesale_profile
       @order = Order.create(status: :draft, wholesale_profile_id: @wholesale_profile.id)
       @cart.cart_items.each do |ci|
@@ -22,7 +21,11 @@ module Api::V1
         @cart.cart_items.destroy_all
         OrderServices::ProcessOrder.process(@order.id, params)
       end
-      render json: {redirect_url: shop_order_path(@order), redirect: true}, status: 200
+      if params[:isAssumedCustomer].present?
+        render json: {redirect_url: manage_order_path(@order), redirect: true}, status: 200  
+      else
+        render json: {redirect_url: shop_order_path(@order), redirect: true}, status: 200
+      end
     end
 
     def show
@@ -38,9 +41,11 @@ module Api::V1
         else
           status = [:processing, :awaiting_payment, :paid_in_full]
         end
-        @orders = Order.where(status: status)
+      end
+      if current_user.roaster_profile.present?
+        @orders = current_user.roaster_profile.orders
       else
-        @orders = Order.all
+        @orders = Order.where(status: status, wholesale_profile: @cart.wholesale_profile)
       end
       render json: @orders, status: 200
     end
@@ -78,8 +83,8 @@ module Api::V1
           InventoryServices::UpdateProductInventoryFromOrder.fulfill(@order)
         end
       end
-      @order = ActiveModel::SerializableResource.new(@order, serializer: OrderSerializer::SingleOrderSerializer)
-      render json: {"redirect":false, data: @order}, status: 200
+
+      render json: @order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
     end
 
     private

@@ -37,7 +37,7 @@ module InventoryServices
         end
       end
       
-      @product.update(title: params[:name], description: params[:description], status: params[:status])
+      @product.update(title: params[:name], description: params[:description], status: params[:status], product_options: params[:product_options])
       return @product
     end
   end

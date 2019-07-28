@@ -5,6 +5,9 @@ import { Segment, Header, Button, Icon } from "semantic-ui-react";
 /* eslint-disable */
 import Table from "shared/table";
 import ErrorHandler from "shared/errorHandler";
+import Modal from "shared/modal";
+
+import CreateOrder from "wholesale/orders/createOrderBehalf";
 
 import tableDefs from "defs/tables/manageOrdersTable";
 
@@ -95,6 +98,14 @@ class Orders extends Component {
         return (
             <Segment>
                 <Header as="h2" content={title} dividing />
+                <Modal
+                    text="Create Order on Customer's Behalf"
+                    title="Create Order on Customer's Behalf"
+                    component={<CreateOrder />}
+                    size="mini"
+                />
+                <br />
+                <br />
                 <ErrorHandler errors={errors} />
                 <Table tableDefs={this.tableDefs} data={sorted} loading={loading} />
             </Segment>

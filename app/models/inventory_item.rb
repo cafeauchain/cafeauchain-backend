@@ -32,6 +32,10 @@ class InventoryItem < ApplicationRecord
     lot.name
   end
 
+  def can_delete
+    self.batches.length == 0 && self.products.length == 0
+  end
+
   def quantity_needed
     totaled_inventory_item = self.lot.roaster_profile.getOpenOrderAmounts.find{ |ii| ii["ii_id"] == self.id }
     totaled_inventory_item.present? ? totaled_inventory_item["weight"] : 0

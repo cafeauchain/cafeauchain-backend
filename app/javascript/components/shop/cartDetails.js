@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Header, Card, Button, Statistic } from "semantic-ui-react";
+import { Header, Card, Button, Statistic, Loader, Dimmer } from "semantic-ui-react";
 
 /* eslint-disable */
 import Flex from "shared/flex";
@@ -10,6 +10,7 @@ import Modal from "shared/modal";
 
 import ShippingOptions from "shop/shipping/options"
 import CustomerAddresses from "shop/customer/addresses";
+import MiniDetails from "shop/cartMiniDetails";
 
 import CartChangePayment from "shop/cart/changePayment";
 import MiniCard from "payments/miniCard";
@@ -20,22 +21,15 @@ import withContext from "contexts/withContext";
 /* eslint-enable */
 
 class CartDetails extends React.Component {
-    static propTypes = () => {
-        const { object, array } = PropTypes;
-        return {
-            cart: object,
-            rates: array
-        };
-    };
     constructor(props) {
         super(props);
-        const { rates, cards, profile: { attributes: { terms } } } = props;
-        const defaultRate = rates.find( rate => rate.service === "Priority" ) || rates[0];
+        const { cart: { attributes: { shipping_rates } }, cards, profile: { attributes: { terms } } } = props;
+        const defaultRate = shipping_rates.findIndex( rate => rate.service === "Priority" ) || 0;
         const card = cards.find( card => card.default );
         const payment_source = card.stripe_card_id; 
         this.state = {
             errors: [],
-            shipping: defaultRate,
+            shippingIdx: defaultRate,
             payment_type: terms ? "terms_with_vendor" : "card_on_file",
             payment_source: !terms ? payment_source : undefined
         };
@@ -49,12 +43,17 @@ class CartDetails extends React.Component {
         const { target } = e;
         e.preventDefault();
         target.blur();
-        const { cart: { id } } = this.props;
+        const { 
+            cart: { id, attributes: { shipping_rates } }, 
+            profile: { id: customer_profile_id }, 
+            isAssumedCustomer 
+        } = this.props;
         const url = `${API_URL}/orders`;
-        const { payment_type, payment_source, shipping } = this.state;
+        const { payment_type, payment_source, shippingIdx } = this.state;
+        const shipping = shipping_rates[shippingIdx];
         const tax = item["data-tax"];
         const total = item["data-total"];
-        const body = { id, payment_type, payment_source, shipping, tax, total };
+        const body = { id, payment_type, payment_source, shipping, tax, total, customer_profile_id, isAssumedCustomer };
         const response = await requester({ url, body });
         if (response instanceof Error) {
             this.setState({ errors: response.response.data });
@@ -74,12 +73,13 @@ class CartDetails extends React.Component {
         const {
             cart: { attributes },
             profile: { attributes: profileAttrs },
-            rates,
             cards,
-            stripeApiKey
+            stripeApiKey,
+            cartLoading
         } = this.props;
         const { primary_address: { street_1, street_2, city, state, postal_code } } = profileAttrs; 
-        const { errors, shipping, payment_type, payment_source } = this.state;
+        const { errors, shippingIdx, payment_type, payment_source } = this.state;
+        const shipping =attributes.shipping_rates[shippingIdx];
         const speed = Number(shipping.est_delivery_days);
         const speedString = speed ? pluralize(speed, ' day') : "Unknown";
         
@@ -91,6 +91,9 @@ class CartDetails extends React.Component {
         const card = cards.find( card => card.stripe_card_id === payment_source );
         return (
             <Card fluid>
+                <Dimmer active={cartLoading} inverted>
+                    <Loader active={cartLoading} size="large" />
+                </Dimmer>
                 <ErrorHandler errors={errors} />
                 <Header as="h2" content="Cart Details" attached />
                 <Card.Content>
@@ -110,6 +113,9 @@ class CartDetails extends React.Component {
                             component={<CustomerAddresses />}
                         />
                     </Card.Meta>
+                </Card.Content>
+                <Card.Content>
+                    {attributes.cart_items.map(item => <MiniDetails key={item.id} item={item} />)}
                 </Card.Content>
                 <Card.Content extra>
                     <Flex spacebetween spacing="10">
@@ -162,7 +168,7 @@ class CartDetails extends React.Component {
                         className="link"
                         component={(
                             <ShippingOptions 
-                                rates={rates}
+                                rates={attributes.shipping_rates}
                                 updateCartDetails={this.updateCartDetails}
                                 current={shipping}
                             />
@@ -239,5 +245,15 @@ class CartDetails extends React.Component {
         );
     }
 }
+
+const { object, array, string, bool } = PropTypes;
+CartDetails.propTypes = {
+    cart: object,
+    profile: object,
+    cards: array,
+    stripeApiKey: string,
+    cartLoading: bool,
+    isAssumedCustomer: bool
+};
 
 export default withContext(CartDetails);

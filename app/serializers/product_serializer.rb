@@ -23,18 +23,9 @@
 #
 
 class ProductSerializer < ActiveModel::Serializer
-  attributes :id, :title, :description, :slug, :composition, :product_image_urls, :product_options, :status, :variants #, :variant_options
-
-  def composition
-    self.object.product_inventory_items.select{ |pii| !pii.inactive }.map do |item|
-      {
-        name: item.inventory_item.lot.label + " " + item.product_name,
-        pct: item.percentage_of_product,
-        inventory_item_id: item.inventory_item.id,
-        id: item.id
-      }
-    end
-  end
+  attributes :id, :title, :description, :slug, :composition, :product_image_urls, :product_options, :status, :variants,
+  :lots
+   #, :variant_options
 
   def variants
     self.object.product_variants.select {|pv| !pv.inactive? }.sort_by{|pv| pv[:custom_options]["size"].to_i }.map do |pv|

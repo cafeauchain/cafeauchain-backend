@@ -1,7 +1,7 @@
 module Api::V1
   class LotsController < ApplicationController
     before_action :set_roaster
-    before_action :set_lot, only: [:show, :update]
+    before_action :set_lot, only: [:show, :update, :destroy]
 
     def index
       @lots = @roaster.lots
@@ -45,6 +45,13 @@ module Api::V1
         LedgerServices::AssetDeliveryTransaction.new(params[:lotDetails][:quantity], @lot.id, @roaster.id).call
       else
         @lot.update(lot_params)
+      end
+      render json: @lot, status: 200, serializer: LotSerializer::SingleLotSerializer
+    end
+
+    def destroy
+      if @lot.can_delete
+        @lot.destroy
       end
       render json: @lot, status: 200, serializer: LotSerializer::SingleLotSerializer
     end
