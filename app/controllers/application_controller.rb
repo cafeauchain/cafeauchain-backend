@@ -34,16 +34,19 @@ class ApplicationController < ActionController::Base
   end
 
   def set_cart
-    if user_signed_in? && current_user.roaster_profile.nil?
-      @cart = current_user.cart(current_roaster)
-    else
-      if params[:customer_profile_id].present?
-        wp = WholesaleProfile.find_by(roaster_profile: current_user.roaster_profile, customer_profile_id: params[:customer_profile_id])
-        @cart = wp.cart
-      else
+    if user_signed_in?
+      if current_user.admin? and current_user.roaster_profile.nil?
         @cart = nil
+      elsif current_user.roaster_profile.nil?
+        @cart = curent_user.cart(current_roaster)
+      else
+        if params[:customer_profile_id].present?
+          wp = WholesaleProfile.find_by(roaster_profile: current_user.roaster_profile, customer_profile_id: params[:customer_profile_id])
+          @cart = wp.cart
+        else
+          @cart = nil
+        end
       end
-      
     end
   end
 

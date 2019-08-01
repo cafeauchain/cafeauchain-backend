@@ -4,6 +4,13 @@ class Users::SessionsController < Devise::SessionsController
     resource = warden.authenticate!(:scope => resource_name, :recall => "#{controller_path}#failure")
     puts "Logged in!"
     puts current_user
+    if resource.admin?
+      if resource.roaster_profile.nil?
+        return render json: {"redirect": true, redirect_url: admin_dashboard_path }, status: 200
+      else
+        return render json: {"redirect":true,"redirect_url": manage_dashboard_path}, status: 200
+      end
+    end
     if resource.roaster_profile.nil? && !ValidSubdomain.matches?(request)
       render json: {"redirect":true,"redirect_url": onboarding_profile_path}, status: 200
     elsif !resource.roaster_profile.nil? && !ValidSubdomain.matches?(request)
