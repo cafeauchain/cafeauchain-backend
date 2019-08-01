@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
       if current_user.admin? and current_user.roaster_profile.nil?
         @cart = nil
       elsif current_user.roaster_profile.nil?
-        @cart = curent_user.cart(current_roaster)
+        @cart = current_user.cart(current_roaster)
       else
         if params[:customer_profile_id].present?
           wp = WholesaleProfile.find_by(roaster_profile: current_user.roaster_profile, customer_profile_id: params[:customer_profile_id])
