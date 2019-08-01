@@ -380,6 +380,7 @@ Rails.application.routes.draw do
     # Customer 'View' Routes
     get 'cart', to: 'carts#index'
     namespace :shop do
+      get "handletoken", to: "shop#handletoken"
       resources :profile, only: [:index]
       get "profile/payment", to: "profile#payment"
       get "profile/addresses", to: "profile#addresses"

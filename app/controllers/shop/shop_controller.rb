@@ -1,8 +1,17 @@
 module Shop
   class ShopController < ApplicationController
-    before_action :authenticate_user!
+    before_action :authenticate_user!, except: [:handletoken]
     before_action :set_roaster
     before_action :set_cart
+
+    def handletoken
+      # TODO Possibly build a component that decodes a token and logs the user in automatically
+      render "customer/base", locals: {
+        body_class: "customer",
+        title: 'Redirect User',
+        component: 'empty',
+      }
+    end
 
     def index
       @roaster = @roaster_profile
