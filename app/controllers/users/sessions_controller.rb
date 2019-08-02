@@ -1,4 +1,6 @@
 class Users::SessionsController < Devise::SessionsController
+  skip_before_action :verify_signed_out_user
+  before_action :delete_cookie, only: [:destroy]
 
   def create
     resource = warden.authenticate!(:scope => resource_name, :recall => "#{controller_path}#failure")
@@ -45,5 +47,10 @@ class Users::SessionsController < Devise::SessionsController
   def failure
     warden.custom_failure!
     render json: { success: false, error: { message: t("devise.failure.#{request.env['warden'].message}") }}, status: 401
+  end
+
+  private
+  def delete_cookie
+    cookies.delete :cac_token_auth
   end
 end

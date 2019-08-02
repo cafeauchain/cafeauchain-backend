@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :authenticate_user_from_cookie
   before_action :current_roaster
   before_action :set_raven_context
   before_action :set_cart
@@ -11,6 +12,12 @@ class ApplicationController < ActionController::Base
   helper_method :set_cart
 
   protected
+
+  def authenticate_user_from_cookie
+      if !cookies[:cac_token_auth].nil?
+        request.headers["Authorization"] = "Bearer " + cookies[:cac_token_auth].to_s
+      end
+    end
 
   def set_csrf_cookie
     cookies["X-CSRF-Token"] = form_authenticity_token

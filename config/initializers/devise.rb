@@ -4,6 +4,9 @@ Devise.setup do |config|
 
   config.jwt do |jwt|
     jwt.secret = "somethingawesome"
+    jwt.dispatch_requests = [
+                          ['GET', %r{^/get_token$}],
+                        ]
   end
 
   # The secret key used by Devise. Devise uses this key to generate
