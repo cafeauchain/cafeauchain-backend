@@ -187,7 +187,7 @@ module Api::V1
     end
 
     def roaster_profile_params
-      params.require(:roaster_profile).permit(:name, :about, :slug, :url, :twitter, :facebook)
+      params.require(:roaster_profile).permit(:name, :about, :slug, :url, :twitter, :facebook, :subdomain)
     end
 
     def address_params
