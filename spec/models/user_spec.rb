@@ -8,6 +8,7 @@
 #  current_sign_in_ip     :inet
 #  email                  :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
+#  jti                    :string           not null
 #  last_sign_in_at        :datetime
 #  last_sign_in_ip        :inet
 #  name                   :string
@@ -25,6 +26,7 @@
 #
 #  index_users_on_customer_profile_id   (customer_profile_id)
 #  index_users_on_email                 (email) UNIQUE
+#  index_users_on_jti                   (jti) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_roaster_profile_id    (roaster_profile_id)
 #

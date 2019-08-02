@@ -27,7 +27,7 @@ class Users::SessionsController < Devise::SessionsController
         roaster = wholesale.roaster_profile
         isProfileComplete = wholesale.onboard_status == 'approved'
         status = wholesale.onboard_status
-        redirect_url = shop_handletoken_url(params: {token: "PASS_TOKEN_HERE"}, subdomain: roaster.subdomain)
+        redirect_url = shop_handletoken_url(params: {token: resource.token}, subdomain: roaster.subdomain)
       end
     else
     # User is a roaster
@@ -39,7 +39,7 @@ class Users::SessionsController < Devise::SessionsController
         redirect_url = manage_dashboard_path
       end
     end
-    render json: {"redirect":true,"redirect_url": redirect_url}, status: 200
+    render json: {"redirect":false, redirect_url: redirect_url}, status: 200
   end
 
   def failure

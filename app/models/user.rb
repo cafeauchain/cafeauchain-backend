@@ -8,6 +8,7 @@
 #  current_sign_in_ip     :inet
 #  email                  :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
+#  jti                    :string           not null
 #  last_sign_in_at        :datetime
 #  last_sign_in_ip        :inet
 #  name                   :string
@@ -25,6 +26,7 @@
 #
 #  index_users_on_customer_profile_id   (customer_profile_id)
 #  index_users_on_email                 (email) UNIQUE
+#  index_users_on_jti                   (jti) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_roaster_profile_id    (roaster_profile_id)
 #
@@ -39,8 +41,10 @@ class User < ApplicationRecord
   friendly_id :name, use: [:slugged, :finders]
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
+  include Devise::JWT::RevocationStrategies::JTIMatcher
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable, :validatable,
+         :jwt_authenticatable, jwt_revocation_strategy: self
 
   belongs_to :roaster_profile, optional: true
   belongs_to :customer_profile, optional: true
@@ -57,5 +61,10 @@ class User < ApplicationRecord
     if !customer_profile.wholesale_profiles.find_by(roaster_profile: roaster).nil?
       customer_profile.wholesale_profiles.find_by(roaster_profile: roaster).cart
     end
+  end
+
+  attr_accessor :token
+  def on_jwt_dispatch(token, payload)
+    self.token = token
   end
 end
