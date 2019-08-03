@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Header, Form, Button, Icon, Divider } from "semantic-ui-react";
+import { Header, Form, Button, Divider } from "semantic-ui-react";
 import shortid from "shortid";
 
 /* eslint-disable */
-import Input from "shared/input";
 import ErrorHandler from "shared/errorHandler";
-import { Weights } from "shared/textFormatters";
+import DraggableList from "shared/draggableList"
 
 import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 
@@ -102,14 +101,10 @@ class CreateDefaults extends Component {
         this.setState({ options: arr });
     };
 
+    updateOrder = items => this.setState({ options: items });
+
     render() {
         const { errors, options, btnLoading } = this.state;
-        let optionFields = options.map((item, idx) => ({
-            name: item.id,
-            key: item.id,
-            label: "Size " + (idx + 1) + " (in ounces)",
-            value: item.value
-        }));
         return (
             <Form>
                 <Header as="h2" content="Create Default Product Sizes" />
@@ -120,39 +115,12 @@ class CreateDefaults extends Component {
                     Additionally, you will be able to add and remove sizes for each product as necessary.
                 </p>
                 <ErrorHandler errors={errors} />
-                {optionFields.map(({ name, label, value }, idx) => (
-                    <div key={name}>
-                        <Input
-                            action
-                            name={name}
-                            label={label}
-                            onChange={this.handleInputChange}
-                            value={value}
-                            type="number"
-                            allowLP
-                        >
-                            <input data-lpignore="true" />
-
-                            <Button
-                                type="button"
-                                color="red"
-                                icon
-                                content={<Icon name="close" />}
-                                compact
-                                idx={idx}
-                                onClick={this.onRemove}
-                                disabled={options.length < 2}
-                            />
-                        </Input>
-                        {Number(value) >= 16 && (
-                            <div style={{ margin: "-10px 0 10px" }}>
-                                <span>(Weight in lbs: </span>
-                                <Weights>{value === "" ? Number(0) : value}</Weights>
-                                <span>)</span>
-                            </div>
-                        )}
-                    </div>
-                ))}
+                <DraggableList 
+                    updateOrder={this.updateOrder}
+                    items={options}
+                    onChange={this.handleInputChange}
+                    onRemove={this.onRemove}
+                />
                 <br />
                 <Button color="blue" onClick={this.addOption} content="Add Option" />
 
