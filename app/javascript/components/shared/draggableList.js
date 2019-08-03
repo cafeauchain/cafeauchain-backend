@@ -110,10 +110,10 @@ class List extends Component {
                                             provided={provided}
                                             snapshot={snapshot}
                                             component={(
-                                                <SizeInput
+                                                <Inner
                                                     {...passedProps}
                                                     index={index}
-                                                    disabled={items.length < 2}
+                                                    length={items.length}
                                                     item={item}
                                                 />
                                             )}
@@ -136,7 +136,7 @@ List.propTypes = {
     children: node,
     updateOrder: func,
     passedProps: object,
-    component: node
+    component: func
 };
 
 export default List;

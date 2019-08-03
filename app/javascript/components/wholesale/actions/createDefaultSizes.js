@@ -120,6 +120,7 @@ class CreateDefaults extends Component {
                     updateOrder={this.updateOrder}
                     items={options}
                     passedProps={{onRemove: this.onRemove, onChange: this.handleInputChange}}
+                    component={SizeInput}
                 />
                 <br />
                 <Button color="blue" onClick={this.addOption} content="Add Option" />
