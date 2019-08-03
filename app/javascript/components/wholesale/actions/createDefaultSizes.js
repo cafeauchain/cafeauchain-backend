@@ -6,6 +6,7 @@ import shortid from "shortid";
 /* eslint-disable */
 import ErrorHandler from "shared/errorHandler";
 import DraggableList from "shared/draggableList"
+import SizeInput from "wholesale/actions/sizeInput";
 
 import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 
@@ -50,7 +51,7 @@ class CreateDefaults extends Component {
         await this.setState({ btnLoading: true });
         const { options, optionId } = this.state;
         const { userId, updateContext, defaults, successClose, closeModal } = this.props;
-        const body = { title: "Size", options: this.buildOptions(options).sort() };
+        const body = { title: "Size", options: this.buildOptions(options) };
         let url = `${ROASTER_URL(userId)}/default_options`;
         if( optionId ) url += "/" + optionId;
         const response = await requester({ url, body, method: optionId ? 'PUT' : 'POST' });
@@ -118,8 +119,7 @@ class CreateDefaults extends Component {
                 <DraggableList 
                     updateOrder={this.updateOrder}
                     items={options}
-                    onChange={this.handleInputChange}
-                    onRemove={this.onRemove}
+                    passedProps={{onRemove: this.onRemove, onChange: this.handleInputChange}}
                 />
                 <br />
                 <Button color="blue" onClick={this.addOption} content="Add Option" />

@@ -10,15 +10,15 @@ import { Weights } from "shared/textFormatters";
 class SizeInput extends React.Component {
     state = {}
     render(){
-        const { name, label, onChange, value, onRemove, idx, disabled } = this.props;
+        const { item, index, length, onChange, onRemove } = this.props;
         return (
             <React.Fragment>
                 <Input
                     action
-                    name={name}
-                    label={label}
+                    name={item.id}
+                    label={"Size " + (index + 1) + " (in ounces)"}
                     onChange={onChange}
-                    value={value}
+                    value={item.value}
                     type="number"
                     allowLP
                 >
@@ -30,15 +30,15 @@ class SizeInput extends React.Component {
                         icon
                         content={<Icon name="close" />}
                         compact
-                        idx={idx}
+                        idx={index}
                         onClick={onRemove}
-                        disabled={disabled}
+                        disabled={length < 2}
                     />
                 </Input>
-                {Number(value) >= 16 && (
+                {Number(item.value) >= 16 && (
                     <div style={{ margin: "-10px 0 10px" }}>
                         <span>(Weight in lbs: </span>
-                        <Weights>{value === "" ? Number(0) : value}</Weights>
+                        <Weights>{item.value === "" ? Number(0) : item.value}</Weights>
                         <span>)</span>
                     </div>
                 )}
@@ -46,15 +46,13 @@ class SizeInput extends React.Component {
         );
     }
 }
-const { func, string, number, bool, oneOfType } = PropTypes;
+const { func, number, object } = PropTypes;
 SizeInput.propTypes = {
-    name: string,
-    label: string,
+    item: object,
     onChange: func,
-    value: oneOfType([number, string]),
     onRemove: func,
-    disabled: bool,
-    idx: number
+    index: number,
+    length: number
 };
 
 export default SizeInput;
