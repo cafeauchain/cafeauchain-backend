@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 
 /* eslint-disable */
 import stylevar from "stylesheets/variables.scss";
-import SizeInput from "wholesale/actions/sizeInput";
 /* eslint-enable */
 
 // a little function to help us with reordering the result
