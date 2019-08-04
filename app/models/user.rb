@@ -58,8 +58,10 @@ class User < ApplicationRecord
   end
 
   def cart(roaster)
-    if !customer_profile.wholesale_profiles.find_by(roaster_profile: roaster).nil?
+    if customer_profile.present?
+      if !customer_profile.wholesale_profiles.find_by(roaster_profile: roaster).nil?
       customer_profile.wholesale_profiles.find_by(roaster_profile: roaster).cart
+      end
     end
   end
 
