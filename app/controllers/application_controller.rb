@@ -14,10 +14,10 @@ class ApplicationController < ActionController::Base
   protected
 
   def authenticate_user_from_cookie
-      if !cookies[:cac_token_auth].nil?
-        request.headers["Authorization"] = "Bearer " + cookies[:cac_token_auth].to_s
-      end
+    if !cookies[:cac_token_auth].nil?
+      request.headers["Authorization"] = "Bearer " + cookies[:cac_token_auth].to_s
     end
+  end
 
   def set_csrf_cookie
     cookies["X-CSRF-Token"] = form_authenticity_token
