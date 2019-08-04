@@ -1107,7 +1107,7 @@ DEPENDENCIES
   coffee-rails
   database_cleaner
   devise (>= 4.6.0)
-  devise-jwt
+  devise-jwt (~> 0.5.9)
   easypost
   factory_bot_rails
   faker
