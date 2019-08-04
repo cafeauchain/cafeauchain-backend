@@ -4,8 +4,10 @@ import { Header, Button } from "semantic-ui-react";
 
 /* eslint-disable */
 import Input from "shared/input";
+import DraggableList from "shared/draggableList";
+import OptionInput from "wholesale/partials/optionInput";
 
-import { humanize, underscorer } from "utilities";
+import { underscorer } from "utilities";
 /* eslint-enable */
 
 class Options extends React.PureComponent {
@@ -63,25 +65,29 @@ class Options extends React.PureComponent {
         setOptions(selected);
         this.setState({ selected });
     };
+
+    updateOrder = arr => {
+        const { setOptions } = this.props;
+        const selected = arr.map(item => item.value);
+        this.setState({ selected }, setOptions(selected));
+    };
+
     render() {
         const { options } = this.props;
+        const optionsAsObj = options.map( item => ({value: item, id: item }));
         const { addedOption, selected } = this.state;
         return (
             <div style={{ marginBottom: 5 }}>
                 <Header as="h3" content="Product Options" style={{ marginBottom: 38 }} />
-                {options.map(item => {
-                    return (
-                        <Input
-                            key={item}
-                            name={item}
-                            label={humanize(item)}
-                            value={item}
-                            inputType="checkbox"
-                            checked={selected.indexOf(item) > -1}
-                            onChange={this.handleInputChange}
-                        />
-                    );
-                })}
+                <DraggableList
+                    updateOrder={this.updateOrder}
+                    items={optionsAsObj}
+                    passedProps={{ 
+                        onChange: this.handleInputChange,
+                        selected
+                    }}
+                    component={OptionInput}
+                />
                 <Input
                     name="options"
                     label=""
