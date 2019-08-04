@@ -17,6 +17,7 @@ gem 'jbuilder', '~> 2.5'
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'pg', '~> 0.18'
 gem "devise", ">= 4.6.0"
+gem 'devise-jwt'
 gem 'high_voltage'
 gem 'font_awesome5_rails'
 gem 'friendly_id', '~> 5.1.0'
@@ -62,7 +63,6 @@ end
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'capybara', '~> 2.13'
-  gem 'devise-jwt'
   gem 'selenium-webdriver'
   gem 'factory_bot_rails'
   gem 'faker'
