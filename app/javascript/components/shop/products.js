@@ -77,7 +77,7 @@ class Products extends React.Component {
 
                         return [
                             ...arr,
-                            <div key={id} flex="33" style={{ flexGrow: 0, margin: "15px 0" }}>
+                            <div key={id} flex="33" className="product-card">
                                 <Product
                                     img={img}
                                     imgs={img_urls}

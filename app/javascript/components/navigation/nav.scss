@@ -74,8 +74,11 @@
     flex-direction: column;
     height: 100%;
     .nav-btn {
-       margin-top: auto;
-       margin-bottom: 20px;
+        margin-bottom: 20px;
+        &:first-of-type {
+            margin-top: auto;
+            margin-bottom: 10px;
+        }
     }
 }
 
