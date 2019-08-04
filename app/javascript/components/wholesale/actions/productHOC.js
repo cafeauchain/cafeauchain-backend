@@ -10,7 +10,12 @@ import withContext from "contexts/withContext";
 /* eslint-enable */
 
 const compositionDefault = () => ({ inventory_item_id: "", pct: "", id: shortid.generate() });
-const variantsDefault = (variant = "") => ({ size: variant, price_in_dollars: "", id: shortid.generate() });
+const variantsDefault = (variant = "", index = 0) => ({ 
+    size: variant, 
+    price_in_dollars: "", 
+    id: shortid.generate(), 
+    sortorder: index + 1
+});
 const defaultDetails = {
     name: "",
     description: "",
@@ -88,7 +93,7 @@ function withProductForm(WrappedComponent) {
 
         addVariant = () => {
             let { details } = this.state;
-            const variant = variantsDefault();
+            const variant = variantsDefault("", details.variants.length);
             details.variants = [...details.variants, variant];
             this.setState({ details });
         };
@@ -121,6 +126,13 @@ function withProductForm(WrappedComponent) {
             details[remover] = arr;
             this.setState({ details });
         };
+
+        handleReorder = (array, name) => {
+            const { details } = this.state;
+            const arr = array.map((item, idx) => ({ ...item, sortorder: idx + 1 }));
+            details[name] = arr;
+            this.setState({ details });
+        }
 
         validateInputs = (details, item) => {
             const { composition, variants, ...rest } = details;
@@ -156,6 +168,7 @@ function withProductForm(WrappedComponent) {
                 buildDefaultVariants: this.buildDefaultVariants,
                 buildDefaultOptions: this.buildDefaultOptions,
                 onRemove: this.onRemove,
+                handleReorder: this.handleReorder,
                 updateHOCState: this.updateHOCState
             };
 

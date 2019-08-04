@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_02_010353) do
+ActiveRecord::Schema.define(version: 2019_08_04_013439) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -287,6 +287,7 @@ ActiveRecord::Schema.define(version: 2019_08_02_010353) do
     t.uuid "product_id"
     t.string "production_options", default: [], array: true
     t.boolean "inactive", default: false
+    t.integer "sortorder"
     t.index ["created_at"], name: "index_product_variants_on_created_at"
     t.index ["product_id"], name: "index_product_variants_on_product_id"
   end

@@ -102,7 +102,8 @@ class CreateProduct extends Component {
             addVariant,
             addInventoryItem,
             setOptions,
-            onRemove
+            onRemove,
+            handleReorder
         } = funcs;
         const { composition, variants, product_options: options } = details;
         const btnActive = validateInputs(details);
@@ -197,6 +198,7 @@ class CreateProduct extends Component {
                                 fields={fields.variants}
                                 handleChange={handleInputChange}
                                 btn={removeButton}
+                                handleReorder={handleReorder}
                             />
                             <Button type="button" color="blue" content="Add Variant" onClick={addVariant} />
                         </div>

@@ -28,11 +28,12 @@ class ProductSerializer < ActiveModel::Serializer
    #, :variant_options
 
   def variants
-    self.object.product_variants.select {|pv| !pv.inactive? }.sort_by{|pv| pv[:custom_options]["size"].to_i }.map do |pv|
+    self.object.product_variants.select {|pv| !pv.inactive? }.sort_by{|pv| pv[:sortorder].to_i }.map do |pv|
       {
         size: pv.custom_options["size"],
         price_in_dollars: '%.2f' % (pv.price_in_cents.to_i/100.0),
-        id: pv.id
+        id: pv.id,
+        sortorder: pv[:sortorder]
       }
     end
   end

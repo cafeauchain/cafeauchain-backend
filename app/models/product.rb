@@ -70,18 +70,25 @@ class Product < ApplicationRecord
   def compare_variants(variant_array, existing_array)
     added_variants = []
     removed_variants = []
+    # changed_variants will need to be invalidated
     changed_variants = []
+    # updated_variants will only have their sortorder updated
+    updated_variants = []
     new_ids = variant_array.pluck(:id)
     existing_ids = existing_array.pluck(:id)
     added_variants = new_ids - existing_ids
     removed_variants = existing_ids - new_ids
     variant_array.each do |variant|
       pv = ProductVariant.find_by(id: variant[:id])
-      if !pv.nil? && (pv.price_in_cents.to_i != variant[:price_in_dollars].to_f * 100 || pv.custom_options["size"].to_s != variant[:size].to_s)
-        changed_variants << variant[:id]
+      if !pv.nil?
+        if (pv.price_in_cents.to_i != variant[:price_in_dollars].to_f * 100 || pv.custom_options["size"].to_s != variant[:size].to_s)
+          changed_variants << variant[:id]
+        elsif pv[:sortorder] != variant[:sortorder]
+          updated_variants << variant[:id]
+        end
       end
     end
-    return { changed_variants: changed_variants, added_variants: added_variants, removed_variants: removed_variants }
+    return { changed_variants: changed_variants, added_variants: added_variants, removed_variants: removed_variants, updated_variants: updated_variants }
   end
 
   def product_image_urls
