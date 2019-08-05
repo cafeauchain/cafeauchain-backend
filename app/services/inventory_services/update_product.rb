@@ -15,8 +15,8 @@ module InventoryServices
       if !variants_changed[:added_variants].empty?
         variants_changed[:added_variants].each do |av|
           variant = params[:variants].detect {|v| v[:id] == av }
-          @variant = ProductVariant.new(product: @product, price_in_cents: (variant[:price_in_dollars].to_f * 100).to_i )
-          @variant.custom_options = variant.except(:price_in_dollars, :id, :price_in_cents)
+          @variant = ProductVariant.new(product: @product, price_in_cents: (variant[:price_in_dollars].to_f * 100).to_i, sortorder: variant[:sortorder] )
+          @variant.custom_options = variant.except(:price_in_dollars, :id, :price_in_cents, :sortorder)
           @variant.save
         end
       end
@@ -25,9 +25,16 @@ module InventoryServices
         variants_changed[:changed_variants].each do |cv|
           ProductVariant.find( cv ).update(inactive: true)
           variant = params[:variants].detect {|v| v[:id] == cv }
-          @variant = ProductVariant.new(product: @product, price_in_cents: (variant[:price_in_dollars].to_f * 100).to_i )
-          @variant.custom_options = variant.except(:price_in_dollars, :id, :price_in_cents)
+          @variant = ProductVariant.new(product: @product, price_in_cents: (variant[:price_in_dollars].to_f * 100).to_i, sortorder: variant[:sortorder] )
+          @variant.custom_options = variant.except(:price_in_dollars, :id, :price_in_cents, :sortorder)
           @variant.save
+        end
+      end
+
+      if !variants_changed[:updated_variants].empty?
+        variants_changed[:updated_variants].each do |cv|
+          variant = params[:variants].detect {|v| v[:id] == cv }
+          ProductVariant.find( cv ).update(sortorder: variant[:sortorder])
         end
       end
 

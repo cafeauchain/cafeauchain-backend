@@ -39,7 +39,8 @@ class EditRoasterProfile extends Component {
             street_2: primaryAddress ? primaryAddress.street_2 : "",
             city: primaryAddress ? primaryAddress.city : "",
             state: primaryAddress ? primaryAddress.state : "",
-            postal_code: primaryAddress ? primaryAddress.postal_code : ""
+            postal_code: primaryAddress ? primaryAddress.postal_code : "",
+            subdomain: attributes.subdomain || ""
         };
     };
 
@@ -90,7 +91,7 @@ class EditRoasterProfile extends Component {
 
     render() {
         const { details, loading, errors, logo_url } = this.state;
-        const { name, about, facebook, twitter, url, logo = [], ...address } = details;
+        const { name, about, facebook, twitter, url, logo = [], subdomain, ...address } = details;
 
         const Input = this.renderInput;
         return (
@@ -105,6 +106,13 @@ class EditRoasterProfile extends Component {
                     <Flex spacing="20">
                         <div flex="66">
                             <Input label="Name" value={name} />
+                            <Input 
+                                label="Customer Ordering URL"
+                                name="subdomain"
+                                value={subdomain}
+                                inputLabel=".cafeauchain.com"
+                                labelPosition="right"
+                            />
                             <Input inputType="markdown" label="About" value={about} />
                         </div>
                         <div flex="33">

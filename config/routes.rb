@@ -1,6 +1,5 @@
 # == Route Map
 #
-# I, [2019-07-09T15:27:04.213138 #87041]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                                        Prefix Verb   URI Pattern                                                                              Controller#Action
 #                     upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                                api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -231,7 +230,7 @@
 #                                                               PUT    /users(.:format)                                                                         users/registrations#update
 #                                                               DELETE /users(.:format)                                                                         users/registrations#destroy
 #                                                               POST   /users(.:format)                                                                         users/registrations#create
-#                                                        logout GET    /logout(.:format)                                                                        devise/sessions#destroy
+#                                                        logout GET    /logout(.:format)                                                                        users/sessions#destroy
 #                                                         login GET    /login(.:format)                                                                         devise/sessions#create
 #                                                        signup GET    /signup(.:format)                                                                        devise/registrations#new
 #                                                      register GET    /register(.:format)                                                                      devise/registrations#new
@@ -370,7 +369,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { sessions: "users/sessions", registrations: "users/registrations", passwords: "users/passwords" }
 
   devise_scope :user do
-    get "/logout" => "devise/sessions#destroy"
+    get "/logout" => "users/sessions#destroy"
     get "/login" => "devise/sessions#create"
     get "/signup" => "devise/registrations#new"
     get "/register" => "devise/registrations#new"
@@ -380,6 +379,7 @@ Rails.application.routes.draw do
     # Customer 'View' Routes
     get 'cart', to: 'carts#index'
     namespace :shop do
+      get "handletoken", to: "token#handletoken"
       resources :profile, only: [:index]
       get "profile/payment", to: "profile#payment"
       get "profile/addresses", to: "profile#addresses"

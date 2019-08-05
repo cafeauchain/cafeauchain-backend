@@ -6,13 +6,11 @@
 
 .ui.menu {
     .menu-trigger {
-        transform: translate(-10px,0)
+        border-left: 1px solid rgba(34, 36, 38, 0.1)
     }
     &.sidebar {
+        height: calc(100vh - 60px) !important;
         .item.nav-btn {
-            &:first-of-type {
-                border-top: 1px solid rgba(34, 36, 38, 0.1);
-            }
             padding: 0;
             > .button {
                 &:not(.unstyled) {
@@ -23,9 +21,11 @@
         }        
     }
     .item {
+        padding-top: 16px;
+        padding-bottom: 16px;
         &.nav-btn {
             @media screen and (min-width: 660px) {
-                margin: 0 0 0 10px;
+                margin: 0 0 0 20px;
                 &:last-of-type {
                     margin-right: 20px;
                 }   
@@ -65,6 +65,19 @@
                     text-decoration: none;
                 }
             }
+        }
+    }
+}
+
+.sidebar-menu-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .nav-btn {
+        margin-bottom: 20px;
+        &:first-of-type {
+            margin-top: auto;
+            margin-bottom: 10px;
         }
     }
 }

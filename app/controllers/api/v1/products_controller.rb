@@ -28,7 +28,7 @@ class Api::V1::ProductsController < ApplicationController
   def variants
     @variants = []
     @roaster.products.each do |product|
-      product.product_variants.select{ |pv| !pv.inactive? }.each do |variant|
+      product.product_variants.select{ |pv| !pv.inactive? }.sort_by{ |pv| pv[:sortorder] }.each do |variant|
         @variants << variant
       end
     end

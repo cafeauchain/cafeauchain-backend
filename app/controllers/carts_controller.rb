@@ -20,7 +20,7 @@ class CartsController < ApplicationController
       stripeApiKey: Rails.application.credentials[Rails.env.to_sym][:stripe_api_key],
       scripts: ["https://js.stripe.com/v3/"],
       roaster: current_roaster,
-      title: 'Products',
+      title: 'Cart',
       component: 'shop/cart',
       cart: @serialized_cart
     }

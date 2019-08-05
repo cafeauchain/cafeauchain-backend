@@ -24,7 +24,10 @@ class CartDetails extends React.Component {
     constructor(props) {
         super(props);
         const { cart: { attributes: { shipping_rates } }, cards, profile: { attributes: { terms } } } = props;
-        const defaultRate = shipping_rates.findIndex( rate => rate.service === "Priority" ) || 0;
+        const shippingIndex = shipping_rates.findIndex(rate => {
+            return (rate.service === "FEDEX_GROUND") || (rate.service === "Ground") || (rate.service === "Priority");
+        });
+        const defaultRate = shippingIndex > -1 ? shippingIndex : 0;
         const card = cards.find( card => card.default );
         const payment_source = card.stripe_card_id; 
         this.state = {

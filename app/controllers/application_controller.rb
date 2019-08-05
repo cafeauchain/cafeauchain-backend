@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :authenticate_user_from_cookie
   before_action :current_roaster
   before_action :set_raven_context
   before_action :set_cart
@@ -11,6 +12,12 @@ class ApplicationController < ActionController::Base
   helper_method :set_cart
 
   protected
+
+  def authenticate_user_from_cookie
+    if !cookies[:cac_token_auth].nil?
+      request.headers["Authorization"] = "Bearer " + cookies[:cac_token_auth].to_s
+    end
+  end
 
   def set_csrf_cookie
     cookies["X-CSRF-Token"] = form_authenticity_token
@@ -34,16 +41,19 @@ class ApplicationController < ActionController::Base
   end
 
   def set_cart
-    if user_signed_in? && current_user.roaster_profile.nil?
-      @cart = current_user.cart(current_roaster)
-    else
-      if params[:customer_profile_id].present?
-        wp = WholesaleProfile.find_by(roaster_profile: current_user.roaster_profile, customer_profile_id: params[:customer_profile_id])
-        @cart = wp.cart
-      else
+    if user_signed_in?
+      if current_user.admin? and current_user.roaster_profile.nil?
         @cart = nil
+      elsif current_user.roaster_profile.nil?
+        @cart = current_user.cart(current_roaster)
+      else
+        if params[:customer_profile_id].present?
+          wp = WholesaleProfile.find_by(roaster_profile: current_user.roaster_profile, customer_profile_id: params[:customer_profile_id])
+          @cart = wp.cart
+        else
+          @cart = nil
+        end
       end
-      
     end
   end
 
