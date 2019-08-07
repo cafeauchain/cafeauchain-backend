@@ -6,6 +6,7 @@ import { Segment, Header, Label, Button, Icon, Dimmer } from "semantic-ui-react"
 import Flex from "shared/flex";
 import Table from "shared/table";
 import Modal from "shared/modal";
+import Titler from "shared/titler";
 
 import { sortBy } from "utilities";
 
@@ -14,6 +15,7 @@ import OrderAddresses from "wholesale/orders/partials/addresses";
 import OrderDetails from "wholesale/orders/partials/details";
 import OrderTotals from "wholesale/orders/partials/totals";
 import LineItem from "wholesale/orders/partials/editLineItem";
+import EditShipping from "wholesale/orders/partials/editShipping";
 
 import tableDefs from "defs/tables/orderLineItems";
 
@@ -110,6 +112,8 @@ class Order extends React.Component {
                 ? sortBy({ collection: line_items, id: "size", sorts: [{ name: "name" }, { name: "size" }] })
                 : [];
         const closed = attributes.status === "fulfilled";
+        const order_shipping_method = attributes ? attributes.order_shipping_method : {carrier: "unknown", service: ""};
+        const shipping_method = `${order_shipping_method.carrier} ${order_shipping_method.service}`;
 
         return (
             <div>
@@ -189,7 +193,27 @@ class Order extends React.Component {
                             />
                         )}
                         <Flex spacing="30" spacebetween>
-                            <div flex="66" />
+                            <div flex="66">
+                                <Titler
+                                    title="Selected Shipping Method"
+                                    value={shipping_method}
+                                    bold
+                                />
+                                <br />
+                                {!isEditable && (
+                                    <Modal
+                                        text="Update Shipping Method"
+                                        title="Update Shipping Method"
+                                        component={(
+                                            <EditShipping 
+                                                order_id={id} 
+                                                wholesale_profile_id={customerAtts.wholesale_profile.id}
+                                                shipping_method={order_shipping_method}
+                                            />
+                                        )}
+                                    />
+                                )}
+                            </div>
                             <div flex="33" style={{ textAlign: "right" }}>
                                 <Segment>
                                     <Dimmer active={isEditable} inverted />

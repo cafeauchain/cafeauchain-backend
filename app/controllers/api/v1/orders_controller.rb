@@ -29,6 +29,7 @@ module Api::V1
     end
 
     def show
+      render json: @order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
     end
 
     def index
