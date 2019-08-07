@@ -50,17 +50,29 @@ class Lot < ApplicationRecord
 
   def coffee_on_hand
     roasted = amount_roasted + self.roasted_on_import.to_f
-    delivered = self.transactions.where(trans_type: :asset_delivery).pluck(:quantity).map{|q| q.to_f}.sum
-    return (delivered - roasted).round(2)
+    delivered = self.delivered
+    adjustment = self.manual_adjustment
+    return (delivered - roasted - adjustment).round(2)
   end
 
   def coffee_in_warehouse
-    delivered = self.transactions.where(trans_type: :asset_delivery).pluck(:quantity).map{|q| q.to_f}.sum
-    return (self.pounds_of_coffee.to_f - delivered).round(2)
+    return (self.pounds_of_coffee.to_f - self.delivered).round(2)
   end
 
   def amount_roasted
-    roasted = self.batches.where(status: :roast_completed).pluck(:starting_amount).map{|sa| sa.to_f || 0}.sum
+    self.batches.where(status: :roast_completed).pluck(:starting_amount).map{|sa| sa.to_f || 0}.sum
+  end
+
+  def delivered
+    self.transactions.where(trans_type: :asset_delivery).pluck(:quantity).map{|q| q.to_f}.sum
+  end
+
+  def manual_adjustment
+    self.transactions.where(trans_type: :adjustment).pluck(:quantity).map{|q| q.to_f}.sum
+  end
+
+  def total_coffee_used
+    self.manual_adjustment.to_f + self.amount_roasted.to_f + self.roasted_on_import
   end
 
   def can_delete
