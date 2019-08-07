@@ -58,3 +58,13 @@
         text-decoration: underline;
     }
 }
+
+// Styles for draggable
+.draggable-icon-container {
+    padding: 2px 0 4px 4px;
+    border-right: 1px solid gray;
+    margin-right: 12px;
+    i {
+        color: gray;
+    } 
+}

@@ -92,15 +92,11 @@ class Options extends React.PureComponent {
                     name="options"
                     label=""
                     placeholder="Name"
-                    action
                     onChange={this.handleOptionInputChange}
                     value={addedOption}
                     onKeyPress={this.handleEnter}
-                    allowLP
-                >
-                    <input data-lpignore="true" />
-                    <Button type="button" color="blue" content="Add Option" onClick={this.addOption} />
-                </Input>
+                />
+                <Button type="button" color="blue" content="Add Option" onClick={this.addOption} />
             </div>
         );
     }
