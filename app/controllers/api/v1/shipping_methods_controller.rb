@@ -31,7 +31,11 @@ module Api::V1
     end
 
     def get_rates
+      @order = Order.find(params[:order_id])
+      @roaster = @order.roaster_profile
       @rates = ShippingServices::GetRates.get_rate_estimates(params[:order_id], params[:wholesale_profile_id], true)
+      @local_rates = ShippingServices::GetLocalRates.get_rates(@roaster)
+      @rates = @rates.concat(@local_rates)
       render json: @rates, status: 200
     end
     

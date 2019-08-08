@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Dimmer, Loader } from "semantic-ui-react";
 
 /* eslint-disable */
 import ShippingOptions from "shop/shipping/options";
@@ -10,13 +11,17 @@ import withContext from "contexts/withContext";
 class EditShipping extends React.Component {
     state = {
         rates: [],
-        current: {}
+        current: {},
+        loading: true
     }
     async componentDidMount(){
-        const { order_id, wholesale_profile_id } = this.props;
+        const { order_id, wholesale_profile_id, shipping_method } = this.props;
         let params = `?order_id=${order_id}&wholesale_profile_id=${wholesale_profile_id}`;
         const response = await requester({ url: API_URL + "/get_rates" + params , method: "GET" });
-        this.setState({ rates: response });
+        const current = response.find( ({carrier, service}) => 
+            (carrier === shipping_method.carrier && service === shipping_method.service)
+        );
+        this.setState({ rates: response, current, loading: false });
     }
     updateCartDetails = obj => {
         const { rates } = this.state;
@@ -42,10 +47,12 @@ class EditShipping extends React.Component {
     }
     render(){
         const { successClose, closeModal } = this.props;
-        const { rates, current } = this.state;
+        const { rates, current, loading } = this.state;
         return (
             <React.Fragment>
-                <div>This is how to edit shipping</div>
+                <Dimmer active={loading} inverted>
+                    <Loader active={loading} size="large" />
+                </Dimmer>
                 <ShippingOptions
                     rates={rates}
                     updateCartDetails={this.updateCartDetails}
