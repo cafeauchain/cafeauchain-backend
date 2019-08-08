@@ -4,7 +4,7 @@ module Manage
     before_action :set_roaster
 
     def dashboard
-      lots = ActiveModel::SerializableResource.new(@roaster.lots, each_serializer: LotSerializer)
+      lots = ActiveModel::SerializableResource.new(@roaster.open_lots, each_serializer: LotSerializer)
       batches = @roaster.batches.where(status: :roast_in_progress)
       batches = ActiveModel::SerializableResource.new(batches, each_serializer: BatchSerializer)
       render "manage/primary", locals: {

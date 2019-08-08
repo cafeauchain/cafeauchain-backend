@@ -75,6 +75,12 @@ class Lot < ApplicationRecord
     self.manual_adjustment.to_f + self.amount_roasted.to_f + self.roasted_on_import
   end
 
+  def change_status
+    if self.coffee_on_hand.to_f == 0.0 && self.coffee_in_warehouse.to_f == 0.0
+      self.update(contract_filled: Time.now(), status: :roasted_in_full)
+    end
+  end
+
   def can_delete
     self.batches.length == 0 && self.inventory_items.length == 0
   end
