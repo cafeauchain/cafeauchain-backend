@@ -5,7 +5,7 @@ module Manage
     before_action :set_roaster_profile, only: [:show, :index]
 
     def index
-      @lots = ActiveModel::SerializableResource.new(@roaster.lots, each_serializer: LotSerializer)
+      @lots = ActiveModel::SerializableResource.new(@roaster.open_lots, each_serializer: LotSerializer)
       render "manage/primary", locals: {
         roaster: @roaster,
         lots: @lots,

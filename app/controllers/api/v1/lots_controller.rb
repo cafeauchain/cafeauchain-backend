@@ -4,7 +4,7 @@ module Api::V1
     before_action :set_lot, only: [:show, :update, :destroy]
 
     def index
-      @lots = @roaster.lots
+      @lots = @roaster.open_lots
       render json: @lots, status: 200
     end
 

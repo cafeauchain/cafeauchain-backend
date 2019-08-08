@@ -67,6 +67,10 @@ class RoasterProfile < ApplicationRecord
   
   has_one :cutoff
 
+  def open_lots
+    self.lots.where.not(status: :roasted_in_full)
+  end
+
   def open_order_items
     items = self.orders.where.not(status: :fulfilled).collect do |o|
       o.order_items.map do |oi|
