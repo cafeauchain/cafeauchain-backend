@@ -4,7 +4,11 @@ import { Dimmer, Loader } from "semantic-ui-react";
 
 /* eslint-disable */
 import ShippingOptions from "shop/shipping/options";
+
+import ErrorHandler from "shared/errorHandler";
+
 import { url as API_URL, roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
+
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
@@ -12,7 +16,8 @@ class EditShipping extends React.Component {
     state = {
         rates: [],
         current: {},
-        loading: true
+        loading: true,
+        errors: []
     }
     async componentDidMount(){
         const { order_id, wholesale_profile_id, shipping_method } = this.props;
@@ -36,23 +41,33 @@ class EditShipping extends React.Component {
             retail_rate: selected.retail_rate,
             carrier: selected.carrier
         };
-        await requester({ url, body, method: 'PUT' });
-        this.afterSubmit();
+        const response = await requester({ url, body, method: 'PUT' });
+        this.afterSubmit(response);
     }
-    afterSubmit = async () => {
+    afterSubmit = async response => {
         const { order_id, updateContext } = this.props;
         const url = API_URL + '/orders/' + order_id;
-        const order = await requester({ url, method: 'GET' });
-        updateContext({order: order.data});
+
+        if (response instanceof Error) {
+            this.setState({ errors: response.response.data });
+        } else {
+            if (response.redirect) {
+                window.location.href = await response.redirect_url;
+            } else {
+                const order = await requester({ url, method: 'GET' });
+                updateContext({ order: order.data });
+            }
+        }        
     }
     render(){
         const { successClose, closeModal } = this.props;
-        const { rates, current, loading } = this.state;
+        const { rates, current, loading, errors } = this.state;
         return (
             <React.Fragment>
                 <Dimmer active={loading} inverted>
                     <Loader active={loading} size="large" />
                 </Dimmer>
+                {errors.length > 0 && <ErrorHandler errors={errors} />}
                 <ShippingOptions
                     rates={rates}
                     updateCartDetails={this.updateCartDetails}
