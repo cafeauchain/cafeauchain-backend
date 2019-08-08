@@ -43,10 +43,23 @@ module Api::V1
     def update
       if params[:lotDetails].present? && params[:lotDetails][:accept_delivery].present?
         LedgerServices::AssetDeliveryTransaction.new(params[:lotDetails][:quantity], @lot.id, @roaster.id).call
+      elsif params[:adjustment].present?
+        if params[:adjustment].to_f <= 0
+          @lot.errors.add(:adjustment, "cannot be negative")
+        elsif params[:adjustment].to_f > @lot.coffee_on_hand.to_f
+          @lot.errors.add(:adjustment, "cannot be more than amount on hand")
+        else
+          LedgerServices::ManualAdjustmentTransaction.new(params[:adjustment].to_f, @lot.id, @roaster.id).call
+        end
       else
         @lot.update(lot_params)
       end
-      render json: @lot, status: 200, serializer: LotSerializer::SingleLotSerializer
+
+      if @lot.errors.empty?
+        render json: @lot, status: 200, serializer: LotSerializer::SingleLotSerializer
+      else
+        render json: @lot.errors.full_messages, status: 409
+      end
     end
 
     def destroy

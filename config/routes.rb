@@ -1,5 +1,6 @@
 # == Route Map
 #
+# I, [2019-08-07T18:49:59.188342 #49219]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                                        Prefix Verb   URI Pattern                                                                              Controller#Action
 #                     upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                                api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -107,6 +108,8 @@
 #                         api_v1_roaster_profile_set_as_default PUT    /api/v1/roasters/:roaster_profile_id/set_as_default(.:format)                            api/v1/roaster_profiles#set_as_default
 #                       api_v1_roaster_profile_shipping_methods GET    /api/v1/roasters/:roaster_profile_id/shipping_methods(.:format)                          api/v1/shipping_methods#index
 #                                                               POST   /api/v1/roasters/:roaster_profile_id/shipping_methods(.:format)                          api/v1/shipping_methods#create
+#                        api_v1_roaster_profile_shipping_method PATCH  /api/v1/roasters/:roaster_profile_id/shipping_methods/:id(.:format)                      api/v1/shipping_methods#update
+#                                                               PUT    /api/v1/roasters/:roaster_profile_id/shipping_methods/:id(.:format)                      api/v1/shipping_methods#update
 #                                api_v1_roaster_profile_cutoffs GET    /api/v1/roasters/:roaster_profile_id/cutoffs(.:format)                                   api/v1/cutoffs#index
 #                                 api_v1_roaster_profile_cutoff PATCH  /api/v1/roasters/:roaster_profile_id/cutoffs/:id(.:format)                               api/v1/cutoffs#update
 #                                                               PUT    /api/v1/roasters/:roaster_profile_id/cutoffs/:id(.:format)                               api/v1/cutoffs#update
@@ -235,6 +238,7 @@
 #                                                        signup GET    /signup(.:format)                                                                        devise/registrations#new
 #                                                      register GET    /register(.:format)                                                                      devise/registrations#new
 #                                                          cart GET    /cart(.:format)                                                                          carts#index
+#                                              shop_handletoken GET    /shop/handletoken(.:format)                                                              shop/token#handletoken
 #                                            shop_profile_index GET    /shop/profile(.:format)                                                                  shop/profile#index
 #                                          shop_profile_payment GET    /shop/profile/payment(.:format)                                                          shop/profile#payment
 #                                        shop_profile_addresses GET    /shop/profile/addresses(.:format)                                                        shop/profile#addresses
@@ -307,7 +311,7 @@ Rails.application.routes.draw do
         post :cards
         delete :cards, to: "roaster_profiles#remove_card"
         put :set_as_default
-        resources :shipping_methods, only: [:index, :create]
+        resources :shipping_methods, only: [:index, :create, :update]
         resources :cutoffs, only: [:index, :update]
       end
       get :get_rates, to: "shipping_methods#get_rates"

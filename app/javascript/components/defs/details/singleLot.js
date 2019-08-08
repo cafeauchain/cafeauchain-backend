@@ -16,6 +16,8 @@ const fields = {
         { name: "roasted_on_platform", formatter: AsNumber, label: "Roasted (on platform)" },
         { name: "roasted_on_import", formatter: AsNumber, label: "Roasted (at import)" },
         { name: "total_amount_roasted", formatter: AsNumber },
+        { name: "manual_adjustment", formatter: AsNumber },
+        { name: "total_coffee_used", formatter: AsNumber }
     ],
     warehouse: [
         { name: "in_warehouse", formatter: AsNumber },

@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import PropTypes from "prop-types";
+import { Icon } from "semantic-ui-react";
 
 /* eslint-disable */
 import stylevar from "stylesheets/variables.scss";
+import Flex from "shared/flex";
 /* eslint-enable */
 
 // a little function to help us with reordering the result
@@ -21,8 +23,9 @@ const grid = 8;
 const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: "none",
-    padding: grid,
+    padding: `2px ${grid}px 2px 0`,
     margin: `0 0 ${grid}px 0`,
+    border: '1px solid ' + stylevar.darkgray,
 
     // change background colour if dragging
     background: isDragging ? "lightgreen" : stylevar.offwhite,
@@ -32,8 +35,8 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 });
 
 const getListStyle = isDraggingOver => ({
-    background: isDraggingOver ? "lightblue" : "lightgrey",
-    padding: grid,
+    background: isDraggingOver ? "lightblue" : "none",
+    padding: grid/2,
     width: "100%"
 });
 
@@ -59,7 +62,15 @@ const PortalAwareItem = ({ provided, snapshot, component }) => {
                 provided.draggableProps.style
             )}
         >
-            {component}
+            <Flex centercross>
+                <div flex="auto" className="draggable-icon-container">
+                    <Icon name="ellipsis vertical" size="small" /> 
+                </div>
+                <div flex="fill">
+                    {component}
+                </div>    
+            </Flex>
+            
         </div>
     );
 

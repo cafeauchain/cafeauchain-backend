@@ -34,7 +34,7 @@ class Transaction < ApplicationRecord
   belongs_to :batch, optional: true
   belongs_to :roaster_profile, optional: true
 
-  enum trans_type: [:asset_issue, :asset_transfer, :asset_delivery, :queued, :roasted, :ready_for_sale]
+  enum trans_type: [:asset_issue, :asset_transfer, :asset_delivery, :queued, :roasted, :ready_for_sale, :adjustment]
   
   scope :trans_type, -> (trans_type) { where trans_type: trans_type }
   scope :order_by, -> (order_by) { order order_by }
