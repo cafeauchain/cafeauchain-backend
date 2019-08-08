@@ -13,7 +13,7 @@ module OrderServices
       )
       @invoice = Invoice.create(
         subtotal: @order.subtotal, 
-        total: @order.subtotal.to_f + params[:shipping][:retail_rate].to_f + params[:tax].to_f,
+        shipping: params[:shipping][:retail_rate].to_f,
         tax: params[:tax], 
         payment_type: params[:payment_type], 
         order_id: @order.id

@@ -23,6 +23,9 @@ module Api::V1
     def update
       shipping_method = OrderShippingMethod.find(params[:id])
       shipping_method.update(carrier: params[:carrier], service: params[:service], final_rate: params[:retail_rate])
+      invoice = shipping_method.order.invoice
+      shipping = params[:retail_rate].to_f
+      invoice.update(shipping: shipping)
       if shipping_method.errors.empty?
         render json: shipping_method, status: 200
       else

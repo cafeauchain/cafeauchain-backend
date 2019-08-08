@@ -74,9 +74,8 @@ module Api::V1
         subtotal = @order.subtotal.to_f
         final_rate = rate[:retail_rate].to_f
         tax = invoice.tax.to_f
-        total = subtotal + final_rate + tax
-
-        invoice.update(subtotal: subtotal, total: total )
+        
+        invoice.update(subtotal: subtotal, shipping: final_rate, tax: tax )
       elsif params[:status].present?
         @order.update(status: params[:status])
         if @order.status == "fulfilled"

@@ -4,10 +4,10 @@
 #
 #  id                :bigint(8)        not null, primary key
 #  payment_type      :integer
+#  shipping          :float
 #  status            :integer
 #  subtotal          :float
 #  tax               :float
-#  total             :float
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  order_id          :bigint(8)

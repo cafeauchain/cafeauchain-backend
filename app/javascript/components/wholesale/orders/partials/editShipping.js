@@ -57,7 +57,6 @@ class EditShipping extends React.Component {
                     rates={rates}
                     updateCartDetails={this.updateCartDetails}
                     current={current}
-                    // TODO not sure why I need to explictly pass these in
                     closeModal={closeModal}
                     successClose={successClose}
                 />
