@@ -6,20 +6,37 @@ import "./styles.scss";
 
 /* eslint-disable */
 import Modal from "shared/modal";
+import Titler from "shared/titler";
 
 import ProductForm from "shop/productForm";
+
+import ProductModal from "shop/productModal";
 /* eslint-enable */
 
-const Product = ({ img, title, description, shortDesc, ...rest }) => (
+const Product = ({ img, title, description, shortDesc, lots, ...rest }) => (
     <Card className="flex-card">
         <Image src={img} as="div" className="card-image-container" />
         <Card.Content>
             <Card.Header>{title}</Card.Header>
-            <Card.Meta>Coffee Profile</Card.Meta>
+            {lots.map(lot => {
+                return (
+                    <Card.Meta key={lot.id}>
+                        <Titler title="Lot" value={lot.name} linebreak />
+                        <Titler title="Origin" value={lot.origin} linebreak />
+                        <Titler title="Harvest" value={lot.harvest_year} />
+                    </Card.Meta>
+                );
+            })}
             <Card.Description title={description}>
                 {shortDesc}
                 <br />
-                <a href="/cart">More Info</a>
+                <Modal
+                    text="More Info"
+                    title={title + " Details"}
+                    component={<ProductModal {...rest} description={description} img={img} title={title} lots={lots} />}
+                    unstyled
+                    className="link"
+                />
             </Card.Description>
         </Card.Content>
         <ProductForm {...rest} />

@@ -43,6 +43,8 @@ class TransactionSerializer < ActiveModel::Serializer
       "Received In House"
     when "ready_for_sale"
       "Batch Completed"
+    when "adjustment"
+      "Manual Adjustment"
     end
   end
 

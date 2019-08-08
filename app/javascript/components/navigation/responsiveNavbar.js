@@ -115,7 +115,11 @@ class NavBar extends Component {
                                     vertical
                                     visible={visible}
                                     content={(
-                                        <div className={children ? "responsive-sidebar-items" : ""}>
+                                        <div className={
+                                            "sidebar-menu-container" + 
+                                            (children ? " responsive-sidebar-items" : "")
+                                        }
+                                        >
                                             {screenSize === "mobile" && (
                                                 <React.Fragment>
                                                     {menuItemBuilder(modRightItems)}
@@ -126,7 +130,6 @@ class NavBar extends Component {
                                             {screenSize === "tablet" && children}
                                         </div>
                                     )}
-                                    style={{ paddingBottom: 100 }}
                                 />
                             </Sidebar.Pushable>
                         </F>

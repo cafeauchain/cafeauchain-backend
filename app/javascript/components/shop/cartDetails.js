@@ -24,7 +24,10 @@ class CartDetails extends React.Component {
     constructor(props) {
         super(props);
         const { cart: { attributes: { shipping_rates } }, cards, profile: { attributes: { terms } } } = props;
-        const defaultRate = shipping_rates.findIndex( rate => rate.service === "Priority" ) || 0;
+        const shippingIndex = shipping_rates.findIndex(rate => {
+            return (rate.service === "FEDEX_GROUND") || (rate.service === "Ground") || (rate.service === "Priority");
+        });
+        const defaultRate = shippingIndex > -1 ? shippingIndex : 0;
         const card = cards.find( card => card.default );
         const payment_source = card.stripe_card_id; 
         this.state = {
@@ -43,13 +46,17 @@ class CartDetails extends React.Component {
         const { target } = e;
         e.preventDefault();
         target.blur();
-        const { cart: { id, attributes: { shipping_rates } }, profile: { id: customer_profile_id } } = this.props;
+        const { 
+            cart: { id, attributes: { shipping_rates } }, 
+            profile: { id: customer_profile_id }, 
+            isAssumedCustomer 
+        } = this.props;
         const url = `${API_URL}/orders`;
         const { payment_type, payment_source, shippingIdx } = this.state;
         const shipping = shipping_rates[shippingIdx];
         const tax = item["data-tax"];
         const total = item["data-total"];
-        const body = { id, payment_type, payment_source, shipping, tax, total, customer_profile_id };
+        const body = { id, payment_type, payment_source, shipping, tax, total, customer_profile_id, isAssumedCustomer };
         const response = await requester({ url, body });
         if (response instanceof Error) {
             this.setState({ errors: response.response.data });
@@ -248,7 +255,8 @@ CartDetails.propTypes = {
     profile: object,
     cards: array,
     stripeApiKey: string,
-    cartLoading: bool
+    cartLoading: bool,
+    isAssumedCustomer: bool
 };
 
 export default withContext(CartDetails);

@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Header, Form, Button, Icon, Divider } from "semantic-ui-react";
+import { Header, Form, Button, Divider } from "semantic-ui-react";
 import shortid from "shortid";
 
 /* eslint-disable */
-import Input from "shared/input";
 import ErrorHandler from "shared/errorHandler";
 
 import { underscorer, humanize } from "utilities";
 
 import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
+
+import DraggableList from "shared/draggableList";
+import OptionsInput from "wholesale/actions/optionsInput";
 
 import withContext from "contexts/withContext";
 /* eslint-enable */
@@ -52,7 +54,7 @@ class CreateDefaults extends Component {
         await this.setState({ btnLoading: true });
         const { options, optionId } = this.state;
         const { userId, updateContext, defaults, successClose, closeModal } = this.props;
-        const body = { title: "Options", options: this.buildOptions(options).sort() };
+        const body = { title: "Options", options: this.buildOptions(options) };
         let url = `${ROASTER_URL(userId)}/default_options`;
         if (optionId) url += "/" + optionId;
         const response = await requester({ url, body, method: optionId ? 'PUT' : 'POST' });
@@ -103,14 +105,10 @@ class CreateDefaults extends Component {
         this.setState({ options: arr });
     };
 
+    updateOrder = items => this.setState({ options: items });
+
     render() {
         const { errors, options, btnLoading } = this.state;
-        let optionFields = options.map((item, idx) => ({
-            name: item.id,
-            key: item.id,
-            label: "Option " + (idx + 1),
-            value: item.value
-        }));
         return (
             <Form>
                 <Header as="h2" content="Create Default Product Options" />
@@ -121,24 +119,12 @@ class CreateDefaults extends Component {
                     add and remove options for each product as necessary.
                 </p>
                 <ErrorHandler errors={errors} />
-                {optionFields.map(({ name, label, value }, idx) => (
-                    <div key={name}>
-                        <Input action name={name} label={label} onChange={this.handleInputChange} value={value} allowLP>
-                            <input data-lpignore="true" />
-
-                            <Button
-                                type="button"
-                                color="red"
-                                icon
-                                content={<Icon name="close" />}
-                                compact
-                                idx={idx}
-                                onClick={this.onRemove}
-                                disabled={options.length < 2}
-                            />
-                        </Input>
-                    </div>
-                ))}
+                <DraggableList
+                    updateOrder={this.updateOrder}
+                    items={options}
+                    passedProps={{ onRemove: this.onRemove, onChange: this.handleInputChange }}
+                    component={OptionsInput}
+                />
                 <br />
                 <Button color="blue" onClick={this.addOption} content="Add Option" />
 

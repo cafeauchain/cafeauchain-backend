@@ -20,8 +20,23 @@ class Api::V1::InventoryItemsController < ApplicationController
   end
 
   def update
-    @inventory_item.update(inventory_item_params)
-    render json: @inventory_item, status: 200, serializer: InventoryItemSerializer
+    renderError = false
+    if params[:adjustment]
+      if params[:quantity].to_f < 0
+        @inventory_item.errors.add(:new_quantity, "cannot be negative")
+        renderError = true
+      elsif params[:quantity].to_f > @inventory_item[:quantity]
+        @inventory_item.errors.add(:new_quantity, "cannot be more than the amount available")
+        renderError = true
+      end
+    end
+    
+    if renderError
+      render json: @inventory_item.errors.full_messages, status: 409
+    else
+      @inventory_item.update(inventory_item_params)
+      render json: @inventory_item, status: 200, serializer: InventoryItemSerializer    
+    end
   end
 
   def destroy

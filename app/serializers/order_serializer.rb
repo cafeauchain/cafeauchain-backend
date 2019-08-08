@@ -19,7 +19,7 @@
 #
 
 class OrderSerializer < ActiveModel::Serializer
-  attributes :id, :order_total, :subtotal, :shipping, :total_line_items, :total_weight, 
+  attributes :id, :order_total, :subtotal, :shipping, :total_line_items, :total_weight, :order_shipping_method,
   :total_items, :roaster_name, :status, :order_date, :company_name, :taxes, :estimated_roast_date
 
   def order_items

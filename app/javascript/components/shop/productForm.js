@@ -158,8 +158,8 @@ class ProductForm extends React.Component {
                         </F>
                     )}
                     {!inCart && (
-                        <Flex spacing="10">
-                            <div flex="50">
+                        <Flex spacing="10" wrap>
+                            <div flex="50" className="product-select">
                                 <Input
                                     inputType={multipleVariants ? "select" : undefined}
                                     options={multipleVariants ? variantOptions : undefined}
@@ -170,7 +170,7 @@ class ProductForm extends React.Component {
                                     readOnly={multipleVariants ? undefined : true}
                                 />
                             </div>
-                            <div flex="50">
+                            <div flex="50" className="product-select">
                                 <Input
                                     label="Option"
                                     inputType="select"

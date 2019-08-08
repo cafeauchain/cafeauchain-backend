@@ -21,10 +21,15 @@ module Api::V1
         @cart.cart_items.destroy_all
         OrderServices::ProcessOrder.process(@order.id, params)
       end
-      render json: {redirect_url: shop_order_path(@order), redirect: true}, status: 200
+      if params[:isAssumedCustomer].present?
+        render json: {redirect_url: manage_order_path(@order), redirect: true}, status: 200  
+      else
+        render json: {redirect_url: shop_order_path(@order), redirect: true}, status: 200
+      end
     end
 
     def show
+      render json: @order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
     end
 
     def index
@@ -69,9 +74,8 @@ module Api::V1
         subtotal = @order.subtotal.to_f
         final_rate = rate[:retail_rate].to_f
         tax = invoice.tax.to_f
-        total = subtotal + final_rate + tax
-
-        invoice.update(subtotal: subtotal, total: total )
+        
+        invoice.update(subtotal: subtotal, shipping: final_rate, tax: tax )
       elsif params[:status].present?
         @order.update(status: params[:status])
         if @order.status == "fulfilled"

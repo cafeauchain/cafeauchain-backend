@@ -6,10 +6,12 @@ import { Container, Segment, Header, Button, Divider } from "semantic-ui-react";
 import Table from "shared/table";
 import Details from "shared/details";
 import Modal from "shared/modal"; 
+import Flex from "shared/flex";
 
 import tableDefs from "defs/tables/lotTransactions";
 import fields from "defs/details/singleLot";
-import EditLot from "lots/edit"
+import EditLot from "lots/edit";
+import ManualAdjustment from "lots/manualAdjustment";
 
 import withContext from "contexts/withContext";
 /* eslint-enable */
@@ -33,12 +35,25 @@ const SingleLot = props => {
                         <Details leftWidth={200} attributes={attributes} fields={fields.on_hand} />
                     </Container>
                 </Segment>
-                <Modal
-                    text="Edit Lot"
-                    title="Edit Lot Details"
-                    icon="coffee"
-                    component={<EditLot />}
-                />
+                <Flex spacebetween>
+                    <div spacing="10">
+                        <Modal
+                            text="Edit Lot"
+                            title="Edit Lot Details"
+                            icon="coffee"
+                            component={<EditLot />}
+                        />
+                    </div>
+                    <div spacing="10">
+                        <Modal
+                            text="Manual Adjustment"
+                            title="Manual Adjustment"
+                            icon="coffee"
+                            component={<ManualAdjustment />}
+                            btnProps={{ primary: false }}
+                        />
+                    </div>
+                </Flex>
             </Segment>
             <Segment>
                 <Header as="h3" content="Transactions" />

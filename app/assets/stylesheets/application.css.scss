@@ -61,6 +61,9 @@ body {
     flex-flow: column;
     min-height: 100vh;
     height: auto;
+    > div {
+        overflow: hidden;
+    }
     .site-footer {
         margin-top: auto;
     }
