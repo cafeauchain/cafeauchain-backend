@@ -19,6 +19,8 @@
 #
 
 class Order < ApplicationRecord
+  before_update :check_status
+
   belongs_to :wholesale_profile
   has_one :customer_profile, through: :wholesale_profile
   has_one :roaster_profile, through: :wholesale_profile
@@ -28,6 +30,15 @@ class Order < ApplicationRecord
   has_one :shipping_method, through: :order_shipping_method
 
   enum status: [:draft, :processing, :packed, :shipped, :fulfilled]
+  
+
+  def check_status
+    if self.status_changed?
+      if self.status == "shipped" && !self.invoice[:stripe_invoice_id].nil?
+        StripeServices::CaptureCharge.capture(self)
+      end
+    end
+  end
 
   def roaster_name
     wholesale_profile.roaster_profile.name
