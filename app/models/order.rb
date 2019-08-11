@@ -27,7 +27,7 @@ class Order < ApplicationRecord
   has_one :order_shipping_method
   has_one :shipping_method, through: :order_shipping_method
 
-  enum status: [:draft, :processing, :awaiting_payment, :paid_in_full, :fulfilled]
+  enum status: [:draft, :processing, :packed, :shipped, :fulfilled]
 
   def roaster_name
     wholesale_profile.roaster_profile.name

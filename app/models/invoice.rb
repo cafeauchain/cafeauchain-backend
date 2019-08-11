@@ -3,6 +3,7 @@
 # Table name: invoices
 #
 #  id                :bigint(8)        not null, primary key
+#  payment_status    :integer
 #  payment_type      :integer
 #  shipping          :float
 #  status            :integer
@@ -25,8 +26,9 @@
 class Invoice < ApplicationRecord
   belongs_to :order
 
-  enum status: [:draft, :awaiting_payment, :partial_payment, :paid_in_full]
+  enum status: [:draft, :processing, :payment_authorized, :awaiting_payment, :partial_payment, :paid_in_full]
   enum payment_type: [:card_on_file, :terms_with_vendor]
+  enum payment_status: [:offline, :stripe]
 
   def total
     self.subtotal.to_f + self.tax.to_f + self.shipping.to_f
