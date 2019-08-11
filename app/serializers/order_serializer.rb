@@ -35,8 +35,7 @@ class OrderSerializer < ActiveModel::Serializer
         size: variant.custom_options["size"],
         unit_price: '%.2f' % (variant.price_in_cents.to_i/100.0),
         image: product.product_image_urls[0],
-        notes: item.notes,
-        total_price: '%.2f' % (variant.price_in_cents.to_i/100.0 * item.quantity),
+        total_price: '%.2f' % (variant.price_in_cents.to_i/100.0 * item.quantity)
       }
     end
   end

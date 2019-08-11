@@ -8,12 +8,12 @@ module Api::V1
 
     def create
       options = params[:option].split(",")
-      @item = OrderServices::CreateCartItem.create(@cart.id, params[:id], params[:quantity], options, params[:notes])
+      @item = OrderServices::CreateCartItem.create(@cart.id, params[:id], params[:quantity], options)
       render json: {item: @item, items: @cart.cart_items, cart: @cart }, status: 200
     end
 
     def update
-      @item = OrderServices::CreateCartItem.update(params[:id], params[:quantity], params[:notes])
+      @item = OrderServices::CreateCartItem.update(params[:id], params[:quantity])
       render json: {"redirect":false, data: @cart}, status: 200
     end
 

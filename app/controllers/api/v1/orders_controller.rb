@@ -13,8 +13,7 @@ module Api::V1
           product_variant_id: pv.id,
           quantity: ci.quantity,
           line_item_cost: (ci.quantity * pv.price_in_cents),
-          product_options: ci.production_options,
-          notes: ci.notes
+          product_options: ci.production_options
         )
       end
       if @order.update(status: :processing)
@@ -59,8 +58,7 @@ module Api::V1
             product_variant_id: li[:variant_id],
             quantity: li[:quantity],
             line_item_cost: (li[:quantity].to_i * li[:unit_price].to_f * 100),
-            product_options: li[:production_options],
-            notes: li[:notes]
+            product_options: li[:production_options]
           )
         }
 

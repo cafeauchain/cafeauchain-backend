@@ -32,8 +32,7 @@ class CartSerializer < ActiveModel::Serializer
         variant_id: item.product_variant_id,
         size: variant.custom_options["size"],
         price: '%.2f' % (variant.price_in_cents.to_i/100.0),
-        image: product.product_image_urls[0],
-        notes: item.notes
+        image: product.product_image_urls[0]
       }
     end
   end
