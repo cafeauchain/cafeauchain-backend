@@ -93,10 +93,9 @@ class Tracking extends React.Component {
     }
 }
 
-const { object, oneOfType, number, string, func } = PropTypes;
+const { object, func } = PropTypes;
 Tracking.propTypes = {
     order: object,
-    order_id: oneOfType([number, string]),
     closeModal: func,
     successClose: func,
     updateContext: func,
