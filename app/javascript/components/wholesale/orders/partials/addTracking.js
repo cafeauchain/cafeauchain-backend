@@ -24,8 +24,8 @@ class Tracking extends React.Component {
         this.state = {
             btnLoading: false,
             details: {
-                tracking_number: tracking_number,
-                carrier: carrier
+                tracking_number: tracking_number || "",
+                carrier: carrier || ""
             },
             errors: []
         };
