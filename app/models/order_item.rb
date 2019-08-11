@@ -25,4 +25,13 @@
 class OrderItem < ApplicationRecord
   belongs_to :order
   belongs_to :product_variant
+  after_update :update_status
+
+  def update_status
+    order_items_packed = self.order.order_items.all?{|oi| oi[:packed]}
+    isPacked = ["packed", "shipped", "fulfilled", "delivered"].include?(self.order[:status])
+    if order_items_packed && !isPacked
+      self.order.update(status: :packed)
+    end
+  end
 end
