@@ -85,6 +85,12 @@ module Api::V1
       render json: @order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
     end
 
+    def update_order_items
+      @order_item = OrderItem.find(params[:order_item_id])
+      @order_item.update(packed: params[:packed])
+      render json: @order_item, status: 200
+    end
+
     private
 
     def set_order
