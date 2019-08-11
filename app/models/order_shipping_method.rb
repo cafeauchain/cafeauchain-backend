@@ -2,13 +2,16 @@
 #
 # Table name: order_shipping_methods
 #
-#  id         :bigint(8)        not null, primary key
-#  carrier    :string
-#  final_rate :float
-#  service    :string
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  order_id   :bigint(8)
+#  id                  :bigint(8)        not null, primary key
+#  carrier             :string
+#  final_rate          :float
+#  service             :string
+#  shipment_date       :datetime
+#  tracking_number     :string
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  easypost_tracker_id :string
+#  order_id            :bigint(8)
 #
 # Indexes
 #

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_11_142245) do
+ActiveRecord::Schema.define(version: 2019_08_11_174835) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -225,6 +225,9 @@ ActiveRecord::Schema.define(version: 2019_08_11_142245) do
     t.datetime "updated_at", null: false
     t.string "service"
     t.string "carrier"
+    t.string "easypost_tracker_id"
+    t.string "tracking_number"
+    t.datetime "shipment_date"
     t.index ["order_id"], name: "index_order_shipping_methods_on_order_id"
   end
 
