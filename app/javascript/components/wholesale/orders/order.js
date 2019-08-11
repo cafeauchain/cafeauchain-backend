@@ -39,7 +39,7 @@ class Order extends React.Component {
         return {
             id: item.id,
             name: item.name,
-            production_options: [item.production_options],
+            production_options: item.production_options,
             variant_id: item.variant_id,
             size: item.size,
             unit_price: item.unit_price,

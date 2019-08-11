@@ -18,7 +18,7 @@ class LineItem extends Component {
             details: {
                 id: current ? current.id : "",
                 name: current ? current.name : "",
-                production_options: current ? [current.production_options] : [],
+                production_options: current ? current.production_options : [],
                 variant_id: current ? current.variant_id : "",
                 size: current ? current.size : "",
                 unit_price: current ? current.unit_price : "",

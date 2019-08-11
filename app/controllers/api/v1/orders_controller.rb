@@ -67,7 +67,7 @@ module Api::V1
         wpid = @order.wholesale_profile_id
         order_shipping_method = @order.order_shipping_method
         rates = ShippingServices::GetRates.get_rate_estimates(@order.id, wpid, true)
-        rate = rates.find{|rate| rate[:carrier] == order_shipping_method[:carrier] and rate[:service] == order_shipping_method[:service]}
+        rate = rates.find{|r| r[:carrier] == order_shipping_method[:carrier] and r[:service] == order_shipping_method[:service]}
         order_shipping_method.update(final_rate: rate[:retail_rate])
         invoice = @order.invoice
 
