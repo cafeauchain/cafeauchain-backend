@@ -5,6 +5,9 @@ import { Button, Header } from "semantic-ui-react";
 /* eslint-disable */
 import ErrorHandler from "shared/errorHandler";
 import Titler from "shared/titler";
+import Modal from "shared/modal";
+
+import MarkPaid from "wholesale/orders/partials/markPaid";
 
 import { humanize } from "utilities";
 
@@ -19,18 +22,9 @@ class PaymentDetails extends React.Component {
         this.state = {
             cardBtnLoading: false,
             emailBtnLoading: false,
-            paidBtnLoading: false,
             errors: []
         };
     }
-    handleInputChange = (e, { value, name, checked }) => {
-        let { details } = this.state;
-        details = { ...details };
-        if (name === "") return;
-        const val = value || checked;
-        details[name] = val || "";
-        this.setState({ details });
-    };
     handleChargeDefaultCard = async e => {
         e.preventDefault();
         const { target } = e;
@@ -51,17 +45,6 @@ class PaymentDetails extends React.Component {
         this.setState({ emailBtnLoading: true });
         // await this.setState({ btnLoading: true });
     }
-    handleMarkPaid = async e => {
-        e.preventDefault();
-        const { target } = e;
-        target.blur();
-        await this.setState({ cardBtnLoading: true });
-        const { order: { attributes: { invoice: { id } } } } = this.props;
-        const url = API_URL + "/invoices/" + id;
-        const body = { status: "paid_in_full" };
-        const response = await requester({ url, body, method: "PUT" });
-        this.afterSubmit(response);
-    }
     afterSubmit = response => {
         setTimeout(async () => {
             this.setState({ cardBtnLoading: false, emailBtnLoading: false });
@@ -74,7 +57,7 @@ class PaymentDetails extends React.Component {
         }, 400);
     }
     render() {
-        const { errors, cardBtnLoading, emailBtnLoading, paidBtnLoading } = this.state;
+        const { errors, cardBtnLoading, emailBtnLoading } = this.state;
         const { order: { attributes }, customer: { attributes: custAtts} } = this.props;
         const default_card = custAtts.cards.find( card => card.default );
         return (
@@ -83,9 +66,17 @@ class PaymentDetails extends React.Component {
                 <p>
                     <Titler bold title="Invoice Status" value={humanize(attributes.invoice.status)} />
                 </p>
-                <p>
-                    <Titler bold title="Default Card" value={default_card.brand + " " + default_card.last4} />
-                </p>
+                {attributes.invoice.payment_status === "offline" && (
+                    <p>
+                        <Titler bold title="Payment Memo" value={attributes.invoice.memo} />
+                    </p>
+                )}
+                {attributes.invoice.payment_status === "stripe" && (
+                    <p>
+                        <Titler bold title="Default Card" value={default_card.brand + " " + default_card.last4} />
+                    </p>    
+                )}
+                
                 {attributes.invoice.status === "awaiting_payment" && (
                     <React.Fragment>
                         <ErrorHandler errors={errors} />
@@ -105,10 +96,11 @@ class PaymentDetails extends React.Component {
                         /> */}
                         <br />
                         <br />
-                        <Button
-                            content="Mark Paid"
-                            onClick={this.handleMarkPaid}
-                            loading={paidBtnLoading}
+                        <Modal
+                            title="Mark Invoice Paid"
+                            text="Mark Paid"
+                            component={<MarkPaid invoice_id={attributes.invoice.id} />}
+                            btnProps={{ primary: false }}
                         />
                     </React.Fragment> 
                 )}
