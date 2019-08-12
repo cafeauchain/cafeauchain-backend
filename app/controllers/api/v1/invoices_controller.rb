@@ -5,8 +5,13 @@ module Api::V1
     before_action :set_invoice
 
     def update
-      @charge = StripeServices::CreateInvoiceCharge.charge(@invoice, params[:payment_source])
-      render json: {payment_processed: true}, status: 200
+      if params[:payment_source].present?
+        @charge = StripeServices::CreateInvoiceCharge.charge(@invoice, params[:payment_source])
+        render json: {payment_processed: true}, status: 200
+      elsif params[:status].present?
+        @invoice.update(status: params[:status])
+        render json: @invoice.order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
+      end
     end
 
     private

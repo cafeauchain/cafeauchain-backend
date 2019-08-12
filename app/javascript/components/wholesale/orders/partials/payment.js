@@ -19,6 +19,7 @@ class PaymentDetails extends React.Component {
         this.state = {
             cardBtnLoading: false,
             emailBtnLoading: false,
+            paidBtnLoading: false,
             errors: []
         };
     }
@@ -50,6 +51,17 @@ class PaymentDetails extends React.Component {
         this.setState({ emailBtnLoading: true });
         // await this.setState({ btnLoading: true });
     }
+    handleMarkPaid = async e => {
+        e.preventDefault();
+        const { target } = e;
+        target.blur();
+        await this.setState({ cardBtnLoading: true });
+        const { order: { attributes: { invoice: { id } } } } = this.props;
+        const url = API_URL + "/invoices/" + id;
+        const body = { status: "paid_in_full" };
+        const response = await requester({ url, body, method: "PUT" });
+        this.afterSubmit(response);
+    }
     afterSubmit = response => {
         setTimeout(async () => {
             this.setState({ cardBtnLoading: false, emailBtnLoading: false });
@@ -62,7 +74,7 @@ class PaymentDetails extends React.Component {
         }, 400);
     }
     render() {
-        const { errors, cardBtnLoading, emailBtnLoading } = this.state;
+        const { errors, cardBtnLoading, emailBtnLoading, paidBtnLoading } = this.state;
         const { order: { attributes }, customer: { attributes: custAtts} } = this.props;
         const default_card = custAtts.cards.find( card => card.default );
         return (
@@ -91,6 +103,13 @@ class PaymentDetails extends React.Component {
                             onClick={this.handleRequestPayment}
                             loading={emailBtnLoading}
                         /> */}
+                        <br />
+                        <br />
+                        <Button
+                            content="Mark Paid"
+                            onClick={this.handleMarkPaid}
+                            loading={paidBtnLoading}
+                        />
                     </React.Fragment> 
                 )}
             </React.Fragment> 
