@@ -16,6 +16,7 @@ import OrderDetails from "wholesale/orders/partials/details";
 import OrderTotals from "wholesale/orders/partials/totals";
 import LineItem from "wholesale/orders/partials/editLineItem";
 import EditShipping from "wholesale/orders/partials/editShipping";
+import Fulfillment from "wholesale/orders/partials/fulfillment";
 
 import tableDefs from "defs/tables/orderLineItems";
 
@@ -39,7 +40,7 @@ class Order extends React.Component {
         return {
             id: item.id,
             name: item.name,
-            production_options: [item.production_options],
+            production_options: item.production_options,
             variant_id: item.variant_id,
             size: item.size,
             unit_price: item.unit_price,
@@ -114,6 +115,7 @@ class Order extends React.Component {
         const closed = attributes.status === "fulfilled";
         const order_shipping_method = attributes ? attributes.order_shipping_method : {carrier: "unknown", service: ""};
         const shipping_method = `${order_shipping_method.carrier} ${order_shipping_method.service}`;
+        const canEdit = !(attributes.status === ( 'shipped' || 'fulfilled' ));
 
         return (
             <div>
@@ -134,7 +136,9 @@ class Order extends React.Component {
                     {/* <OrderFulfillment id={id} status={attributes.status} /> */}
                     <Segment style={{ maxWidth: 900, margin: "40px auto" }}>
                         <div>
-                            {!isEditable && <Button onClick={this.toggleEditable} content="Edit Order" primary />}
+                            {!isEditable && canEdit && (
+                                <Button onClick={this.toggleEditable} content="Edit Order" primary />
+                            )}
                             {isEditable && (
                                 <Flex spacebetween spacing="20">
                                     <div>
@@ -200,7 +204,7 @@ class Order extends React.Component {
                                     bold
                                 />
                                 <br />
-                                {!isEditable && (
+                                {!isEditable && canEdit && (
                                     <Modal
                                         text="Update Shipping Method"
                                         title="Update Shipping Method"
@@ -221,6 +225,9 @@ class Order extends React.Component {
                                 </Segment>
                             </div>
                         </Flex>
+                    </Segment>
+                    <Segment>
+                        <Fulfillment />
                     </Segment>
                 </Segment>
             </div>

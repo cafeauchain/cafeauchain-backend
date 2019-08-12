@@ -54,11 +54,13 @@ class Order extends React.Component {
     }
 
     afterSubmit = async response => {
-        setTimeout(() => {
+        setTimeout( () => {
             if( response instanceof Error ){
                 this.setState({ btnLoading: false, errors: [response.response.data] });
             } else {
-                this.setState({ btnLoading: false, });
+                const { updateContext } = this.props;
+                this.setState({ btnLoading: false });
+                updateContext({ order: response.data });
                 // TODO Refetch/update invoice status
             }
         }, 400);
@@ -90,7 +92,7 @@ class Order extends React.Component {
                         <div flex="50">
                             <a href="/shop/orders">Back to All Orders</a>
                         </div>
-                        {attributes.status === 'awaiting_payment' && (
+                        {attributes.invoice.status === 'awaiting_payment' && (
                             <div flex="auto">
                                 <div>
                                     <ErrorHandler errors={errors} />

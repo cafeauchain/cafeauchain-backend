@@ -16,14 +16,12 @@ module OrderServices
         shipping: params[:shipping][:retail_rate].to_f,
         tax: params[:tax], 
         payment_type: params[:payment_type], 
-        order_id: @order.id
+        order_id: @order.id,
+        status: :processing
       )
-      @order.update(status: :awaiting_payment)
       NotificationServices::SendRoasterOrderEmail.send(@order.wholesale_profile.roaster_profile, @order.wholesale_profile.customer_profile, @order)
       if params[:payment_type] == "card_on_file"
         @charge = StripeServices::CreateInvoiceCharge.charge(@invoice, payment_source)
-      else
-        @invoice.update(status: :awaiting_payment)
       end
       InventoryServices::UpdateProductInventoryFromOrder.update(@order)
       NotificationServices::SendCustomerOrderEmail.send(@order.wholesale_profile.customer_profile, @order.wholesale_profile.roaster_profile, @order)

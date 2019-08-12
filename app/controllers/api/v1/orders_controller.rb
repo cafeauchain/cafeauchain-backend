@@ -13,8 +13,7 @@ module Api::V1
           product_variant_id: pv.id,
           quantity: ci.quantity,
           line_item_cost: (ci.quantity * pv.price_in_cents),
-          product_options: ci.production_options,
-          notes: ci.notes
+          product_options: ci.production_options
         )
       end
       if @order.update(status: :processing)
@@ -59,15 +58,14 @@ module Api::V1
             product_variant_id: li[:variant_id],
             quantity: li[:quantity],
             line_item_cost: (li[:quantity].to_i * li[:unit_price].to_f * 100),
-            product_options: li[:production_options],
-            notes: li[:notes]
+            product_options: li[:production_options]
           )
         }
 
         wpid = @order.wholesale_profile_id
         order_shipping_method = @order.order_shipping_method
         rates = ShippingServices::GetRates.get_rate_estimates(@order.id, wpid, true)
-        rate = rates.find{|rate| rate[:carrier] == order_shipping_method[:carrier] and rate[:service] == order_shipping_method[:service]}
+        rate = rates.find{|r| r[:carrier] == order_shipping_method[:carrier] and r[:service] == order_shipping_method[:service]}
         order_shipping_method.update(final_rate: rate[:retail_rate])
         invoice = @order.invoice
 
@@ -78,12 +76,15 @@ module Api::V1
         invoice.update(subtotal: subtotal, shipping: final_rate, tax: tax )
       elsif params[:status].present?
         @order.update(status: params[:status])
-        if @order.status == "fulfilled"
-          InventoryServices::UpdateProductInventoryFromOrder.fulfill(@order)
-        end
       end
 
       render json: @order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
+    end
+
+    def update_order_items
+      @order_item = OrderItem.find(params[:order_item_id])
+      @order_item.update(packed: params[:packed])
+      render json: @order_item, status: 200
     end
 
     private

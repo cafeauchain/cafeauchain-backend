@@ -81,7 +81,8 @@ class RoasterProfile < ApplicationRecord
           product: oi.product_variant.product.title,
           options: oi.product_options[0],
           order: oi.order.id,
-          id: oi.id
+          id: oi.id,
+          packed: oi.packed
         }
       end
     end
