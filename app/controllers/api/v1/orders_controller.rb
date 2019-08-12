@@ -76,10 +76,6 @@ module Api::V1
         invoice.update(subtotal: subtotal, shipping: final_rate, tax: tax )
       elsif params[:status].present?
         @order.update(status: params[:status])
-        if @order.status == "fulfilled"
-          StripeServices::CaptureCharge.capture(@order)
-          InventoryServices::UpdateProductInventoryFromOrder.fulfill(@order)
-        end
       end
 
       render json: @order, status: 200, serializer: OrderSerializer::SingleOrderSerializer

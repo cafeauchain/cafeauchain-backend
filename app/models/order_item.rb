@@ -29,9 +29,10 @@ class OrderItem < ApplicationRecord
 
   def update_status
     order_items_packed = self.order.order_items.all?{|oi| oi[:packed]}
-    isPacked = ["packed", "shipped", "fulfilled", "delivered"].include?(self.order[:status])
+    isPacked = ["packed", "shipped", "fulfilled"].include?(self.order[:status])
     if order_items_packed && !isPacked
       self.order.update(status: :packed)
+      InventoryServices::UpdateProductInventoryFromOrder.fulfill(self.order)
     end
   end
 end

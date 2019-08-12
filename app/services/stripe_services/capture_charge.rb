@@ -12,7 +12,7 @@ class StripeServices::CaptureCharge
       id: @charge_id,
       amount: order.invoice.total_in_cents,
       application_fee_amount: application_fee
-    )
+    )}
     if stripe_charge
       order.invoice.update(status: :paid_in_full, payment_status: :stripe)
       return true
