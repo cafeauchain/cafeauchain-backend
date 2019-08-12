@@ -6,8 +6,8 @@ module Api::V1
 
     def update
       if params[:payment_source].present?
-        @charge = StripeServices::CreateInvoiceCharge.charge(@invoice, params[:payment_source])
-        render json: {payment_processed: true}, status: 200
+        @charge = StripeServices::CreateInvoiceCharge.charge(@invoice, params[:payment_source], true)
+        render json: @invoice.order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
       elsif params[:status].present? && params[:status] == "paid_in_full"
         @invoice.update(status: params[:status], memo: params[:memo], payment_status: :offline)
         render json: @invoice.order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
