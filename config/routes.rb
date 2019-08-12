@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-08-11T14:44:56.780961 #46382]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-08-11T19:11:19.109561 #54046]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                                        Prefix Verb   URI Pattern                                                                              Controller#Action
 #                     upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                                api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -143,6 +143,7 @@
 #                         api_v1_customer_update_onboard_status PUT    /api/v1/customers/:customer_id/update_onboard_status(.:format)                           api/v1/customers#update_onboard_status
 #                          api_v1_customer_set_shipping_default PUT    /api/v1/customers/:customer_id/set_shipping_default(.:format)                            api/v1/customers#set_shipping_default
 #                                      add_logo_api_v1_customer POST   /api/v1/customers/:id/add_logo(.:format)                                                 api/v1/customers#add_logo
+#                               api_v1_customer_process_payment PUT    /api/v1/customers/:customer_id/process_payment(.:format)                                 api/v1/customers#process_payment
 #                                              api_v1_customers GET    /api/v1/customers(.:format)                                                              api/v1/customers#index
 #                                                               POST   /api/v1/customers(.:format)                                                              api/v1/customers#create
 #                                           new_api_v1_customer GET    /api/v1/customers/new(.:format)                                                          api/v1/customers#new
@@ -332,6 +333,7 @@ Rails.application.routes.draw do
         member do
           post :add_logo
         end
+        put :process_payment
       end
       post :password_reset, to: "password#password_reset"
       resources :invoices, only: [:update]

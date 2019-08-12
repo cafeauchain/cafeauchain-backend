@@ -43,5 +43,5 @@ class OrderSerializer < ActiveModel::Serializer
 end
 
 class SingleOrderSerializer < OrderSerializer
-  attributes :order_items, :terms
+  attributes :order_items, :terms, :invoice
 end

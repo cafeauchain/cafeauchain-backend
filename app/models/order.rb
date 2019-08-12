@@ -34,8 +34,12 @@ class Order < ApplicationRecord
 
   def check_status
     if self.status_changed?
-      if self.status == "shipped" && !self.invoice[:stripe_invoice_id].nil?
-        StripeServices::CaptureCharge.capture(self)
+      if self.status == "shipped"
+        if !self.invoice[:stripe_invoice_id].nil?
+          StripeServices::CaptureCharge.capture(self)
+        else
+          self.invoice.update(status: :awaiting_payment)
+        end
       end
     end
   end

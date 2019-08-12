@@ -7,6 +7,7 @@ import Titler from "shared/titler";
 import Modal from "shared/modal";
 
 import Tracking from "wholesale/orders/partials/addTracking";
+import PaymentDetails from "wholesale/orders/partials/payment";
 /* eslint-enable */
 
 class Fulfillment extends React.PureComponent {
@@ -52,6 +53,7 @@ class Fulfillment extends React.PureComponent {
                     </F>
                     
                 )}
+                <PaymentDetails />
             </F>
         );
     }
