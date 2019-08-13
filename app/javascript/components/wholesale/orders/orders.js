@@ -35,7 +35,7 @@ class Orders extends Component {
         await this.setState({ loading: true });
         const { getData, type } = this.props;
         const url = API_URL + "/orders/" + item["data-id"];
-        const response = await requester({ url, body: { status: 4 }, method: "PUT" });
+        const response = await requester({ url, body: { status: "fulfilled" }, method: "PUT" });
         setTimeout(async () => {
             if (response instanceof Error) {
                 this.setState({ errors: response.response.data, loading: false });
@@ -71,14 +71,14 @@ class Orders extends Component {
     };
     modifyTableDefs = () => {
         let inner = { ...tableDefs };
-        let newField = {
-            name: "status",
-            key: "action",
-            formatter: this.actions,
-            style: { width: 100 },
-            textAlign: "center"
-        };
-        inner.fields = [...inner.fields, newField];
+        // let newField = {
+        //     name: "status",
+        //     key: "action",
+        //     formatter: this.actions,
+        //     style: { width: 100 },
+        //     textAlign: "center"
+        // };
+        // inner.fields = [...inner.fields, newField];
         return inner;
     };
     render() {

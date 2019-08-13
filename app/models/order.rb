@@ -92,4 +92,12 @@ class Order < ApplicationRecord
     OrderServices::GetRoastDate.process(self)
   end
 
+  def invoice_fee
+    '%.2f' % (self.invoice.fee)
+  end
+
+  def order_net
+    '%.2f' % (self.order_total - self.invoice_fee.to_f)
+  end
+
 end

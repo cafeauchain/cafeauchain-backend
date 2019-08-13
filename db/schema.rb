@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_12_023826) do
+ActiveRecord::Schema.define(version: 2019_08_13_174803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -179,6 +179,7 @@ ActiveRecord::Schema.define(version: 2019_08_12_023826) do
     t.float "shipping"
     t.integer "payment_status"
     t.string "memo"
+    t.float "fee", default: 0.0
     t.index ["order_id"], name: "index_invoices_on_order_id"
   end
 

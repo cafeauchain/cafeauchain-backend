@@ -2,23 +2,31 @@ module Api::V1
   class OrderShippingMethodsController < ApplicationController
 
     def update
-      shipping_method = OrderShippingMethod.find(params[:id])
+      order_shipping_method = OrderShippingMethod.find(params[:id])
       if !params[:tracking_number].nil?
-        tracker = ShippingServices::AddTracker.add(params[:tracking_number], params[:carrier], shipping_method)
-        if !tracker
-          shipping_method.errors.add(:tracking_code, "was not saved correctly")
+        tracker = ShippingServices::AddTracker.add(params[:tracking_number], params[:carrier])
+        if !tracker[:id].nil?
+          order_shipping_method.update(
+                tracking_number: tracker[:tracking_code], 
+                carrier: tracker[:carrier], 
+                easypost_tracker_id: tracker[:id],
+                shipment_date: tracker[:tracking_details][0][:datetime] || Time.now()
+            )
+          order_shipping_method.order.update(status: :shipped)
+        else
+          order_shipping_method.errors.add(:tracking_error, " - " + tracker[:message])
         end
       else
-        shipping_method.update(carrier: params[:carrier], service: params[:service], final_rate: params[:retail_rate])
-        invoice = shipping_method.order.invoice
+        order_shipping_method.update(carrier: params[:carrier], service: params[:service], final_rate: params[:retail_rate])
+        invoice = order_shipping_method.order.invoice
         shipping = params[:retail_rate].to_f
         invoice.update(shipping: shipping)
       end
       
-      if shipping_method.errors.empty?
-        render json: shipping_method, status: 200
+      if order_shipping_method.errors.empty?
+        render json: order_shipping_method, status: 200
       else
-        render json: shipping_method.errors.full_messages, status: 409
+        render json: order_shipping_method.errors.full_messages, status: tracker[:status] || 409
       end
     end
   end

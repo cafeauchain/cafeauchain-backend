@@ -45,13 +45,14 @@ class Fulfillment extends React.Component {
     render() {
         const { btnLoading, errors } = this.state;
         const { order: { attributes } } = this.props;
-        const { order_items, order_shipping_method } = attributes;
+        const { order_items, order_shipping_method, status } = attributes;
         const packed = order_items.reduce((total, item) => {
             if( item.packed ) total += 1;
             return total;
         }, 0 );
         const packedDisplay = packed + "/" + order_items.length;
         const hasTrackingNumber = !!order_shipping_method.tracking_number;
+        const isTrackingEditable = ["packed", "shipped"].includes( status );
         const trackingText = hasTrackingNumber ? "Update" : "Add";
         return (
             <F>
@@ -75,7 +76,7 @@ class Fulfillment extends React.Component {
                                 linebreak 
                             />
                         )}
-                        {attributes.status === ( "packed" || "shipped" ) && (
+                        {isTrackingEditable && (
                             <React.Fragment>
                                 <Modal
                                     size="small"
