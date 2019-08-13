@@ -35,13 +35,13 @@ class OrderSerializer < ActiveModel::Serializer
         size: variant.custom_options["size"],
         unit_price: '%.2f' % (variant.price_in_cents.to_i/100.0),
         image: product.product_image_urls[0],
-        notes: item.notes,
         total_price: '%.2f' % (variant.price_in_cents.to_i/100.0 * item.quantity),
+        packed: item[:packed]
       }
     end
   end
 end
 
 class SingleOrderSerializer < OrderSerializer
-  attributes :order_items, :terms
+  attributes :order_items, :terms, :invoice, :invoice_fee, :order_net
 end

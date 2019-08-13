@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-08-07T18:49:59.188342 #49219]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-08-11T19:11:19.109561 #54046]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                                        Prefix Verb   URI Pattern                                                                              Controller#Action
 #                     upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                                api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -117,6 +117,8 @@
 #                                        api_v1_roaster_profile PATCH  /api/v1/roasters/:id(.:format)                                                           api/v1/roaster_profiles#update
 #                                                               PUT    /api/v1/roasters/:id(.:format)                                                           api/v1/roaster_profiles#update
 #                                              api_v1_get_rates GET    /api/v1/get_rates(.:format)                                                              api/v1/shipping_methods#get_rates
+#                                  api_v1_order_shipping_method PATCH  /api/v1/order_shipping_methods/:id(.:format)                                             api/v1/order_shipping_methods#update
+#                                                               PUT    /api/v1/order_shipping_methods/:id(.:format)                                             api/v1/order_shipping_methods#update
 #                                                  api_v1_carts GET    /api/v1/carts(.:format)                                                                  api/v1/carts#index
 #                                                               POST   /api/v1/carts(.:format)                                                                  api/v1/carts#create
 #                                               new_api_v1_cart GET    /api/v1/carts/new(.:format)                                                              api/v1/carts#new
@@ -133,6 +135,7 @@
 #                                                               PATCH  /api/v1/orders/:id(.:format)                                                             api/v1/orders#update
 #                                                               PUT    /api/v1/orders/:id(.:format)                                                             api/v1/orders#update
 #                                                               DELETE /api/v1/orders/:id(.:format)                                                             api/v1/orders#destroy
+#                                            api_v1_order_items PUT    /api/v1/order_items(.:format)                                                            api/v1/orders#update_order_items
 #                                api_v1_customer_update_address POST   /api/v1/customers/:customer_id/update_address(.:format)                                  api/v1/customers#update_address
 #                                         api_v1_customer_cards POST   /api/v1/customers/:customer_id/cards(.:format)                                           api/v1/customers#cards
 #                                api_v1_customer_set_as_default PUT    /api/v1/customers/:customer_id/set_as_default(.:format)                                  api/v1/customers#set_as_default
@@ -140,6 +143,7 @@
 #                         api_v1_customer_update_onboard_status PUT    /api/v1/customers/:customer_id/update_onboard_status(.:format)                           api/v1/customers#update_onboard_status
 #                          api_v1_customer_set_shipping_default PUT    /api/v1/customers/:customer_id/set_shipping_default(.:format)                            api/v1/customers#set_shipping_default
 #                                      add_logo_api_v1_customer POST   /api/v1/customers/:id/add_logo(.:format)                                                 api/v1/customers#add_logo
+#                               api_v1_customer_process_payment PUT    /api/v1/customers/:customer_id/process_payment(.:format)                                 api/v1/customers#process_payment
 #                                              api_v1_customers GET    /api/v1/customers(.:format)                                                              api/v1/customers#index
 #                                                               POST   /api/v1/customers(.:format)                                                              api/v1/customers#create
 #                                           new_api_v1_customer GET    /api/v1/customers/new(.:format)                                                          api/v1/customers#new
@@ -315,8 +319,10 @@ Rails.application.routes.draw do
         resources :cutoffs, only: [:index, :update]
       end
       get :get_rates, to: "shipping_methods#get_rates"
+      resources :order_shipping_methods, only: [:update]
       resources :carts
       resources :orders
+      put :order_items, to: "orders#update_order_items"
       resources :customers do
         post :update_address
         post :cards
@@ -327,6 +333,7 @@ Rails.application.routes.draw do
         member do
           post :add_logo
         end
+        put :process_payment
       end
       post :password_reset, to: "password#password_reset"
       resources :invoices, only: [:update]

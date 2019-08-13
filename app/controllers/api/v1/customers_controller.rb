@@ -184,6 +184,20 @@ module Api::V1
       render json: {success: true}, status: 200
     end
 
+    def process_payment
+      begin
+        @order = Order.find(params[:order])
+        charge = StripeServices::CreateInvoiceCharge.charge(@order.invoice, params[:card], true)
+        render json: @order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
+      rescue StandardError => e
+        render json: {
+            error: e.http_status,
+            message: e.message,
+            code: e.code
+        }, status: e.http_status
+      end
+    end
+
     private
 
     def set_roaster

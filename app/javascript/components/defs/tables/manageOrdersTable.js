@@ -23,7 +23,7 @@ const tableDefinition = {
             namespace: "attributes", 
             label: "Roast Date", 
             formatter: DateFormatter, 
-            link: "/manage/orders"
+            link: "/manage/orders/"
         },
         { name: "id", label: "Order Id", link: "/manage/orders/", textAlign: "center" },
         { name: "status", namespace: "attributes", formatter: Humanize },

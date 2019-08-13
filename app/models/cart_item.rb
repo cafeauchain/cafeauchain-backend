@@ -3,7 +3,6 @@
 # Table name: cart_items
 #
 #  id                 :bigint(8)        not null, primary key
-#  notes              :string
 #  production_options :string           default([]), is an Array
 #  quantity           :integer
 #  created_at         :datetime         not null

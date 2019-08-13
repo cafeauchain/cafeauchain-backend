@@ -5,6 +5,8 @@ import { Segment, Header, Divider } from "semantic-ui-react";
 /* eslint-disable */
 import Table from "shared/table";
 import { Weights } from "shared/textFormatters";
+import Packer from "manage/production/packer";
+
 import { sortBy, humanize } from "utilities";
 /* eslint-enable */
 
@@ -14,6 +16,7 @@ const Link = ({ content }) => <a href={"/manage/orders/" + content}>{content}</a
 
 const fields = {
     fields: [
+        { name: 'packed', style: { width: 60, position: "relative" }, formatter: Packer, textAlign: "center" },
         { name: 'product', style: {minWidth: 200} },
         { name: 'quantity', textAlign: "right", style: { width: 60 } },
         { name: 'options', formatter: Humanize },
@@ -43,7 +46,13 @@ class Production extends React.PureComponent {
 
             const sorted = sortBy({
                 collection: inner.items,
-                sorts: [{ name: "product" }, { name: "options" }, { name: "customer" }]
+                sorts: [
+                    { name: "product" }, 
+                    { name: "packed" },
+                    { name: "options" }, 
+                    { name: "quantity" }, 
+                    { name: "customer" }
+                ]
             });
 
             return [...obj, { size: Number(item), total: inner.total, items: sorted }];

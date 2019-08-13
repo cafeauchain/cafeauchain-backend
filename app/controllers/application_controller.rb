@@ -16,6 +16,9 @@ class ApplicationController < ActionController::Base
   def authenticate_user_from_cookie
     if !cookies[:cac_token_auth].nil?
       request.headers["Authorization"] = "Bearer " + cookies[:cac_token_auth].to_s
+      if !user_signed_in?
+        cookies.delete :cac_token_auth
+      end
     end
   end
 

@@ -34,7 +34,8 @@ class CartDetails extends React.Component {
             errors: [],
             shippingIdx: defaultRate,
             payment_type: terms ? "terms_with_vendor" : "card_on_file",
-            payment_source: !terms ? payment_source : undefined
+            payment_source: !terms ? payment_source : undefined,
+            btnLoading: false
         };
     }
 
@@ -46,6 +47,7 @@ class CartDetails extends React.Component {
         const { target } = e;
         e.preventDefault();
         target.blur();
+        await this.setState({ btnLoading: true });
         const { 
             cart: { id, attributes: { shipping_rates } }, 
             profile: { id: customer_profile_id }, 
@@ -59,7 +61,7 @@ class CartDetails extends React.Component {
         const body = { id, payment_type, payment_source, shipping, tax, total, customer_profile_id, isAssumedCustomer };
         const response = await requester({ url, body });
         if (response instanceof Error) {
-            this.setState({ errors: response.response.data });
+            this.setState({ errors: response.response.data, btnLoading: false });
         } else {
             if (response.redirect) {
                 window.location.href = await response.redirect_url;
@@ -81,7 +83,7 @@ class CartDetails extends React.Component {
             cartLoading
         } = this.props;
         const { primary_address: { street_1, street_2, city, state, postal_code } } = profileAttrs; 
-        const { errors, shippingIdx, payment_type, payment_source } = this.state;
+        const { errors, shippingIdx, payment_type, payment_source, btnLoading } = this.state;
         const shipping =attributes.shipping_rates[shippingIdx];
         const speed = Number(shipping.est_delivery_days);
         const speedString = speed ? pluralize(speed, ' day') : "Unknown";
@@ -240,6 +242,7 @@ class CartDetails extends React.Component {
                                 data-shipping={shipping.retail_rate}
                                 data-tax={tax_due}
                                 data-total={orderTotal}
+                                loading={btnLoading}
                             />
                         </div>
                     </Flex>
