@@ -129,7 +129,7 @@ class RoasterProfile < ApplicationRecord
   end
 
   def getOpenOrderAmountsByDate
-    orders = self.orders.where.(status: :processing)
+    orders = self.orders.where(status: :processing)
     InventoryServices::GetAmountsNeeded.process(orders, true)
   end
 
