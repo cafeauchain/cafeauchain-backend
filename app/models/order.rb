@@ -19,7 +19,7 @@
 #
 
 class Order < ApplicationRecord
-  # before_update :check_status
+  before_update :check_status
 
   belongs_to :wholesale_profile
   has_one :customer_profile, through: :wholesale_profile

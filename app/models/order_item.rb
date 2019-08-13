@@ -25,7 +25,7 @@
 class OrderItem < ApplicationRecord
   belongs_to :order
   belongs_to :product_variant
-  # after_update :update_status
+  after_update :update_status
 
   def update_status
     order_items_packed = self.order.order_items.all?{|oi| oi[:packed]}

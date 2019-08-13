@@ -27,7 +27,7 @@
 class Invoice < ApplicationRecord
   belongs_to :order
 
-  # before_update :check_total
+  before_update :check_total
 
   enum status: [:draft, :processing, :payment_authorized, :awaiting_payment, :partial_payment, :paid_in_full]
   enum payment_type: [:card_on_file, :terms_with_vendor]
