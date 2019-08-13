@@ -40,6 +40,14 @@ class Invoice < ApplicationRecord
     (self.total * 100).to_i
   end
 
+  def application_fee
+    transaction_fee = (self.total_in_cents * 0.029 + 30).ceil
+    base_application_fee = (self.total_in_cents * 0.034).ceil 
+    minimum = 250
+    amount_to_use = base_application_fee < minimum ? minimum : base_application_fee;
+    return amount_to_use - transaction_fee
+  end
+
   def check_total
     if !self[:stripe_invoice_id].nil?
       Stripe.api_key = Rails.application.credentials[Rails.env.to_sym][:stripe_secret_key]

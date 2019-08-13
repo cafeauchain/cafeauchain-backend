@@ -7,11 +7,6 @@ module StripeServices
       account = invoice.order.wholesale_profile.roaster_profile.stripe_account_id
       customer_id = invoice.order.customer_profile.stripe_customer_id
       customer  = Stripe::Customer.retrieve(customer_id)
-      # TODO How do we want to handle orders under $60? Because that would make the application fee less than the processsing fee
-      application_fee = ((invoice.total_in_cents * 0.034) - (invoice.total_in_cents * 0.029 + 30)).to_i
-      if application_fee < 0
-        application_fee = 0
-      end
       source = payment_source || customer.default_source
 
       charge = Stripe::Charge.create({
@@ -19,7 +14,7 @@ module StripeServices
         currency: 'usd',
         source: source,
         customer: customer_id,
-        application_fee_amount: application_fee,
+        application_fee_amount: invoice.application_fee,
         destination: account,
         capture: capture
       })
