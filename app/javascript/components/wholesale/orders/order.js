@@ -115,7 +115,7 @@ class Order extends React.Component {
         const closed = attributes.status === "fulfilled";
         const order_shipping_method = attributes ? attributes.order_shipping_method : {carrier: "unknown", service: ""};
         const shipping_method = `${order_shipping_method.carrier} ${order_shipping_method.service}`;
-        const canEdit = !(attributes.status === ( 'shipped' || 'fulfilled' ));
+        const canEdit = ["processing", "packed"].includes(attributes.status);
 
         return (
             <div>

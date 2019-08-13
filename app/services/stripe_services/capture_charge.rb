@@ -12,7 +12,7 @@ class StripeServices::CaptureCharge
 
       card = charge[:payment_method_details][:card]
       memo = "Payment via Stripe"
-      fee = order.invoice.total_fee
+      fee = (order.invoice.total_fee/100).round(2)
       if !card.nil?
         memo += " with " + card[:brand].to_s.capitalize + " " + card[:last4].to_s
       end
