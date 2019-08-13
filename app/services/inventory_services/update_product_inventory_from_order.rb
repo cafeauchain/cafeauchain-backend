@@ -2,7 +2,7 @@ module InventoryServices
   class UpdateProductInventoryFromOrder
     def self.update(order)
       current_order = InventoryServices::GetAmountsNeeded.process([order])
-      all_open_orders = order.customer_profile.orders.where.not(status: [:draft, :fulfilled])
+      all_open_orders = order.customer_profile.orders.where(status: :processing)
       all_orders = InventoryServices::GetAmountsNeeded.process(all_open_orders)
 
       current_order.each{ |co|

@@ -8,7 +8,7 @@ import { Money } from "shared/textFormatters";
 
 class OrderTotals extends PureComponent {
     render() {
-        const { attributes: { subtotal, taxes, shipping, order_total } } = this.props;
+        const { attributes: { subtotal, taxes, shipping, order_total, invoice_fee, order_net } } = this.props;
         return (
             <Flex spacing="10" spacebetween wrap>
                 <div flex="50">
@@ -34,6 +34,18 @@ class OrderTotals extends PureComponent {
                 </div>
                 <div flex="50">
                     <Money type="positive">{order_total}</Money>
+                </div>
+                <div flex="50">
+                    <strong>Fee:</strong>
+                </div>
+                <div flex="50">
+                    <Money type="negative">{invoice_fee}</Money>
+                </div>
+                <div flex="50">
+                    <strong>Net:</strong>
+                </div>
+                <div flex="50">
+                    <Money type="positive">{order_net}</Money>
                 </div>
             </Flex>
         );

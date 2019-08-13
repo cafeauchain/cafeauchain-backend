@@ -11,6 +11,6 @@
 // about supported directives.
 //
 //= require font_awesome5
-//= require jquery
+
 //= require rails-ujs
 //= require_tree .

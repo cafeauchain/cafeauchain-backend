@@ -3,6 +3,7 @@
 # Table name: invoices
 #
 #  id                :bigint(8)        not null, primary key
+#  fee               :float            default(0.0)
 #  memo              :string
 #  payment_status    :integer
 #  payment_type      :integer
@@ -40,12 +41,15 @@ class Invoice < ApplicationRecord
     (self.total * 100).to_i
   end
 
-  def application_fee
-    transaction_fee = (self.total_in_cents * 0.029 + 30).ceil
-    base_application_fee = (self.total_in_cents * 0.034).ceil 
+  def total_fee
     minimum = 250
-    amount_to_use = base_application_fee < minimum ? minimum : base_application_fee;
-    return amount_to_use - transaction_fee
+    base_application_fee = (self.total_in_cents * 0.034).ceil 
+    return base_application_fee < minimum ? minimum : base_application_fee
+  end
+
+  def application_fee
+    transaction_fee = (self.total_in_cents * 0.029 + 30).round
+    return self.total_fee - transaction_fee
   end
 
   def check_total

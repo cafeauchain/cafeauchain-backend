@@ -3,6 +3,7 @@
 # Table name: invoices
 #
 #  id                :bigint(8)        not null, primary key
+#  fee               :float            default(0.0)
 #  memo              :string
 #  payment_status    :integer
 #  payment_type      :integer

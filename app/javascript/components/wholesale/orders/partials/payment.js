@@ -59,25 +59,26 @@ class PaymentDetails extends React.Component {
     render() {
         const { errors, cardBtnLoading, emailBtnLoading } = this.state;
         const { order: { attributes }, customer: { attributes: custAtts} } = this.props;
+        const { invoice: { status, memo, payment_status, id } } = attributes;
         const default_card = custAtts.cards.find( card => card.default );
         return (
             <React.Fragment>
                 <Header as="h3" dividing content="Payment Details" />
                 <p>
-                    <Titler bold title="Invoice Status" value={humanize(attributes.invoice.status)} />
+                    <Titler bold title="Invoice Status" value={humanize(status)} />
                 </p>
-                {attributes.invoice.payment_status === "offline" && (
+                {status === "paid_in_full" && (
                     <p>
-                        <Titler bold title="Payment Memo" value={attributes.invoice.memo} />
+                        <Titler bold title="Payment Memo" value={memo} />
                     </p>
                 )}
-                {attributes.invoice.payment_status === "stripe" && (
+                {payment_status === "stripe" && status !== 'paid_in_full'  && (
                     <p>
                         <Titler bold title="Default Card" value={default_card.brand + " " + default_card.last4} />
                     </p>    
                 )}
                 
-                {attributes.invoice.status === "awaiting_payment" && (
+                {status === "awaiting_payment" && (
                     <React.Fragment>
                         <ErrorHandler errors={errors} />
                         <Button 
@@ -99,7 +100,7 @@ class PaymentDetails extends React.Component {
                         <Modal
                             title="Mark Invoice Paid"
                             text="Mark Paid"
-                            component={<MarkPaid invoice_id={attributes.invoice.id} />}
+                            component={<MarkPaid invoice_id={id} />}
                             btnProps={{ primary: false }}
                         />
                     </React.Fragment> 
