@@ -93,7 +93,7 @@ class Order < ApplicationRecord
   end
 
   def invoice_fee
-    '%.2f' % (self.invoice.fee)
+    '%.2f' % (self.invoice.fee.to_f)
   end
 
   def order_net
