@@ -90,7 +90,7 @@ pickle-email-*.html
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml/public/packs
 /public/packs-test
-# /node_modules
+/node_modules
 /public/assets
 yarn-debug.log*
 .yarn-integrity
