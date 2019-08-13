@@ -48,7 +48,7 @@ class Batch < ApplicationRecord
     if self.status == "roast_in_progress"
       (self.starting_amount / self.inventory_item.roast_size).ceil
     elsif self.status == "in_queue"
-      (target_weight / (self.inventory_item.roast_size * (1 - (self.inventory_item.shrinkage/100)))).ceil
+      (target_weight / (self.inventory_item.roast_size * (1 - (self.inventory_item.shrinkage/100.0)))).ceil
     end
     
   end
