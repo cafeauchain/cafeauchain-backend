@@ -6,11 +6,12 @@ module Api::V1
       if !params[:tracking_number].nil?
         tracker = ShippingServices::AddTracker.add(params[:tracking_number], params[:carrier])
         if !tracker[:id].nil?
+          tracker_time = tracker[:tracking_details].length > 0 ? tracker[:tracking_details][0][:datetime] : Time.now()
           order_shipping_method.update(
                 tracking_number: tracker[:tracking_code], 
                 carrier: tracker[:carrier], 
                 easypost_tracker_id: tracker[:id],
-                shipment_date: tracker[:tracking_details][0][:datetime] || Time.now()
+                shipment_date: tracker_time
             )
           order_shipping_method.order.update(status: :shipped)
         else
