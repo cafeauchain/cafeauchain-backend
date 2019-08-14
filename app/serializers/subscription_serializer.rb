@@ -28,6 +28,8 @@ require 'stripe'
 
 
 class SubscriptionSerializer < ActiveModel::Serializer
-  attributes :id, :trial_end, :status, :amount_roasted_in_cycle, :next_bill_date, :period_start,
+  attributes :id, :subscription_items, :trial_end, :status, :amount_roasted_in_cycle, :next_bill_date, :period_start,
     :period_end, :subscription_start, :balance_details, :status, :next_amount_due, :sub_items
+  
+  has_many :subscription_items
 end

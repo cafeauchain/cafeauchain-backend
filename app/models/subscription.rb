@@ -41,12 +41,17 @@ class Subscription < ApplicationRecord
       self.update({
         next_bill_date: Time.at(current_period_end) + 1.second,
         period_start: Time.at(current_period_start),
-        period_end: Time.at(current_period_end),
-        trial_end: Time.now()
+        period_end: Time.at(current_period_end)
       })
     end
 
-    si = sub_data.items.data.map{|item| {name: item[:plan][:metadata][:plan_name], id: item[:id]}}
+    si = sub_data.items.data.map{|item| 
+      {
+        name: item[:plan][:metadata][:plan_name], 
+        id: item[:id],
+        description: item[:plan][:metadata][:our_description]
+      }
+    }
     current_sub_item_ids = self.subscription_items.map(&:stripe_sub_item_id)
     sub_item_ids = si.map{|item| item[:id]}
 
@@ -58,7 +63,8 @@ class Subscription < ApplicationRecord
         SubscriptionItem.create({
           subscription_id: self.id,
           stripe_sub_item_id: item[:id],
-          stripe_meta_name: item[:name]
+          stripe_meta_name: item[:name],
+          description: item[:description]
         })
       } 
     end
