@@ -1,3 +1,4 @@
+# TODO This probably should be deleted since we arent offering a separate wholesale option
 module StripeServices
   class EnrollWholesaleSubscription
     def initialize(subscription_id)

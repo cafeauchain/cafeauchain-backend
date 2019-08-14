@@ -84,10 +84,10 @@ module Api::V1
       render json: @crops.includes(:lots), status: 200
     end
 
-    def subscriptions
-      @subscription = @roaster_profile.owner.subscription
-      render json: @subscription, status: 200
-    end
+    # def subscriptions
+    #   @subscription = @roaster_profile.owner.subscription
+    #   render json: @subscription, status: 200
+    # end
 
     def cards
       begin

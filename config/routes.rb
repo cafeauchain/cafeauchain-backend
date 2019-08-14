@@ -1,6 +1,6 @@
 # == Route Map
 #
-# I, [2019-08-11T19:11:19.109561 #54046]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
+# I, [2019-08-14T16:58:25.414312 #25411]  INFO -- sentry: ** [Raven] Raven 2.9.0 ready to catch errors
 #                                                        Prefix Verb   URI Pattern                                                                              Controller#Action
 #                     upload_csv_api_v1_admin_producer_profiles POST   /api/v1/admin/producers/upload_csv(.:format)                                             api/v1/admin/producer_profiles#upload_csv
 #                                api_v1_admin_producer_profiles GET    /api/v1/admin/producers(.:format)                                                        api/v1/admin/producer_profiles#index
@@ -102,7 +102,7 @@
 #                                                               POST   /api/v1/roasters/:roaster_profile_id/default_options(.:format)                           api/v1/default_options#create
 #                         api_v1_roaster_profile_default_option PATCH  /api/v1/roasters/:roaster_profile_id/default_options/:id(.:format)                       api/v1/default_options#update
 #                                                               PUT    /api/v1/roasters/:roaster_profile_id/default_options/:id(.:format)                       api/v1/default_options#update
-#                          api_v1_roaster_profile_subscriptions GET    /api/v1/roasters/:roaster_profile_id/subscriptions(.:format)                             api/v1/roaster_profiles#subscriptions
+#                          api_v1_roaster_profile_subscriptions GET    /api/v1/roasters/:roaster_profile_id/subscriptions(.:format)                             api/v1/subscriptions#index
 #                                  api_v1_roaster_profile_cards POST   /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#cards
 #                                                               DELETE /api/v1/roasters/:roaster_profile_id/cards(.:format)                                     api/v1/roaster_profiles#remove_card
 #                         api_v1_roaster_profile_set_as_default PUT    /api/v1/roasters/:roaster_profile_id/set_as_default(.:format)                            api/v1/roaster_profiles#set_as_default
@@ -311,7 +311,7 @@ Rails.application.routes.draw do
         end
         get :variants, to: 'products#variants'
         resources :default_options, only: [:index, :create, :update]
-        get :subscriptions
+        resources :subscriptions, only: [:index]
         post :cards
         delete :cards, to: "roaster_profiles#remove_card"
         put :set_as_default
