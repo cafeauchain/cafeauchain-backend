@@ -45,8 +45,7 @@ module Api::V1
         @inventory_item = InventoryServices::AddRoastToInventory.call(@batch.inventory_item, params[:ending_amount])
         if @inventory_item.errors.full_messages.empty?
           if @batch.errors.full_messages.empty?
-            subscription = @roaster.owner.subscription
-            StripeServices::UpdateQuantifiedSubscription.update(@roaster.owner.id, subscription.id)
+            StripeServices::UpdateQuantifiedSubscription.update(@roaster.owner.id)
             render json: {
               "batch": @batch,
               "inventory_item": @inventory_item

@@ -40,7 +40,7 @@ module Api::V1
         roaster_profile.update(onboard_status: 'lots')
         render json: {"redirect":true,"redirect_url": onboarding_lots_path()}, status: 200
       else
-        redirect_to new_roaster_profile_path, alert: 'There were a problem when creating the Roaster Profile.'
+        redirect_to new_roaster_profile_path, alert: 'There was a problem when creating the Roaster Profile.'
       end
     end
 
@@ -84,10 +84,10 @@ module Api::V1
       render json: @crops.includes(:lots), status: 200
     end
 
-    def subscriptions
-      @subscription = @roaster_profile.owner.subscription
-      render json: @subscription, status: 200
-    end
+    # def subscriptions
+    #   @subscription = @roaster_profile.owner.subscription
+    #   render json: @subscription, status: 200
+    # end
 
     def cards
       begin

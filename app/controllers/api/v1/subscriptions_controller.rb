@@ -1,16 +1,17 @@
 module Api::V1
   class SubscriptionsController < ApplicationController
-    before_action :set_subscription, only: [:show]
-    respond_to :json
-    
-    def show
-      respond_with @subscription, status: 200
+    before_action :set_roaster
+
+    def index
+      subscription = @roaster.owner.subscription
+      subscription.update_subscription_details
+      render json: subscription, status: 200
     end
 
     private
 
-    def set_subscription
-      @subscription = Subscription.find(params[:id])
+    def set_roaster
+      @roaster = RoasterProfile.find(params[:roaster_profile_id])
     end
   end
 end

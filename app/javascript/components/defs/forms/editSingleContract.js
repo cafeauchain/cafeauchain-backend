@@ -1,6 +1,7 @@
 const fields = [
-    { name: "name", label: "Lot Name" },
+    { name: "name", label: "Lot Name", flex: "100" },
     { name: "label", label: "Lot Abbreviation (for Roast Log)" },
+    { name: "origin", label: "Origin" },
     {
         name: "pounds_of_coffee",
         label: "Pounds Ordered from Producer",

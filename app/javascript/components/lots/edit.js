@@ -133,7 +133,7 @@ class EditLot extends Component {
                     {fields.concat(onboarding ? onboardingFields : []).map(field => (
                         <div
                             key={field.name}
-                            flex="50"
+                            flex={field.flex || "50"}
                             style={{
                                 marginBottom: 20,
                             }}
