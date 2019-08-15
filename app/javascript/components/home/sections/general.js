@@ -11,16 +11,17 @@ const General = () => {
             <Flex spacing="50" wrap centercross>
                 <div flex="50">
                     <Header as="h3" className="home-section-header">
-                        Tools for the coffee industry.
+                        Tools for coffee roasters.
                         <br />
-                        Built for sustainability
+                        At your fingertips.
                     </Header>
                     <p className="home-section-text">
-                        You care about sustainability. So do we.
+                        Track roasting, production queues, and wholesale orders
+                        all in one place.
                     </p>
                     <p className="home-section-text">
-                        We’re building tools to help you track economic and
-                        environmental sustainability through your supply chain.
+                        Reduce the complexities in managing your data by keeping track of it in one place.
+                        No hidden fees, no extra charges, only pay for what you use.
                     </p>
                     <Header as="h3" className="home-section-header">
                         Manage your business, manage your data
@@ -42,7 +43,7 @@ const General = () => {
                 </div>
             </Flex>
         </div>
-        
+
     );
 };
 
