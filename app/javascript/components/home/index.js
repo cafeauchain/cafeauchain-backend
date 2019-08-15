@@ -33,9 +33,6 @@ const HomepageLayout = () => (
         <Segment vertical as="section">
             <About />
         </Segment>
-        <Segment vertical as="section">
-            <Features />
-        </Segment>
     </React.Fragment>
     
 );
