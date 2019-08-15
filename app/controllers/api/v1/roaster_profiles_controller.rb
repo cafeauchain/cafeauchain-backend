@@ -20,31 +20,27 @@ module Api::V1
     end
 
     def create
-      begin
-        @roaster_profile_wizard.roaster_profile.subdomain = @roaster_profile_wizard.roaster_profile.name
-        if @roaster_profile_wizard.roaster_profile.save!
-          logo = (params[:roaster_profile][:logo])
-          roaster_profile = @roaster_profile_wizard.roaster_profile
-          Cutoff.create(roaster_profile_id: roaster_profile.id, day_1: '00:00', day_2: '00:00', day_3: '00:00', day_4: '00:00', day_5: '00:00')
-          address = address_params
-          address["location_label"] = "Office"
-          address["primary_location"] = true
-          address["country"] = "United States of America"
-          roaster_profile.addresses.create!(address)
-          roaster_profile.users << current_user
-          roaster_profile.set_owner
-          if !logo.blank?
-            ActiveStorageServices::ImageAttachment.new(logo, roaster_profile.id, "RoasterProfile", "logo").call
-          end
-          session[:roaster_profile_attributes] = nil
-          StripeServices::EnrollBaseSubscription.initial_enroll(current_user.id)
-          roaster_profile.update(onboard_status: 'lots')
-          render json: {"redirect":true,"redirect_url": onboarding_lots_path()}, status: 200
-        else
-          redirect_to new_roaster_profile_path, alert: 'There was a problem when creating the Roaster Profile.'
+      @roaster_profile_wizard.roaster_profile.subdomain = @roaster_profile_wizard.roaster_profile.name
+      if @roaster_profile_wizard.roaster_profile.save!
+        logo = (params[:roaster_profile][:logo])
+        roaster_profile = @roaster_profile_wizard.roaster_profile
+        Cutoff.create(roaster_profile_id: roaster_profile.id, day_1: '00:00', day_2: '00:00', day_3: '00:00', day_4: '00:00', day_5: '00:00')
+        address = address_params
+        address["location_label"] = "Office"
+        address["primary_location"] = true
+        address["country"] = "United States of America"
+        roaster_profile.addresses.create!(address)
+        roaster_profile.users << current_user
+        roaster_profile.set_owner
+        if !logo.blank?
+          ActiveStorageServices::ImageAttachment.new(logo, roaster_profile.id, "RoasterProfile", "logo").call
         end
-      rescue => exception
-       return exception 
+        session[:roaster_profile_attributes] = nil
+        StripeServices::EnrollBaseSubscription.initial_enroll(current_user.id)
+        roaster_profile.update(onboard_status: 'lots')
+        render json: {"redirect":true,"redirect_url": onboarding_lots_path()}, status: 200
+      else
+        redirect_to new_roaster_profile_path, alert: 'There was a problem when creating the Roaster Profile.'
       end
     end
 
