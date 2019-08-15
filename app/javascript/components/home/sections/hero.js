@@ -17,7 +17,7 @@ const Hero = () => {
                 className="home-hero-tertiary"
             />
             <p className="home-hero-text">
-                Cafe au Chain provides tools for roasters that integrates your roast queue, production management, and wholesale ordering
+                Cafe au Chain provides tools for specialty coffee roasters to integrate your green coffee inventory, production management, and wholesale ordering
                 so you can see your roastery's health all in one place.
             </p>
             <Button positive size="huge" as="a" href="/register">
