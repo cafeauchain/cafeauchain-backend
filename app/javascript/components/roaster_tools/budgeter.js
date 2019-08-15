@@ -16,7 +16,7 @@ class Budgeter extends Component {
     }
     getRemaining = value => {
         value = Number(value);
-        return Math.ceil(value / 500) * 500 - value;
+        return value < 500 ? 500 - value : Math.ceil(value / 500) * 500 - value;
     };
 
     getColor = pct => pct > 90 ? "red" : (pct > 75 ? "yellow" : "green");
@@ -82,7 +82,7 @@ class Budgeter extends Component {
                             <Money type="negative">{amount_due}</Money>
                             <F>. You can roast </F>
                             <AsNumber type="positive">{amountRemaining}</AsNumber>
-                            <F> more pounds before incurring a $10 usage fee. Your period started on </F>
+                            <F> more pounds before triggering a $10 usage fee. Your period started on </F>
                             {period_start_display}
                             <F> and will end on </F>
                             {period_end_display}

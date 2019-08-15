@@ -29,7 +29,7 @@ module StripeServices
           stripe_sub = Stripe::Subscription.create({
             customer: stripe_customer["id"], 
             items: plans, 
-            billing_cycle_anchor: (Time.now.beginning_of_day + 30.days).to_time.to_i, 
+            billing_cycle_anchor: (Time.now.beginning_of_day + 1.month).to_time.to_i, 
             prorate: false
           })
           period_start = Time.at(stripe_sub["current_period_start"]).beginning_of_day
