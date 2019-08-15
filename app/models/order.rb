@@ -36,7 +36,7 @@ class Order < ApplicationRecord
     if self.status_changed?
       if self.status == "shipped"
         if !self.invoice[:stripe_invoice_id].nil?
-          StripeServices::CaptureCharge.capture(self)
+          self.invoice.update(status: :payment_authorized)
         else
           self.invoice.update(status: :awaiting_payment)
         end

@@ -133,7 +133,7 @@ class Order extends React.Component {
                     <p>
                         <a href="/manage/orders">Back to All Orders</a>
                     </p>
-                    {/* <OrderFulfillment id={id} status={attributes.status} /> */}
+                    <OrderFulfillment />
                     <Segment style={{ maxWidth: 900, margin: "40px auto" }}>
                         <div>
                             {!isEditable && canEdit && (
