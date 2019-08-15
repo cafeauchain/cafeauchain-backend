@@ -98,16 +98,15 @@ class RoasterProfile < ApplicationRecord
   end
 
   def bags_remaining(producer_id, lot_id)
-    producer = ProducerProfile.find(producer_id)
     lot = Lot.find(lot_id)
-    bags_remaining = lot.bags - self.bags_delivered(lot_id)
+    lot.bags - self.bags_delivered(lot_id)
   end
 
   def amount_roasted_in_period(subscription_id)
     subscription = Subscription.find(subscription_id)
-    date_range = (subscription.next_bill_date - 30.days)..subscription.next_bill_date.end_of_day - 1.days
+    date_range = subscription.period_start..subscription.period_end
     batches = self.batches.where(roast_date: date_range, status: :roast_completed)
-    pounds_roasted_in_period = batches.pluck(:starting_amount).map{|sa| sa.to_f || 0}.sum
+    batches.pluck(:starting_amount).map{|sa| sa.to_f || 0}.sum
   end
 
   def set_owner

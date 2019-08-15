@@ -6,88 +6,53 @@ import moment from "moment";
 /* eslint-disable */
 import { Money, AsNumber } from "shared/textFormatters";
 
-import roasterCostCalc from "utilities/roasterCostCalc";
-
-import Context from "contexts/main";
+import withContext from "contexts/withContext";
 /* eslint-enable */
-
-const Wrapper = props => (
-    <Context>
-        {ctx => <Budgeter {...props} data={ctx.activity} loading={ctx.loading} getCtxData={ctx.getData} />}
-    </Context>
-);
 
 class Budgeter extends Component {
     componentDidMount() {
-        const { data, getCtxData } = this.props;
-        if (data === undefined) getCtxData("activity");
+        const { activity, getData } = this.props;
+        if (activity === undefined) getData("activity");
     }
     getRemaining = value => {
         value = Number(value);
-        return value < 500 ? 500 - value : Math.ceil(value / 100) * 100 - value;
+        return value < 500 ? 500 - value : Math.ceil(value / 500) * 500 - value;
     };
 
-    getLimit = value => {
-        value = Number(value);
-        return value < 500 ? 500 : 100;
-    };
-
-    getColor = pct => {
-        let color = "green";
-        if (pct > 75) {
-            color = "yellow";
-        }
-        if (pct > 90) {
-            color = "red";
-        }
-        return color;
-    };
-
-    // TODO We can probably remove this once we get stripe set up correctly
-    getAmountDue = (value, period_start, subscription_start) => {
-        let total = roasterCostCalc(value);
-        if (moment(period_start).isSame(moment(subscription_start), "day")) {
-            return value <= 500 ? 0 : total - 19.99;
-        }
-        return total;
-    };
+    getColor = pct => pct > 90 ? "red" : (pct > 75 ? "yellow" : "green");
 
     render() {
-        const { loading } = this.props;
-        let { data } = this.props;
-        if (data === undefined) data = [];
-        const { attributes } = data;
-        let total,
-            amountRemaining,
-            period_start,
-            period_start_display,
-            period_end,
-            period_end_display,
-            days_remaining,
-            days_elapsed,
-            dayProgress,
-            dayColor,
-            roastProgress,
-            roastColor,
-            subscription_start,
-            amount_due;
-        const today = moment().startOf("day");
-        if (attributes) {
-            total = attributes.amount_roasted_in_cycle;
-            amountRemaining = this.getRemaining(total);
-            period_start = moment(attributes.period_start).startOf("day");
-            period_start_display = period_start.format("MMMM D");
-            period_end = moment(attributes.period_end).endOf("day");
-            period_end_display = period_end.format("MMMM D");
-            days_remaining = period_end.diff(today, "days");
-            days_elapsed = today.diff(period_start, "days");
-            dayProgress = (days_elapsed / 30) * 100;
-            dayColor = this.getColor(dayProgress);
-            roastProgress = ((this.getLimit(total) - this.getRemaining(total)) / this.getLimit(total)) * 100;
-            roastColor = this.getColor(roastProgress);
-            subscription_start = attributes.subscription_start;
-            amount_due = this.getAmountDue(total, period_start, subscription_start);
+        const { loading, activity: data } = this.props;
+
+        if (data === undefined) {
+            return (
+                <Dimmer inverted active>
+                    <Loader size="large" />
+                </Dimmer>
+            );
         }
+
+        const { attributes: {
+            amount_roasted_in_cycle: total,
+            period_start: attr_period_start,
+            period_end: attr_period_end,
+            next_amount_due
+        } } = data;
+
+        const today = moment().startOf("day");
+        const amountRemaining = this.getRemaining(total);
+        const period_start = moment(attr_period_start).startOf("day");
+        const period_start_display = period_start.format("MMMM D");
+        const period_end = moment(attr_period_end).endOf("day");
+        const period_end_display = period_end.format("MMMM D");
+        const days_remaining = period_end.diff(today, "days");
+        const days_elapsed = today.diff(period_start, "days");
+        const days_in_period = period_end.diff(period_start, "days");
+        const dayProgress = (days_elapsed / days_in_period) * 100;
+        const dayColor = this.getColor(dayProgress);
+        const roastProgress = ((500 - amountRemaining) / 500) * 100;
+        const roastColor = this.getColor(roastProgress);
+        const amount_due = next_amount_due / 100;
         return (
             <F>
                 <Header as="h2" content="Billing Activity" />
@@ -105,9 +70,8 @@ class Budgeter extends Component {
                             <F> lbs before next charge</F>
                         </Progress>
                         <Header as="h3">
-                            <F>Billing: </F>
                             <Money type="negative">{amount_due}</Money>
-                            <F> due on </F>
+                            <F> due </F>
                             {period_end_display}
                         </Header>
                         <div>
@@ -118,7 +82,7 @@ class Budgeter extends Component {
                             <Money type="negative">{amount_due}</Money>
                             <F>. You can roast </F>
                             <AsNumber type="positive">{amountRemaining}</AsNumber>
-                            <F> more pounds before you will be charged another $2. Your period started on </F>
+                            <F> more pounds before triggering a $10 usage fee. Your period started on </F>
                             {period_start_display}
                             <F> and will end on </F>
                             {period_end_display}
@@ -135,9 +99,9 @@ class Budgeter extends Component {
 
 const { object, bool, func } = PropTypes;
 Budgeter.propTypes = {
-    data: object,
+    activity: object,
     loading: bool,
-    getCtxData: func
+    getData: func
 };
 
-export default Wrapper;
+export default withContext(Budgeter);
