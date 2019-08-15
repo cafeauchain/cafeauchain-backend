@@ -38,18 +38,17 @@ const Footer = ({ loggedIn }) => {
                                             </List.Item>
                                         </List>
                                     </Flex>
-                                    
+
                                 </div>
                                 <div flex="50" className="footer-tag">
-                                    <Header inverted as="h4" content="Cafe au Chain | Proof of Perk" />
+                                    <Header inverted as="h4" content="Cafe au Chain" />
                                     <p>
-                                        Blockchain-backed roaster management tools for Roasters that want to make an
-                                        impact.
+                                        Tools for roasters, all in one place.
                                     </p>
                                 </div>
-                            </Flex>                        
+                            </Flex>
                         </div>
-                        
+
                         <Divider inverted section />
                     </React.Fragment>
                 )}
@@ -69,7 +68,7 @@ const Footer = ({ loggedIn }) => {
                         </List.Item>
                     </List>
                 )}
-                
+
             </Container>
         </Segment>
     );

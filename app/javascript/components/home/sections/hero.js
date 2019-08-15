@@ -10,21 +10,15 @@ const Hero = () => {
                 inverted
                 className="home-hero-main"
             />
-            <Header
-                as="h2"
-                content="Proof of Perk"
-                inverted
-                className="home-hero-sub"
-            />
-            <Header
+           <Header
                 as="h3"
                 content="Start your journey!"
                 inverted
                 className="home-hero-tertiary"
             />
             <p className="home-hero-text">
-                Proof of Perk provides a set of blockchain-backed roaster tools to help bring transparency to the
-                specitiality coffee supply chain.
+                Cafe au Chain provides tools for specialty coffee roasters to integrate your green coffee inventory, production management, and wholesale ordering
+                so you can see your roastery's health all in one place.
             </p>
             <Button positive size="huge" as="a" href="/register">
                 Get Started
