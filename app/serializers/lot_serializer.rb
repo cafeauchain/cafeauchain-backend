@@ -38,7 +38,7 @@ class LotSerializer < ActiveModel::Serializer
   attributes :id, :label, :name, :producer, :crop_name, :harvest_year, :pounds_of_coffee, :price_per_pound, :contract_value, 
   :roasted_on_import, :roasted_on_platform, :total_amount_roasted, :manual_adjustment, :total_coffee_used,
   :on_hand, :on_hand_value, :low_on_hand, :on_hand_alert,
-  :in_warehouse, :warehouse_value, :low_remaining, :warehouse_alert, :can_delete
+  :in_warehouse, :warehouse_value, :low_remaining, :warehouse_alert, :can_delete, :origin
 
   belongs_to :crop
   # belongs_to :roaster_profile
@@ -85,7 +85,7 @@ class LotSerializer < ActiveModel::Serializer
 
   def batches
     started_batches = self.object.batches.where(status: :roast_completed).where(roast_date: instance_options[:range])
-    batches = InventoryServices::BatchGrouping.group(started_batches, instance_options[:period])
+    InventoryServices::BatchGrouping.group(started_batches, instance_options[:period])
   end
 end
 
