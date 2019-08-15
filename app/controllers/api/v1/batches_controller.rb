@@ -43,7 +43,6 @@ module Api::V1
       if !params[:finish_batch].nil?
         @batch = InventoryServices::FinishBatchRoast.finish(@batch.id, batch_params)
         @inventory_item = InventoryServices::AddRoastToInventory.call(@batch.inventory_item, params[:ending_amount])
-        @inventory_item = @batch.inventory_item
         if @inventory_item.errors.full_messages.empty?
           if @batch.errors.full_messages.empty?
             StripeServices::UpdateQuantifiedSubscription.update(@roaster.owner.id)
