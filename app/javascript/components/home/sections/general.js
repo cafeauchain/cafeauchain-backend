@@ -1,5 +1,5 @@
 import React from "react";
-import { Header, Image, Button } from "semantic-ui-react";
+import { Header, Image } from "semantic-ui-react";
 /* eslint-disable */
 import img from "images/coffee-imgs/coffee-img-23.jpg";
 import Flex from "shared/flex";
@@ -20,14 +20,14 @@ const General = () => {
                         all in one place.
                     </p>
                     <p className="home-section-text">
-                        Reduce the complexities in managing your data by keeping track of it in one place.
+                        Reduce the complexities in managing your data by keeping track of it on one platform.
                         No hidden fees, no extra charges, only pay for what you use.
                     </p>
                     <Header as="h3" className="home-section-header">
                         Manage your business, manage your data
                     </Header>
                     <p className="home-section-text">
-                        No one knows your business better than you. Get to know it better.
+                        No one knows your business better than you. Get to know it even better.
                     </p>
                     <p className="home-section-text">
                         With the Cafe au Chain platform, see your business data in
@@ -37,10 +37,10 @@ const General = () => {
                 <div flex="50" className="home-img-container">
                     <Image bordered rounded src={img} />
                 </div>
-                <div flex="100" className="text-centered">
+                {/* <div flex="100" className="text-centered">
                     <br />
                     <Button size="huge" primary as="a" href="/register">Check Out Our Tools</Button>
-                </div>
+                </div> */}
             </Flex>
         </div>
 
