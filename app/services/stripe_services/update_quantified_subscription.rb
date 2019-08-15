@@ -21,7 +21,11 @@ module StripeServices
             temp = stripe_subscription.items.data.find{|item| item[:plan][:metadata][:plan_name] == "usage"}
             sub_item_id = temp[:id]
           end
-          Stripe::UsageRecord.create({quantity: quantity, timestamp: Time.now.to_time.to_i, subscription_item: sub_item_id})
+          Stripe::UsageRecord.create({
+            quantity: quantity, 
+            timestamp: Time.now.to_time.to_i, 
+            subscription_item: sub_item_id
+          })
           return subscription
         end
       end
