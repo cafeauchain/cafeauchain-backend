@@ -104,7 +104,7 @@ class RoasterProfile < ApplicationRecord
 
   def amount_roasted_in_period(subscription_id)
     subscription = Subscription.find(subscription_id)
-    date_range = (subscription.next_bill_date - 1.month)..subscription.next_bill_date.end_of_day - 1.days
+    date_range = subscription.period_start..subscription.period_end
     batches = self.batches.where(roast_date: date_range, status: :roast_completed)
     batches.pluck(:starting_amount).map{|sa| sa.to_f || 0}.sum
   end
