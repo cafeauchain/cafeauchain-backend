@@ -49,7 +49,8 @@ class Subscription < ApplicationRecord
       {
         name: item[:plan][:metadata][:plan_name], 
         id: item[:id],
-        description: item[:plan][:metadata][:our_description]
+        description: item[:plan][:metadata][:our_description],
+        title: item[:plan][:nickname],
       }
     }
     current_sub_item_ids = self.subscription_items.map(&:stripe_sub_item_id)
@@ -64,7 +65,8 @@ class Subscription < ApplicationRecord
           subscription_id: self.id,
           stripe_sub_item_id: item[:id],
           stripe_meta_name: item[:name],
-          description: item[:description]
+          description: item[:description],
+          title: item[:title]
         })
       } 
     end
