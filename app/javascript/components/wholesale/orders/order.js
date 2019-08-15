@@ -17,6 +17,7 @@ import OrderTotals from "wholesale/orders/partials/totals";
 import LineItem from "wholesale/orders/partials/editLineItem";
 import EditShipping from "wholesale/orders/partials/editShipping";
 import Fulfillment from "wholesale/orders/partials/fulfillment";
+import Packer from "manage/production/packer";
 
 import tableDefs from "defs/tables/orderLineItems";
 
@@ -117,6 +118,20 @@ class Order extends React.Component {
         const shipping_method = `${order_shipping_method.carrier} ${order_shipping_method.service}`;
         const canEdit = ["processing", "packed"].includes(attributes.status);
 
+        const packer = {
+            name: 'packed',
+            style: { width: 60, position: "relative" },
+            formatter: Packer,
+            textAlign: "center"
+        };
+
+        const modifiedTableDefs = defs => {
+            let { fields, ...rest } = defs;
+            rest.fields = [packer, ...fields];
+            return rest;
+        };
+
+
         return (
             <div>
                 <Segment>
@@ -175,7 +190,7 @@ class Order extends React.Component {
                         </Flex>
                         <br />
                         <Table 
-                            tableDefs={tableDefs}
+                            tableDefs={modifiedTableDefs(tableDefs)}
                             data={sorted}
                             onClick={isEditable ? this.handleTableClick : null}
                         />

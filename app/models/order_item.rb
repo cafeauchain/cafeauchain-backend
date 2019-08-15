@@ -30,6 +30,7 @@ class OrderItem < ApplicationRecord
   def update_status
     order_items_packed = self.order.order_items.all?{|oi| oi[:packed]}
     isPacked = ["packed", "shipped", "fulfilled"].include?(self.order[:status])
+    # TODO Remove order items from production queue if full order is packed
     if order_items_packed && !isPacked
       self.order.update(status: :packed)
       InventoryServices::UpdateProductInventoryFromOrder.fulfill(self.order)
