@@ -16,6 +16,7 @@ import OrderDetails from "wholesale/orders/partials/details";
 import OrderTotals from "wholesale/orders/partials/totals";
 import LineItem from "wholesale/orders/partials/editLineItem";
 import EditShipping from "wholesale/orders/partials/editShipping";
+import ManualShipping from "wholesale/orders/partials/manualShipping";
 import Fulfillment from "wholesale/orders/partials/fulfillment";
 import Packer from "manage/production/packer";
 
@@ -220,17 +221,36 @@ class Order extends React.Component {
                                 />
                                 <br />
                                 {!isEditable && canEdit && (
-                                    <Modal
-                                        text="Update Shipping Method"
-                                        title="Update Shipping Method"
-                                        component={(
-                                            <EditShipping 
-                                                order_id={id} 
-                                                wholesale_profile_id={customerAtts.wholesale_profile.id}
-                                                shipping_method={order_shipping_method}
-                                            />
-                                        )}
-                                    />
+                                    <React.Fragment>
+                                        <br />
+                                        <Modal
+                                            text="Update Shipping Method"
+                                            title="Update Shipping Method"
+                                            component={(
+                                                <EditShipping
+                                                    order_id={id}
+                                                    wholesale_profile_id={customerAtts.wholesale_profile.id}
+                                                    shipping_method={order_shipping_method}
+                                                />
+                                            )}
+                                        />
+                                        <br />
+                                        <br />
+                                        <Modal
+                                            text="Manually Adjust Shipping"
+                                            title="Manually Adjust Shipping"
+                                            btnProps={{
+                                                primary: false
+                                            }}
+                                            component={(
+                                                <ManualShipping
+                                                    order_id={id}
+                                                    shipping_method={order_shipping_method}
+                                                />
+                                            )}
+                                        />
+                                    </React.Fragment>
+                                    
                                 )}
                             </div>
                             <div flex="33" style={{ textAlign: "right" }}>
