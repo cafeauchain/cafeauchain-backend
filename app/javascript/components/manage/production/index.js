@@ -49,7 +49,6 @@ class Production extends React.PureComponent {
                 collection: inner.items,
                 sorts: [
                     { name: "product" }, 
-                    { name: "packed" },
                     { name: "options" }, 
                     { name: "quantity" }, 
                     { name: "customer" }
