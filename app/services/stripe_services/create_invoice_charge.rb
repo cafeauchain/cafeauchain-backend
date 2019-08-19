@@ -8,13 +8,15 @@ module StripeServices
       customer_id = invoice.order.customer_profile.stripe_customer_id
       customer  = Stripe::Customer.retrieve(customer_id)
       source = payment_source || customer.default_source
+      statement_descriptor = invoice.order.wholesale_profile.roaster_profile.name[0..22]
 
       charge = Stripe::Charge.create({
         amount: invoice.total_in_cents,
         currency: 'usd',
         source: source,
         customer: customer_id,
-        application_fee_amount: invoice.application_fee,
+        application_fee_amount: invoice.total_fee,
+        statement_descriptor_suffix: statement_descriptor,
         destination: account,
         capture: capture
       })
