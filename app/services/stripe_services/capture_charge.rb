@@ -7,7 +7,7 @@ class StripeServices::CaptureCharge
       @charge_id = order.invoice[:stripe_invoice_id]
       charge = Stripe::Charge.capture(@charge_id, {
         amount: order.invoice.total_in_cents,
-        application_fee_amount: order.invoice.application_fee
+        application_fee_amount: order.invoice.total_fee
       })
 
       card = charge[:payment_method_details][:card]
