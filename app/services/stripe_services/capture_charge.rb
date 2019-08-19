@@ -18,7 +18,7 @@ class StripeServices::CaptureCharge
       end
 
       order.invoice.update(status: :paid_in_full, payment_status: :stripe, memo: memo, fee: fee )
-    rescue => exception
+    rescue => e
       return { message: e.message, status: e.http_status }
     end
   end

@@ -57,7 +57,7 @@ class Order < ApplicationRecord
   end
 
   def order_total
-    invoice.total.to_f
+    '%.2f' % (invoice.total)
   end
 
   def shipping
@@ -97,7 +97,7 @@ class Order < ApplicationRecord
   end
 
   def order_net
-    '%.2f' % (self.order_total - self.invoice_fee.to_f)
+    '%.2f' % (self.order_total.to_f - self.invoice_fee.to_f)
   end
 
 end

@@ -186,8 +186,13 @@ module Api::V1
 
     def process_payment
       begin
-        @order = Order.find(params[:order])
-        charge = StripeServices::CreateInvoiceCharge.charge(@order.invoice, params[:card], true)
+        @order = Order.find(params[:order_id])
+        if !params[:card].nil?
+          StripeServices::CreateInvoiceCharge.charge(@order.invoice, params[:card], true)  
+        else
+          StripeServices::CaptureCharge.capture(@order)
+        end
+        
         render json: @order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
       rescue StandardError => e
         render json: {
