@@ -103,7 +103,7 @@ class Order extends React.Component {
     modifiedTableDefs = defs => {
         const WrappedPacker = (props) => {
             const { updateContext, order: { id } } = this.props;
-            return <Packer {...props} updateContext={updateContext} id={id} />;
+            return <Packer {...props} updateContext={updateContext} id={id} fromOrder />;
         };
         const packer = {
             name: 'packed',

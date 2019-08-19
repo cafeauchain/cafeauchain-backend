@@ -32,11 +32,16 @@ class Packer extends React.Component {
             if (response instanceof Error) {
                 alert("Something went wrong. Try again later or contact support@cafeauchain.com");
             } else {
-                const { updateContext, id } = this.props;
-                if( updateContext ){
+                const { fromOrder, fromQueue } = this.props;
+                if( fromOrder ){
+                    const { updateContext, id } = this.props;
                     const url = API_URL + "/orders/" + id;
                     const res = await requester({ url, method: 'GET' });
                     updateContext({ order: res.data });
+                } 
+                if( fromQueue ) {
+                    const { getData } = this.props;
+                    getData("orders", "?grouped_order_items=true");
                 }
             }
         }, 400);
@@ -67,7 +72,10 @@ Packer.propTypes = {
     content: bool,
     item: object,
     updateContext: func,
-    id: oneOfType([number, string])
+    getData: func,
+    id: oneOfType([number, string]),
+    fromOrder: bool,
+    fromQueue: bool
 };
 
 export default Packer;
