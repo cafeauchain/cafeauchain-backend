@@ -92,9 +92,20 @@ ModalWithTrigger.defaultProps = {
 // eslint-disable-next-line react/prefer-stateless-function
 class FormattedModal extends PureComponent {
     render() {
-        const { title, children, size, centered, icon, isOpen, success, closeModal, successClose, ...rest } = this.props;
+        const { 
+            title, children, size, centered, icon, 
+            isOpen, success, closeModal, successClose, ...rest 
+        } = this.props;
         return (
-            <Modal {...rest} closeIcon size={size} centered={centered} open={isOpen} onClose={closeModal}>
+            <Modal 
+                closeOnDimmerClick={false}
+                {...rest}
+                closeIcon
+                size={size}
+                centered={centered}
+                open={isOpen}
+                onClose={closeModal}
+            >
                 <Header icon={icon} content={title} />
                 <Modal.Content scrolling style={{ minHeight: "30vw" }}>
                     {children}

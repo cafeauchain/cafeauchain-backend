@@ -9,7 +9,7 @@ import Modal from "shared/modal";
 
 import MarkPaid from "wholesale/orders/partials/markPaid";
 
-import { humanize } from "utilities";
+import { humanize, callMeDanger } from "utilities";
 
 import { url as API_URL, requester } from "utilities/apiUtils";
 
@@ -26,16 +26,26 @@ class PaymentDetails extends React.Component {
         };
     }
     handleChargeDefaultCard = async e => {
+        const { url, custAtts, order_id } = await this.handlePayment(e);
+        const default_card = custAtts.cards.find(card => card.default);
+        const body = { card: default_card.stripe_card_id, order_id };
+        const response = await requester({ url, body, method: "PUT" });
+        this.afterSubmit( response );
+    }
+    handleProcessAuthorizedCard = async e => {
+        const { url, order_id } = await this.handlePayment(e);
+        const body = { order_id };
+        const response = await requester({ url, body, method: "PUT" });
+        this.afterSubmit(response);
+    }
+    handlePayment = async e => {
         e.preventDefault();
         const { target } = e;
         target.blur();
         await this.setState({ cardBtnLoading: true });
         const { customer: { attributes: custAtts, id }, order: { id: order_id } } = this.props;
-        const default_card = custAtts.cards.find( card => card.default );
         const url = API_URL + "/customers/" + id + "/process_payment";
-        const body = { card: default_card.stripe_card_id, order: order_id };
-        const response = await requester({ url, body, method: "PUT" });
-        this.afterSubmit( response );
+        return { url, custAtts, order_id };
     }
     handleRequestPayment = e => {
         e.preventDefault();
@@ -67,6 +77,22 @@ class PaymentDetails extends React.Component {
                 <p>
                     <Titler bold title="Invoice Status" value={humanize(status)} />
                 </p>
+                
+                {status === "awaiting_payment" && (
+                    <p>
+                        {callMeDanger(`Awaiting payment means that this customer was not required to submit payment 
+                        when they placed an order and this order has been marked as shipped. You can either 
+                        charge the customer's default payment method, wait for the customer to pay the invoice
+                        on their end, or mark the order as paid with an off-platform method like cash or check.`)}
+                    </p>  
+                )}
+                {status === "payment_authorized" && (
+                    <p>
+                        {callMeDanger(`Payment authorized means that the customer used a card when placing the 
+                        order. As soon as the order is finalized and shipped, you can charge the customer's 
+                        payment method.`)}
+                    </p>  
+                )}
                 {status === "paid_in_full" && (
                     <p>
                         <Titler bold title="Payment Memo" value={memo} />
@@ -76,6 +102,17 @@ class PaymentDetails extends React.Component {
                     <p>
                         <Titler bold title="Default Card" value={default_card.brand + " " + default_card.last4} />
                     </p>    
+                )}
+                {status === "payment_authorized" && (
+                    <React.Fragment>
+                        <ErrorHandler errors={errors} />
+                        <Button
+                            primary
+                            content="Charge Card"
+                            onClick={this.handleProcessAuthorizedCard}
+                            loading={cardBtnLoading}
+                        />
+                    </React.Fragment>
                 )}
                 
                 {status === "awaiting_payment" && (

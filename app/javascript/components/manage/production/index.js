@@ -8,6 +8,8 @@ import { Weights } from "shared/textFormatters";
 import Packer from "manage/production/packer";
 
 import { sortBy, humanize } from "utilities";
+
+import withContext from "contexts/withContext";
 /* eslint-enable */
 
 const Humanize = ({ content }) => humanize(content);
@@ -16,7 +18,6 @@ const Link = ({ content }) => <a href={"/manage/orders/" + content}>{content}</a
 
 const fields = {
     fields: [
-        { name: 'packed', style: { width: 60, position: "relative" }, formatter: Packer, textAlign: "center" },
         { name: 'product', style: {minWidth: 200} },
         { name: 'quantity', textAlign: "right", style: { width: 60 } },
         { name: 'options', formatter: Humanize },
@@ -48,7 +49,6 @@ class Production extends React.PureComponent {
                 collection: inner.items,
                 sorts: [
                     { name: "product" }, 
-                    { name: "packed" },
                     { name: "options" }, 
                     { name: "quantity" }, 
                     { name: "customer" }
@@ -58,6 +58,22 @@ class Production extends React.PureComponent {
             return [...obj, { size: Number(item), total: inner.total, items: sorted }];
         }, []);
     }
+
+    modifiedTableDefs = defs => {
+        const WrappedPacker = (props) => {
+            const { getData } = this.props;
+            return <Packer {...props} getData={getData} fromQueue />;
+        };
+        const packer = {
+            name: 'packed',
+            style: { width: 60, position: "relative" },
+            formatter: WrappedPacker,
+            textAlign: "center"
+        };
+        let { fields, ...rest } = defs;
+        rest.fields = [packer, ...fields];
+        return rest;
+    };
 
     render() {
         const { orders } = this.props;
@@ -79,7 +95,7 @@ class Production extends React.PureComponent {
                                     <strong>Total bags: </strong>
                                     {size.total}
                                 </p>
-                                <Table tableDefs={fields} data={size.items} />
+                                <Table tableDefs={this.modifiedTableDefs(fields)} data={size.items} />
                             </Segment>
                             <br />
                         </React.Fragment>      
@@ -89,9 +105,10 @@ class Production extends React.PureComponent {
         );
     }
 }
-const { object } = PropTypes;
+const { object, func } = PropTypes;
 Production.propTypes = {
-    orders: object
+    orders: object,
+    getData: func
 };
 
-export default Production;
+export default withContext(Production);

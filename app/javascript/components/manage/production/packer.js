@@ -11,19 +11,18 @@ class Packer extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            isChecked: props.content,
-            loading: false 
+            loading: false
         };
     }
     handleInputChange = (e, {value, checked}) => {
         const val = value || checked;
-        this.setState({ isChecked: val, loading: true }, this.handleUpdate); 
+        this.handleUpdate( val );
     }
-    handleUpdate = async () => {
-        const { isChecked } = this.state;
+    handleUpdate = async val => {
+        this.setState({ loading: true });
         const { item: { id } } = this.props;
         const url = API_URL + "/order_items";
-        const body = { order_item_id: id, packed: isChecked };
+        const body = { order_item_id: id, packed: val };
         const response = await requester({ url, body, method: 'PUT' });
         this.afterSubmit( response );
     }
@@ -32,11 +31,24 @@ class Packer extends React.Component {
             this.setState({ loading: false });
             if (response instanceof Error) {
                 alert("Something went wrong. Try again later or contact support@cafeauchain.com");
+            } else {
+                const { fromOrder, fromQueue } = this.props;
+                if( fromOrder ){
+                    const { updateContext, id } = this.props;
+                    const url = API_URL + "/orders/" + id;
+                    const res = await requester({ url, method: 'GET' });
+                    updateContext({ order: res.data });
+                } 
+                if( fromQueue ) {
+                    const { getData } = this.props;
+                    getData("orders", "?grouped_order_items=true");
+                }
             }
         }, 400);
     }
     render(){
-        const { isChecked, loading } = this.state;
+        const { loading } = this.state;
+        const { content: isChecked } = this.props;
         return (
             <React.Fragment>
                 <Dimmer inverted active={loading}>
@@ -48,16 +60,22 @@ class Packer extends React.Component {
                     inputType="checkbox"
                     name="packed"
                     label=""
-                    defaultChecked={isChecked}
+                    checked={isChecked}
+                    disabled={isChecked}
                 />
             </React.Fragment>        
         );
     }
 }
-const { bool, object } = PropTypes;
+const { bool, object, func, oneOfType, number, string } = PropTypes;
 Packer.propTypes = {
     content: bool,
-    item: object
+    item: object,
+    updateContext: func,
+    getData: func,
+    id: oneOfType([number, string]),
+    fromOrder: bool,
+    fromQueue: bool
 };
 
 export default Packer;
