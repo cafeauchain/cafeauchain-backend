@@ -16,7 +16,9 @@ import OrderDetails from "wholesale/orders/partials/details";
 import OrderTotals from "wholesale/orders/partials/totals";
 import LineItem from "wholesale/orders/partials/editLineItem";
 import EditShipping from "wholesale/orders/partials/editShipping";
+import ManualShipping from "wholesale/orders/partials/manualShipping";
 import Fulfillment from "wholesale/orders/partials/fulfillment";
+import Packer from "manage/production/packer";
 
 import tableDefs from "defs/tables/orderLineItems";
 
@@ -98,6 +100,22 @@ class Order extends React.Component {
         });
     };
 
+    modifiedTableDefs = defs => {
+        const WrappedPacker = (props) => {
+            const { updateContext, order: { id } } = this.props;
+            return <Packer {...props} updateContext={updateContext} id={id} fromOrder />;
+        };
+        const packer = {
+            name: 'packed',
+            style: { width: 60, position: "relative" },
+            formatter: WrappedPacker,
+            textAlign: "center"
+        };
+        let { fields, ...rest } = defs;
+        rest.fields = [packer, ...fields];
+        return rest;
+    };
+
     render() {
         const { isEditable, showModal, current, lineItems, btnLoading } = this.state;
         const {
@@ -133,7 +151,7 @@ class Order extends React.Component {
                     <p>
                         <a href="/manage/orders">Back to All Orders</a>
                     </p>
-                    {/* <OrderFulfillment id={id} status={attributes.status} /> */}
+                    <OrderFulfillment />
                     <Segment style={{ maxWidth: 900, margin: "40px auto" }}>
                         <div>
                             {!isEditable && canEdit && (
@@ -175,7 +193,7 @@ class Order extends React.Component {
                         </Flex>
                         <br />
                         <Table 
-                            tableDefs={tableDefs}
+                            tableDefs={isEditable ? tableDefs : this.modifiedTableDefs(tableDefs)}
                             data={sorted}
                             onClick={isEditable ? this.handleTableClick : null}
                         />
@@ -205,17 +223,36 @@ class Order extends React.Component {
                                 />
                                 <br />
                                 {!isEditable && canEdit && (
-                                    <Modal
-                                        text="Update Shipping Method"
-                                        title="Update Shipping Method"
-                                        component={(
-                                            <EditShipping 
-                                                order_id={id} 
-                                                wholesale_profile_id={customerAtts.wholesale_profile.id}
-                                                shipping_method={order_shipping_method}
-                                            />
-                                        )}
-                                    />
+                                    <React.Fragment>
+                                        <br />
+                                        <Modal
+                                            text="Update Shipping Method"
+                                            title="Update Shipping Method"
+                                            component={(
+                                                <EditShipping
+                                                    order_id={id}
+                                                    wholesale_profile_id={customerAtts.wholesale_profile.id}
+                                                    shipping_method={order_shipping_method}
+                                                />
+                                            )}
+                                        />
+                                        <br />
+                                        <br />
+                                        <Modal
+                                            text="Manually Adjust Shipping"
+                                            title="Manually Adjust Shipping"
+                                            btnProps={{
+                                                primary: false
+                                            }}
+                                            component={(
+                                                <ManualShipping
+                                                    order_id={id}
+                                                    shipping_method={order_shipping_method}
+                                                />
+                                            )}
+                                        />
+                                    </React.Fragment>
+                                    
                                 )}
                             </div>
                             <div flex="33" style={{ textAlign: "right" }}>

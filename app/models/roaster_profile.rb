@@ -72,7 +72,7 @@ class RoasterProfile < ApplicationRecord
   end
 
   def open_order_items
-    items = self.orders.where(status: :processing).collect do |o|
+    items = self.orders.where(status: [:processing, :packed]).collect do |o|
       o.order_items.map do |oi|
         {
           size: oi.product_variant.custom_options["size"],

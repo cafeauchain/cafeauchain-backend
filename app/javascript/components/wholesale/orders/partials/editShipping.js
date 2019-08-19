@@ -71,7 +71,7 @@ class EditShipping extends React.Component {
                 <ShippingOptions
                     rates={rates}
                     updateCartDetails={this.updateCartDetails}
-                    current={current}
+                    current={current ? current : {}}
                     closeModal={closeModal}
                     successClose={successClose}
                 />

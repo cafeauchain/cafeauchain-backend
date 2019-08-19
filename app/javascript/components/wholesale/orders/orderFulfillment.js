@@ -1,87 +1,114 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Step, Icon, Dimmer, Loader, Header } from "semantic-ui-react";
+import { Dimmer, Loader, Header } from "semantic-ui-react";
 
 /* eslint-disable */
-import { requester, url as API_URL } from "utilities/apiUtils";
-
+import Input from "shared/input";
 import ErrorHandler from "shared/errorHandler";
+
+import { requester, url as API_URL } from "utilities/apiUtils";
+import { callMeDanger } from "utilities";
 
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
+const steps = [
+    { text: "Processing", value: 1, key: "processing" },
+    { text: "Packed", value: 2, key: "packed" },
+    { text: "Shipped", value: 3, key: "shipped" },
+    { text: "Fulfilled", value: 4, key: "fulfilled" }
+];
+
 class OrderFulfillment extends React.Component {
-    static propTypes = () => {
-        const { object, oneOfType, number, string } = PropTypes;
-        return {
-            order: object,
-            id: oneOfType([number, string]),
-            status: string
-        };
-    };
     constructor(props) {
         super(props);
         this.state = {
-            btnLoading: false
+            loading: false,
+            errors: []
         };
     }
 
-    onClick = async (e, status) => {
-        e.preventDefault();
-        const { target } = e;
-        target.blur();
-        await this.setState({ btnLoading: true });
-        const { id, updateContext } = this.props;
+    handleInputChange = (event, { value }) => {
+        this.handleSubmit( value );
+    };
+
+    handleSubmit = async (statusNum) => {
+        await this.setState({ loading: true });
+        const { order: { id } } = this.props;
         const url = API_URL + "/orders/" + id;
-        let response = await requester({ url, body: { status }, method: "PUT" });
+        let response = await requester({ url, body: { status: statusNum }, method: "PUT" });
+        this.afterSubmit( response );
+    };
+
+    afterSubmit = async response => {
+        const { updateContext } = this.props;
         setTimeout(async () => {
             if (response instanceof Error) {
-                this.setState({ errors: response.response.data, btnLoading: false });
+                this.setState({ errors: [response.response.data], loading: false });
             } else {
                 if (response.redirect) {
                     window.location.href = await response.redirect_url;
                 } else {
-                    await updateContext({ order: response.data.data });
-                    this.setState({ btnLoading: false });
+                    await updateContext({ order: response.data });
+                    this.setState({ loading: false });
                 }
             }
         }, 400);
-    };
+    }
+
+    getStatusNumFromStatus = status => {
+        const statusIdx = steps.find(step => step.key === status);
+        return statusIdx.value;
+    }
 
     render() {
-        const { errors, btnLoading } = this.state;
-        const steps = [
-            { name: "draft", icon: "unordered list", title: "Draft", index: 0 },
-            { name: "processing", icon: "unordered list", title: "Processing", index: 1 },
-            { name: "awaiting_payment", icon: "payment", title: "Awaiting Payment", index: 2 },
-            { name: "paid_in_full", icon: "payment", title: "Paid in Full", index: 3 },
-            { name: "fulfilled", icon: "coffee", title: "Fulfilled", index: 4 }
-        ];
-        const { status } = this.props;
-        const statusIdx = steps.find(step => step.name === status);
-        const statusNum = statusIdx.index;
+        const { errors, loading } = this.state;
+        const { order: { attributes: { order_items, status } } } = this.props;
+        const statusNum = this.getStatusNumFromStatus(status);
+        const isPacked = order_items.every(item => item.packed);
+        const modifiedSteps = steps.map( item => {
+            if (statusNum > 1 && item.value === 1) {
+                return { ...item, disabled: true };
+            }
+            return item;
+        });
+        
         return (
             <F>
                 <Header as="h3" content="Order Status" />
-                <Dimmer active={btnLoading} inverted content={<Loader />} />
+                <Dimmer active={loading} inverted content={<Loader />} />
                 <ErrorHandler errors={errors} />
-                <Step.Group fluid>
-                    {steps.map(({ name, icon, title, index }) => {
-                        const color = index <= statusNum ? "green" : "grey";
-                        const future = index > statusNum;
-                        return (
-                            <Step key={name} active={future} onClick={e => this.onClick(e, index + 1)}>
-                                <Icon name={icon} color={color} />
-                                <Step.Content>
-                                    <Step.Title style={{ color }}>{title}</Step.Title>
-                                </Step.Content>
-                            </Step>
-                        );
-                    })}
-                </Step.Group>
+                {isPacked && (
+                    <Input
+                        inputType="select"
+                        options={modifiedSteps}
+                        name="statusNum"
+                        label=""
+                        onChange={this.handleInputChange}
+                        value={statusNum}
+                        fluid={false}
+                    />
+                )}
+                {!isPacked && (
+                    <div>
+                        <strong>Processing</strong>
+                        <br />
+                        {
+                            callMeDanger(`Before you can change the status, you'll need 
+                            to pack the line items. You can do this from the `)
+                        }
+                        <a href="/manage/production">production queue</a>
+                    </div>
+                )}
             </F>
         );
     }
 }
+
+const { object, func } = PropTypes;
+OrderFulfillment.propTypes = {
+    order: object,
+    updateContext: func
+};
 
 export default withContext(OrderFulfillment);

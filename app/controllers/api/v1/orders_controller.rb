@@ -35,15 +35,20 @@ module Api::V1
       if params[:status].present?
         case params[:status]
         when "open"
-          status = [:processing, :awaiting_payment, :paid_in_full]
+          status = [:processing, :packed]
         # TODO Right now, I'm only getting open orders
         # Revisit later
         else
-          status = [:processing, :awaiting_payment, :paid_in_full]
+          status = [:processing, :packed, :shipped]
         end
       end
+      if !params[:grouped_order_items].nil?
+        orders = current_user.roaster_profile.open_order_items
+        items = orders.group_by {|oi| oi[:size]}
+        return render json: { data: items }, status: 200, serializer: nil
+      end
       if current_user.roaster_profile.present?
-        @orders = current_user.roaster_profile.orders
+        @orders = current_user.roaster_profile.orders.where(status: status)
       else
         @orders = Order.where(status: status, wholesale_profile: @cart.wholesale_profile)
       end
