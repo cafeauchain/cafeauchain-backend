@@ -100,6 +100,22 @@ class Order extends React.Component {
         });
     };
 
+    modifiedTableDefs = defs => {
+        const WrappedPacker = (props) => {
+            const { updateContext, order: { id } } = this.props;
+            return <Packer {...props} updateContext={updateContext} id={id} />;
+        };
+        const packer = {
+            name: 'packed',
+            style: { width: 60, position: "relative" },
+            formatter: WrappedPacker,
+            textAlign: "center"
+        };
+        let { fields, ...rest } = defs;
+        rest.fields = [packer, ...fields];
+        return rest;
+    };
+
     render() {
         const { isEditable, showModal, current, lineItems, btnLoading } = this.state;
         const {
@@ -118,20 +134,6 @@ class Order extends React.Component {
         const order_shipping_method = attributes ? attributes.order_shipping_method : {carrier: "unknown", service: ""};
         const shipping_method = `${order_shipping_method.carrier} ${order_shipping_method.service}`;
         const canEdit = ["processing", "packed"].includes(attributes.status);
-
-        const packer = {
-            name: 'packed',
-            style: { width: 60, position: "relative" },
-            formatter: Packer,
-            textAlign: "center"
-        };
-
-        const modifiedTableDefs = defs => {
-            let { fields, ...rest } = defs;
-            rest.fields = [packer, ...fields];
-            return rest;
-        };
-
 
         return (
             <div>
@@ -191,7 +193,7 @@ class Order extends React.Component {
                         </Flex>
                         <br />
                         <Table 
-                            tableDefs={modifiedTableDefs(tableDefs)}
+                            tableDefs={isEditable ? tableDefs : this.modifiedTableDefs(tableDefs)}
                             data={sorted}
                             onClick={isEditable ? this.handleTableClick : null}
                         />

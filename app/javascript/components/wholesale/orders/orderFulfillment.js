@@ -22,32 +22,19 @@ const steps = [
 class OrderFulfillment extends React.Component {
     constructor(props) {
         super(props);
-        const { order: { attributes: { status } } } = props;
-
-        const statusIdx = steps.find(step => step.key === status);
-        const statusNum = statusIdx.value;
         this.state = {
             loading: false,
-            details: {
-                statusNum
-            },
             errors: []
         };
     }
 
-    handleInputChange = (event, { value, name, checked }) => {
-        let { details } = this.state;
-        details = { ...details };
-        if (name === "") return;
-        const val = value || checked;
-        details[name] = val || "";
-        this.setState({ details }, this.handleSubmit);
+    handleInputChange = (event, { value }) => {
+        this.handleSubmit( value );
     };
 
-    handleSubmit = async () => {
+    handleSubmit = async (statusNum) => {
         await this.setState({ loading: true });
         const { order: { id } } = this.props;
-        const { details: { statusNum } } = this.state;
         const url = API_URL + "/orders/" + id;
         let response = await requester({ url, body: { status: statusNum }, method: "PUT" });
         this.afterSubmit( response );
@@ -69,12 +56,18 @@ class OrderFulfillment extends React.Component {
         }, 400);
     }
 
+    getStatusNumFromStatus = status => {
+        const statusIdx = steps.find(step => step.key === status);
+        return statusIdx.value;
+    }
+
     render() {
-        const { errors, loading, details } = this.state;
-        const { order: { attributes: { order_items } } } = this.props;
+        const { errors, loading } = this.state;
+        const { order: { attributes: { order_items, status } } } = this.props;
+        const statusNum = this.getStatusNumFromStatus(status);
         const isPacked = order_items.every(item => item.packed);
         const modifiedSteps = steps.map( item => {
-            if (details.statusNum > 1 && item.value === 1) {
+            if (statusNum > 1 && item.value === 1) {
                 return { ...item, disabled: true };
             }
             return item;
@@ -92,7 +85,7 @@ class OrderFulfillment extends React.Component {
                         name="statusNum"
                         label=""
                         onChange={this.handleInputChange}
-                        value={details.statusNum}
+                        value={statusNum}
                         fluid={false}
                     />
                 )}
