@@ -32,7 +32,8 @@ class Order < ApplicationRecord
 
   enum status: [:draft, :processing, :packed, :shipped, :fulfilled]
   
-  scope :status, -> (status) { where status: status == "all" ? [:processing, :packed, :shipped, :fulfilled] : status == "open" ? [:processing, :packed, :shipped] : status }
+  scope :open_orders, -> (status) { where status: status === "open" ? [:processing, :packed, :shipped] : status }
+  scope :status, -> (status) { status == "all" ? all : open_orders(status) }
 
   def check_status
     if self.status_changed?
