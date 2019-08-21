@@ -13,6 +13,23 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def pagination(records)
+    page = params[:page] || 1
+    limit = params[:limit] || 10
+    record_count = records.all.count
+    total_pages = (record_count / limit.to_f).ceil
+    meta = {
+      pagination: {
+        pagenumber: page,
+        pagesize: limit.to_i,
+        totalpages: total_pages,
+        totalobjects: record_count
+      }
+    }
+    records = records.page(page).per(limit)
+    return { records: records, meta: meta }
+  end
+
   def authenticate_user_from_cookie
     if !cookies[:cac_token_auth].nil?
       request.headers["Authorization"] = "Bearer " + cookies[:cac_token_auth].to_s

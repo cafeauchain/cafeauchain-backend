@@ -32,14 +32,15 @@ module Api::V1
     end
 
     def index
+      status = [:processing, :packed, :shipped]
       if params[:status].present?
         case params[:status]
         when "open"
           status = [:processing, :packed]
         # TODO Right now, I'm only getting open orders
         # Revisit later
-        else
-          status = [:processing, :packed, :shipped]
+        # else
+        #   status = [:processing, :packed, :shipped]
         end
       end
       if !params[:grouped_order_items].nil?
@@ -52,7 +53,8 @@ module Api::V1
       else
         @orders = Order.where(status: status, wholesale_profile: @cart.wholesale_profile)
       end
-      render json: @orders, status: 200
+      paged = pagination(@orders)
+      render json: paged[:records], meta: paged[:meta], status: 200
     end
 
     def update

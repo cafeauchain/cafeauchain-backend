@@ -54,12 +54,12 @@ module Manage
 
     def index
       roaster = current_user.roaster_profile
-      orders = roaster.orders
-      @orders = ActiveModel::SerializableResource.new(orders, each_serializer: OrderSerializer)
+      # orders = roaster.orders
+      # @orders = ActiveModel::SerializableResource.new(orders, each_serializer: OrderSerializer)
       render "manage/primary", locals: {
         roaster: roaster,
         customers: roaster.customer_profiles,
-        orders: @orders,
+        # orders: @orders,
         component: "wholesale/orders/orders",
         title: "View Orders"
       }

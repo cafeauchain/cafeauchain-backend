@@ -1,4 +1,7 @@
 const paramatize = string => {
+    if( !string ){
+        return {};
+    }
     const params = string.slice(1).split("&");
     const json = {};
     for (const key of params) {

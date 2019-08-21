@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 // TODO Remove semantic-ui-react-button-pagination
 // import Pagination from "semantic-ui-react-button-pagination";
-import { Pagination, Table, Ref, Loader, Dimmer } from "semantic-ui-react";
+import { Table, Ref, Loader, Dimmer } from "semantic-ui-react";
 
 /* eslint-disable */
+import Pagination from "shared/pagination";
 import { humanize, namespacer, sortBy, debounce } from "utilities";
 /* eslint-enable */
 
@@ -153,21 +154,14 @@ class FormattedTable extends Component {
                                     </Table.Row>
                                 )}
                             </Table.Body>
-                            {pagination && (
-                                <Table.Footer>
-                                    <Table.Row>
-                                        <Table.HeaderCell colSpan={tableDefs.fields.length} textAlign="right">
-                                            <Pagination
-                                                defaultActivePage={pagination.pagenumber}
-                                                totalPages={pagination.totalpages}
-                                                onPageChange={onPageChange}
-                                            />
-                                        </Table.HeaderCell>
-                                    </Table.Row>
-                                </Table.Footer>
-                            )}
                         </Table>
                     </div>
+                    {pagination && (
+                        <React.Fragment>
+                            <br />
+                            <Pagination pagination={pagination} onPageChange={onPageChange} />
+                        </React.Fragment> 
+                    )}
                 </div>
             </Ref>
         );

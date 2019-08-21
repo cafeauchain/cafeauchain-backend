@@ -22,10 +22,18 @@ class Orders extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
+            loading: true,
             errors: []
         };
         this.tableDefs = this.modifyTableDefs();
+    }
+    componentDidMount(){
+        const { orders = [], getData } = this.props;
+        if( !orders.length ){
+            getData("orders", window.location.search).then( () => this.setState({ loading: false }));
+        } else {
+            this.setState({ loading: false });
+        }
     }
 
     onSubmit = async (e, item) => {
@@ -81,8 +89,18 @@ class Orders extends Component {
         // inner.fields = [...inner.fields, newField];
         return inner;
     };
+
+    handlePager = obj => {
+        const { getData } = this.props;
+        if( obj.startLoader ){
+            this.setState({ loading: true });
+        } else {
+            getData("orders", obj.paramString ).then( () => this.setState({ loading: false }));
+        }
+    }
+
     render() {
-        let { orders, type, open_orders } = this.props;
+        let { orders = [], type, open_orders, orders_paging } = this.props;
         let title = "All Orders";
         if (type === "open") {
             orders = open_orders;
@@ -95,6 +113,7 @@ class Orders extends Component {
             sorts: [{ name: "order_date" }],
             namespace: "attributes"
         });
+        
         return (
             <Segment>
                 <Header as="h2" content={title} dividing />
@@ -107,16 +126,24 @@ class Orders extends Component {
                 <br />
                 <br />
                 <ErrorHandler errors={errors} />
-                <Table tableDefs={this.tableDefs} data={sorted} loading={loading} />
+                <Table
+                    tableDefs={this.tableDefs}
+                    data={sorted}
+                    loading={loading}
+                    pagination={orders_paging}
+                    onPageChange={this.handlePager}
+                />    
+                
             </Segment>
         );
     }
 }
 
-const { array, func, string } = PropTypes;
+const { array, func, string, object } = PropTypes;
 Orders.propTypes = {
     open_orders: array,
     orders: array,
+    orders_paging: object,
     getData: func,
     type: string
 };

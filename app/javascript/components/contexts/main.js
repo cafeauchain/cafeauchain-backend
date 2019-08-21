@@ -54,9 +54,10 @@ class ConfigProvider extends React.Component {
     getData = async (request, params) => {
         const { id } = this.props;
         const response = await fetch(urls(id)[request] + (params || ""));
-        const { data } = await response.json();
+        const { data, meta } = await response.json();
         // this.setState({ [request]: data });
-        this.updateContext({ [request]: data });
+        const paging = meta && meta.pagination ? { [request + "_paging"]: meta.pagination } : undefined;
+        this.updateContext({ [request]: data, ...paging });
     };
 
     render() {
