@@ -3,6 +3,7 @@
 # Table name: orders
 #
 #  id                   :bigint(8)        not null, primary key
+#  roast_date           :date
 #  status               :integer
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
@@ -89,10 +90,6 @@ class Order < ApplicationRecord
 
   def terms
     wholesale_profile.terms
-  end
-
-  def estimated_roast_date
-    OrderServices::GetRoastDate.process(self)
   end
 
   def invoice_fee

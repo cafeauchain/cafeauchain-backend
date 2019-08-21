@@ -19,7 +19,7 @@ const tableDefinition = {
         { name: "company_name", namespace: "attributes", link: "/manage/orders/" },
         { name: "order_date", namespace: "attributes", formatter: DateFormatter, link: "/manage/orders/" },
         { 
-            name: "estimated_roast_date", 
+            name: "roast_date", 
             namespace: "attributes", 
             label: "Roast Date", 
             formatter: DateFormatter, 

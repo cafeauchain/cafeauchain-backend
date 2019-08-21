@@ -3,6 +3,7 @@
 # Table name: orders
 #
 #  id                   :bigint(8)        not null, primary key
+#  roast_date           :date
 #  status               :integer
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null

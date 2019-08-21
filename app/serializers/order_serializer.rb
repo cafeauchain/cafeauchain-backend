@@ -3,6 +3,7 @@
 # Table name: orders
 #
 #  id                   :bigint(8)        not null, primary key
+#  roast_date           :date
 #  status               :integer
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
@@ -20,7 +21,7 @@
 
 class OrderSerializer < ActiveModel::Serializer
   attributes :id, :order_total, :subtotal, :shipping, :total_line_items, :total_weight, :order_shipping_method,
-  :total_items, :roaster_name, :status, :order_date, :company_name, :taxes, :estimated_roast_date
+  :total_items, :roaster_name, :status, :order_date, :company_name, :taxes, :roast_date
 
   def order_items
     self.object.order_items.map do |item|
