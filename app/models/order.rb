@@ -19,6 +19,7 @@
 #
 
 class Order < ApplicationRecord
+  include Filterable
   before_update :check_status
 
   belongs_to :wholesale_profile
@@ -31,6 +32,7 @@ class Order < ApplicationRecord
 
   enum status: [:draft, :processing, :packed, :shipped, :fulfilled]
   
+  scope :status, -> (status) { where status: status == "all" ? [:processing, :packed, :shipped, :fulfilled] : status == "open" ? [:processing, :packed, :shipped] : status }
 
   def check_status
     if self.status_changed?

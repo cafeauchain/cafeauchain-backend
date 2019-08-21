@@ -11,7 +11,7 @@ import CreateOrder from "wholesale/orders/createOrderBehalf";
 
 import tableDefs from "defs/tables/manageOrdersTable";
 
-import { sortBy } from "utilities";
+import { sortBy, params as paramatize, paramString } from "utilities";
 
 import { requester, url as API_URL } from "utilities/apiUtils";
 
@@ -21,9 +21,12 @@ import withContext from "contexts/withContext";
 class Orders extends Component {
     constructor(props) {
         super(props);
+        let string = window.location.search;
+        let params = paramatize(string);
         this.state = {
             loading: true,
-            errors: []
+            errors: [],
+            btnActive: params.status || "all"
         };
         this.tableDefs = this.modifyTableDefs();
     }
@@ -99,6 +102,17 @@ class Orders extends Component {
         }
     }
 
+    updateStatus = (e, { content }) => {
+        const { getData } = this.props;
+        let string = window.location.search;
+        let params = paramatize(string);
+        params.status = content.toLowerCase();
+        const newParamString = paramString(params);
+        this.setState({ loading: true, btnActive: params.status });
+        window.history.pushState(null, null, newParamString);
+        getData("orders", newParamString).then(() => this.setState({ loading: false }));
+    }
+
     render() {
         let { orders = [], type, open_orders, orders_paging } = this.props;
         let title = "All Orders";
@@ -106,13 +120,15 @@ class Orders extends Component {
             orders = open_orders;
             title = "Open Orders";
         }
-        const { errors, loading } = this.state;
+        const { errors, loading, btnActive } = this.state;
         const sorted = sortBy({
             collection: orders,
             id: "order_date",
             sorts: [{ name: "order_date" }],
             namespace: "attributes"
         });
+
+        const statuses = ["Open", "Processing", "Packed", "Shipped", "Fulfilled", "All" ];
         
         return (
             <Segment>
@@ -123,6 +139,18 @@ class Orders extends Component {
                     component={<CreateOrder />}
                     size="mini"
                 />
+                <br />
+                <br />
+                <Button.Group size="small" compact basic labeled>
+                    {statuses.map( status => (
+                        <Button 
+                            key={status}
+                            content={status}
+                            onClick={this.updateStatus}
+                            active={status.toLowerCase() === btnActive}
+                        />
+                    ))}
+                </Button.Group>
                 <br />
                 <br />
                 <ErrorHandler errors={errors} />
