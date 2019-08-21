@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
         pagenumber: page,
         pagesize: limit.to_i,
         totalpages: total_pages,
-        totalobjects: record_count
+        totalcount: record_count
       }
     }
     records = records.page(page).per(limit)

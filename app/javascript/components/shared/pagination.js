@@ -6,7 +6,7 @@ import { Pagination, Icon } from "semantic-ui-react";
 import Input from "shared/input";
 import Flex from "shared/flex";
 
-import { params as paramatize, paramString } from "utilities";
+import { params as paramatize, paramString, callMeDanger } from "utilities";
 /* eslint-enable */
 
 const pages = [10,25,50,100];
@@ -38,7 +38,12 @@ class Pager extends PureComponent {
     };
     optionsBuilder = arr => arr.map( val => ({ value: val, key: val, text: val }));
     render(){
-        const { pagination: { pagenumber, totalpages, pagesize } } = this.props;
+        const { pagination: { pagenumber, totalpages, pagesize, totalcount } } = this.props;
+        let end = pagenumber * pagesize;
+        const start = end - pagesize + 1;
+        if( end > totalcount ){
+            end = totalcount;
+        }
         return (
             <Flex spacebetween wrap centercross>
                 <div flex="25">
@@ -52,6 +57,7 @@ class Pager extends PureComponent {
                     />
                 </div>
                 <div flex="75" style={{ textAlign: "right" }}>
+                    {callMeDanger(`Viewing ${ start }-${ end } of ${ totalcount }<br />`)}
                     { totalpages !== 1 && (
                         <Pagination
                             defaultActivePage={pagenumber}
