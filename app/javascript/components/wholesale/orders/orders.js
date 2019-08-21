@@ -11,7 +11,7 @@ import CreateOrder from "wholesale/orders/createOrderBehalf";
 
 import tableDefs from "defs/tables/manageOrdersTable";
 
-import { sortBy, params as paramatize, paramString } from "utilities";
+import { params as paramatize, paramString, underscorer } from "utilities";
 
 import { requester, url as API_URL } from "utilities/apiUtils";
 
@@ -26,7 +26,8 @@ class Orders extends Component {
         this.state = {
             loading: true,
             errors: [],
-            btnActive: params.status || "all"
+            btnActive: params.status || "all",
+            dateBtnActive: params.range
         };
         this.tableDefs = this.modifyTableDefs();
     }
@@ -114,6 +115,18 @@ class Orders extends Component {
         getData("orders", newParamString).then(() => this.setState({ loading: false }));
     }
 
+    updateRange = (e, { content }) => {
+        const { getData } = this.props;
+        let string = window.location.search;
+        let params = paramatize(string);
+        params.range = underscorer(content);
+        params.page = 1;
+        const newParamString = paramString(params);
+        this.setState({ loading: true, dateBtnActive: params.range });
+        window.history.pushState(null, null, newParamString);
+        getData("orders", newParamString).then(() => this.setState({ loading: false }));
+    }
+
     render() {
         let { orders = [], type, open_orders, orders_paging } = this.props;
         let title = "All Orders";
@@ -121,9 +134,11 @@ class Orders extends Component {
             orders = open_orders;
             title = "Open Orders";
         }
-        const { errors, loading, btnActive } = this.state;
+        const { errors, loading, btnActive, dateBtnActive } = this.state;
 
         const statuses = ["Open", "Processing", "Packed", "Shipped", "Fulfilled", "All" ];
+
+        const dates = ["Today", "Yesterday", "This Week", "Last Week", "This Month", "Last Month" ];
         
         return (
             <Segment>
@@ -143,6 +158,18 @@ class Orders extends Component {
                             content={status}
                             onClick={this.updateStatus}
                             active={status.toLowerCase() === btnActive}
+                        />
+                    ))}
+                </Button.Group>
+                <br />
+                <br />
+                <Button.Group size="small" compact basic labeled>
+                    {dates.map(date => (
+                        <Button
+                            key={date}
+                            content={date}
+                            onClick={this.updateRange}
+                            active={underscorer(date) === dateBtnActive}
                         />
                     ))}
                 </Button.Group>

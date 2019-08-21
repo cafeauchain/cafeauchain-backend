@@ -53,7 +53,7 @@ module Api::V1
         if params[:order_by].nil?
           @orders = @orders.order(created_at: :desc)
         end
-        @orders = @orders.filter(params.slice(:status, :order_by))
+        @orders = @orders.filter(params.slice(:status, :order_by, :range))
       else
         @orders = Order.where(status: status, wholesale_profile: @cart.wholesale_profile)
       end

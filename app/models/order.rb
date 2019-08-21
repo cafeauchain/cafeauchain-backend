@@ -60,6 +60,34 @@ class Order < ApplicationRecord
     end
   end
 
+  def self.range(range)
+    case range
+    when "last_month"
+      where(created_at: 1.month.ago.all_month)
+    when "this_month"
+      where(created_at: Date.today.all_month)
+    when "last_week"
+      where(created_at: 1.week.ago.all_week)
+    when "this_week"
+      where(created_at: Date.today.all_week)
+    when "yesterday"
+      where(created_at: Date.yesterday.all_day)
+    when "today"
+      where(created_at: Date.today.all_day)
+    else
+      begin
+        range = range.split("::")
+        start = range[0].to_date.beginning_of_day
+        endval = range[1].present? ? range[1].to_date : Date.today 
+        dates = start..endval.end_of_day
+        where(created_at: dates)    
+      rescue
+        all
+      end
+      
+    end
+  end
+
   def check_status
     if self.status_changed?
       if self.status == "shipped"
