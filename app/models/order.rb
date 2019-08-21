@@ -36,6 +36,30 @@ class Order < ApplicationRecord
   scope :open_orders, -> (status) { where status: status === "open" ? [:processing, :packed, :shipped] : status }
   scope :status, -> (status) { status == "all" ? all : open_orders(status) }
 
+  attr_accessor :temp_total_weight
+
+  def self.order_by(order_by)
+    parts = order_by.split
+    case parts[0]
+    when "order_date"
+      order("created_at #{parts[1]}")
+    when "subtotal"
+      includes(:invoice).order("invoices.subtotal #{parts[1]}")
+    when "shipping"
+      includes(:invoice).order("invoices.shipping #{parts[1]}")
+    when "company_name"
+      includes(:customer_profile).order("customer_profiles.company_name #{parts[1]}")
+    when "total_weight"
+      temp = all.each{|order| order.temp_total_weight = order.total_weight}.sort{|a,b| a.temp_total_weight <=> b.temp_total_weight }
+      if parts[1] == 'desc'
+        return temp.reverse
+      end
+      return temp
+    else
+      order(order_by)
+    end
+  end
+
   def check_status
     if self.status_changed?
       if self.status == "shipped"

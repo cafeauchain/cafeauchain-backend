@@ -107,6 +107,7 @@ class Orders extends Component {
         let string = window.location.search;
         let params = paramatize(string);
         params.status = content.toLowerCase();
+        params.page = 1;
         const newParamString = paramString(params);
         this.setState({ loading: true, btnActive: params.status });
         window.history.pushState(null, null, newParamString);
@@ -121,12 +122,6 @@ class Orders extends Component {
             title = "Open Orders";
         }
         const { errors, loading, btnActive } = this.state;
-        const sorted = sortBy({
-            collection: orders,
-            id: "order_date",
-            sorts: [{ name: "order_date" }],
-            namespace: "attributes"
-        });
 
         const statuses = ["Open", "Processing", "Packed", "Shipped", "Fulfilled", "All" ];
         
@@ -156,7 +151,7 @@ class Orders extends Component {
                 <ErrorHandler errors={errors} />
                 <Table
                     tableDefs={this.tableDefs}
-                    data={sorted}
+                    data={orders}
                     loading={loading}
                     pagination={orders_paging}
                     onPageChange={this.handlePager}

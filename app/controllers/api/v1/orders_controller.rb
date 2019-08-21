@@ -50,7 +50,10 @@ module Api::V1
       end
       if current_user.roaster_profile.present?
         @orders = current_user.roaster_profile.orders#.where(status: status)
-        @orders = @orders.filter(params.slice(:status))
+        if params[:order_by].nil?
+          @orders = @orders.order(created_at: :desc)
+        end
+        @orders = @orders.filter(params.slice(:status, :order_by))
       else
         @orders = Order.where(status: status, wholesale_profile: @cart.wholesale_profile)
       end

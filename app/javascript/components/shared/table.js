@@ -6,16 +6,20 @@ import { Table, Ref, Loader, Dimmer } from "semantic-ui-react";
 
 /* eslint-disable */
 import Pagination from "shared/pagination";
-import { humanize, namespacer, sortBy, debounce } from "utilities";
+import { humanize, namespacer, sortBy, debounce, params as paramatize, paramString } from "utilities";
 /* eslint-enable */
 
 class FormattedTable extends Component {
     constructor(props) {
         super(props);
+        const string = window.location.search;
+        const params = paramatize(string);
+        const sorted = params.order_by ? params.order_by.split(" ") : [null, null];
+
         this.state = {
-            column: null,
+            column: sorted[0],
             data: props.data,
-            direction: null,
+            direction: sorted[1],
             scrollable: true
         };
         this.containerRef = React.createRef();
@@ -59,24 +63,45 @@ class FormattedTable extends Component {
     };
 
     handleSort = clickedColumn => () => {
+        const { pagination, onPageChange } = this.props;
         const { column, data, direction } = this.state;
         const {
             tableDefs: { fields }
         } = this.props;
         const item = fields.find(field => field.name === clickedColumn);
+
+        const newDirection = direction === "asc" ? "desc" : "asc";
+
+        if (pagination) {
+            onPageChange({ startLoader: true });
+            let string = window.location.search;
+            let params = paramatize(string);
+            const dir = column !== clickedColumn ? "asc" : newDirection;
+            params.order_by = clickedColumn + " " + dir;
+            params.page = 1;
+            const newParamString = paramString(params);
+            window.history.pushState(null, null, newParamString);
+            onPageChange({ paramString: newParamString });
+            if( column === clickedColumn ){
+                this.setState({
+                    direction: newDirection
+                });
+                return;
+            }
+        }
+
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
                 data: sortBy({ collection: data, id: clickedColumn, namespace: item.namespace }),
-                direction: "ascending"
+                direction: "asc"
             });
-
             return;
         }
 
         this.setState({
             data: data.reverse(),
-            direction: direction === "ascending" ? "descending" : "ascending"
+            direction: newDirection
         });
     };
 
@@ -105,6 +130,8 @@ class FormattedTable extends Component {
         const { data, column, direction, scrollable } = this.state;
         const { props: tableProps } = tableDefs;
 
+        const tableDirection = direction === "asc" ? "ascending" : direction === "desc" ? "descending" : null;
+
         return (
             <Ref innerRef={this.containerRef}>
                 <div>
@@ -125,7 +152,7 @@ class FormattedTable extends Component {
                                 <Table.Row>
                                     {tableDefs.fields.map(field => (
                                         <Table.HeaderCell
-                                            sorted={column === field.name ? direction : null}
+                                            sorted={column === field.name ? tableDirection : null}
                                             onClick={tableProps.sortable ? this.handleSort(field.name) : null}
                                             key={field.key || field.name}
                                             title={field.title}

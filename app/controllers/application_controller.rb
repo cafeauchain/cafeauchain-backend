@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   def pagination(records)
     page = params[:page] || 1
     limit = params[:limit] || 10
-    record_count = records.all.count
+    record_count = records.length
     total_pages = (record_count / limit.to_f).ceil
     meta = {
       pagination: {
@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
         totalcount: record_count
       }
     }
-    records = records.page(page).per(limit)
+    records = Kaminari.paginate_array(records).page(page).per(limit)
     return { records: records, meta: meta }
   end
 
