@@ -1,12 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Header, Card, Button, Statistic, Loader, Dimmer } from "semantic-ui-react";
+import { Header, Card, Button, Statistic, Loader, Dimmer, Form } from "semantic-ui-react";
 
 /* eslint-disable */
 import Flex from "shared/flex";
 import { Money, Weights } from "shared/textFormatters";
 import ErrorHandler from "shared/errorHandler";
 import Modal from "shared/modal";
+import Input from "shared/input";
 
 import ShippingOptions from "shop/shipping/options"
 import CustomerAddresses from "shop/customer/addresses";
@@ -35,13 +36,25 @@ class CartDetails extends React.Component {
             shippingIdx: defaultRate,
             payment_type: terms ? "terms_with_vendor" : "card_on_file",
             payment_source: !terms ? payment_source : undefined,
-            btnLoading: false
+            btnLoading: false,
+            details: {
+                notes: ""
+            }
         };
     }
 
     updateCartDetails = obj => {
         this.setState( obj );
     }
+
+    handleInputChange = (event, { value, name, checked }) => {
+        let { details } = this.state;
+        details = { ...details };
+        if (name === "") return;
+        const val = value || checked;
+        details[name] = val;
+        this.setState({ details });
+    };
 
     handleSubmit = async ( e, item ) => {
         const { target } = e;
@@ -54,11 +67,13 @@ class CartDetails extends React.Component {
             isAssumedCustomer 
         } = this.props;
         const url = `${API_URL}/orders`;
-        const { payment_type, payment_source, shippingIdx } = this.state;
+        const { payment_type, payment_source, shippingIdx, details: { notes } } = this.state;
         const shipping = shipping_rates[shippingIdx];
         const tax = item["data-tax"];
         const total = item["data-total"];
-        const body = { id, payment_type, payment_source, shipping, tax, total, customer_profile_id, isAssumedCustomer };
+        const body = { 
+            id, payment_type, payment_source, shipping, tax, total, customer_profile_id, isAssumedCustomer, notes
+        };
         const response = await requester({ url, body });
         if (response instanceof Error) {
             this.setState({ errors: response.response.data, btnLoading: false });
@@ -83,7 +98,7 @@ class CartDetails extends React.Component {
             cartLoading
         } = this.props;
         const { primary_address: { street_1, street_2, city, state, postal_code } } = profileAttrs; 
-        const { errors, shippingIdx, payment_type, payment_source, btnLoading } = this.state;
+        const { errors, shippingIdx, payment_type, payment_source, btnLoading, details: { notes } } = this.state;
         const shipping =attributes.shipping_rates[shippingIdx];
         const speed = Number(shipping.est_delivery_days);
         const speedString = speed ? pluralize(speed, ' day') : "Unknown";
@@ -223,6 +238,16 @@ class CartDetails extends React.Component {
                             />
                         )}
                     />
+                </Card.Content>
+                <Card.Content>
+                    <Form>
+                        <Input
+                            label="Notes"
+                            inputType="textarea"
+                            onChange={this.handleInputChange}
+                            value={notes || ""}
+                        />
+                    </Form>
                 </Card.Content>
                 <Card.Content>
                     <Flex spacebetween centercross spacing="10">

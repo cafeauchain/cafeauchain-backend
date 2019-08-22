@@ -6,7 +6,7 @@ module Api::V1
 
     def create
       @wholesale_profile = @cart.wholesale_profile
-      @order = Order.create(status: :draft, wholesale_profile_id: @wholesale_profile.id)
+      @order = Order.create(status: :draft, wholesale_profile_id: @wholesale_profile.id, notes: params[:notes] )
       @cart.cart_items.each do |ci|
         pv = ProductVariant.find(ci.product_variant_id)
         @order.order_items.create(

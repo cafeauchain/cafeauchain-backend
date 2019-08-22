@@ -185,10 +185,10 @@ class Order extends React.Component {
                                 <OrderAddresses roaster={roasterAtts} customer={customerAtts} />
                             </div>
                             <div flex="33" style={{ textAlign: "right" }}>
-                                <Segment>
+                                <React.Fragment>
                                     <Dimmer active={isEditable} inverted />
                                     <OrderDetails attributes={attributes} id={id} />
-                                </Segment>
+                                </React.Fragment>
                             </div>
                         </Flex>
                         <br />
@@ -221,45 +221,54 @@ class Order extends React.Component {
                                     value={shipping_method}
                                     bold
                                 />
-                                <br />
                                 {!isEditable && canEdit && (
+                                    <Flex wrap spacing="10">
+                                        <div flex="auto">
+                                            <Modal
+                                                text="Update Shipping Method"
+                                                title="Update Shipping Method"
+                                                component={(
+                                                    <EditShipping
+                                                        order_id={id}
+                                                        wholesale_profile_id={customerAtts.wholesale_profile.id}
+                                                        shipping_method={order_shipping_method}
+                                                    />
+                                                )}
+                                            />
+                                        </div>
+                                        <div flex="auto">
+                                            <Modal
+                                                text="Manually Adjust Shipping"
+                                                title="Manually Adjust Shipping"
+                                                btnProps={{
+                                                    primary: false
+                                                }}
+                                                component={(
+                                                    <ManualShipping
+                                                        order_id={id}
+                                                        shipping_method={order_shipping_method}
+                                                    />
+                                                )}
+                                            />
+                                        </div>
+                                    </Flex>
+                                )}
+                                {attributes.notes && (
                                     <React.Fragment>
                                         <br />
-                                        <Modal
-                                            text="Update Shipping Method"
-                                            title="Update Shipping Method"
-                                            component={(
-                                                <EditShipping
-                                                    order_id={id}
-                                                    wholesale_profile_id={customerAtts.wholesale_profile.id}
-                                                    shipping_method={order_shipping_method}
-                                                />
-                                            )}
-                                        />
                                         <br />
-                                        <br />
-                                        <Modal
-                                            text="Manually Adjust Shipping"
-                                            title="Manually Adjust Shipping"
-                                            btnProps={{
-                                                primary: false
-                                            }}
-                                            component={(
-                                                <ManualShipping
-                                                    order_id={id}
-                                                    shipping_method={order_shipping_method}
-                                                />
-                                            )}
-                                        />
+                                        <p>
+                                            <strong>Order Notes:</strong>
+                                        </p>
+                                        <Segment secondary>{attributes.notes}</Segment>
                                     </React.Fragment>
-                                    
-                                )}
+                                )} 
                             </div>
-                            <div flex="33" style={{ textAlign: "right" }}>
-                                <Segment>
+                            <div flex="33" style={{ textAlign: "right", marginTop: "auto" }}>
+                                <React.Fragment>
                                     <Dimmer active={isEditable} inverted />
                                     <OrderTotals attributes={attributes} />
-                                </Segment>
+                                </React.Fragment>
                             </div>
                         </Flex>
                     </Segment>

@@ -3,6 +3,7 @@
 # Table name: orders
 #
 #  id                   :bigint(8)        not null, primary key
+#  notes                :text
 #  roast_date           :date
 #  status               :integer
 #  created_at           :datetime         not null
@@ -134,7 +135,7 @@ class Order < ApplicationRecord
   end
 
   def taxes
-    invoice.tax.to_i
+    '%.2f' % (invoice.tax.to_f)
   end
 
   def total_items

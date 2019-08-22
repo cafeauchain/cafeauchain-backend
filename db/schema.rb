@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_21_184033) do
+ActiveRecord::Schema.define(version: 2019_08_22_214242) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -240,6 +240,7 @@ ActiveRecord::Schema.define(version: 2019_08_21_184033) do
     t.datetime "updated_at", null: false
     t.string "easypost_shipment_id"
     t.date "roast_date"
+    t.text "notes"
     t.index ["wholesale_profile_id"], name: "index_orders_on_wholesale_profile_id"
   end
 
