@@ -23,10 +23,7 @@ class Order extends React.Component {
         const {
             order: { attributes = {}, id },
             roaster: { attributes: roasterAtts },
-            customer: { attributes: customerAtts },
-            cards,
-            stripeApiKey,
-            updateContext
+            customer: { attributes: customerAtts }
         } = this.props;
         const order_items = attributes ? attributes.order_items : [];
         const sorted =
@@ -54,12 +51,7 @@ class Order extends React.Component {
                             <div flex="33" style={{ textAlign: "right" }}>
                                 <Details attributes={attributes} id={id} isCustomer />
                                 <Divider />
-                                <PaymentDetails 
-                                    attributes={attributes}
-                                    cards={cards}
-                                    stripeApiKey={stripeApiKey}
-                                    updateContext={updateContext}
-                                />
+                                <PaymentDetails attributes={attributes} />
                             </div>
                         </Flex>
                         <br />
@@ -116,14 +108,11 @@ class Order extends React.Component {
     }
 }
 
-const { object, array, string, func } = PropTypes;
+const { object } = PropTypes;
 Order.propTypes = {
     order: object,
     roaster: object,
-    customer: object,
-    cards: array,
-    stripeApiKey: string,
-    updateContext: func
-}
+    customer: object
+};
 
 export default withContext(Order);

@@ -11,6 +11,8 @@ import CartChangePayment from "shop/cart/changePayment";
 import MiniCard from "payments/miniCard";
 
 import { url as API_URL, requester } from "utilities/apiUtils";
+
+import withContext from "contexts/withContext";
 /* eslint-enable */
 
 class CustomerPay extends React.Component {
@@ -93,4 +95,4 @@ CustomerPay.propTypes = {
     id: oneOfType([ number, string ]),
     updateContext: func
 };
-export default CustomerPay;
+export default withContext(CustomerPay);
