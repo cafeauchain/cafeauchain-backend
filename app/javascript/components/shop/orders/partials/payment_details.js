@@ -17,6 +17,7 @@ class PaymentDetails extends React.PureComponent {
         if( memo.indexOf(" via Stripe") > -1 ){
             memo = memo.replace(" via Stripe", "");
         }
+        const { tracking_number } = attributes.order_shipping_method;
 
         return (
             <React.Fragment>
@@ -55,6 +56,12 @@ class PaymentDetails extends React.PureComponent {
                     </div>
                     
                 )}
+                <br />
+                <Titler
+                    title="Tracking Number"
+                    value={tracking_number || "N/A"}
+                    bold
+                />
             </React.Fragment>
         );
     }
