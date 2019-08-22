@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Segment, Header, Button, Icon } from "semantic-ui-react";
+import { Segment, Header, Button } from "semantic-ui-react";
 
 /* eslint-disable */
 import Table from "shared/table";
 import ErrorHandler from "shared/errorHandler";
 import Modal from "shared/modal";
+import Flex from "shared/flex";
+import Input from "shared/input";
 
 import CreateOrder from "wholesale/orders/createOrderBehalf";
 
 import tableDefs from "defs/tables/manageOrdersTable";
 
 import { params as paramatize, paramString, underscorer } from "utilities";
-
-import { requester, url as API_URL } from "utilities/apiUtils";
 
 import withContext from "contexts/withContext";
 /* eslint-enable */
@@ -26,10 +26,12 @@ class Orders extends Component {
         this.state = {
             loading: true,
             errors: [],
-            btnActive: params.status || "all",
-            dateBtnActive: params.range
+            details: { 
+                status: params.status,
+                invoice_status: params.invoice_status,
+                range: params.range
+            }
         };
-        this.tableDefs = this.modifyTableDefs();
     }
     componentDidMount(){
         const { orders = [], getData } = this.props;
@@ -40,60 +42,6 @@ class Orders extends Component {
         }
     }
 
-    onSubmit = async (e, item) => {
-        const { target } = e;
-        e.preventDefault();
-        target.blur();
-        await this.setState({ loading: true });
-        const { getData, type } = this.props;
-        const url = API_URL + "/orders/" + item["data-id"];
-        const response = await requester({ url, body: { status: "fulfilled" }, method: "PUT" });
-        setTimeout(async () => {
-            if (response instanceof Error) {
-                this.setState({ errors: response.response.data, loading: false });
-            } else {
-                if (response.redirect) {
-                    window.location.href = await response.redirect_url;
-                } else {
-                    await getData(type === "open" ? "open_orders" : "orders");
-                    await getData("inventory");
-                    this.setState({ loading: false });
-                }
-            }
-        }, 400);
-    };
-    actions = ({ item }) => {
-        let { orders, type, open_orders } = this.props;
-        if( type === "open" ) orders = open_orders;
-        const order = orders.find(order => order.id === item.id);
-        if (orders.length && order.attributes.status === "fulfilled") {
-            return <Icon key={item.id} name="circle check" color="green" />;
-        }
-        return (
-            <Button
-                key={item.id}
-                onClick={this.onSubmit}
-                data-id={item.id}
-                primary
-                content="Complete"
-                compact
-                size="mini"
-            />
-        );
-    };
-    modifyTableDefs = () => {
-        let inner = { ...tableDefs };
-        // let newField = {
-        //     name: "status",
-        //     key: "action",
-        //     formatter: this.actions,
-        //     style: { width: 100 },
-        //     textAlign: "center"
-        // };
-        // inner.fields = [...inner.fields, newField];
-        return inner;
-    };
-
     handlePager = obj => {
         const { getData } = this.props;
         if( obj.startLoader ){
@@ -103,29 +51,45 @@ class Orders extends Component {
         }
     }
 
-    updateStatus = (e, { content }) => {
+    updateStatus = (e, { value, name }) => {
         const { getData } = this.props;
         let string = window.location.search;
         let params = paramatize(string);
-        params.status = content.toLowerCase();
+        params[name] = value;
         params.page = 1;
         const newParamString = paramString(params);
-        this.setState({ loading: true, btnActive: params.status });
+
+        let { details } = this.state;
+        details = { ...details };
+        details[name] = value;
+        this.setState({ loading: true, details });
+
         window.history.pushState(null, null, newParamString);
         getData("orders", newParamString).then(() => this.setState({ loading: false }));
     }
 
-    updateRange = (e, { content }) => {
+    clearFilters = e => {
+        e.preventDefault();
+        const { target } = e;
+        target.blur();
         const { getData } = this.props;
         let string = window.location.search;
         let params = paramatize(string);
-        params.range = underscorer(content);
-        params.page = 1;
+
+        let { details } = this.state;
+        details = { ...details };
+        for (const prop in details) {
+            details[prop] = "";
+            delete params[prop];
+        }
+        this.setState({ loading: true, details });
+
         const newParamString = paramString(params);
-        this.setState({ loading: true, dateBtnActive: params.range });
         window.history.pushState(null, null, newParamString);
         getData("orders", newParamString).then(() => this.setState({ loading: false }));
     }
+
+    buildOptions = arr => arr.map( item => ({ key: underscorer(item), value: underscorer(item), text: item }))
 
     render() {
         let { orders = [], type, open_orders, orders_paging } = this.props;
@@ -134,12 +98,11 @@ class Orders extends Component {
             orders = open_orders;
             title = "Open Orders";
         }
-        const { errors, loading, btnActive, dateBtnActive } = this.state;
-
+        const { errors, loading, details } = this.state;
         const statuses = ["Open", "Processing", "Packed", "Shipped", "Fulfilled", "All" ];
-
         const dates = ["Today", "Yesterday", "This Week", "Last Week", "This Month", "Last Month" ];
-        
+        const invoice_statuses = ["Processing", "Awaiting Payment", "Payment Authorized", "Paid in Full", "All"];
+
         return (
             <Segment>
                 <Header as="h2" content={title} dividing />
@@ -151,33 +114,47 @@ class Orders extends Component {
                 />
                 <br />
                 <br />
-                <Button.Group size="small" compact basic labeled>
-                    {statuses.map( status => (
-                        <Button 
-                            key={status}
-                            content={status}
-                            onClick={this.updateStatus}
-                            active={status.toLowerCase() === btnActive}
-                        />
-                    ))}
-                </Button.Group>
-                <br />
-                <br />
-                <Button.Group size="small" compact basic labeled>
-                    {dates.map(date => (
-                        <Button
-                            key={date}
-                            content={date}
-                            onClick={this.updateRange}
-                            active={underscorer(date) === dateBtnActive}
-                        />
-                    ))}
-                </Button.Group>
-                <br />
-                <br />
+                <Segment>
+                    <Flex spacebetween wrap spacing="10">
+                        <div flex="25">
+                            <Input
+                                inputType="select"
+                                onChange={this.updateStatus}
+                                name="status"
+                                label="Order Status"
+                                options={this.buildOptions(statuses)}
+                                value={details.status || ""}
+                            />
+                        </div>
+                        <div flex="25">
+                            <Input
+                                inputType="select"
+                                onChange={this.updateStatus}
+                                name="invoice_status"
+                                label="Payment Status"
+                                options={this.buildOptions(invoice_statuses)}
+                                value={details.invoice_status || ""}
+                            />
+                        </div>
+                        <div flex="25">
+                            <Input
+                                inputType="select"
+                                onChange={this.updateStatus}
+                                name="range"
+                                label="Dates"
+                                options={this.buildOptions(dates)}
+                                value={details.range || ""}
+                            />
+                        </div>
+                        <div flex="auto" style={{ marginTop: "auto" }}>
+                            <Button content="Reset Filters" onClick={this.clearFilters} size="small" />
+                        </div>
+                    </Flex>
+                    <div style={{ marginBottom: 10 }} />
+                </Segment>
                 <ErrorHandler errors={errors} />
                 <Table
-                    tableDefs={this.tableDefs}
+                    tableDefs={tableDefs}
                     data={orders}
                     loading={loading}
                     pagination={orders_paging}

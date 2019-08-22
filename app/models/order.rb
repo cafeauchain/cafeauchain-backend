@@ -36,21 +36,33 @@ class Order < ApplicationRecord
   scope :open_orders, -> (status) { where status: status === "open" ? [:processing, :packed, :shipped] : status }
   scope :status, -> (status) { status == "all" ? all : open_orders(status) }
 
-  attr_accessor :temp_total_weight
+  scope :invoice_status, -> (invoice_status) { invoice_status == "all" ? all : includes(:invoice).where( "invoices.status": invoice_status )}
 
   def self.order_by(order_by)
     parts = order_by.split
     case parts[0]
     when "order_date"
-      order("created_at #{parts[1]}")
+      order("orders.created_at #{parts[1]}")
     when "subtotal"
       includes(:invoice).order("invoices.subtotal #{parts[1]}")
     when "shipping"
       includes(:invoice).order("invoices.shipping #{parts[1]}")
+    when "invoice_status"
+      includes(:invoice).order("invoices.status #{parts[1]}")
     when "company_name"
       includes(:customer_profile).order("customer_profiles.company_name #{parts[1]}")
+    when "status"
+      order("orders.status #{parts[1]}")
+    when "id"
+      order("orders.id #{parts[1]}")
+    when "order_total"
+      temp = all.sort{|a,b| a.order_total.to_f <=> b.order_total.to_f }
+      if parts[1] == 'desc'
+        return temp.reverse
+      end
+      return temp
     when "total_weight"
-      temp = all.each{|order| order.temp_total_weight = order.total_weight}.sort{|a,b| a.temp_total_weight <=> b.temp_total_weight }
+      temp = all.sort{|a,b| a.total_weight <=> b.total_weight }
       if parts[1] == 'desc'
         return temp.reverse
       end
@@ -150,6 +162,10 @@ class Order < ApplicationRecord
 
   def order_net
     '%.2f' % (self.order_total.to_f - self.invoice_fee.to_f)
+  end
+
+  def invoice_status
+    self.invoice.status
   end
 
 end

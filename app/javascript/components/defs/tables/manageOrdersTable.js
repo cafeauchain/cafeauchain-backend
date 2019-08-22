@@ -27,6 +27,7 @@ const tableDefinition = {
         },
         { name: "id", label: "Order Id", link: "/manage/orders/", textAlign: "center" },
         { name: "status", namespace: "attributes", formatter: Humanize },
+        { name: "invoice_status", label: "Payment Status", namespace: "attributes", formatter: Humanize },
         { name: "total_weight", namespace: "attributes", formatter: Weights, textAlign: "right" },
         { name: "subtotal", namespace: "attributes", formatter: Money, textAlign: "right" },
         { name: "shipping", namespace: "attributes", formatter: Money, textAlign: "right" },

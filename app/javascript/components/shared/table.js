@@ -136,7 +136,7 @@ class FormattedTable extends Component {
             <Ref innerRef={this.containerRef}>
                 <div>
                     <Dimmer active={loading} inverted>
-                        <Loader active={loading} size="large" style={{ top: 0, marginTop: 60 }} />
+                        <Loader active={loading} size="large" inline="centered" />
                     </Dimmer>
                     <div style={{ overflowX: scrollable ? "scroll" : "hidden" }}>
                         <Table {...tableProps}>

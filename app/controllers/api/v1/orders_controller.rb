@@ -53,7 +53,8 @@ module Api::V1
         if params[:order_by].nil?
           @orders = @orders.order(created_at: :desc)
         end
-        @orders = @orders.filter(params.slice(:status, :order_by, :range))
+        # I think :order_by has to be last because it the only one that changes from AR to an array
+        @orders = @orders.filter(params.slice(:range, :status, :invoice_status, :order_by))
       else
         @orders = Order.where(status: status, wholesale_profile: @cart.wholesale_profile)
       end
