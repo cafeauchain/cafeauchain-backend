@@ -28,6 +28,10 @@ class CustomerPay extends React.Component {
         };
     }
 
+    updatePayment = obj => {
+        this.setState({ payment_source: obj.payment_source });
+    }
+
     payInvoice = async e => {
         const { target } = e;
         e.preventDefault();
@@ -73,7 +77,7 @@ class CustomerPay extends React.Component {
                                 component={(
                                     <CartChangePayment
                                         cards={cards}
-                                        updateCartDetails={this.updateCartDetails}
+                                        updateCartDetails={this.updatePayment}
                                         payment_source={payment_source}
                                         stripeApiKey={stripeApiKey}
                                     />
