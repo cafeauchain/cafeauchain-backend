@@ -14,7 +14,6 @@ module Shop
         order: order,
         customer: @customer,
         cart: @serialized_cart,
-        # invoice: @order.invoice, 
         stripeApiKey: Rails.application.credentials[Rails.env.to_sym][:stripe_api_key],
         cards: current_user.customer_profile.cards,
         scripts: ["https://js.stripe.com/v3/"],
