@@ -49,7 +49,7 @@ class PaymentDetails extends React.PureComponent {
                         <br />
                         <Titler
                             title="Payment Memo"
-                            value={`<div>${memo}</div>`}
+                            value={`<div> -- ${memo}</div>`}
                             bold
                         />
                     </div>
