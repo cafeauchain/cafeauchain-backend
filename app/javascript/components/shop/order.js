@@ -6,8 +6,9 @@ import { Segment, Header, Label, Divider } from "semantic-ui-react";
 import Flex from "shared/flex";
 import { Money } from "shared/textFormatters";
 import Table from "shared/table";
+import Titler from "shared/titler";
 
-import { sortBy } from "utilities";
+import { sortBy, callMeDanger } from "utilities";
 
 import tableDefs from "defs/tables/orderLineItems";
 import CustomerPay from "shop/orders/partials/payment";
@@ -40,13 +41,20 @@ class Order extends React.Component {
             order_items && order_items.length
                 ? sortBy({ collection: order_items, id: "size", sorts: [{ name: "name" }, { name: "size" }] })
                 : [];
+        const invoice_status = attributes.invoice.status;
+
+        let payment_label = {
+            text: invoice_status === "paid_in_full" ? "Paid" : "Open",
+            color: invoice_status === "paid_in_full" ? "black" : "green"
+        };
+
         return (
             <div>
                 <Segment>
                     <Header as="h2" content="Order Details" dividing />
                     <a href="/shop/orders">Back to All Orders</a>
                     <Segment style={{ maxWidth: 900, margin: "40px auto" }}>
-                        <Label size="large" ribbon="right" content="Open" color="green" />
+                        <Label size="large" ribbon="right" content={payment_label.text} color={payment_label.color} />
                         <Flex spacing="30" spacebetween>
                             <div flex="66">
                                 <Addresses roaster={roasterAtts} customer={customerAtts} />
@@ -54,12 +62,35 @@ class Order extends React.Component {
                             <div flex="33" style={{ textAlign: "right" }}>
                                 <Details attributes={attributes} id={id} isCustomer />
                                 <Divider />
-                                {attributes.invoice.status === 'awaiting_payment' && (
-                                    <CustomerPay
-                                        stripeApiKey={stripeApiKey}
-                                        cards={cards}
-                                        updateContext={updateContext}
-                                        invoice={attributes.invoice}
+                                {invoice_status === 'awaiting_payment' && (
+                                    <React.Fragment>
+                                        <Titler title="Payment Status" value="Awaiting Payment" bold />
+                                        <CustomerPay
+                                            stripeApiKey={stripeApiKey}
+                                            cards={cards}
+                                            updateContext={updateContext}
+                                            id={attributes.invoice.id}
+                                        />
+                                    </React.Fragment>
+                                    
+                                )}
+                                {invoice_status === "processing" && (
+                                    <Titler title="Payment Status" value="Verifying Order" bold />
+                                )}
+                                {invoice_status === "payment_authorized" && (
+                                    <div style={{ textAlign: "left" }}>
+                                        <Titler title="Payment Status" value="Payment Authorized" bold />
+                                        <p>
+                                            {callMeDanger(`On checkout, you authorized your payment. Once your order
+                                            is ready, your roaster will process this transaction.`)}
+                                        </p>
+                                    </div>
+                                )}
+                                {invoice_status === "paid_in_full" && (
+                                    <Titler
+                                        title="Payment Status"
+                                        value='<strong class="positive-text">PAID</strong>'
+                                        bold
                                     />
                                 )}
                             </div>

@@ -1,4 +1,4 @@
-import React, { Fragment as F } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { Button, Card } from "semantic-ui-react";
 
@@ -31,7 +31,7 @@ class CustomerPay extends React.Component {
         e.preventDefault();
         target.blur();
         await this.setState({ btnLoading: true });
-        const { invoice: { id } } = this.props;
+        const { id } = this.props;
         const { payment_source } = this.state;
         const url = API_URL + "/invoices/" + id;
         const response = await requester({ url, body: { payment_source }, method: 'PUT' });
@@ -86,11 +86,11 @@ class CustomerPay extends React.Component {
     }
 }
 
-const { array, string, object, func } = PropTypes;
+const { array, string, oneOfType, number, func } = PropTypes;
 CustomerPay.propTypes = {
     cards: array,
     stripeApiKey: string,
-    invoice: object,
+    id: oneOfType([ number, string ]),
     updateContext: func
 }
 export default CustomerPay;
