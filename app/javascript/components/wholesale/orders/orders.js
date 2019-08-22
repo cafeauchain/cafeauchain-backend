@@ -23,6 +23,13 @@ class Orders extends Component {
         super(props);
         let string = window.location.search;
         let params = paramatize(string);
+        let newParamString = "";
+        if( props.type === "open" ){
+            params.status = "open";
+            params.invoice_status = "all";
+            newParamString = paramString(params);
+            window.history.pushState(null, null, newParamString);
+        }
         this.state = {
             loading: true,
             errors: [],
@@ -96,10 +103,9 @@ class Orders extends Component {
     buildOptions = arr => arr.map( item => ({ key: underscorer(item), value: underscorer(item), text: item }))
 
     render() {
-        let { orders = [], type, open_orders, orders_paging, customers } = this.props;
+        let { orders = [], type, orders_paging, customers } = this.props;
         let title = "All Orders";
         if (type === "open") {
-            orders = open_orders;
             title = "Open Orders";
         }
         const { errors, loading, details } = this.state;
@@ -192,7 +198,6 @@ class Orders extends Component {
 
 const { array, func, string, object } = PropTypes;
 Orders.propTypes = {
-    open_orders: array,
     orders: array,
     orders_paging: object,
     getData: func,
