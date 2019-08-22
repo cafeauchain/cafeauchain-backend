@@ -92,5 +92,5 @@ CustomerPay.propTypes = {
     stripeApiKey: string,
     id: oneOfType([ number, string ]),
     updateContext: func
-}
+};
 export default CustomerPay;

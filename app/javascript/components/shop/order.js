@@ -6,14 +6,13 @@ import { Segment, Header, Label, Divider } from "semantic-ui-react";
 import Flex from "shared/flex";
 import { Money } from "shared/textFormatters";
 import Table from "shared/table";
-import Titler from "shared/titler";
 
-import { sortBy, callMeDanger } from "utilities";
+import { sortBy } from "utilities";
 
 import tableDefs from "defs/tables/orderLineItems";
-import CustomerPay from "shop/orders/partials/payment";
 import Addresses from "wholesale/orders/partials/addresses";
 import Details from "wholesale/orders/partials/details";
+import PaymentDetails from "shop/orders/partials/payment_details";
 
 import withContext from "contexts/withContext";
 /* eslint-enable */
@@ -62,37 +61,12 @@ class Order extends React.Component {
                             <div flex="33" style={{ textAlign: "right" }}>
                                 <Details attributes={attributes} id={id} isCustomer />
                                 <Divider />
-                                {invoice_status === 'awaiting_payment' && (
-                                    <React.Fragment>
-                                        <Titler title="Payment Status" value="Awaiting Payment" bold />
-                                        <CustomerPay
-                                            stripeApiKey={stripeApiKey}
-                                            cards={cards}
-                                            updateContext={updateContext}
-                                            id={attributes.invoice.id}
-                                        />
-                                    </React.Fragment>
-                                    
-                                )}
-                                {invoice_status === "processing" && (
-                                    <Titler title="Payment Status" value="Verifying Order" bold />
-                                )}
-                                {invoice_status === "payment_authorized" && (
-                                    <div style={{ textAlign: "left" }}>
-                                        <Titler title="Payment Status" value="Payment Authorized" bold />
-                                        <p>
-                                            {callMeDanger(`On checkout, you authorized your payment. Once your order
-                                            is ready, your roaster will process this transaction.`)}
-                                        </p>
-                                    </div>
-                                )}
-                                {invoice_status === "paid_in_full" && (
-                                    <Titler
-                                        title="Payment Status"
-                                        value='<strong class="positive-text">PAID</strong>'
-                                        bold
-                                    />
-                                )}
+                                <PaymentDetails 
+                                    attributes={attributes}
+                                    cards={cards}
+                                    stripeApiKey={stripeApiKey}
+                                    updateContext={updateContext}
+                                />
                             </div>
                         </Flex>
                         <br />
