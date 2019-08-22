@@ -13,6 +13,10 @@ class PaymentDetails extends React.PureComponent {
     render(){
         const { attributes } = this.props;
         const invoice_status = attributes.invoice.status;
+        let memo = attributes.invoice.memo || "";
+        if( memo.indexOf(" via Stripe") > -1 ){
+            memo = memo.replace(" via Stripe", "");
+        }
 
         return (
             <React.Fragment>
@@ -36,11 +40,20 @@ class PaymentDetails extends React.PureComponent {
                     </div>
                 )}
                 {invoice_status === "paid_in_full" && (
-                    <Titler
-                        title="Payment Status"
-                        value='<strong class="positive-text">PAID</strong>'
-                        bold
-                    />
+                    <div style={{ textAlign: "left" }}>
+                        <Titler
+                            title="Payment Status"
+                            value='<strong class="positive-text">PAID</strong>'
+                            bold
+                        />
+                        <br />
+                        <Titler
+                            title="Payment Memo"
+                            value={`<div>${memo}</div>`}
+                            bold
+                        />
+                    </div>
+                    
                 )}
             </React.Fragment>
         );
