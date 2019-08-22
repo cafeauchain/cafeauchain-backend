@@ -17,8 +17,7 @@ import Totals from "wholesale/orders/partials/totals";
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
-class Order extends React.Component {
-    state = {}
+class Order extends React.PureComponent {
     render() {
         const {
             order: { attributes = {}, id },
