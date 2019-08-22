@@ -16,7 +16,8 @@ module Api::V1
           product_options: ci.production_options
         )
       end
-      if @order.update(status: :processing)
+      roast_date = OrderServices::GetRoastDate.process(@order)
+      if @order.update(status: :processing, roast_date: roast_date)
         @cart.cart_items.destroy_all
         OrderServices::ProcessOrder.process(@order.id, params)
       end
