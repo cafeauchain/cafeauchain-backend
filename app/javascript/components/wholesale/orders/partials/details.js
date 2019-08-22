@@ -6,13 +6,15 @@ import moment from "moment";
 /* eslint-disable */
 import Flex from "shared/flex";
 import { Money } from "shared/textFormatters";
+import Modal from "shared/modal";
+import EditRoastDate from "wholesale/orders/partials/editRoastDate";
 
 import { humanize } from "utilities";
 /* eslint-enable */
 
 class OrderDetails extends PureComponent {
     render() {
-        const { id, attributes: { order_date, terms, status, order_total } } = this.props;
+        const { id, attributes: { order_date, terms, status, order_total, roast_date } } = this.props;
         return (
             <F>
                 <Header as="h2">{"Order #" + id}</Header>
@@ -21,6 +23,22 @@ class OrderDetails extends PureComponent {
                         <strong>Date: </strong>
                     </div>
                     <div flex="50">{moment(order_date).format("MMM D, YYYY")}</div>
+                    <div flex="50">
+                        <strong>Roast Date: </strong>
+                    </div>
+                    <div flex="50">
+                        <Modal
+                            text={moment(roast_date).format("MMM D, YYYY")}
+                            title="Edit Roast Date"
+                            unstyled
+                            className="link"
+                            size="mini"
+                            component={(
+                                <EditRoastDate id={id} roast_date={roast_date} />
+                            )}
+                        />
+                        
+                    </div>
                     <div flex="50">
                         <strong>Terms:</strong>
                     </div>

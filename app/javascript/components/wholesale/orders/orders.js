@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Segment, Header, Button, Icon } from "semantic-ui-react";
+import { Segment, Header, Button } from "semantic-ui-react";
 
 /* eslint-disable */
 import Table from "shared/table";
 import ErrorHandler from "shared/errorHandler";
 import Modal from "shared/modal";
+import Flex from "shared/flex";
+import Input from "shared/input";
 
 import CreateOrder from "wholesale/orders/createOrderBehalf";
 
 import tableDefs from "defs/tables/manageOrdersTable";
 
-import { sortBy } from "utilities";
-
-import { requester, url as API_URL } from "utilities/apiUtils";
+import { params as paramatize, paramString, underscorer } from "utilities";
 
 import withContext from "contexts/withContext";
 /* eslint-enable */
@@ -21,80 +21,104 @@ import withContext from "contexts/withContext";
 class Orders extends Component {
     constructor(props) {
         super(props);
+        let string = window.location.search;
+        let params = paramatize(string);
+        let newParamString = "";
+        if( props.type === "open" ){
+            params.status = "open";
+            params.invoice_status = "all";
+            newParamString = paramString(params);
+            window.history.pushState(null, null, newParamString);
+        }
         this.state = {
-            loading: false,
-            errors: []
+            loading: true,
+            errors: [],
+            details: { 
+                status: params.status,
+                invoice_status: params.invoice_status,
+                range: params.range,
+                customer: params.customer
+            }
         };
-        this.tableDefs = this.modifyTableDefs();
+    }
+    componentDidMount(){
+        const { orders = [], getData } = this.props;
+        if( !orders.length ){
+            getData("orders", window.location.search).then( () => this.setState({ loading: false }));
+        } else {
+            this.setState({ loading: false });
+        }
     }
 
-    onSubmit = async (e, item) => {
-        const { target } = e;
-        e.preventDefault();
-        target.blur();
-        await this.setState({ loading: true });
-        const { getData, type } = this.props;
-        const url = API_URL + "/orders/" + item["data-id"];
-        const response = await requester({ url, body: { status: "fulfilled" }, method: "PUT" });
-        setTimeout(async () => {
-            if (response instanceof Error) {
-                this.setState({ errors: response.response.data, loading: false });
-            } else {
-                if (response.redirect) {
-                    window.location.href = await response.redirect_url;
-                } else {
-                    await getData(type === "open" ? "open_orders" : "orders");
-                    await getData("inventory");
-                    this.setState({ loading: false });
-                }
-            }
-        }, 400);
-    };
-    actions = ({ item }) => {
-        let { orders, type, open_orders } = this.props;
-        if( type === "open" ) orders = open_orders;
-        const order = orders.find(order => order.id === item.id);
-        if (orders.length && order.attributes.status === "fulfilled") {
-            return <Icon key={item.id} name="circle check" color="green" />;
+    handlePager = obj => {
+        const { getData } = this.props;
+        if( obj.startLoader ){
+            this.setState({ loading: true });
+        } else {
+            getData("orders", obj.paramString ).then( () => this.setState({ loading: false }));
         }
-        return (
-            <Button
-                key={item.id}
-                onClick={this.onSubmit}
-                data-id={item.id}
-                primary
-                content="Complete"
-                compact
-                size="mini"
-            />
-        );
-    };
-    modifyTableDefs = () => {
-        let inner = { ...tableDefs };
-        // let newField = {
-        //     name: "status",
-        //     key: "action",
-        //     formatter: this.actions,
-        //     style: { width: 100 },
-        //     textAlign: "center"
-        // };
-        // inner.fields = [...inner.fields, newField];
-        return inner;
-    };
+    }
+
+    updateStatus = (e, { value, name }) => {
+        const { getData } = this.props;
+        let string = window.location.search;
+        let params = paramatize(string);
+        params[name] = value;
+        params.page = 1;
+        const newParamString = paramString(params);
+
+        let { details } = this.state;
+        details = { ...details };
+        if( details[name] != value ){
+            details[name] = value;
+            this.setState({ loading: true, details });
+
+            window.history.pushState(null, null, newParamString);
+            getData("orders", newParamString).then(() => this.setState({ loading: false }));
+        }
+        
+    }
+
+    clearFilters = e => {
+        e.preventDefault();
+        const { target } = e;
+        target.blur();
+        const { getData } = this.props;
+        let string = window.location.search;
+        let params = paramatize(string);
+
+        let { details } = this.state;
+        details = { ...details };
+        for (const prop in details) {
+            details[prop] = "";
+            delete params[prop];
+        }
+        this.setState({ loading: true, details });
+
+        const newParamString = paramString(params);
+        window.history.pushState(null, null, newParamString);
+        getData("orders", newParamString).then(() => this.setState({ loading: false }));
+    }
+
+    buildOptions = arr => arr.map( item => ({ key: underscorer(item), value: underscorer(item), text: item }))
+
     render() {
-        let { orders, type, open_orders } = this.props;
+        let { orders = [], type, orders_paging, customers } = this.props;
         let title = "All Orders";
         if (type === "open") {
-            orders = open_orders;
             title = "Open Orders";
         }
-        const { errors, loading } = this.state;
-        const sorted = sortBy({
-            collection: orders,
-            id: "order_date",
-            sorts: [{ name: "order_date" }],
-            namespace: "attributes"
-        });
+        const { errors, loading, details } = this.state;
+        const statuses = ["Open", "Processing", "Packed", "Shipped", "Fulfilled", "All" ];
+        const dates = ["Today", "Yesterday", "This Week", "Last Week", "This Month", "Last Month" ];
+        const invoice_statuses = ["Processing", "Awaiting Payment", "Payment Authorized", "Paid in Full", "All"];
+
+        const cust_options = customers.map( customer => ({ 
+            key: customer.id,
+            value: customer.id, 
+            text: customer.company_name 
+        }));
+
         return (
             <Segment>
                 <Header as="h2" content={title} dividing />
@@ -106,19 +130,79 @@ class Orders extends Component {
                 />
                 <br />
                 <br />
+                <Segment>
+                    <Flex spacebetween wrap spacing="10">
+                        <div flex="25">
+                            <Input
+                                inputType="select"
+                                onChange={this.updateStatus}
+                                name="customer"
+                                label="Customer"
+                                options={cust_options}
+                                value={details.customer || ""}
+                                search
+                            />
+                        </div>
+                        <div flex="25">
+                            <Input
+                                inputType="select"
+                                onChange={this.updateStatus}
+                                name="status"
+                                label="Order Status"
+                                options={this.buildOptions(statuses)}
+                                value={details.status || ""}
+                            />
+                        </div>
+                        <div flex="25">
+                            <Input
+                                inputType="select"
+                                onChange={this.updateStatus}
+                                name="invoice_status"
+                                label="Payment Status"
+                                options={this.buildOptions(invoice_statuses)}
+                                value={details.invoice_status || ""}
+                            />
+                        </div>
+                        <div flex="25">
+                            <Input
+                                inputType="select"
+                                onChange={this.updateStatus}
+                                name="range"
+                                label="Dates"
+                                options={this.buildOptions(dates)}
+                                value={details.range || ""}
+                            />
+                        </div>
+                    </Flex>
+                    <br />
+                    <Flex flexend>
+                        <div flex="auto" style={{ marginTop: "auto" }}>
+                            <Button content="Reset Filters" onClick={this.clearFilters} size="small" />
+                        </div>
+                    </Flex>
+                    <div style={{ marginBottom: 10 }} />
+                </Segment>
                 <ErrorHandler errors={errors} />
-                <Table tableDefs={this.tableDefs} data={sorted} loading={loading} />
+                <Table
+                    tableDefs={tableDefs}
+                    data={orders}
+                    loading={loading}
+                    pagination={orders_paging}
+                    onPageChange={this.handlePager}
+                />    
+                
             </Segment>
         );
     }
 }
 
-const { array, func, string } = PropTypes;
+const { array, func, string, object } = PropTypes;
 Orders.propTypes = {
-    open_orders: array,
     orders: array,
+    orders_paging: object,
     getData: func,
-    type: string
+    type: string,
+    customers: array
 };
 
 export default withContext(Orders);

@@ -16,7 +16,8 @@ module Api::V1
           product_options: ci.production_options
         )
       end
-      if @order.update(status: :processing)
+      roast_date = OrderServices::GetRoastDate.process(@order)
+      if @order.update(status: :processing, roast_date: roast_date)
         @cart.cart_items.destroy_all
         OrderServices::ProcessOrder.process(@order.id, params)
       end
@@ -32,27 +33,23 @@ module Api::V1
     end
 
     def index
-      if params[:status].present?
-        case params[:status]
-        when "open"
-          status = [:processing, :packed]
-        # TODO Right now, I'm only getting open orders
-        # Revisit later
-        else
-          status = [:processing, :packed, :shipped]
-        end
-      end
       if !params[:grouped_order_items].nil?
         orders = current_user.roaster_profile.open_order_items
         items = orders.group_by {|oi| oi[:size]}
         return render json: { data: items }, status: 200, serializer: nil
       end
       if current_user.roaster_profile.present?
-        @orders = current_user.roaster_profile.orders.where(status: status)
+        @orders = current_user.roaster_profile.orders#.where(status: status)
+        if params[:order_by].nil?
+          @orders = @orders.order(created_at: :desc)
+        end
+        # I think :order_by has to be last because it the only one that changes from AR to an array
+        @orders = @orders.filter(params.slice(:range, :status, :invoice_status, :customer, :order_by))
       else
-        @orders = Order.where(status: status, wholesale_profile: @cart.wholesale_profile)
+        @orders = Order.where(wholesale_profile: @cart.wholesale_profile)
       end
-      render json: @orders, status: 200
+      paged = pagination(@orders)
+      render json: paged[:records], meta: paged[:meta], status: 200
     end
 
     def update
@@ -81,6 +78,8 @@ module Api::V1
         invoice.update(subtotal: subtotal, shipping: final_rate, tax: tax )
       elsif params[:status].present?
         @order.update(status: params[:status])
+      elsif params[:roast_date].present?
+        @order.update(roast_date: params[:roast_date])
       end
 
       render json: @order, status: 200, serializer: OrderSerializer::SingleOrderSerializer

@@ -19,7 +19,7 @@ const tableDefinition = {
         { name: "company_name", namespace: "attributes", link: "/manage/orders/" },
         { name: "order_date", namespace: "attributes", formatter: DateFormatter, link: "/manage/orders/" },
         { 
-            name: "estimated_roast_date", 
+            name: "roast_date", 
             namespace: "attributes", 
             label: "Roast Date", 
             formatter: DateFormatter, 
@@ -27,6 +27,7 @@ const tableDefinition = {
         },
         { name: "id", label: "Order Id", link: "/manage/orders/", textAlign: "center" },
         { name: "status", namespace: "attributes", formatter: Humanize },
+        { name: "invoice_status", label: "Payment Status", namespace: "attributes", formatter: Humanize },
         { name: "total_weight", namespace: "attributes", formatter: Weights, textAlign: "right" },
         { name: "subtotal", namespace: "attributes", formatter: Money, textAlign: "right" },
         { name: "shipping", namespace: "attributes", formatter: Money, textAlign: "right" },
