@@ -89,6 +89,8 @@ module Api::V1
         invoice.update(subtotal: subtotal, shipping: final_rate, tax: tax )
       elsif params[:status].present?
         @order.update(status: params[:status])
+      elsif params[:roast_date].present?
+        @order.update(roast_date: params[:roast_date])
       end
 
       render json: @order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
