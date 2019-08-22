@@ -11,10 +11,7 @@ import CustomerPay from "shop/orders/partials/payment";
 
 class PaymentDetails extends React.PureComponent {
     render(){
-        const {
-            attributes,
-            ...custPayProps
-        } = this.props;
+        const { attributes } = this.props;
         const invoice_status = attributes.invoice.status;
 
         return (
@@ -22,10 +19,7 @@ class PaymentDetails extends React.PureComponent {
                 {invoice_status === 'awaiting_payment' && (
                     <React.Fragment>
                         <Titler title="Payment Status" value="Awaiting Payment" bold />
-                        <CustomerPay
-                            {...custPayProps}
-                            id={attributes.invoice.id}
-                        />
+                        <CustomerPay id={attributes.invoice.id} />
                     </React.Fragment>
 
                 )}
@@ -53,12 +47,9 @@ class PaymentDetails extends React.PureComponent {
     }
 }
 
-const { object, array, string, func } = PropTypes;
+const { object } = PropTypes;
 PaymentDetails.propTypes = {
-    attributes: object,
-    cards: array,
-    stripeApiKey: string,
-    updateContext: func
+    attributes: object
 };
 
 export default PaymentDetails;
