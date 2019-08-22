@@ -33,17 +33,6 @@ module Api::V1
     end
 
     def index
-      # status = [:processing, :packed, :shipped]
-      # if params[:status].present?
-      #   case params[:status]
-      #   when "open"
-      #     status = [:processing, :packed]
-      #   # TODO Right now, I'm only getting open orders
-      #   # Revisit later
-      #   # else
-      #   #   status = [:processing, :packed, :shipped]
-      #   end
-      # end
       if !params[:grouped_order_items].nil?
         orders = current_user.roaster_profile.open_order_items
         items = orders.group_by {|oi| oi[:size]}
@@ -57,7 +46,7 @@ module Api::V1
         # I think :order_by has to be last because it the only one that changes from AR to an array
         @orders = @orders.filter(params.slice(:range, :status, :invoice_status, :customer, :order_by))
       else
-        @orders = Order.where(status: status, wholesale_profile: @cart.wholesale_profile)
+        @orders = Order.where(wholesale_profile: @cart.wholesale_profile)
       end
       paged = pagination(@orders)
       render json: paged[:records], meta: paged[:meta], status: 200
