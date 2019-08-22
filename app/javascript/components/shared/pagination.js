@@ -44,6 +44,9 @@ class Pager extends PureComponent {
         if( end > totalcount ){
             end = totalcount;
         }
+        if( totalcount === 0 ) {
+            return null;
+        }
         return (
             <Flex spacebetween wrap centercross>
                 <div flex="25">
