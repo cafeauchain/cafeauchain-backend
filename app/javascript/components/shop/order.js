@@ -58,24 +58,20 @@ class Order extends React.Component {
                         <Table tableDefs={tableDefs} data={sorted} />
                         <br />
                         <Flex spacing="30" spacebetween>
-                            <div flex="66" />
-                            <div flex="33" style={{ textAlign: "right" }}>
+                            <div flex="66">
+                                {attributes.notes && (
+                                    <React.Fragment>
+                                        <p>
+                                            <strong>Order Notes:</strong>
+                                        </p>
+                                        <Segment secondary>{attributes.notes}</Segment>
+                                    </React.Fragment>
+                                )} 
+                            </div>
+                            <div flex="33" style={{ textAlign: "right", marginTop: "auto" }}>
                                 <Totals attributes={attributes} isCustomer />
                             </div>
                         </Flex>
-                        {false && (
-                            <React.Fragment>
-                                <br />
-                                <p>
-                                    <strong>Notes:</strong>
-                                </p>
-                                <Segment secondary>These are notes. Should they be editable?</Segment>
-                                <p>
-                                    <strong>Terms:</strong>
-                                </p>
-                                <Segment secondary>These are full terms. Should they be editable?</Segment>
-                            </React.Fragment>
-                        )}
                     </Segment>
                 </Segment>
             </div>
