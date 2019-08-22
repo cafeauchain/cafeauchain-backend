@@ -4,7 +4,6 @@ import { Segment, Header, Label, Divider } from "semantic-ui-react";
 
 /* eslint-disable */
 import Flex from "shared/flex";
-import { Money } from "shared/textFormatters";
 import Table from "shared/table";
 
 import { sortBy } from "utilities";
