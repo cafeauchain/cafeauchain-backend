@@ -14,10 +14,11 @@ import { humanize } from "utilities";
 
 class OrderDetails extends PureComponent {
     render() {
-        const { id, attributes: { order_date, terms, status, order_total, roast_date } } = this.props;
+        const { id, attributes: { order_date, terms, status, order_total, roast_date }, isCustomer } = this.props;
+        const title = isCustomer ? "Invoice #" + id : "Order #" + id;
         return (
             <F>
-                <Header as="h2">{"Order #" + id}</Header>
+                <Header as="h2">{title}</Header>
                 <Flex spacing="10" spacebetween wrap>
                     <div flex="50">
                         <strong>Date: </strong>
@@ -27,17 +28,19 @@ class OrderDetails extends PureComponent {
                         <strong>Roast Date: </strong>
                     </div>
                     <div flex="50">
-                        <Modal
-                            text={moment(roast_date).format("MMM D, YYYY")}
-                            title="Edit Roast Date"
-                            unstyled
-                            className="link"
-                            size="mini"
-                            component={(
-                                <EditRoastDate id={id} roast_date={roast_date} />
-                            )}
-                        />
-                        
+                        {isCustomer && moment(roast_date).format("MMM D, YYYY")}
+                        {!isCustomer && (
+                            <Modal
+                                text={moment(roast_date).format("MMM D, YYYY")}
+                                title="Edit Roast Date"
+                                unstyled
+                                className="link"
+                                size="mini"
+                                component={(
+                                    <EditRoastDate id={id} roast_date={roast_date} />
+                                )}
+                            />
+                        )}
                     </div>
                     <div flex="50">
                         <strong>Terms:</strong>
@@ -48,7 +51,7 @@ class OrderDetails extends PureComponent {
                     </div>
                     <div flex="50">{humanize(status)}</div>
                     <div flex="50">
-                        <strong>Balance Due:</strong>
+                        <strong>Order Total:</strong>
                     </div>
                     <div flex="50">
                         <Money type="positive">{order_total}</Money>
@@ -59,10 +62,11 @@ class OrderDetails extends PureComponent {
     }
 }
 
-const { object, oneOfType, number, string } = PropTypes;
+const { object, oneOfType, number, string, bool } = PropTypes;
 OrderDetails.propTypes = {
     id: oneOfType([number, string]),
-    attributes: object
+    attributes: object,
+    isCustomer: bool
 };
 
 export default OrderDetails;

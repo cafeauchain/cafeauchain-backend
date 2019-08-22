@@ -1,17 +1,18 @@
-import React, { Fragment as F } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import { Segment, Header, Item, Label } from "semantic-ui-react";
-import moment from "moment";
+import { Segment, Header, Label, Divider } from "semantic-ui-react";
 
 /* eslint-disable */
 import Flex from "shared/flex";
 import { Money } from "shared/textFormatters";
 import Table from "shared/table";
 
-import { humanize, sortBy } from "utilities";
+import { sortBy } from "utilities";
 
 import tableDefs from "defs/tables/orderLineItems";
 import CustomerPay from "shop/orders/partials/payment";
+import Addresses from "wholesale/orders/partials/addresses";
+import Details from "wholesale/orders/partials/details";
 
 import withContext from "contexts/withContext";
 /* eslint-enable */
@@ -35,8 +36,6 @@ class Order extends React.Component {
             updateContext
         } = this.props;
         const order_items = attributes ? attributes.order_items : [];
-        const roasterLogo = roasterAtts.logo_image_url;
-        const customerLogo = customerAtts.logo_url;
         const sorted =
             order_items && order_items.length
                 ? sortBy({ collection: order_items, id: "size", sorts: [{ name: "name" }, { name: "size" }] })
@@ -45,94 +44,24 @@ class Order extends React.Component {
             <div>
                 <Segment>
                     <Header as="h2" content="Order Details" dividing />
-                    <Flex spacing="20" spacebetween>
-                        <div flex="50">
-                            <a href="/shop/orders">Back to All Orders</a>
-                        </div>
-                        {attributes.invoice.status === 'awaiting_payment' && (
-                            <div flex="auto">
-                                <CustomerPay 
-                                    stripeApiKey={stripeApiKey}
-                                    cards={cards}
-                                    updateContext={updateContext}
-                                    invoice={attributes.invoice}
-                                />
-                            </div>
-                        )}
-                    </Flex>
+                    <a href="/shop/orders">Back to All Orders</a>
                     <Segment style={{ maxWidth: 900, margin: "40px auto" }}>
                         <Label size="large" ribbon="right" content="Open" color="green" />
                         <Flex spacing="30" spacebetween>
                             <div flex="66">
-                                <Item.Group>
-                                    <Item>
-                                        <Item.Image size="tiny" src={roasterLogo} />
-                                        <Item.Content verticalAlign="top">
-                                            <Item.Header as="a">{roasterAtts.name}</Item.Header>
-                                            <Item.Description>
-                                                <p>
-                                                    {roasterAtts.primary_address.street_1}
-                                                    <br />
-                                                    {roasterAtts.primary_address.street_2 && (
-                                                        <F>
-                                                            {roasterAtts.primary_address.street_2}
-                                                            <br />
-                                                        </F>
-                                                    )}
-                                                    {`${roasterAtts.primary_address.city}, ${roasterAtts.primary_address.state} ${roasterAtts.primary_address.postal_code}`}
-                                                </p>
-                                            </Item.Description>
-                                        </Item.Content>
-                                    </Item>
-                                    <Item>
-                                        <Item.Content>
-                                            <Item.Meta content="Bill To:" />
-                                        </Item.Content>
-                                    </Item>
-                                    <Item>
-                                        <Item.Image size="tiny" src={customerLogo} />
-                                        <Item.Content verticalAlign="top">
-                                            <Item.Header as="a">{customerAtts.company_name}</Item.Header>
-                                            <Item.Description>
-                                                <p>
-                                                    {customerAtts.primary_address.street_1}
-                                                    <br />
-                                                    {customerAtts.primary_address.street_2 && (
-                                                        <F>
-                                                            {customerAtts.primary_address.street_2}
-                                                            <br />
-                                                        </F>
-                                                    )}
-                                                    {`${customerAtts.primary_address.city}, 
-                                                    ${customerAtts.primary_address.state} ${customerAtts.primary_address.postal_code}`}
-                                                </p>
-                                            </Item.Description>
-                                        </Item.Content>
-                                    </Item>
-                                </Item.Group>
+                                <Addresses roaster={roasterAtts} customer={customerAtts} />
                             </div>
                             <div flex="33" style={{ textAlign: "right" }}>
-                                <Header as="h2">{"Invoice #" + id}</Header>
-                                <Flex spacing="10" spacebetween wrap>
-                                    <div flex="50">
-                                        <strong>Date: </strong>
-                                    </div>
-                                    <div flex="50">{moment(attributes.order_date).format("MMM D, YYYY")}</div>
-                                    <div flex="50">
-                                        <strong>Terms:</strong>
-                                    </div>
-                                    <div flex="50">On Receipt</div>
-                                    <div flex="50">
-                                        <strong>Status:</strong>
-                                    </div>
-                                    <div flex="50">{humanize(attributes.status)}</div>
-                                    <div flex="50">
-                                        <strong>Balance Due:</strong>
-                                    </div>
-                                    <div flex="50">
-                                        <Money type="positive">{attributes.order_total}</Money>
-                                    </div>
-                                </Flex>
+                                <Details attributes={attributes} id={id} isCustomer />
+                                <Divider />
+                                {attributes.invoice.status === 'awaiting_payment' && (
+                                    <CustomerPay
+                                        stripeApiKey={stripeApiKey}
+                                        cards={cards}
+                                        updateContext={updateContext}
+                                        invoice={attributes.invoice}
+                                    />
+                                )}
                             </div>
                         </Flex>
                         <br />

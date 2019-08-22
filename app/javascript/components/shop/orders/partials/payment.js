@@ -1,10 +1,11 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Button } from "semantic-ui-react";
+import { Button, Card } from "semantic-ui-react";
 
 /* eslint-disable */
 import Modal from "shared/modal";
 import ErrorHandler from "shared/errorHandler";
+import Flex from "shared/flex";
 
 import CartChangePayment from "shop/cart/changePayment";
 import MiniCard from "payments/miniCard";
@@ -49,34 +50,38 @@ class CustomerPay extends React.Component {
         }, 400);
     }
 
-
     render() {
         const { cards, stripeApiKey } = this.props;
         const { payment_source, btnLoading, errors } = this.state;
         const card = cards.find(card => card.stripe_card_id === payment_source);
         return (
-            <F>
+            <Card>
                 <ErrorHandler errors={errors} />
-                <MiniCard card={card} />
-                <br />
-                <Modal
-                    text="Change"
-                    title="Change Payment Method"
-                    unstyled
-                    className="link"
-                    component={(
-                        <CartChangePayment
-                            cards={cards}
-                            updateCartDetails={this.updateCartDetails}
-                            payment_source={payment_source}
-                            stripeApiKey={stripeApiKey}
-                        />
-                    )}
-                />
-                <br />
-                <br />
-                <Button primary content="Pay Invoice" onClick={this.payInvoice} loading={btnLoading} />
-            </F>
+                <div style={{ padding: 20 }}>
+                    <Flex centermain spacing="20">
+                        <div flex="50" style={{ textAlign: "right" }}>
+                            <MiniCard card={card} />
+                        </div>
+                        <div flex="50">
+                            <Modal
+                                text="Change"
+                                title="Change Payment Method"
+                                unstyled
+                                className="link"
+                                component={(
+                                    <CartChangePayment
+                                        cards={cards}
+                                        updateCartDetails={this.updateCartDetails}
+                                        payment_source={payment_source}
+                                        stripeApiKey={stripeApiKey}
+                                    />
+                                )}
+                            />
+                        </div>
+                    </Flex>
+                </div> 
+                <Button primary content="Pay Invoice" onClick={this.payInvoice} loading={btnLoading} fluid />
+            </Card>
         );
     }
 }
