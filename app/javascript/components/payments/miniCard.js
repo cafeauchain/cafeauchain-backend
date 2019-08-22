@@ -12,7 +12,8 @@ class MiniCardView extends React.PureComponent {
         } = this.props;
         const exp = exp_month + "/" + exp_year;
         const brandLower = brand ? brand.toLowerCase() : "";
-        const brandUpper = brand ? brand.toUpperCase() : "";
+        let brandUpper = brand ? brand.toUpperCase() : "";
+        if( brandUpper === "MASTERCARD" ) brandUpper = "MC";
         return (
             <React.Fragment>
                 <Icon name={"cc " + brandLower} size="large" />
@@ -25,7 +26,7 @@ class MiniCardView extends React.PureComponent {
     
 }
 
-const { func, object } = PropTypes;
+const { object } = PropTypes;
 MiniCardView.propTypes = {
     card: object,
 };
