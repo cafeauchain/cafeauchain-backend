@@ -29,7 +29,8 @@ class Orders extends Component {
             details: { 
                 status: params.status,
                 invoice_status: params.invoice_status,
-                range: params.range
+                range: params.range,
+                customer: params.customer
             }
         };
     }
@@ -61,11 +62,14 @@ class Orders extends Component {
 
         let { details } = this.state;
         details = { ...details };
-        details[name] = value;
-        this.setState({ loading: true, details });
+        if( details[name] != value ){
+            details[name] = value;
+            this.setState({ loading: true, details });
 
-        window.history.pushState(null, null, newParamString);
-        getData("orders", newParamString).then(() => this.setState({ loading: false }));
+            window.history.pushState(null, null, newParamString);
+            getData("orders", newParamString).then(() => this.setState({ loading: false }));
+        }
+        
     }
 
     clearFilters = e => {
@@ -92,7 +96,7 @@ class Orders extends Component {
     buildOptions = arr => arr.map( item => ({ key: underscorer(item), value: underscorer(item), text: item }))
 
     render() {
-        let { orders = [], type, open_orders, orders_paging } = this.props;
+        let { orders = [], type, open_orders, orders_paging, customers } = this.props;
         let title = "All Orders";
         if (type === "open") {
             orders = open_orders;
@@ -102,6 +106,12 @@ class Orders extends Component {
         const statuses = ["Open", "Processing", "Packed", "Shipped", "Fulfilled", "All" ];
         const dates = ["Today", "Yesterday", "This Week", "Last Week", "This Month", "Last Month" ];
         const invoice_statuses = ["Processing", "Awaiting Payment", "Payment Authorized", "Paid in Full", "All"];
+
+        const cust_options = customers.map( customer => ({ 
+            key: customer.id,
+            value: customer.id, 
+            text: customer.company_name 
+        }));
 
         return (
             <Segment>
@@ -116,6 +126,17 @@ class Orders extends Component {
                 <br />
                 <Segment>
                     <Flex spacebetween wrap spacing="10">
+                        <div flex="25">
+                            <Input
+                                inputType="select"
+                                onChange={this.updateStatus}
+                                name="customer"
+                                label="Customer"
+                                options={cust_options}
+                                value={details.customer || ""}
+                                search
+                            />
+                        </div>
                         <div flex="25">
                             <Input
                                 inputType="select"
@@ -146,6 +167,9 @@ class Orders extends Component {
                                 value={details.range || ""}
                             />
                         </div>
+                    </Flex>
+                    <br />
+                    <Flex flexend>
                         <div flex="auto" style={{ marginTop: "auto" }}>
                             <Button content="Reset Filters" onClick={this.clearFilters} size="small" />
                         </div>
@@ -172,7 +196,8 @@ Orders.propTypes = {
     orders: array,
     orders_paging: object,
     getData: func,
-    type: string
+    type: string,
+    customers: array
 };
 
 export default withContext(Orders);

@@ -32,9 +32,10 @@ class Order < ApplicationRecord
   has_one :shipping_method, through: :order_shipping_method
 
   enum status: [:draft, :processing, :packed, :shipped, :fulfilled]
-  
+
   scope :open_orders, -> (status) { where status: status === "open" ? [:processing, :packed, :shipped] : status }
   scope :status, -> (status) { status == "all" ? all : open_orders(status) }
+  scope :customer, -> (customer) { joins(:customer_profile).where("customer_profiles.id = #{customer}") }
 
   scope :invoice_status, -> (invoice_status) { invoice_status == "all" ? all : includes(:invoice).where( "invoices.status": invoice_status )}
 
