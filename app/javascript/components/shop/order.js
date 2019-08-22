@@ -18,13 +18,6 @@ import withContext from "contexts/withContext";
 /* eslint-enable */
 
 class Order extends React.Component {
-    static propTypes = () => {
-        const { object } = PropTypes;
-        return {
-            order: object
-        };
-    };
-
     state = {}
     render() {
         const {
@@ -121,6 +114,16 @@ class Order extends React.Component {
             </div>
         );
     }
+}
+
+const { object, array, string, func } = PropTypes;
+Order.propTypes = {
+    order: object,
+    roaster: object,
+    customer: object,
+    cards: array,
+    stripeApiKey: string,
+    updateContext: func
 }
 
 export default withContext(Order);
