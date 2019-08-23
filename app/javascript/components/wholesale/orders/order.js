@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Segment, Header, Label, Button, Icon, Dimmer } from "semantic-ui-react";
+import moment from "moment";
 
 /* eslint-disable */
 import Flex from "shared/flex";
@@ -8,7 +9,7 @@ import Table from "shared/table";
 import Modal from "shared/modal";
 import Titler from "shared/titler";
 
-import { sortBy } from "utilities";
+import { sortBy, slugify } from "utilities";
 
 import OrderFulfillment from "wholesale/orders/orderFulfillment";
 import OrderAddresses from "wholesale/orders/partials/addresses";
@@ -19,6 +20,7 @@ import EditShipping from "wholesale/orders/partials/editShipping";
 import ManualShipping from "wholesale/orders/partials/manualShipping";
 import Fulfillment from "wholesale/orders/partials/fulfillment";
 import Packer from "manage/production/packer";
+import Pdfer from "shop/orders/partials/pdfer";
 
 import tableDefs from "defs/tables/orderLineItems";
 
@@ -135,6 +137,11 @@ class Order extends React.Component {
         const shipping_method = `${order_shipping_method.carrier} ${order_shipping_method.service}`;
         const canEdit = ["processing", "packed"].includes(attributes.status);
 
+        const order_date = moment(attributes.order_date).format("YYYY-MM-DD");
+        const roaster_name = slugify(roasterAtts.name);
+        const company_name = slugify(customerAtts.company_name)
+        const filename = order_date + "_" + "order_" + id + "_" + roaster_name + "_" + company_name;
+
         return (
             <div>
                 <Segment>
@@ -148,14 +155,24 @@ class Order extends React.Component {
                     )}
                     
                     <Header as="h2" content="Order Details" dividing />
-                    <p>
-                        <a href="/manage/orders">Back to All Orders</a>
-                    </p>
+                    <Flex spacebetween spacing="20">
+                        <div flex="auto">
+                            <a href="/shop/orders">Back to All Orders</a>
+                        </div>
+                        <div flex="auto">
+                            <Pdfer filename={filename} title="Print Packing Slip" />
+                        </div>
+                    </Flex>
                     <OrderFulfillment />
                     <Segment style={{ maxWidth: 900, margin: "40px auto" }}>
-                        <div>
+                        <div id="pdf_container">
                             {!isEditable && canEdit && (
-                                <Button onClick={this.toggleEditable} content="Edit Order" primary />
+                                <Button
+                                    onClick={this.toggleEditable}
+                                    content="Edit Order"
+                                    primary
+                                    data-html2canvas-ignore
+                                />
                             )}
                             {isEditable && (
                                 <Flex spacebetween spacing="20">
@@ -163,7 +180,7 @@ class Order extends React.Component {
                                         <Button onClick={this.toggleEditable} content="Cancel Changes" negative basic />
                                     </div>
                                     <div>
-                                        <Button 
+                                        <Button
                                             onClick={this.handleSubmit}
                                             content="Save Changes"
                                             primary
@@ -173,104 +190,106 @@ class Order extends React.Component {
                                 </Flex>
                             )}
                             <br />
-                        </div>
-                        <Label
-                            size="large"
-                            ribbon="right"
-                            content={closed ? "Closed" : "Open"}
-                            color={closed ? "black" : "green"}
-                        />
-                        <Flex spacing="30" spacebetween>
-                            <div flex="66">
-                                <OrderAddresses roaster={roasterAtts} customer={customerAtts} />
-                            </div>
-                            <div flex="33" style={{ textAlign: "right" }}>
-                                <React.Fragment>
-                                    <Dimmer active={isEditable} inverted />
-                                    <OrderDetails attributes={attributes} id={id} />
-                                </React.Fragment>
-                            </div>
-                        </Flex>
-                        <br />
-                        <Table 
-                            tableDefs={isEditable ? tableDefs : this.modifiedTableDefs(tableDefs)}
-                            data={sorted}
-                            onClick={isEditable ? this.handleTableClick : null}
-                        />
-                        <br />
-                        {isEditable && (
-                            <Modal
-                                text="Add Line Item"
-                                btnProps={{
-                                    icon: <Icon name="plus circle" inverted />,
-                                    size: "large"
-                                }}
-                                title="Add New Line Item"
-                                component={(
-                                    <LineItem 
-                                        updateLineItems={this.updateLineItems}
-                                        products={products}
-                                    />
-                                )}
+                            <Label
+                                size="large"
+                                ribbon="right"
+                                content={closed ? "Closed" : "Open"}
+                                color={closed ? "black" : "green"}
                             />
-                        )}
-                        <Flex spacing="30" spacebetween>
-                            <div flex="66">
-                                <Titler
-                                    title="Selected Shipping Method"
-                                    value={shipping_method}
-                                    bold
-                                />
-                                {!isEditable && canEdit && (
-                                    <Flex wrap spacing="10">
-                                        <div flex="auto">
-                                            <Modal
-                                                text="Update Shipping Method"
-                                                title="Update Shipping Method"
-                                                component={(
-                                                    <EditShipping
-                                                        order_id={id}
-                                                        wholesale_profile_id={customerAtts.wholesale_profile.id}
-                                                        shipping_method={order_shipping_method}
-                                                    />
-                                                )}
-                                            />
-                                        </div>
-                                        <div flex="auto">
-                                            <Modal
-                                                text="Manually Adjust Shipping"
-                                                title="Manually Adjust Shipping"
-                                                btnProps={{
-                                                    primary: false
-                                                }}
-                                                component={(
-                                                    <ManualShipping
-                                                        order_id={id}
-                                                        shipping_method={order_shipping_method}
-                                                    />
-                                                )}
-                                            />
-                                        </div>
-                                    </Flex>
-                                )}
-                                {attributes.notes && (
+                            <Flex spacing="30" spacebetween>
+                                <div flex="66">
+                                    <OrderAddresses roaster={roasterAtts} customer={customerAtts} />
+                                </div>
+                                <div flex="33" style={{ textAlign: "right" }}>
                                     <React.Fragment>
-                                        <br />
-                                        <br />
-                                        <p>
-                                            <strong>Order Notes:</strong>
-                                        </p>
-                                        <Segment secondary>{attributes.notes}</Segment>
+                                        <Dimmer active={isEditable} inverted />
+                                        <OrderDetails attributes={attributes} id={id} />
                                     </React.Fragment>
-                                )} 
-                            </div>
-                            <div flex="33" style={{ textAlign: "right", marginTop: "auto" }}>
-                                <React.Fragment>
-                                    <Dimmer active={isEditable} inverted />
-                                    <OrderTotals attributes={attributes} />
-                                </React.Fragment>
-                            </div>
-                        </Flex>
+                                </div>
+                            </Flex>
+                            <br />
+                            <Table
+                                tableDefs={isEditable ? tableDefs : this.modifiedTableDefs(tableDefs)}
+                                data={sorted}
+                                onClick={isEditable ? this.handleTableClick : null}
+                            />
+                            <br />
+                            {isEditable && (
+                                <Modal
+                                    text="Add Line Item"
+                                    btnProps={{
+                                        icon: <Icon name="plus circle" inverted />,
+                                        size: "large"
+                                    }}
+                                    title="Add New Line Item"
+                                    component={(
+                                        <LineItem
+                                            updateLineItems={this.updateLineItems}
+                                            products={products}
+                                        />
+                                    )}
+                                />
+                            )}
+                            <Flex spacing="30" spacebetween>
+                                <div flex="66">
+                                    <Titler
+                                        title="Selected Shipping Method"
+                                        value={shipping_method}
+                                        bold
+                                    />
+                                    {!isEditable && canEdit && (
+                                        <div data-html2canvas-ignore>
+                                            <Flex wrap spacing="10">
+                                                <div flex="auto">
+                                                    <Modal
+                                                        text="Update Shipping Method"
+                                                        title="Update Shipping Method"
+                                                        component={(
+                                                            <EditShipping
+                                                                order_id={id}
+                                                                wholesale_profile_id={customerAtts.wholesale_profile.id}
+                                                                shipping_method={order_shipping_method}
+                                                            />
+                                                        )}
+                                                    />
+                                                </div>
+                                                <div flex="auto">
+                                                    <Modal
+                                                        text="Manually Adjust Shipping"
+                                                        title="Manually Adjust Shipping"
+                                                        btnProps={{
+                                                            primary: false
+                                                        }}
+                                                        component={(
+                                                            <ManualShipping
+                                                                order_id={id}
+                                                                shipping_method={order_shipping_method}
+                                                            />
+                                                        )}
+                                                    />
+                                                </div>
+                                            </Flex>
+                                        </div>
+                                    )}
+                                    {attributes.notes && (
+                                        <React.Fragment>
+                                            <br />
+                                            <br />
+                                            <p>
+                                                <strong>Order Notes:</strong>
+                                            </p>
+                                            <Segment secondary>{attributes.notes}</Segment>
+                                        </React.Fragment>
+                                    )}
+                                </div>
+                                <div flex="33" style={{ textAlign: "right", marginTop: "auto" }}>
+                                    <React.Fragment>
+                                        <Dimmer active={isEditable} inverted />
+                                        <OrderTotals attributes={attributes} />
+                                    </React.Fragment>
+                                </div>
+                            </Flex>
+                        </div>
                     </Segment>
                     <Segment>
                         <Fulfillment />
