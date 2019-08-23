@@ -95,6 +95,23 @@ module Api::V1
 
     def set_order
       @order = Order.find(params[:id])
+      wp = @order.wholesale_profile
+      user_is_customer = current_user.customer_profile
+      user_is_roaster = current_user.roaster_profile
+
+      # Customer side
+      if !user_is_customer.nil?
+        same_customer = wp.customer_profile_id == user_is_customer.id
+        if !same_customer
+          render json: { data: "Unauthorized" }, status: 401 and return
+        end
+      # Roaster side
+      elsif !user_is_roaster.nil?
+        same_roaster = wp.roaster_profile_id == user_is_roaster.id
+        if !same_roaster
+          render json: { data: "Unauthorized" }, status: 401 and return
+        end
+      end
     end
 
   end
