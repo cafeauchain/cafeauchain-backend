@@ -1,6 +1,7 @@
 module Manage
   class OrdersController < ApplicationController
     before_action :authenticate_user!
+    before_action :set_order, only: [:show]
 
     def new
       if params[:customer_profile_id].blank?
@@ -34,10 +35,9 @@ module Manage
     end
 
     def show
-      order = Order.find(params[:id])
-      customer = order.customer_profile
+      customer = @order.customer_profile
       roaster = current_user.roaster_profile
-      @order = ActiveModel::SerializableResource.new(order, serializer: OrderSerializer::SingleOrderSerializer)
+      @order = ActiveModel::SerializableResource.new(@order, serializer: OrderSerializer::SingleOrderSerializer)
       @roaster_profile = ActiveModel::SerializableResource.new(roaster, serializer: RoasterSerializer)
       @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer, scope: roaster)
       products = ActiveModel::SerializableResource.new(roaster.products, each_serializer: ProductSerializer)
@@ -60,6 +60,17 @@ module Manage
         component: "wholesale/orders/orders",
         title: "View Orders"
       }
+    end
+
+    private
+
+    def set_order
+      @order = Order.find(params[:id])
+      wp = @order.wholesale_profile
+      same_roaster = wp.roaster_profile_id == current_user.roaster_profile_id
+      if !same_roaster
+        return redirect_to manage_orders_path
+      end
     end
 
   end
