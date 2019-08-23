@@ -38,6 +38,12 @@ module Shop
 
     def set_order
       @order = Order.find(params[:id])
+      wp = @order.wholesale_profile
+      same_roaster = wp.roaster_profile_id == current_roaster.id
+      same_customer = wp.customer_profile_id == current_user.customer_profile_id
+      if !same_roaster || !same_customer
+        return redirect_to shop_orders_path
+      end
     end
 
     def serialize_cart
