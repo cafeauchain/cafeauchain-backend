@@ -12,13 +12,6 @@ import MiniCard from "payments/miniCard";
 /* eslint-enable */
 
 class CartChangePayment extends React.Component {
-    static propTypes = () => {
-        const { array, oneOfType, number, string } = PropTypes;
-        return {
-            cards: array,
-            cardId: oneOfType([ number, string ])
-        };
-    };
     constructor(props) {
         super(props);
         const { terms, payment_source } = props;
@@ -109,5 +102,16 @@ class CartChangePayment extends React.Component {
         );
     }
 }
+
+const { array, string, func } = PropTypes;
+CartChangePayment.propTypes = {
+    cards: array,
+    stripeApiKey: string,
+    updateCartDetails: func,
+    successClose: func,
+    closeModal: func,
+    terms: string,
+    payment_source: string
+};
 
 export default CartChangePayment;

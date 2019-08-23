@@ -11,7 +11,7 @@ module InventoryServices
               "ii_id" => pii.inventory_item_id,
               "pii_id" => pii.id,
               "weight" => amount_needed_for_order,
-              "roast_date" => o.estimated_roast_date
+              "roast_date" => o.roast_date
             }
             item_quantities << iq
           end

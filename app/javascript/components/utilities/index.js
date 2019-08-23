@@ -14,6 +14,7 @@ import jsonToFormData from "./jsonToFormData";
 import noEmpties from "./noEmpties";
 import objectEqual from "./objectEqual";
 import params from "./params";
+import paramString from "./paramString";
 import pluralize from "./pluralize";
 import readCookie from "./readCookie";
 import registerServiceWorker from "./registerServiceWorker";
@@ -43,6 +44,7 @@ export {
     objectEqual,
     origin,
     params,
+    paramString,
     pluralize,
     readCookie,
     registerServiceWorker,

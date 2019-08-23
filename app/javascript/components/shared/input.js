@@ -58,6 +58,8 @@ const Input = props => {
 
             {inputType === "select" && (
                 <Form.Select
+                    selectOnBlur={false}
+                    selectOnNavigation={false}
                     {...rest}
                     placeholder={placeholder}
                     label={label}

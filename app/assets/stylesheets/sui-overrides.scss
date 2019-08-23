@@ -35,6 +35,13 @@
     color: $darkgreen;
 }
 
+.ui.pagination.menu .item {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    &.active {
+        padding-top: 12px;
+    }
+}
 // Progress bar
 .ui.progress .bar {
     min-width: 6px;

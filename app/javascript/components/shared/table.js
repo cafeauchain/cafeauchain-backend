@@ -2,19 +2,24 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 // TODO Remove semantic-ui-react-button-pagination
 // import Pagination from "semantic-ui-react-button-pagination";
-import { Pagination, Table, Ref, Loader, Dimmer } from "semantic-ui-react";
+import { Table, Ref, Loader, Dimmer } from "semantic-ui-react";
 
 /* eslint-disable */
-import { humanize, namespacer, sortBy, debounce } from "utilities";
+import Pagination from "shared/pagination";
+import { humanize, namespacer, sortBy, debounce, params as paramatize, paramString } from "utilities";
 /* eslint-enable */
 
 class FormattedTable extends Component {
     constructor(props) {
         super(props);
+        const string = window.location.search;
+        const params = paramatize(string);
+        const sorted = params.order_by ? params.order_by.split(" ") : [null, null];
+
         this.state = {
-            column: null,
+            column: sorted[0],
             data: props.data,
-            direction: null,
+            direction: sorted[1],
             scrollable: true
         };
         this.containerRef = React.createRef();
@@ -58,24 +63,45 @@ class FormattedTable extends Component {
     };
 
     handleSort = clickedColumn => () => {
+        const { pagination, onPageChange } = this.props;
         const { column, data, direction } = this.state;
         const {
             tableDefs: { fields }
         } = this.props;
         const item = fields.find(field => field.name === clickedColumn);
+
+        const newDirection = direction === "asc" ? "desc" : "asc";
+
+        if (pagination) {
+            onPageChange({ startLoader: true });
+            let string = window.location.search;
+            let params = paramatize(string);
+            const dir = column !== clickedColumn ? "asc" : newDirection;
+            params.order_by = clickedColumn + " " + dir;
+            params.page = 1;
+            const newParamString = paramString(params);
+            window.history.pushState(null, null, newParamString);
+            onPageChange({ paramString: newParamString });
+            if( column === clickedColumn ){
+                this.setState({
+                    direction: newDirection
+                });
+                return;
+            }
+        }
+
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
                 data: sortBy({ collection: data, id: clickedColumn, namespace: item.namespace }),
-                direction: "ascending"
+                direction: "asc"
             });
-
             return;
         }
 
         this.setState({
             data: data.reverse(),
-            direction: direction === "ascending" ? "descending" : "ascending"
+            direction: newDirection
         });
     };
 
@@ -104,11 +130,13 @@ class FormattedTable extends Component {
         const { data, column, direction, scrollable } = this.state;
         const { props: tableProps } = tableDefs;
 
+        const tableDirection = direction === "asc" ? "ascending" : direction === "desc" ? "descending" : null;
+
         return (
             <Ref innerRef={this.containerRef}>
                 <div>
                     <Dimmer active={loading} inverted>
-                        <Loader active={loading} size="large" style={{ top: 0, marginTop: 60 }} />
+                        <Loader active={loading} size="large" inline="centered" />
                     </Dimmer>
                     <div style={{ overflowX: scrollable ? "scroll" : "hidden" }}>
                         <Table {...tableProps}>
@@ -124,7 +152,7 @@ class FormattedTable extends Component {
                                 <Table.Row>
                                     {tableDefs.fields.map(field => (
                                         <Table.HeaderCell
-                                            sorted={column === field.name ? direction : null}
+                                            sorted={column === field.name ? tableDirection : null}
                                             onClick={tableProps.sortable ? this.handleSort(field.name) : null}
                                             key={field.key || field.name}
                                             title={field.title}
@@ -153,21 +181,14 @@ class FormattedTable extends Component {
                                     </Table.Row>
                                 )}
                             </Table.Body>
-                            {pagination && (
-                                <Table.Footer>
-                                    <Table.Row>
-                                        <Table.HeaderCell colSpan={tableDefs.fields.length} textAlign="right">
-                                            <Pagination
-                                                defaultActivePage={pagination.pagenumber}
-                                                totalPages={pagination.totalpages}
-                                                onPageChange={onPageChange}
-                                            />
-                                        </Table.HeaderCell>
-                                    </Table.Row>
-                                </Table.Footer>
-                            )}
                         </Table>
                     </div>
+                    {pagination && (
+                        <React.Fragment>
+                            <br />
+                            <Pagination pagination={pagination} onPageChange={onPageChange} />
+                        </React.Fragment> 
+                    )}
                 </div>
             </Ref>
         );
