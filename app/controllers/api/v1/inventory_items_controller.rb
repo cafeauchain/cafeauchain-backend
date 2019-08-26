@@ -59,7 +59,7 @@ class Api::V1::InventoryItemsController < ApplicationController
   end
 
   def set_roaster
-    validate_roaster(RoasterProfile.friendly.find(params[:roaster_profile_id]).id)
+    validate_roaster(RoasterProfile.friendly.find(params[:roaster_profile_id]))
   end
 
   def set_inventory_item

@@ -13,9 +13,9 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def validate_roaster(id)
+  def validate_roaster(roaster)
     @roaster = current_roaster || current_user.roaster_profile
-    if id != @roaster.id
+    if roaster != @roaster
       return render json: { message: "You don't have access to this record" }, status: 409
     end
   end
