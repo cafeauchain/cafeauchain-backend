@@ -1,11 +1,11 @@
 module Manage
   class LotsController < ApplicationController
     before_action :authenticate_user!
+    before_action :set_roaster
     before_action :set_lot, only: [:show]
-    before_action :set_roaster_profile, only: [:show, :index]
 
     def index
-      @lots = ActiveModel::SerializableResource.new(@roaster.open_lots, each_serializer: LotSerializer)
+      @lots = ActiveModelSerializers::SerializableResource.new(@roaster.open_lots, each_serializer: LotSerializer)
       render "manage/primary", locals: {
         roaster: @roaster,
         lots: @lots,
@@ -15,23 +15,29 @@ module Manage
     end
 
     def show
-      @lot = ActiveModel::SerializableResource.new(@lot, serializer: LotSerializer::SingleLotSerializer)
+      title = "View " + @lot[:name]
+      @lot = ActiveModelSerializers::SerializableResource.new(@lot, serializer: LotSerializer::SingleLotSerializer)
       render "manage/primary", locals: {
         roaster: @roaster,
         lot: @lot,
         component: "lots/single",
-        title: "View Lot"
+        title: title
       }
     end
 
     private
 
-    def set_roaster_profile
+    def set_roaster
       @roaster = current_user.roaster_profile
     end
 
     def set_lot
-      @lot = Lot.find(params[:id])
+      begin
+        @lot = @roaster.lots.find(params[:id])  
+      rescue
+        redirect_to manage_lots_path
+      end
+      
     end
   end
 end
