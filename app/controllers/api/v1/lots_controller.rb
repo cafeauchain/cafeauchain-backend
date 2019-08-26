@@ -88,11 +88,15 @@ module Api::V1
     private
 
     def set_roaster
-      @roaster = RoasterProfile.friendly.find(params[:roaster_profile_id])
+      validate_roaster(RoasterProfile.friendly.find(params[:roaster_profile_id]))
     end
 
     def set_lot
-      @lot = Lot.find(params[:id])
+      begin
+        @lot = @roaster.lots.find(params[:id])  
+      rescue => exception
+        return render json: { error: "Lot not found", exception: exception }, status: 404
+      end  
     end
 
     def lot_params
