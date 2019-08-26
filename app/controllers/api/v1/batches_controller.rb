@@ -4,24 +4,14 @@ module Api::V1
     before_action :set_batch, only: [:show, :update, :destroy]
     before_action :set_lot, only: [:create]
 
-    def index
-      if params[:status].present?
-        case params[:status]
-        when "queued"
-          status = 0
-        when "roast_in_progress"
-          status = 1
-        when "completed"
-          status = 2
-        when "bagged"
-          status = 3
-        else
-          status = 1
-        end
-        @batches = @roaster.batches.where(status: status)
+    def index      
+      @batches = @roaster.batches
+      if params[:status].nil?
+        @batches = @batches.where(status: :roast_in_progress)
       else
-        @batches = @roaster.batches.where(status: :roast_in_progress)
+        @batches = @batches.filter(params.slice(:status))
       end
+      
       render json: @batches, status: 200
     end
 
@@ -83,11 +73,19 @@ module Api::V1
     end
 
     def set_lot
-      @lot = Lot.find(params[:lot_id])
+      begin
+        @lot = @roaster.lots.find(params[:lot_id])  
+      rescue => exception
+        return render json: { error: "Lot not found", exception: exception }, status: 404
+      end
     end
 
     def set_batch
-      @batch = Batch.find(params[:id])
+      begin
+        @batch = @roaster.batches.find(params[:id])
+      rescue => exception
+        return render json: { error: "Batch not found", exception: exception }, status: 404
+      end
     end
 
     def batch_params
