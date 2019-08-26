@@ -5,7 +5,7 @@ module Manage
     before_action :set_customer, only: [:show]
 
     def show
-      customer = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
+      customer = ActiveModelSerializers::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
       render "manage/primary", locals: {
         roaster: @roaster,
         customer: customer,
@@ -16,7 +16,7 @@ module Manage
 
     def index
       @customers = @roaster.customer_profiles
-      @customers = ActiveModel::SerializableResource.new(@customers, each_serializer: CustomerSerializer, scope: @roaster)
+      @customers = ActiveModelSerializers::SerializableResource.new(@customers, each_serializer: CustomerSerializer, scope: @roaster)
       render "manage/primary", locals: {
         roaster: @roaster,
         customers: @customers,
