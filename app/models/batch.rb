@@ -21,6 +21,7 @@
 #
 
 class Batch < ApplicationRecord
+  include Filterable
   include ActiveModel::Validations
   validates_with BatchCheckAmountAvailableValidator
 
@@ -28,6 +29,8 @@ class Batch < ApplicationRecord
   belongs_to :inventory_item
 
   enum status: [:in_queue, :roast_in_progress, :roast_completed, :bagged_for_sale]
+
+  scope :status, -> (status) { status == "all" ? all : where( status: status ) }
 
   def batch_cost # starting weight
     starting_amount * lot.price_per_pound
