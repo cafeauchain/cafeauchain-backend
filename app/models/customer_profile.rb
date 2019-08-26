@@ -31,6 +31,9 @@ class CustomerProfile < ApplicationRecord
 
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } 
 
+  # TODO Why do I have to do this? How do I use a named value/symbol
+  scope :approved, -> { where('wholesale_profiles.onboard_status = ?', 5 ) }
+
   def primary_address
     self.addresses.find_by(primary_location: true)
   end

@@ -1,6 +1,7 @@
 module Manage
   class OrdersController < ApplicationController
     before_action :authenticate_user!
+    before_action :set_roaster
     before_action :set_order, only: [:show]
 
     def new
@@ -10,13 +11,12 @@ module Manage
           title: "No Customer Selected"
         }
       else
-        @roaster = current_user.roaster_profile
         wp = WholesaleProfile.where(roaster_profile: @roaster, customer_profile_id: params[:customer_profile_id]).first
         customer = wp.customer_profile
-        @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
+        @customer = ActiveModelSerializers::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
         @cart = Cart.find_by(wholesale_profile: wp)
-        @products = ActiveModel::SerializableResource.new(@roaster.products, each_serializer: ProductSerializer)
-        @serialized_cart = ActiveModel::SerializableResource.new(@cart, each_serializer: CartSerializer)
+        @products = ActiveModelSerializers::SerializableResource.new(@roaster.products, each_serializer: ProductSerializer)
+        @serialized_cart = ActiveModelSerializers::SerializableResource.new(@cart, each_serializer: CartSerializer)
         @cards = customer.cards
         render "manage/primary", locals: {
           isAssumedCustomer: true,
@@ -36,33 +36,36 @@ module Manage
 
     def show
       customer = @order.customer_profile
-      roaster = current_user.roaster_profile
-      @order = ActiveModel::SerializableResource.new(@order, serializer: OrderSerializer::SingleOrderSerializer)
-      @roaster_profile = ActiveModel::SerializableResource.new(roaster, serializer: RoasterSerializer)
-      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer, scope: roaster)
-      products = ActiveModel::SerializableResource.new(roaster.products, each_serializer: ProductSerializer)
+      title = "View Order ##{ @order.id }"
+      @order = ActiveModelSerializers::SerializableResource.new(@order, serializer: OrderSerializer::SingleOrderSerializer)
+      @roaster_profile = ActiveModelSerializers::SerializableResource.new(@roaster, serializer: RoasterSerializer)
+      @customer = ActiveModelSerializers::SerializableResource.new(customer, serializer: CustomerSerializer, scope: @roaster)
+      products = ActiveModelSerializers::SerializableResource.new(@roaster.products, each_serializer: ProductSerializer)
       render "manage/primary", locals: {
-        roaster: current_user.roaster_profile,
+        roaster: @roaster,
         profile: @roaster_profile,
         customer: @customer,
         order: @order,
         products: products,
         component: "wholesale/orders/order",
-        title: "View Order ##{ order.id }"
+        title: title
       }
     end
 
     def index
-      roaster = current_user.roaster_profile
       render "manage/primary", locals: {
-        roaster: roaster,
-        customers: roaster.customer_profiles,
+        roaster: @roaster,
+        customers: @roaster.customer_profiles.approved,
         component: "wholesale/orders/orders",
         title: "View Orders"
       }
     end
 
     private
+
+    def set_roaster
+      @roaster = current_user.roaster_profile
+    end
 
     def set_order
       @order = Order.find(params[:id])
