@@ -89,7 +89,7 @@ class ManualLotAdjustment extends Component {
                 </p>
 
                 <p>
-                    <Titler title="Green Amount Available" value={on_hand + " lbs"} bold />
+                    <Titler title="Green Amount Available" value={on_hand.toFixed(1) + " lbs"} bold />
                 </p>
 
                 <Input
