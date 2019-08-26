@@ -29,6 +29,8 @@ class CustomerProfile < ApplicationRecord
 
   has_one_attached :logo
 
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } 
+
   def primary_address
     self.addresses.find_by(primary_location: true)
   end
