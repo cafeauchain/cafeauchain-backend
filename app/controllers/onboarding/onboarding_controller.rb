@@ -4,12 +4,9 @@ module Onboarding
     before_action :set_roaster
 
     def profile
-      # profile = ActiveModel::SerializableResource.new(@roaster, serializer: RoasterSerializer)
       render "manage/primary", locals: {
         roaster: @roaster,
-        # profile: profile,
         user: current_user,
-        # loggedIn: user_signed_in?,
         title: 'Roaster Onboarding | Create Profile',
         component: 'roaster_onboarding/profile'
       }
@@ -17,7 +14,7 @@ module Onboarding
 
     def lots
       lots = @roaster.lots
-      @lots = ActiveModel::SerializableResource.new(lots, each_serializer: LotSerializer)
+      @lots = ActiveModelSerializers::SerializableResource.new(lots, each_serializer: LotSerializer)
       render "manage/primary", locals: {
         roaster: @roaster,
         lots: @lots,
