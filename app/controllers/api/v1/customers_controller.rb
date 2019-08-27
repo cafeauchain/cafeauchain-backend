@@ -82,7 +82,7 @@ module Api::V1
           end
         # Roaster/Admin Side
         else
-          @serCustomer = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
+          @serCustomer = ActiveModelSerializers::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
           render json: { customer: @serCustomer }, status: 200
         end
       else
@@ -166,7 +166,7 @@ module Api::V1
         @customer.addresses.create(address)
       end
 
-      @serCust = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
+      @serCust = ActiveModelSerializers::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
 
       render json: { customer: @serCust }, status: 200 
     end
@@ -175,7 +175,7 @@ module Api::V1
       wp = @customer.wholesale_profiles.where(roaster_profile: @roaster)
       wp.update(onboard_status: params[:status])
       if params[:status] == 'approved'
-        @serCust = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
+        @serCust = ActiveModelSerializers::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
         render json: {customer: @serCust}, status: 200
       else
         render json: {redirect: true, redirect_url: send("shop_onboard_#{params[:status]}_path")}, status: 200
