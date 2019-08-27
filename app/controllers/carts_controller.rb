@@ -2,7 +2,7 @@ class CartsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @serialized_cart = ActiveModel::SerializableResource.new(@cart, each_serializer: CartSerializer)
+    @serialized_cart = ActiveModelSerializers::SerializableResource.new(@cart, each_serializer: CartSerializer)
     wp = current_user.customer_profile.wholesale_profiles.find_by(roaster_profile: current_roaster)
     @customer = current_user.customer_profile
     # TODO Once shipping is working correctly, handle the customers default setting
@@ -10,7 +10,7 @@ class CartsController < ApplicationController
     @rates = ShippingServices::GetRates.get_rate_estimates(@cart.id, wp.id)
     @local_rates = ShippingServices::GetLocalRates.get_rates(current_roaster)
     @all_rates = (@rates + @local_rates).sort_by{|ar| ar[:retail_rate].to_f}
-    @profile = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer, scope: current_roaster)
+    @profile = ActiveModelSerializers::SerializableResource.new(@customer, serializer: CustomerSerializer, scope: current_roaster)
     @cards = @customer.cards
 
     render "customer/base", locals: {
