@@ -20,7 +20,7 @@ module Shop
         profile: @customer,
         cart: @cart,
         stripeApiKey: Rails.application.credentials[Rails.env.to_sym][:stripe_api_key],
-        cards: customer.cards,
+        cards: current_user.customer_profile.cards,
         scripts: ["https://js.stripe.com/v3/"],
         component: "shop/customer/paymentWrapper",
         title: "Payment | Customer Profile"
