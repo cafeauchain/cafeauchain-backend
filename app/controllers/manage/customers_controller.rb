@@ -5,12 +5,13 @@ module Manage
     before_action :set_customer, only: [:show]
 
     def show
-      customer = ActiveModelSerializers::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
+      title = customer.company_name
+      @customer = ActiveModelSerializers::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
       render "manage/primary", locals: {
         roaster: @roaster,
-        customer: customer,
+        customer: @customer,
         component: "wholesale/customer",
-        title: @customer.company_name
+        title: title
       }
     end
 
