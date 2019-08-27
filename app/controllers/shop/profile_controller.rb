@@ -6,7 +6,7 @@ module Shop
 
     def index
       render "customer/base", locals: {
-        roaster: @roaster_profile,
+        roaster: @roaster,
         profile: @customer,
         cart: @cart,
         component: "shop/customer/edit",
