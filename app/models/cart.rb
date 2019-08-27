@@ -23,13 +23,6 @@ class Cart < ApplicationRecord
 
   accepts_nested_attributes_for :cart_items, reject_if: ->(attributes){ attributes['quantity'].blank? }, allow_destroy: true
 
-  def shipping_rates
-    @rates = ShippingServices::GetRates.get_rate_estimates(self.id, self.wholesale_profile_id)
-    @roaster = self.wholesale_profile.roaster_profile
-    @local_rates = ShippingServices::GetLocalRates.get_rates(@roaster)
-    @all_rates = (@rates + @local_rates).sort_by{|ar| ar[:retail_rate].to_f}
-  end
-
   # Moved to CreateCartItem Service
   # def add_to_cart(product_variant_id, quantity)
   #   current_item = cart_items.find_by(product_variant_id: product_variant_id)
