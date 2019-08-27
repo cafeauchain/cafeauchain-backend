@@ -7,15 +7,15 @@ module Shop
     before_action :set_cart
 
     def handletoken
-      @roaster = @roaster_profile
-      @serialized_cart = ActiveModel::SerializableResource.new(@cart, each_serializer: CartSerializer)
+      @roaster = @roaster
+      @serialized_cart = ActiveModelSerializers::SerializableResource.new(@cart, each_serializer: CartSerializer)
       redirect_to root_path
     end
 
     private
 
     def set_roaster
-      @roaster_profile = current_roaster || RoasterProfile.find_by(subdomain: request.subdomain)
+      @roaster = current_roaster || RoasterProfile.find_by(subdomain: request.subdomain)
     end
 
     def set_cac_token_auth
