@@ -4,7 +4,7 @@ module Manage
     before_action :set_roaster
 
     def dashboard
-      lots = ActiveModel::SerializableResource.new(@roaster.open_lots, each_serializer: LotSerializer)
+      lots = ActiveModelSerializers::SerializableResource.new(@roaster.open_lots, each_serializer: LotSerializer)
       batches = @roaster.batches.where(status: :roast_in_progress)
       batches = ActiveModel::SerializableResource.new(batches, each_serializer: BatchSerializer)
       render "manage/primary", locals: {
@@ -18,7 +18,7 @@ module Manage
     end
 
     def inventory
-      lots = ActiveModel::SerializableResource.new(@roaster.lots, each_serializer: LotSerializer)
+      lots = ActiveModelSerializers::SerializableResource.new(@roaster.lots, each_serializer: LotSerializer)
       render "manage/primary", locals: {
         roaster_profile_id: @roaster.slug,
         roaster: @roaster,
@@ -42,7 +42,7 @@ module Manage
 
     def subscription
       subscription = Subscription.includes(:subscription_items).find_by(user: @roaster.owner)
-      @subscription = ActiveModel::SerializableResource.new(subscription)
+      @subscription = ActiveModelSerializers::SerializableResource.new(subscription)
       @cards = subscription.cards
       render "manage/primary", locals: {
         roaster: @roaster,
