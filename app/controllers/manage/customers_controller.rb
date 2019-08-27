@@ -1,27 +1,42 @@
 module Manage
   class CustomersController < ApplicationController
     before_action :authenticate_user!
+    before_action :set_roaster
+    before_action :set_customer, only: [:show]
 
     def show
-      customer = CustomerProfile.find(params[:id])
-      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: current_user.roaster_profile)
+      title = customer.company_name
+      @customer = ActiveModelSerializers::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
       render "manage/primary", locals: {
-        roaster: current_user.roaster_profile,
+        roaster: @roaster,
         customer: @customer,
         component: "wholesale/customer",
-        title: customer.company_name
+        title: title
       }
     end
 
     def index
-      customers = current_user.roaster_profile.customer_profiles
-      @customers = ActiveModel::SerializableResource.new(customers, each_serializer: CustomerSerializer, scope: current_user.roaster_profile)
+      @customers = @roaster.customer_profiles
+      @customers = ActiveModelSerializers::SerializableResource.new(@customers, each_serializer: CustomerSerializer, scope: @roaster)
       render "manage/primary", locals: {
-        roaster: current_user.roaster_profile,
+        roaster: @roaster,
         customers: @customers,
         component: "wholesale/customers",
         title: "View Customers"
       }
+    end
+
+    private
+    def set_roaster
+      @roaster = current_user.roaster_profile
+    end
+
+    def set_customer
+      begin
+        @customer = @roaster.customer_profiles.find(params[:id])
+      rescue
+        redirect_to manage_customers_path
+      end
     end
 
   end

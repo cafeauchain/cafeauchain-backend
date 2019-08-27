@@ -13,38 +13,42 @@ module Api::V1
     end
 
     def create
-      existing_user = User.find_by(email: params[:email])
-      existing_customer = CustomerProfile.find_by(email: params[:email])
-      
-      if existing_user.blank?
-        user = User.create(email: params[:email], name: params[:name], password: @roaster.slug)
-      else
-        user = existing_user
-      end
+      begin
+        existing_user = User.find_by(email: params[:email])
+        existing_customer = CustomerProfile.find_by(email: params[:email])
+        
+        if existing_user.blank?
+            user = User.create!(email: params[:email], name: params[:name], password: @roaster.slug)  
+        else
+          user = existing_user
+        end
 
-      if existing_customer.blank?
-        customer = CustomerProfile.create(owner: user, email: params[:email], company_name: params[:company_name])
-      else
-        customer = existing_customer
-      end
-      
-      existing_wholesale = WholesaleProfile.find_by(roaster_profile: @roaster, customer_profile: customer)
-      if existing_wholesale.blank?
-        user.update(customer_profile: customer)
-        wp = customer.wholesale_profiles.create(roaster_profile: @roaster)
-        wp.create_cart
-        wp.update(onboard_status: 'profile')
+        if existing_customer.blank?
+          customer = CustomerProfile.create!(owner: user, email: params[:email], company_name: params[:company_name])
+        else
+          customer = existing_customer
+        end
+        
+        existing_wholesale = WholesaleProfile.find_by(roaster_profile: @roaster, customer_profile: customer)
+        if existing_wholesale.blank?
+          user.update(customer_profile: customer)
+          wp = customer.wholesale_profiles.create(roaster_profile: @roaster)
+          wp.create_cart
+          wp.update(onboard_status: 'profile')
 
-        # Send Welcome Email
-        user[:roaster_profile_id] = @roaster.id
-        user.send_reset_password_instructions
-        # End Send Welcome Email
+          # Send Welcome Email
+          user[:roaster_profile_id] = @roaster.id
+          user.send_reset_password_instructions
+          # End Send Welcome Email
 
-        @customers = @roaster.customer_profiles
-        render json: @customers, status: 200, each_serializer: CustomerSerializer, scope: @roaster
-      else
-        customer.errors.add(:customer, "already exists")
-        render json: customer.errors.full_messages, status: 409
+          @customers = @roaster.customer_profiles
+          render json: @customers, status: 200, each_serializer: CustomerSerializer, scope: @roaster
+        else
+          customer.errors.add(:customer, "already exists")
+          render json: customer.errors.full_messages, status: 409
+        end
+      rescue => exception
+        render json: [exception], status: 422
       end
     end
 
@@ -78,7 +82,7 @@ module Api::V1
           end
         # Roaster/Admin Side
         else
-          @serCustomer = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
+          @serCustomer = ActiveModelSerializers::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
           render json: { customer: @serCustomer }, status: 200
         end
       else
@@ -162,7 +166,7 @@ module Api::V1
         @customer.addresses.create(address)
       end
 
-      @serCust = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
+      @serCust = ActiveModelSerializers::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
 
       render json: { customer: @serCust }, status: 200 
     end
@@ -171,7 +175,7 @@ module Api::V1
       wp = @customer.wholesale_profiles.where(roaster_profile: @roaster)
       wp.update(onboard_status: params[:status])
       if params[:status] == 'approved'
-        @serCust = ActiveModel::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
+        @serCust = ActiveModelSerializers::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
         render json: {customer: @serCust}, status: 200
       else
         render json: {redirect: true, redirect_url: send("shop_onboard_#{params[:status]}_path")}, status: 200
@@ -186,7 +190,7 @@ module Api::V1
 
     def process_payment
       begin
-        @order = Order.find(params[:order_id])
+        @order = @customer.orders.find(params[:order_id])
         if !params[:card].nil?
           StripeServices::CreateInvoiceCharge.charge(@order.invoice, params[:card], true)  
         else
@@ -210,10 +214,14 @@ module Api::V1
     end
 
     def set_customer
-      if params[:customer_id].present?
-        @customer = CustomerProfile.find(params[:customer_id])
-      else
-        @customer = CustomerProfile.find(params[:id])
+      begin
+        if params[:customer_id].present?
+          @customer = @roaster.customer_profiles.find(params[:customer_id])
+        else
+          @customer = @roaster.customer_profiles.find(params[:id]) 
+        end
+      rescue => exception
+        return render json: { error: "Customer not found", exception: exception }, status: 404
       end
       
     end

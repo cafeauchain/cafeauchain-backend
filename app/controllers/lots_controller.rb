@@ -4,22 +4,25 @@ class LotsController < ApplicationController
   before_action :set_roaster_profile, only: [:show, :index]
 
   def index
-    @lots = ActiveModel::SerializableResource.new(@roaster_profile.lots, each_serializer: LotSerializer)
-    # render component: 'lots', props: { lots: @lots }
+    @lots = ActiveModelSerializers::SerializableResource.new(@roaster.lots, each_serializer: LotSerializer)
   end
 
   def show
-    @lot = ActiveModel::SerializableResource.new(@lot, serializer: LotSerializer::SingleLotSerializer)
-    # render component: 'lots', props: @lot
+    @lot = ActiveModelSerializers::SerializableResource.new(@lot, serializer: LotSerializer::SingleLotSerializer)
   end
 
   private
 
   def set_roaster_profile
-    @roaster_profile = RoasterProfile.friendly.find(params[:roaster_profile_id])
+    @roaster = RoasterProfile.friendly.find(params[:roaster_profile_id])
   end
 
   def set_lot
-    @lot = Lot.find(params[:id])
+    begin
+      @lot = @roaster.lots.find(params[:id])  
+    rescue => exception
+      return render json: { error: "Lot not found", exception: exception }, status: 404
+    end
+    
   end
 end

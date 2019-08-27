@@ -45,7 +45,7 @@ module Api::V1
     private
 
     def set_roaster
-      @roaster = RoasterProfile.find(params[:roaster_profile_id])
+      validate_roaster(RoasterProfile.find(params[:roaster_profile_id]))
     end
   end
 end

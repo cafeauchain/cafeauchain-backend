@@ -2,12 +2,11 @@ module Shop
   class OnboardController < ApplicationController
     before_action :authenticate_user!
     before_action :set_roaster
+    before_action :set_customer
 
     def profile
-      customer = current_user.customer_profile
-      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster_profile)
       render "customer/base", locals: {
-        roaster: @roaster_profile,
+        roaster: @roaster,
         profile: @customer,
         cart: @cart,
         component: "shop/onboard/profile",
@@ -16,10 +15,8 @@ module Shop
     end
 
     def addresses
-      customer = current_user.customer_profile
-      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster_profile)
       render "customer/base", locals: {
-        roaster: @roaster_profile,
+        roaster: @roaster,
         profile: @customer,
         cart: @cart,
         component: "shop/onboard/addresses",
@@ -28,10 +25,8 @@ module Shop
     end
 
     def payment
-      customer = current_user.customer_profile
-      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster_profile)
       render "customer/base", locals: {
-        roaster: @roaster_profile,
+        roaster: @roaster,
         profile: @customer,
         cart: @cart,
         stripeApiKey: Rails.application.credentials[Rails.env.to_sym][:stripe_api_key],
@@ -44,11 +39,9 @@ module Shop
 
     # Currently disabled
     def shipping
-      customer = current_user.customer_profile
-      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster_profile)
       methods = @roaster_profile.shipping_methods
       render "customer/base", locals: {
-        roaster: @roaster_profile,
+        roaster: @roaster,
         profile: @customer,
         cart: @cart,
         shipping_methods: methods,
@@ -58,10 +51,8 @@ module Shop
     end
     
     def onboard_completed
-      customer = current_user.customer_profile
-      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster_profile)
       render "customer/base", locals: {
-        roaster: @roaster_profile,
+        roaster: @roaster,
         profile: @customer,
         cart: @cart,
         component: "shop/onboard/complete",
@@ -72,7 +63,12 @@ module Shop
     private
 
     def set_roaster
-      @roaster_profile = current_roaster || RoasterProfile.find_by(subdomain: request.subdomain)
+      @roaster = current_roaster || RoasterProfile.find_by(subdomain: request.subdomain)
+    end
+
+    def set_customer
+      customer = current_user.customer_profile
+      @customer = ActiveModelSerializers::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
     end
   end
 end
