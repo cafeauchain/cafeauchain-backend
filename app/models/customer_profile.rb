@@ -29,6 +29,11 @@ class CustomerProfile < ApplicationRecord
 
   has_one_attached :logo
 
+  validates :email, presence: true, 'valid_email_2/email': true
+
+  # TODO Why do I have to do this? How do I use a named value/symbol
+  scope :approved, -> { where('wholesale_profiles.onboard_status = ?', 5 ) }
+
   def primary_address
     self.addresses.find_by(primary_location: true)
   end

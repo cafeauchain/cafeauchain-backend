@@ -26,10 +26,7 @@ const fields = {
     ],
     props: {
         celled: true,
-        striped: true,
-        selectable: true,
         sortable: true,
-        singleLine: true
     }
 };
 

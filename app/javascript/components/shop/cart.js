@@ -7,6 +7,7 @@ import "./styles.scss";
 /* eslint-disable */
 import Flex from "shared/flex";
 
+import EmptyCart from "shop/cart/emptyCart";
 import ProductForm from "shop/productForm";
 import CartItemDetails from "shop/cartItemDetails";
 import CartDetails from "shop/cartDetails";
@@ -19,6 +20,11 @@ class Cart extends React.PureComponent {
     render() {
         const { cart } = this.props;
         const { cart_items: items = [], roaster_name = "" } = cart.attributes;
+        if( !items.length ){
+            return (
+                <EmptyCart roaster_name={roaster_name} />
+            );
+        }
         return (
             <Flex spacing="20" wrap>
                 <div flex="fill">

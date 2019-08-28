@@ -34,9 +34,15 @@ module Api::V1
     end
 
     def get_rates
-      @order = Order.find(params[:order_id])
-      @roaster = @order.roaster_profile
-      @rates = ShippingServices::GetRates.get_rate_estimates(params[:order_id], params[:wholesale_profile_id], true)
+      if !params[:cart_id].nil?
+        @roaster = current_roaster
+        @rates = ShippingServices::GetRates.get_rate_estimates(params[:cart_id], params[:wholesale_profile_id])
+        
+      else
+        @order = Order.find(params[:order_id])
+        @roaster = @order.roaster_profile
+        @rates = ShippingServices::GetRates.get_rate_estimates(params[:order_id], params[:wholesale_profile_id], true)
+      end
       @local_rates = ShippingServices::GetLocalRates.get_rates(@roaster)
       @rates = @rates.concat(@local_rates)
       render json: @rates, status: 200
@@ -45,7 +51,7 @@ module Api::V1
     private
 
     def set_roaster
-      @roaster = RoasterProfile.find(params[:roaster_profile_id])
+      validate_roaster(RoasterProfile.find(params[:roaster_profile_id]))
     end
   end
 end

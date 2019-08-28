@@ -36,6 +36,9 @@ class Order extends React.PureComponent {
             color: invoice_status === "paid_in_full" ? "black" : "green"
         };
 
+        const detailBox = { textAlign: "right", minWidth: 240, flexShrink: 0, maxWidth: 300, marginLeft: "auto" };
+        const totalBox = { ...detailBox, marginTop: "auto" };
+
         return (
             <div>
                 <Segment>
@@ -43,11 +46,11 @@ class Order extends React.PureComponent {
                     <a href="/shop/orders">Back to All Orders</a>
                     <Segment style={{ maxWidth: 900, margin: "40px auto" }}>
                         <Label size="large" ribbon="right" content={payment_label.text} color={payment_label.color} />
-                        <Flex spacing="30" spacebetween>
+                        <Flex spacing="30" spacebetween wrap>
                             <div flex="66">
                                 <Addresses roaster={roasterAtts} customer={customerAtts} />
                             </div>
-                            <div flex="33" style={{ textAlign: "right" }}>
+                            <div flex="33" style={detailBox}>
                                 <Details attributes={attributes} id={id} isCustomer />
                                 <Divider />
                                 <PaymentDetails attributes={attributes} />
@@ -56,7 +59,7 @@ class Order extends React.PureComponent {
                         <br />
                         <Table tableDefs={tableDefs} data={sorted} />
                         <br />
-                        <Flex spacing="30" spacebetween>
+                        <Flex spacing="30" spacebetween wrap>
                             <div flex="66">
                                 {attributes.notes && (
                                     <React.Fragment>
@@ -67,7 +70,7 @@ class Order extends React.PureComponent {
                                     </React.Fragment>
                                 )} 
                             </div>
-                            <div flex="33" style={{ textAlign: "right", marginTop: "auto" }}>
+                            <div flex="33" style={totalBox}>
                                 <Totals attributes={attributes} isCustomer />
                             </div>
                         </Flex>

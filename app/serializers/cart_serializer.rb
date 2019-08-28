@@ -18,7 +18,7 @@
 #
 
 class CartSerializer < ActiveModel::Serializer
-  attributes :id, :cart_items, :total_price, :total_line_items, :total_weight, :total_items, :roaster_name, :shipping_rates
+  attributes :id, :cart_items, :total_price, :total_line_items, :total_weight, :total_items, :roaster_name, :tax_rate
 
   def cart_items
     self.object.cart_items.map do |item|

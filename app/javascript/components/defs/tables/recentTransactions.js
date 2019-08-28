@@ -14,10 +14,7 @@ const tableDefinition = {
     ],
     props: {
         celled: true,
-        striped: true,
-        selectable: true,
-        sortable: true,
-        singleLine: true
+        sortable: true
     }
 };
 

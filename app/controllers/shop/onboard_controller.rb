@@ -2,13 +2,12 @@ module Shop
   class OnboardController < ApplicationController
     before_action :authenticate_user!
     before_action :set_roaster
+    before_action :set_customer
 
     def profile
-      customer = current_user.customer_profile
-      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster_profile)
       render "customer/base", locals: {
-        roaster: @roaster_profile,
-        profile: @customer,
+        roaster: @roaster,
+        profile: serialize_customer(@customer),
         cart: @cart,
         component: "shop/onboard/profile",
         title: "Customer Onboarding | Profile"
@@ -16,11 +15,9 @@ module Shop
     end
 
     def addresses
-      customer = current_user.customer_profile
-      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster_profile)
       render "customer/base", locals: {
-        roaster: @roaster_profile,
-        profile: @customer,
+        roaster: @roaster,
+        profile: serialize_customer(@customer),
         cart: @cart,
         component: "shop/onboard/addresses",
         title: "Customer Onboarding | Addresses"
@@ -28,14 +25,12 @@ module Shop
     end
 
     def payment
-      customer = current_user.customer_profile
-      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster_profile)
       render "customer/base", locals: {
-        roaster: @roaster_profile,
-        profile: @customer,
+        roaster: @roaster,
+        profile: serialize_customer(@customer),
         cart: @cart,
         stripeApiKey: Rails.application.credentials[Rails.env.to_sym][:stripe_api_key],
-        cards: customer.cards,
+        cards: @customer.cards,
         scripts: ["https://js.stripe.com/v3/"],
         component: "shop/onboard/payment",
         title: "Customer Onboarding | Payment"
@@ -44,12 +39,10 @@ module Shop
 
     # Currently disabled
     def shipping
-      customer = current_user.customer_profile
-      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster_profile)
       methods = @roaster_profile.shipping_methods
       render "customer/base", locals: {
-        roaster: @roaster_profile,
-        profile: @customer,
+        roaster: @roaster,
+        profile: serialize_customer(@customer),
         cart: @cart,
         shipping_methods: methods,
         component: "shop/onboard/shipping",
@@ -58,11 +51,9 @@ module Shop
     end
     
     def onboard_completed
-      customer = current_user.customer_profile
-      @customer = ActiveModel::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster_profile)
       render "customer/base", locals: {
-        roaster: @roaster_profile,
-        profile: @customer,
+        roaster: @roaster,
+        profile: serialize_customer(@customer),
         cart: @cart,
         component: "shop/onboard/complete",
         title: "Customer Onboarding | Registration Complete"
@@ -72,7 +63,16 @@ module Shop
     private
 
     def set_roaster
-      @roaster_profile = current_roaster || RoasterProfile.find_by(subdomain: request.subdomain)
+      @roaster = current_roaster || RoasterProfile.find_by(subdomain: request.subdomain)
+    end
+
+    def set_customer
+      @customer = current_user.customer_profile
+    end
+
+    def serialize_customer(customer)
+      # TODO Come back to this
+      ActiveModelSerializers::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
     end
   end
 end

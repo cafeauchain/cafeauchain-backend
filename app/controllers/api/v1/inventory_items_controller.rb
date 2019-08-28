@@ -1,4 +1,5 @@
 class Api::V1::InventoryItemsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_roaster
   before_action :set_inventory_item, only: [:update, :destroy]
   before_action :set_lot, only: [:create]
@@ -49,15 +50,24 @@ class Api::V1::InventoryItemsController < ApplicationController
   private
 
   def set_lot
-    @lot = Lot.find(params[:lot_id])
+    begin
+      @lot = @roaster.lots.find(params[:lot_id])  
+    rescue => exception
+      return render json: { error: "Lot not found", exception: exception }, status: 404
+    end
+    
   end
 
   def set_roaster
-    @roaster = RoasterProfile.friendly.find(params[:roaster_profile_id])
+    validate_roaster(RoasterProfile.friendly.find(params[:roaster_profile_id]))
   end
 
   def set_inventory_item
-    @inventory_item = InventoryItem.find(params[:id])
+    begin
+      @inventory_item = @roaster.inventory_item.find(params[:id])  
+    rescue => exception
+      return render json: { error: "Inventory Item not found", exception: exception }, status: 404
+    end
   end
 
   def inventory_item_params

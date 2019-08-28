@@ -16,12 +16,6 @@ import { requester, url as API_URL } from "utilities/apiUtils";
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
-// const Wrapper = props => (
-//     <Context>
-//         {ctx => <ProductForm {...props} loading={ctx.loading} userId={ctx.userId} getCtxData={ctx.getData} />}
-//     </Context>
-// );
-
 class ProductForm extends React.Component {
     static propTypes = () => {
         const { array, oneOfType, string, number } = PropTypes;
@@ -44,6 +38,15 @@ class ProductForm extends React.Component {
             added: false,
             loading: false
         };
+    }
+
+    componentDidUpdate(props){
+        const { cart: { attributes: { total_weight: old_weight } }, inCart, updateContext } = props;
+        const { cart: { attributes: { total_weight: new_weight } } } = this.props;
+        if( old_weight !== new_weight && inCart ){
+            console.log( 'trigger an update for rates' );
+            updateContext({ fetchRates: true });
+        }
     }
 
     handleInputChange = (event, { value, name, checked }) => {

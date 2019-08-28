@@ -13,6 +13,13 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def validate_roaster(roaster)
+    @roaster = current_roaster || current_user.roaster_profile
+    if roaster != @roaster
+      return render json: { message: "You don't have access to this record" }, status: 409
+    end
+  end
+
   def pagination(records)
     page = params[:page] || 1
     limit = params[:limit] || 10

@@ -1,10 +1,14 @@
 class Api::V1::ProductsController < ApplicationController
   before_action :set_roaster, except: [:delete_image]
-  before_action :set_product, only: [:update, :add_images]
+  before_action :set_product, only: [:update, :add_images, :show]
 
   def index
-    @products = Product.where(roaster_profile: @roaster)
+    @products = @roaster.products
     render json: @products, status: 200
+  end
+
+  def show
+    render json: @product, status: 200
   end
 
   def create
@@ -47,10 +51,14 @@ class Api::V1::ProductsController < ApplicationController
   private
 
   def set_product
-    @product = Product.find(params[:id])
+    begin
+      @product = @roaster.products.find(params[:id])  
+    rescue => exception
+      return render json: { error: "Product not found", exception: exception }, status: 404
+    end
   end
 
   def set_roaster
-    @roaster = RoasterProfile.friendly.find(params[:roaster_profile_id])
+    validate_roaster(RoasterProfile.friendly.find(params[:roaster_profile_id]))
   end
 end
