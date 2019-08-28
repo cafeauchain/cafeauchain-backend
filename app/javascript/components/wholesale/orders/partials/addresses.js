@@ -18,7 +18,7 @@ class OrderAddress extends React.Component {
         const { primary_address: raddress } = roaster;
         const { primary_address: caddress } = customer;
         return (
-            <Item.Group>
+            <Item.Group unstackable>
                 <Item>
                     <Item.Image size="tiny" src={roasterLogo} />
                     <Item.Content verticalAlign="top">
