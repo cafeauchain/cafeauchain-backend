@@ -37,10 +37,7 @@ const tableDefinition = {
         { name: "roast_date", namespace: "attributes", formatter: FormattedDate }
     ],
     props: {
-        celled: true,
-        striped: true,
-        selectable: true,
-        singleLine: true
+        celled: true
     }
 };
 

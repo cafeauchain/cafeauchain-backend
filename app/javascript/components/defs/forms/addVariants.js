@@ -41,10 +41,7 @@ const tableDefs = {
     ],
     props: {
         celled: true,
-        striped: true,
-        selectable: true,
         sortable: true,
-        singleLine: true,
         verticalAlign: "top"
     }
 };

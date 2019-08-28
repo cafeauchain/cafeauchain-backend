@@ -26,10 +26,7 @@ const tableDefinition = {
         { name: "par_level", namespace: "attributes", formatter: AsNumber, textAlign: "right" },
     ],
     props: {
-        celled: true,
-        striped: true,
-        selectable: true,
-        singleLine: true
+        celled: true
     }
 };
 
