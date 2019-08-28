@@ -185,10 +185,10 @@ class Order extends React.Component {
                                 <OrderAddresses roaster={roasterAtts} customer={customerAtts} />
                             </div>
                             <div flex="33" style={{ textAlign: "right" }}>
-                                <React.Fragment>
+                                <div style={{ position: "relative"}}>
                                     <Dimmer active={isEditable} inverted />
                                     <OrderDetails attributes={attributes} id={id} />
-                                </React.Fragment>
+                                </div>
                             </div>
                         </Flex>
                         <br />
@@ -265,10 +265,10 @@ class Order extends React.Component {
                                 )} 
                             </div>
                             <div flex="33" style={{ textAlign: "right", marginTop: "auto" }}>
-                                <React.Fragment>
+                                <div style={{ position: "relative" }}>
                                     <Dimmer active={isEditable} inverted />
                                     <OrderTotals attributes={attributes} />
-                                </React.Fragment>
+                                </div>
                             </div>
                         </Flex>
                     </Segment>
