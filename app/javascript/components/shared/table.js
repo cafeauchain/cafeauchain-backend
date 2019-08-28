@@ -128,7 +128,8 @@ class FormattedTable extends Component {
     render() {
         const { tableDefs, pagination, onPageChange, onClick, loading } = this.props;
         const { data, column, direction, scrollable } = this.state;
-        const { props: tableProps } = tableDefs;
+        let { props: tableProps } = tableDefs;
+        tableProps = { unstackable: true, singleLine: true, striped: true, selectable: true, ...tableProps };
 
         const tableDirection = direction === "asc" ? "ascending" : direction === "desc" ? "descending" : null;
 

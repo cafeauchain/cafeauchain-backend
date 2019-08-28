@@ -32,7 +32,7 @@ class Addresses extends Component {
     }
     
     render(){
-        const { profile, updateContext } = this.props;
+        const { profile, updateContext, successClose, closeModal, inCart } = this.props;
         const { attributes: { addresses } } = profile;
         const { adding } = this.state;
         return (
@@ -46,7 +46,10 @@ class Addresses extends Component {
                             address={address}
                             profileId={profile.id}
                             updateContext={updateContext}
+                            successClose={successClose}
+                            closeModal={closeModal}
                             resetStatus={this.resetStatus}
+                            inCart
                         />
                     ))}
                     {adding && (
@@ -54,7 +57,10 @@ class Addresses extends Component {
                             address={defaultAddress}
                             profileId={profile.id}
                             updateContext={updateContext}
+                            successClose={successClose}
+                            closeModal={closeModal}
                             resetStatus={this.resetStatus}
+                            inCart
                         />
                     )}
                     {!adding && <Button content="Add Address" color="blue" onClick={this.addAddress} />}
@@ -66,7 +72,9 @@ class Addresses extends Component {
 const { object, func } = PropTypes;
 Addresses.propTypes = {
     profile: object,
-    updateContext: func
+    updateContext: func,
+    closeModal: func,
+    successClose: func
 };
 
 export default withContext(Addresses);

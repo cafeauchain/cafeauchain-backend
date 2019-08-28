@@ -7,7 +7,7 @@ module Shop
     def profile
       render "customer/base", locals: {
         roaster: @roaster,
-        profile: @customer,
+        profile: serialize_customer(@customer),
         cart: @cart,
         component: "shop/onboard/profile",
         title: "Customer Onboarding | Profile"
@@ -17,7 +17,7 @@ module Shop
     def addresses
       render "customer/base", locals: {
         roaster: @roaster,
-        profile: @customer,
+        profile: serialize_customer(@customer),
         cart: @cart,
         component: "shop/onboard/addresses",
         title: "Customer Onboarding | Addresses"
@@ -27,10 +27,10 @@ module Shop
     def payment
       render "customer/base", locals: {
         roaster: @roaster,
-        profile: @customer,
+        profile: serialize_customer(@customer),
         cart: @cart,
         stripeApiKey: Rails.application.credentials[Rails.env.to_sym][:stripe_api_key],
-        cards: customer.cards,
+        cards: @customer.cards,
         scripts: ["https://js.stripe.com/v3/"],
         component: "shop/onboard/payment",
         title: "Customer Onboarding | Payment"
@@ -42,7 +42,7 @@ module Shop
       methods = @roaster_profile.shipping_methods
       render "customer/base", locals: {
         roaster: @roaster,
-        profile: @customer,
+        profile: serialize_customer(@customer),
         cart: @cart,
         shipping_methods: methods,
         component: "shop/onboard/shipping",
@@ -53,7 +53,7 @@ module Shop
     def onboard_completed
       render "customer/base", locals: {
         roaster: @roaster,
-        profile: @customer,
+        profile: serialize_customer(@customer),
         cart: @cart,
         component: "shop/onboard/complete",
         title: "Customer Onboarding | Registration Complete"
@@ -67,8 +67,12 @@ module Shop
     end
 
     def set_customer
-      customer = current_user.customer_profile
-      @customer = ActiveModelSerializers::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
+      @customer = current_user.customer_profile
+    end
+
+    def serialize_customer(customer)
+      # TODO Come back to this
+      ActiveModelSerializers::SerializableResource.new(customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
     end
   end
 end

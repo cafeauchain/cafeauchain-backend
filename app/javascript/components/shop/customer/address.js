@@ -7,6 +7,7 @@ import AddressForm from "shared/addresses"
 import Flex from "shared/flex";
 import Input from "shared/input";
 import { requester, url as API_URL } from "utilities/apiUtils";
+import styles from "stylesheets/variables.scss";
 /* eslint-enable */
 
 class Address extends React.Component {
@@ -38,13 +39,15 @@ class Address extends React.Component {
         const { profileId } = this.props;
         const url = API_URL + "/customers/" + profileId + "/update_address";
         const response = await requester({ url, body: {...details} });
-        this.afterSubmit(response, url);
+        this.afterSubmit(response);
     }
 
-    afterSubmit = async (response, url) => {
+    afterSubmit = async response => {
         const {
             updateContext,
-            profileId
+            closeModal,
+            successClose,
+            inCart
         } = this.props;
         if (response instanceof Error) {
             // this.setState({ errors: response.response.data, btnLoading: false });
@@ -52,14 +55,14 @@ class Address extends React.Component {
             if (response.redirect) {
                 window.location.href = await response.redirect_url;
             } else {
-                // TODO Why doesnt the response have the correct results?
-                fetch(API_URL + "/customers/" + profileId)
-                    .then(data => data.json())
-                    .then(data => updateContext({ profile: data.data }));
-                // if( response.customer.data ){
-                //     updateContext({ profile: response.customer.data });
-                // }
-                
+                const { data: profile } = response;
+                if( successClose ){
+                    const success = "Address Updated";
+                    successClose(success, updateContext, { profile, fetchRates: inCart });
+                } else if(closeModal){
+                    await updateContext({ profile, fetchRates: inCart });
+                    closeModal();
+                }
             }
         }
     }
@@ -70,6 +73,11 @@ class Address extends React.Component {
         const { details } = this.state;
         const { address } = this.props;
         const isPrimary = address.primary_location;
+        const checkboxStyles = {
+            borderRadius: 4,
+            padding: 10,
+            background: styles.lightgray
+        };
         return (
             <Segment>
                 {isPrimary && <Label corner="right" icon="star" color="green" />}
@@ -90,16 +98,17 @@ class Address extends React.Component {
                                 checked={details.primary_location}
                                 disabled={isPrimary}
                                 onChange={this.handleInputChange}
+                                style={checkboxStyles}
                             />
                         </div>
                         <div>
-                            <Button 
+                            {/* <Button 
                                 content="Delete"
                                 onClick={this.handleDelete}
                                 color="red"
                                 inverted
                                 disabled={isPrimary}
-                            />
+                            /> */}
                             <Button 
                                 content="Update"
                                 onClick={this.handleSubmit}
@@ -114,11 +123,14 @@ class Address extends React.Component {
         ); 
     }
 }
-const { object, func, oneOfType, number, string } = PropTypes;
+const { object, func, oneOfType, number, string, bool } = PropTypes;
 Address.propTypes = {
     address: object,
     updateContext: func,
-    profileId: oneOfType([ number, string ])
+    profileId: oneOfType([ number, string ]),
+    successClose: func,
+    closeModal: func,
+    inCart: bool
 };
 
 export default Address;

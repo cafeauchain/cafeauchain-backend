@@ -39,10 +39,7 @@ const tableDefinition = {
         }
     ],
     props: {
-        celled: true,
-        striped: true,
-        selectable: true,
-        singleLine: true
+        celled: true
     }
 };
 

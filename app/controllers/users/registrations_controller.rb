@@ -8,11 +8,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
       if resource.roaster_profile.nil? && !ValidSubdomain.matches?(request)
         render json: {"redirect":true,"redirect_url": onboarding_profile_path}, status: 200
       else ValidSubdomain.matches?(request)
-        cp = CustomerProfile.create(owner_id: resource.id)
+        cp = CustomerProfile.create!(owner_id: resource.id, email: resource.email)
         cp.users << resource
-        wp = cp.wholesale_profiles.create(roaster_profile: current_roaster)
+        wp = cp.wholesale_profiles.create!(roaster_profile: current_roaster)
         wp.create_cart
-        wp.update(onboard_status: 'profile')
+        wp.update!(onboard_status: 'profile')
         render json: {"redirect":true,"redirect_url": shop_onboard_profile_path}, status: 200
       end
     else

@@ -38,6 +38,7 @@ gem 'acts-as-taggable-on', '~> 6.0'
 gem "sentry-raven"
 gem "easypost"
 gem "skylight"
+gem "valid_email2"
 
 group :development do
   gem 'web-console', '>= 3.3.0'

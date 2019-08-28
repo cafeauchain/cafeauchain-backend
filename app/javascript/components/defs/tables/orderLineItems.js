@@ -20,8 +20,7 @@ const tableDefinition = {
         }
     ],
     props: {
-        striped: true,
-        selectable: true
+        singleLine: false
     }
 };
 

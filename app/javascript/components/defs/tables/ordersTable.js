@@ -30,11 +30,7 @@ const tableDefinition = {
             textAlign: "right"
         }
     ],
-    props: {
-        striped: true,
-        selectable: true,
-        singleLine: true
-    }
+    props: {}
 };
 
 export default tableDefinition;
