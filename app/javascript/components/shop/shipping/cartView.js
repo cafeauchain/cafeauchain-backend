@@ -26,10 +26,9 @@ class Shipping extends React.Component {
         this.fetchShipping();
     }
 
-    async componentDidUpdate(props){
-        const { fetchRates } = props;
-        const { fetchRates: newRates } = this.props;
-        if( fetchRates && newRates ){
+    async componentDidUpdate(){
+        const { fetchRates } = this.props;
+        if( fetchRates ){
             // eslint-disable-next-line react/no-did-update-set-state
             this.setState({ loading: true }, this.getShipping() );
         }

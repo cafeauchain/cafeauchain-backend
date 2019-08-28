@@ -150,8 +150,6 @@ module Api::V1
 
     def update_address
       # TODO Consider moving this to another/its own controller because of id/customer_id conflict
-      # TODO Why doesnt the response return the correct values?
-      @customer = CustomerProfile.find(params[:customer_id])
       address = address_params
       if params[:primary_location]
         @customer.addresses.update(primary_location: false)
@@ -165,10 +163,9 @@ module Api::V1
       else
         @customer.addresses.create(address)
       end
-
-      @serCust = ActiveModelSerializers::SerializableResource.new(@customer, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster)
-
-      render json: { customer: @serCust }, status: 200 
+      # Have to do it this way because primary address was not being set.
+      # Probably a race condition
+      render json: CustomerProfile.find(params[:customer_id]), status: 200, serializer: CustomerSerializer::SingleCustomerSerializer, scope: @roaster
     end
 
     def update_onboard_status

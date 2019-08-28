@@ -125,7 +125,7 @@ class CartDetails extends React.Component {
                             title="Edit Addresses"
                             unstyled
                             className="link"
-                            component={<CustomerAddresses />}
+                            component={<CustomerAddresses inCart />}
                         />
                     </Card.Meta>
                 </Card.Content>
@@ -250,6 +250,8 @@ CartDetails.propTypes = {
     cards: array,
     stripeApiKey: string,
     cartLoading: bool,
+    isAssumedCustomer: bool,
+    shipping: object
 };
 
 export default withContext(CartDetails);
