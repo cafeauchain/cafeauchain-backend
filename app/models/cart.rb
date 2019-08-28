@@ -53,4 +53,8 @@ class Cart < ApplicationRecord
     cart_items.sum { |ci| ci.product_variant.custom_options["size"].to_i * ci.quantity }
   end
 
+  def tax_rate
+    self.wholesale_profile.tax_rate
+  end
+
 end

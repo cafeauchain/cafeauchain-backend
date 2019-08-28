@@ -100,7 +100,7 @@ class CartDetails extends React.Component {
         const { errors, payment_type, payment_source, btnLoading, details: { notes } } = this.state;
         // TODO Consider moving these calculations to the backend
         const cartTotal = (Number(attributes.total_price) + Number(shipping.retail_rate)).toFixed(2);
-        const tax_due = (Number(profileAttrs.wholesale_profile.tax_rate) * Number(cartTotal) / 100).toFixed(2);
+        const tax_due = (Number(attributes.tax_rate) * Number(cartTotal) / 100).toFixed(2);
         const orderTotal = (Number(cartTotal) + Number(tax_due)).toFixed(2);
 
         const card = cards.find( card => card.stripe_card_id === payment_source );
@@ -167,7 +167,7 @@ class CartDetails extends React.Component {
                     <Flex spacebetween spacing="10">
                         <span>Rate: </span>
                         <span>
-                            {profileAttrs.wholesale_profile.tax_rate + "%"}
+                            {attributes.tax_rate + "%"}
                         </span>
                     </Flex>
                     <Flex spacebetween spacing="10">
