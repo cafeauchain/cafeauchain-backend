@@ -13,11 +13,10 @@ const fields = {
     owner: [
         { label: "First Name", flex: "50" },
         { label: "Last Name", flex: "50" },
-        { label: "Title" },
-        { label: "Email" },
-        { label: "Phone" },
-        { label: "Ownership Percentage", name: "percent_ownership", flex: "50" },
-        { label: "Last 4 of SSN", name: "ssn_last_4", flex: "50" }
+        { label: "Email", flex: 100 },
+        { label: "Title", flex: 50 },
+        { label: "Phone", flex: 25 },
+        { label: "Last 4 of SSN", name: "ssn_last_4", flex: 25 }
     ],
     dob: [
         { label: "", name: "dob_month", placeholder: "month", flex: "25" },
@@ -27,10 +26,10 @@ const fields = {
     opener: [
         { label: "First Name", flex: "50" },
         { label: "Last Name", flex: "50" },
-        { label: "Title" },
-        { label: "Email" },
-        { label: "Phone" },
-        { label: "Last 4 of SSN", name: "ssn_last_4" }
+        { label: "Email", flex: 100 },
+        { label: "Title", flex: 50 },
+        { label: "Phone", flex: 25 },
+        { label: "Last 4 of SSN", name: "ssn_last_4", flex: 25 }
     ]
 };
 

@@ -141,7 +141,6 @@ module StripeServices
         },
         relationship: {
           owner: true,
-          percent_ownership: params[:owner][:percent_ownership],
           title: params[:owner][:title]
         },
         verification: {
@@ -195,6 +194,10 @@ module StripeServices
           }
         }
       }
+
+      if params[:account_opener][:isOwner] == "yes"
+        account_opener[:relationship][:owner] = true
+      end
 
       stripe_opener = Stripe::Account.create_person(
         @roaster_profile[:stripe_account_id],

@@ -34,7 +34,9 @@ class Opener extends React.Component {
 
         details.account_opener = {
             ...details.account_opener,
-            ...openerDefaults
+            ...openerDefaults,
+            isOwner: "no",
+            isOnlyOwner: "no"
         };
 
         this.state = {
@@ -44,15 +46,26 @@ class Opener extends React.Component {
         };
     }
 
-    handleSubmit = async e => {
+    handleAddOwner = async e => {
         const { target } = e;
         e.preventDefault();
         target.blur();
         await this.setState({ loading: true, errors: [] });
+        this.handleSubmit("opener");
+    }
+    handleFinish = async e => {
+        const { target } = e;
+        e.preventDefault();
+        target.blur();
+        await this.setState({ loading: true, errors: [] });
+        this.handleSubmit("only_owner");
+    }
+
+    handleSubmit = async type => {
         const { details } = this.state;
         var form_data = jsonToFormData(details);
         const { userId, updateContext } = this.props;
-        const url = ROASTER_URL(userId) + "/wholesale_signup?submit_type=opener";
+        const url = ROASTER_URL(userId) + "/wholesale_signup?submit_type=" + type;
 
         const response = await requester({ url, body: form_data, noContentType: true });
 
@@ -86,9 +99,6 @@ class Opener extends React.Component {
     renderInput = props => <Input {...props} onChange={this.handleInputChange} />;
 
     render() {
-        // TODO Add workflow for account opener to be a beneficial owner and 
-        // skip adding themself again as an owner
-        // Also, add short-cut to finish enrollment if they are the ONLY BO
         const {
             loading,
             details: { account_opener, ...details },
@@ -110,6 +120,65 @@ class Opener extends React.Component {
                                 {callMeDanger(`Next, we need to collect some information on the person actually 
                                 opening the account. This can be an owner, executive, or director.`)}
                             </p>
+                            <Segment color="green">
+                                <Header as="h4" content="Ownership Info" />
+                                <p>
+                                    {callMeDanger(`Is the account opener a beneficial owner (having an ownership 
+                                    stake of 25% or more)?`)}
+                                </p>
+                                <Input
+                                    inputType="radio"
+                                    label=""
+                                    name="isOwner"
+                                    data-namespace="account_opener"
+                                    dataArray={[
+                                        {
+                                            label: "Yes",
+                                            value: "yes",
+                                            checked: account_opener.isOwner === "yes"
+                                        },
+                                        {
+                                            label: "No",
+                                            value: "no",
+                                            checked: account_opener.isOwner === "no"
+                                        }
+                                    ]}
+                                />
+                                {account_opener.isOwner === "yes" && (
+                                    <React.Fragment>
+                                        <Input 
+                                            type="number"
+                                            name="percent_ownership"
+                                            data-namespace="account_opener"
+                                            label="Ownership Percentage"
+                                            style={{ maxWidth: 200 }}
+                                        />
+                                        <p>
+                                            {callMeDanger(`Is this beneficial owner the <strong>ONLY</strong> 
+                                            beneficial owner (having an ownership stake of 25 % or more)?`)}
+                                        </p>
+                                        <Input
+                                            inputType="radio"
+                                            label=""
+                                            name="isOnlyOwner"
+                                            data-namespace="account_opener"
+                                            dataArray={[
+                                                {
+                                                    label: "Yes",
+                                                    value: "yes",
+                                                    checked: account_opener.isOnlyOwner === "yes"
+                                                },
+                                                {
+                                                    label: "No",
+                                                    value: "no",
+                                                    checked: account_opener.isOnlyOwner === "no"
+                                                }
+                                            ]}
+                                        />
+                                    </React.Fragment>
+                                )} 
+                            </Segment>
+                            
                             <Flex spacing="10" wrap>
                                 {fields.opener.map(({ name: fieldName, label, flex, ...rest }) => {
                                     const name = fieldName || underscorer(label);
@@ -189,13 +258,24 @@ class Opener extends React.Component {
                         <Flex spacing="20" spacebetween>
                             <div />
                             <div>
-                                <Button
-                                    content="Add Beneficial Owner(s)"
-                                    icon="right arrow"
-                                    labelPosition="right"
-                                    primary
-                                    onClick={this.handleSubmit}
-                                />
+                                {account_opener.isOnlyOwner === "yes" && account_opener.isOwner === "yes" && (
+                                    <Button
+                                        content="Finish Wholesale Enrollment"
+                                        icon="right arrow"
+                                        labelPosition="right"
+                                        primary
+                                        onClick={this.handleFinish}
+                                    />  
+                                )}
+                                {(account_opener.isOnlyOwner === "no" || account_opener.isOwner === "no") && (
+                                    <Button
+                                        content="Add Beneficial Owner(s)"
+                                        icon="right arrow"
+                                        labelPosition="right"
+                                        primary
+                                        onClick={this.handleAddOwner}
+                                    />
+                                )} 
                             </div>
                         </Flex>
                     </Form>

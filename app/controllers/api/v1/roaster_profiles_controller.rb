@@ -142,6 +142,10 @@ module Api::V1
         elsif params[:submit_type]  == "owner"
           stripe_account = StripeServices::CreateConnectAccount.account_create_owner(@roaster_profile.id, params)
           @roaster_profile.update(wholesale_status: :owner)
+        elsif params[:submit_type] == "only_owner"
+          stripe_account = StripeServices::CreateConnectAccount.account_create_opener(@roaster_profile.id, params)
+          @roaster_profile.update(wholesale_status: :enrolled, onboard_status: :shipping)
+          render json: { redirect: true, redirect_url: onboarding_shipping_path }, status: 200 and return
         elsif params[:submit_type] == "enrolled"
           stripe_account = StripeServices::CreateConnectAccount.account_create_owner(@roaster_profile.id, params)
           @roaster_profile.update(wholesale_status: :enrolled, onboard_status: :shipping)
