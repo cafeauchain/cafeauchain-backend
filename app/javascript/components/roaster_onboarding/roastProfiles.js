@@ -18,7 +18,7 @@ class RoastProfiles extends React.Component {
     render() {
         const { inventory = [], userId } = this.props;
         const leftBtn = { text: "Add Lots", href: "lots" };
-        const rightBtn = { text: "Wholesale Details ", href: "wholesale_details", disabled: !inventory.length };
+        const rightBtn = { text: "Wholesale Signup ", href: "wholesale_signup", disabled: !inventory.length };
         return (
             <React.Fragment>
                 <Step.Group fluid items={steps("roastprofiles")} />

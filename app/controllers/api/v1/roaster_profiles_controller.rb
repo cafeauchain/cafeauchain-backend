@@ -133,9 +133,21 @@ module Api::V1
 
     def wholesale_signup
       begin
-        StripeServices::CreateConnectAccount.account_create(@roaster_profile.id, params)
-        @roaster_profile.update(onboard_status: "shipping")
-        render json: { redirect: true, redirect_url: onboarding_shipping_path }, status: 200
+        if params[:submit_type].nil?
+          stripe_account = StripeServices::CreateConnectAccount.account_create_business(@roaster_profile.id, params)
+          @roaster_profile.update(stripe_account_id: stripe_account.id, wholesale_status: :business)
+        elsif params[:submit_type] == "opener"
+          stripe_account = StripeServices::CreateConnectAccount.account_create_opener(@roaster_profile.id, params)
+          @roaster_profile.update(wholesale_status: :opener)
+        elsif params[:submit_type]  == "owner"
+          stripe_account = StripeServices::CreateConnectAccount.account_create_owner(@roaster_profile.id, params)
+          @roaster_profile.update(wholesale_status: :owner)
+        elsif params[:submit_type] == "enrolled"
+          stripe_account = StripeServices::CreateConnectAccount.account_create_owner(@roaster_profile.id, params)
+          @roaster_profile.update(wholesale_status: :enrolled, onboard_status: :shipping)
+          render json: { redirect: true, redirect_url: onboarding_shipping_path }, status: 200 and return
+        end
+        render json: {stripe_account: stripe_account, roaster: @roaster_profile}, status: 200
       rescue StandardError => e
         render json: {
             error: e.http_status,

@@ -50,39 +50,76 @@ module StripeServices
     # }
     ################################################
 
-    def self.account_create(roaster_profile_id, params)
+    def self.account_create_business(roaster_profile_id, params)
       Stripe.api_key = Rails.application.credentials[Rails.env.to_sym][:stripe_secret_key]
       @roaster_profile = RoasterProfile.find(roaster_profile_id)
 
-      def self.verifyPerson( file )
-        if file.present?
-          Stripe::File.create({
-            purpose:'identity_document',
-            file: file["0"]
-          })
-        end
-      end
-
       business_profile = {
         mcc: 5812, # Merchant code for restaurant/bar - best guess for coffee roasters
-        name: @roaster_profile.name,
-        support_email: @roaster_profile.owner.email,
-        support_url: @roaster_profile.url,
-        url: @roaster_profile.url
+        name: params[:business][:name],
+        support_email: params[:business][:email],
+        support_url: params[:business][:support_url],
+        url: params[:business][:url]
       }
       company = {
-        name: @roaster_profile.name,
+        name: params[:business][:name],
         tax_id: params[:business][:tax_id],
         phone: params[:business][:phone],
         address: {
-          line1: @roaster_profile.primary_address.street_1,
-          line2: @roaster_profile.primary_address.street_2,
-          city: @roaster_profile.primary_address.city,
-          state: @roaster_profile.primary_address.state,
-          postal_code: @roaster_profile.primary_address.postal_code
+          line1: params[:business][:address][:street_1],
+          line2: params[:business][:address][:street_2],
+          city: params[:business][:address][:city],
+          state: params[:business][:address][:state],
+          postal_code: params[:business][:address][:postal_code]
         }
       }
-      # first_name, last_name = @roaster_profile.owner.name.split(' ')
+
+
+      external_account = {
+        object: 'bank_account',
+        country: 'US',
+        currency: 'usd',
+        account_holder_type: 'company',
+        routing_number: params[:business][:routing],
+        account_number: params[:business][:account]
+      }
+
+      account = {
+        country: 'US',
+        type: 'custom',
+        requested_capabilities: ['card_payments'],
+        business_type: 'company',
+        email: params[:business][:email],
+        business_profile: business_profile,
+        company: company,
+        external_account: external_account,
+        # relationship: {account_opener: account_opener, owner: owner},
+        tos_acceptance: {date: Time.now.to_i, ip: @roaster_profile.owner.last_sign_in_ip}
+      }
+
+      stripe_account = Stripe::Account.create(account)
+
+      token = Stripe::Token.create(
+        {
+          bank_account: {
+            country: 'US',
+            currency: 'usd',
+            account_holder_name: @roaster_profile.name,
+            account_holder_type: 'company',
+            routing_number: params[:business][:routing],
+            account_number: params[:business][:account],
+          }
+        }
+      )
+      Stripe::Customer.create_source(@roaster_profile.owner.subscription.stripe_customer_id, {source: token})
+
+      return stripe_account
+    end
+
+    def self.account_create_owner(roaster_profile_id, params)
+      Stripe.api_key = Rails.application.credentials[Rails.env.to_sym][:stripe_secret_key]
+      @roaster_profile = RoasterProfile.find(roaster_profile_id)
+
       owner = {
         first_name: params[:owner][:first_name],
         last_name: params[:owner][:last_name],
@@ -114,7 +151,20 @@ module StripeServices
           }
         }
       }
-      # ao_first_name, ao_last_name = params[:account_opener][:name].split(' ')
+
+      stripe_owner = Stripe::Account.create_person(
+        @roaster_profile[:stripe_account_id],
+        owner
+      )
+
+      return stripe_owner
+
+    end
+
+    def self.account_create_opener(roaster_profile_id, params)
+      Stripe.api_key = Rails.application.credentials[Rails.env.to_sym][:stripe_secret_key]
+      @roaster_profile = RoasterProfile.find(roaster_profile_id)
+
       account_opener = {
         first_name: params[:account_opener][:first_name],
         last_name: params[:account_opener][:last_name],
@@ -146,52 +196,21 @@ module StripeServices
         }
       }
 
-      external_account = {
-        object: 'bank_account',
-        country: 'US',
-        currency: 'usd',
-        # account_holder_name: 'Jane Doe',
-        account_holder_type: 'company',
-        routing_number: params[:business][:routing],
-        account_number: params[:business][:account]
-      }
-
-      account = Stripe::Account.create({
-        country: 'US',
-        type: 'custom',
-        requested_capabilities: ['card_payments'],
-        business_type: 'company',
-        email: @roaster_profile.owner.email,
-        business_profile: business_profile,
-        company: company,
-        external_account: external_account,
-        # relationship: {account_opener: account_opener, owner: owner},
-        tos_acceptance: {date: Time.now.to_i, ip: @roaster_profile.owner.last_sign_in_ip}
-      })
-      stripe_owner = Stripe::Account.create_person(
-        account.id,
-        owner
-      )
       stripe_opener = Stripe::Account.create_person(
-        account.id,
+        @roaster_profile[:stripe_account_id],
         account_opener
       )
-      @roaster_profile.update(stripe_account_id: account.id)
-      StripeServices::EnrollWholesaleSubscription.new(@roaster_profile.owner.subscription.id).enroll
-      token = Stripe::Token.create(
-        {
-          bank_account: {
-            country: 'US',
-            currency: 'usd',
-            account_holder_name: @roaster_profile.name,
-            account_holder_type: 'company',
-            routing_number: params[:business][:routing],
-            account_number: params[:business][:account],
-          }
-        }
-      )
-      Stripe::Customer.create_source(@roaster_profile.owner.subscription.stripe_customer_id, {source: token})
-      return @roaster_profile
+
+      return stripe_opener
+    end
+
+    def self.verifyPerson( file )
+      if file.present?
+        Stripe::File.create({
+          purpose:'identity_document',
+          file: file["0"]
+        })
+      end
     end
 
   end
