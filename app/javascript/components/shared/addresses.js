@@ -36,6 +36,7 @@ class Addresses extends Component {
                         options={usStates}
                         onChange={onChange}
                         search={this.searchFunc}
+                        selectOnBlur
                     />
                     <Input label="Zip" value={postal_code} name="postal_code" onChange={onChange} />
                 </Form.Group>
