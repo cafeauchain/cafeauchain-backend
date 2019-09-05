@@ -39,7 +39,6 @@ const defaults = {
         title: "",
         email: "",
         phone: process.env.NODE_ENV === "development" ? "7061234567" : "",
-        percent_ownership: "",
         ssn_last_4: "",
         dob: {
             dob_day: process.env.NODE_ENV === "development" ? "09" : "",
