@@ -116,92 +116,99 @@ module StripeServices
       return stripe_account
     end
 
-    def self.account_create_owner(roaster_profile_id, params)
+    # def self.account_create_owner(roaster_profile_id, params)
+    #   Stripe.api_key = Rails.application.credentials[Rails.env.to_sym][:stripe_secret_key]
+    #   @roaster_profile = RoasterProfile.find(roaster_profile_id)
+
+    #   owner = {
+    #     first_name: params[:first_name],
+    #     last_name: params[:last_name],
+    #     email: params[:email],
+    #     ssn_last_4: params[:ssn_last_4],
+    #     phone: params[:phone],
+    #     dob: {
+    #       day: params[:dob][:dob_day],
+    #       month: params[:dob][:dob_month],
+    #       year: params[:dob][:dob_year]
+    #     },
+    #     address: {
+    #       line1: params[:address][:street_1],
+    #       line2: params[:address][:street_2],
+    #       city: params[:address][:city],
+    #       state: params[:address][:state],
+    #       postal_code: params[:address][:postal_code],
+    #       country: 'US'
+    #     },
+    #     relationship: {
+    #       owner: true,
+    #       title: params[:title]
+    #     },
+    #     verification: {
+    #       document: {
+    #         front: self.verifyPerson(params[:verification_front]),
+    #         back: self.verifyPerson(params[:verification_back])
+    #       }
+    #     }
+    #   }
+
+    #   stripe_owner = Stripe::Account.create_person(
+    #     @roaster_profile[:stripe_account_id],
+    #     owner
+    #   )
+
+    #   return stripe_owner
+
+    # end
+
+    def self.account_create_person(roaster_profile_id, params)
       Stripe.api_key = Rails.application.credentials[Rails.env.to_sym][:stripe_secret_key]
       @roaster_profile = RoasterProfile.find(roaster_profile_id)
 
-      owner = {
-        first_name: params[:owner][:first_name],
-        last_name: params[:owner][:last_name],
-        email: params[:owner][:email],
-        ssn_last_4: params[:owner][:ssn_last_4],
-        phone: params[:owner][:phone],
+      person = {
+        first_name: params[:first_name],
+        last_name: params[:last_name],
+        email: params[:email],
+        ssn_last_4: params[:ssn_last_4],
+        phone: params[:phone],
         dob: {
-          day: params[:owner][:dob][:dob_day],
-          month: params[:owner][:dob][:dob_month],
-          year: params[:owner][:dob][:dob_year]
+          day: params[:dob][:dob_day],
+          month: params[:dob][:dob_month],
+          year: params[:dob][:dob_year]
         },
         address: {
-          line1: params[:owner][:address][:street_1],
-          line2: params[:owner][:address][:street_2],
-          city: params[:owner][:address][:city],
-          state: params[:owner][:address][:state],
-          postal_code: params[:owner][:address][:postal_code],
+          line1: params[:address][:street_1],
+          line2: params[:address][:street_2],
+          city: params[:address][:city],
+          state: params[:address][:state],
+          postal_code: params[:address][:postal_code],
           country: 'US'
         },
         relationship: {
-          owner: true,
-          title: params[:owner][:title]
+          # account_opener: true,
+          title: params[:title]
         },
         verification: {
           document: {
-            front: self.verifyPerson(params[:owner_verification_front]),
-            back: self.verifyPerson(params[:owner_verification_back])
+            front: self.verifyPerson(params[:verification_front]),
+            back: self.verifyPerson(params[:verification_back])
           }
         }
       }
 
-      stripe_owner = Stripe::Account.create_person(
-        @roaster_profile[:stripe_account_id],
-        owner
-      )
-
-      return stripe_owner
-
-    end
-
-    def self.account_create_opener(roaster_profile_id, params)
-      Stripe.api_key = Rails.application.credentials[Rails.env.to_sym][:stripe_secret_key]
-      @roaster_profile = RoasterProfile.find(roaster_profile_id)
-
-      account_opener = {
-        first_name: params[:account_opener][:first_name],
-        last_name: params[:account_opener][:last_name],
-        email: params[:account_opener][:email],
-        ssn_last_4: params[:account_opener][:ssn_last_4],
-        phone: params[:account_opener][:phone],
-        dob: {
-          day: params[:account_opener][:dob][:dob_day],
-          month: params[:account_opener][:dob][:dob_month],
-          year: params[:account_opener][:dob][:dob_year]
-        },
-        address: {
-          line1: params[:account_opener][:address][:street_1],
-          line2: params[:account_opener][:address][:street_2],
-          city: params[:account_opener][:address][:city],
-          state: params[:account_opener][:address][:state],
-          postal_code: params[:account_opener][:address][:postal_code],
-          country: 'US'
-        },
-        relationship: {
-          account_opener: true,
-          title: params[:account_opener][:title]
-        },
-        verification: {
-          document: {
-            front: self.verifyPerson(params[:opener_verification_front]),
-            back: self.verifyPerson(params[:opener_verification_back])
-          }
-        }
-      }
-
-      if params[:account_opener][:isOwner] == "yes"
-        account_opener[:relationship][:owner] = true
+      if params[:submit_type] == "opener" || params[:submit_type] == "only_opener"
+        person[:relationship][:account_opener] = true
+        if params[:isOwner] == "yes"
+          person[:relationship][:owner] = true
+        end
+      else
+        person[:relationship][:owner] = true
       end
+
+      
 
       stripe_opener = Stripe::Account.create_person(
         @roaster_profile[:stripe_account_id],
-        account_opener
+        person
       )
 
       return stripe_opener

@@ -10,11 +10,11 @@ const fields = {
         { label: "Bank Account Number", name: "account", flex: "33", type: "phone" },
         { label: "Confirm Account Number", name: "account_confirm", flex: "33", type: "phone" },
     ],
-    owner: [
+    person: [
         { label: "First Name", flex: "50" },
         { label: "Last Name", flex: "50" },
-        { label: "Email", flex: 100 },
         { label: "Title", flex: 50 },
+        { label: "Email", flex: 50 },
         { label: "Phone", flex: 25 },
         { label: "Last 4 of SSN", name: "ssn_last_4", flex: 25 }
     ],
@@ -22,14 +22,6 @@ const fields = {
         { label: "", name: "dob_month", placeholder: "month", flex: "25" },
         { label: "", name: "dob_day", placeholder: "day", flex: "25" },
         { label: "", name: "dob_year", placeholder: "year", flex: "50" }
-    ],
-    opener: [
-        { label: "First Name", flex: "50" },
-        { label: "Last Name", flex: "50" },
-        { label: "Email", flex: 100 },
-        { label: "Title", flex: 50 },
-        { label: "Phone", flex: 25 },
-        { label: "Last 4 of SSN", name: "ssn_last_4", flex: 25 }
     ]
 };
 

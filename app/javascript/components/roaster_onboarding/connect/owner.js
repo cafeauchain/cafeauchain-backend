@@ -21,25 +21,29 @@ import withContext from "contexts/withContext";
 /* eslint-enable */
 
 const reset = {
-    owner: defaults.owner,
-    owner_verification_back: null,
-    owner_verification_front: null
+    ...defaults.person,
+    verification_back: null,
+    verification_front: null
 };
 
+const hardreset = JSON.stringify(reset);
+
 const Owner = props => {
-    let initdetails = reset;
-    const { owner: owner_props } = props;
-    let ownerName = owner_props.name.split(" ");
+    let initdetails = {...reset};
+    const { owner, updateContext, isOpener, userId } = props;
+    let ownerName = owner.name.split(" ");
 
     const ownerDefaults = {
         first_name: ownerName[0],
         last_name: ownerName[1],
-        email: owner_props.email
+        email: owner.email
     };
 
-    initdetails.owner = {
-        ...initdetails.owner,
-        ...ownerDefaults
+    initdetails = {
+        ...initdetails,
+        ...ownerDefaults,
+        isOwner: isOpener ? "no" : undefined,
+        isOnlyOwner: isOpener ? "no" : undefined
     };
 
     const [loading, updateLoading] = useState(false);
@@ -51,9 +55,9 @@ const Owner = props => {
         updateLoading(true);
     };
     const callback = response => {
-        const { updateContext } = props;
         updateLoading(false);
-        updateDetails(reset);
+        const resetMe = JSON.parse(hardreset);
+        updateDetails(resetMe);
         updateContext({ roaster: response.roaster });
     };
 
@@ -64,8 +68,10 @@ const Owner = props => {
         return noEmpties(inner);
     };
 
-    const handleAddAnother = async e => handleSubmit(e, "owner");
-    const handleFinish = async e => handleSubmit(e, "enrolled");
+    const handleAddOwner = e => handleSubmit(e, "opener");
+    const handleOnlyOwner = e => handleSubmit(e, "only_owner");
+    const handleAddAnother = e => handleSubmit(e, "owner");
+    const handleFinish = e => handleSubmit(e, "enrolled");
 
     const handleSubmit = async (e, type) => {
         const { target } = e;
@@ -74,7 +80,6 @@ const Owner = props => {
         await updateLoading(true);
         await updateErrors([]);
         var form_data = jsonToFormData(details);
-        const { userId } = props;
         const url = ROASTER_URL(userId) + "/wholesale_signup?submit_type=" + type;
 
         const response = await requester({ url, body: form_data, noContentType: true });
@@ -82,29 +87,78 @@ const Owner = props => {
         useAfterSubmit(response, callback, errback);
     };
 
-    
-
     const submitEnabled = validateInputs(details, ["street_2"]);
-    console.log(submitEnabled);
 
-    const { owner } = details;
+    const openerIsOwner_options = [
+        { label: "Yes", value: "yes", checked: details.isOwner === "yes" },
+        { label: "No", value: "no", checked: details.isOwner === "no" }
+    ];
+    const openerIsOnlyOwner_options = [
+        { label: "Yes", value: "yes", checked: details.isOnlyOwner === "yes" },
+        { label: "No", value: "no", checked: details.isOnlyOwner === "no" }
+    ];
+
+    const onlyOwner = details.isOnlyOwner === "yes" && details.isOwner === "yes";
+
     return (
         <React.Fragment>
-            <Segment>
+            <div>
                 <Dimmer active={loading} inverted>
                     <Loader size="large">Processing</Loader>
                 </Dimmer>
-                <Header as="h3">Beneficial Owner Information</Header>
+                <Header as="h3">{isOpener ? "Account Opener" : "Beneficial Owner Information"}</Header>
                 <Divider />
-                <p>
-                    {callMeDanger(`Finally, we need to gather information on all beneficial 
-                        owners with a stake greater than or equal to 25%. Please complete all fields 
-                        in order to avoid a delay in processing payments or withdrawing payouts.`)}
-                </p>
+                {isOpener && (
+                    <p>
+                        {callMeDanger(`Next, we need to collect some information on the person actually 
+                            opening the account. This can be an owner, executive, or director.`)}
+                    </p>
+                )}
+                {!isOpener && (
+                    <p>
+                        {callMeDanger(`Finally, we need to gather information on all beneficial 
+                            owners with a stake greater than or equal to 25%. Please complete all fields 
+                            in order to avoid a delay in processing payments or withdrawing payouts.`)}
+                    </p>
+                )}
                 <Form>
                     <Segment>
+                        {isOpener && (
+                            <>
+                                <Segment color="green">
+                                    <Header as="h4" content="Ownership Info" />
+                                    <p>
+                                        {callMeDanger(`Is the account opener a beneficial owner (having an ownership 
+                                            stake of 25% or more)?`)}
+                                    </p>
+                                    <Input
+                                        inputType="radio"
+                                        label=""
+                                        name="isOwner"
+                                        dataArray={openerIsOwner_options}
+                                        onChange={handleInputChange}
+                                    />
+                                    {details.isOwner === "yes" && (
+                                        <>
+                                            <p>
+                                                {callMeDanger(`Is this beneficial owner the <strong>ONLY</strong> 
+                                                    beneficial owner (having an ownership stake of 25 % or more)?`)}
+                                            </p>
+                                            <Input
+                                                inputType="radio"
+                                                label=""
+                                                name="isOnlyOwner"
+                                                dataArray={openerIsOnlyOwner_options}
+                                                onChange={handleInputChange}
+                                            />
+                                        </>
+                                    )}
+                                </Segment>
+                            </>
+                        )}
+                        
                         <Flex spacing="10" wrap>
-                            {fields.owner.map(({ name: fieldName, label, flex, ...rest }) => {
+                            {fields.person.map(({ name: fieldName, label, flex, ...rest }) => {
                                 const name = fieldName || underscorer(label);
                                 return (
                                     <div key={name} flex={flex || "100"} style={{ marginBottom: "1em" }}>
@@ -112,41 +166,46 @@ const Owner = props => {
                                             {...rest}
                                             label={label}
                                             name={name}
-                                            value={owner[name]}
-                                            data-namespace="owner"
+                                            value={details.name}
                                             onChange={handleInputChange}
+                                            autoComplete="nocomplete"
                                         />
                                     </div>
                                 );
                             })}
+                            <div flex="50">
+                                <label style={{ fontSize: 13 }}>
+                                    <strong>Date of Birth</strong>
+                                </label>
+                                <Flex spacing="10">
+                                    {fields.dob.map(({ name, label, flex, ...rest }) => {
+                                        return (
+                                            <div key={name} flex={flex || "100"} style={{ marginBottom: "1em" }}>
+                                                <Input
+                                                    {...rest}
+                                                    label=""
+                                                    name={name}
+                                                    value={details.dob.name}
+                                                    data-namespace="dob"
+                                                    type="number"
+                                                    onChange={handleInputChange}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+                                </Flex>
+                            </div>
                         </Flex>
-                        <label style={{ fontSize: 13 }}>
-                            <strong>Date of Birth</strong>
-                        </label>
-                        <Flex spacing="10">
-                            {fields.dob.map(({ name, label, flex, ...rest }) => {
-                                return (
-                                    <div key={name} flex={flex || "100"} style={{ marginBottom: "1em" }}>
-                                        <Input
-                                            {...rest}
-                                            label=""
-                                            name={name}
-                                            value={owner["dob"][name]}
-                                            data-namespace="owner/dob"
-                                            type="number"
-                                            onChange={handleInputChange}
-                                        />
-                                    </div>
-                                );
-                            })}
-                        </Flex>
+                        <Divider />
                         <Addresses
-                            details={owner.address}
+                            key={details.address}
+                            details={details.address}
                             onChange={(e, item) =>
-                                handleInputChange(e, { ...item, "data-namespace": "owner/address" })
+                                handleInputChange(e, { ...item, "data-namespace": "address" })
                             }
                         />
-                        <p><strong>Owner Verification ID (required)</strong></p>
+                        <Divider />
+                        <p><strong>Verification ID (required)</strong></p>
                         <p>
                             {callMeDanger(`In order to receive payouts, you will need to verify 
                                 your identity with a state-issued ID or passport. Please upload an 
@@ -157,24 +216,23 @@ const Owner = props => {
                                 <p><strong>Front</strong></p>
                                 <FileUpload
                                     handleChange={handleInputChange}
-                                    name="owner_verification_front"
+                                    name="verification_front"
                                     fileType="fileImage"
-                                    id="owner_verification_front"
-                                    files={details["owner_verification_front"] || []}
+                                    id="verification_front"
+                                    files={details.verification_front || []}
                                 />
                             </div>
                             <div flex="50">
                                 <p><strong>Back</strong></p>
                                 <FileUpload
                                     handleChange={handleInputChange}
-                                    name="owner_verification_back"
+                                    name="verification_back"
                                     fileType="fileImage"
-                                    id="owner_verification_back"
-                                    files={details["owner_verification_back"] || []}
+                                    id="verification_back"
+                                    files={details.verification_back || []}
                                 />
                             </div>
                         </Flex>
-
                     </Segment>
                     <br />
                     <Divider />
@@ -182,32 +240,47 @@ const Owner = props => {
                     <Flex spacing="20" spacebetween>
                         <div />
                         <div>
-                            <Button
-                                content="Add Another Owner"
-                                onClick={handleAddAnother}
-                                disabled={!submitEnabled}
-                            />
-                            <Button
-                                content="Finish Wholesale Enrollment"
-                                icon="right arrow"
-                                labelPosition="right"
-                                primary
-                                onClick={handleFinish}
-                                disabled={!submitEnabled}
-                            />
+                            {isOpener && (
+                                <Button
+                                    content={onlyOwner ? "Finish Wholesale Enrollment" : "Add Beneficial Owner(s)"}
+                                    icon="right arrow"
+                                    labelPosition="right"
+                                    primary
+                                    onClick={onlyOwner ? handleOnlyOwner : handleAddOwner}
+                                    disabled={!submitEnabled}
+                                />
+                            )}
+                            {!isOpener && (
+                                <>
+                                    <Button
+                                        content="Add Another Owner"
+                                        onClick={handleAddAnother}
+                                        disabled={!submitEnabled}
+                                    />
+                                    <Button
+                                        content="Finish Wholesale Enrollment"
+                                        icon="right arrow"
+                                        labelPosition="right"
+                                        primary
+                                        onClick={handleFinish}
+                                        disabled={!submitEnabled}
+                                    />
+                                </>
+                            )}
                         </div>
                     </Flex>
                 </Form>
-            </Segment>
+            </div>
         </React.Fragment>
     );
 };
 
-const { object, func, oneOfType, number, string } = PropTypes;
+const { object, func, oneOfType, number, string, bool } = PropTypes;
 Owner.propTypes = {
     owner: object,
     userId: oneOfType([number, string]),
-    updateContext: func
+    updateContext: func,
+    isOpener: bool
 };
 
 export default withContext(Owner);

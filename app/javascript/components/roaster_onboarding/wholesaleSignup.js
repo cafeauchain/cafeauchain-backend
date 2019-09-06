@@ -6,7 +6,6 @@ import { Segment, Header, Step, Divider } from "semantic-ui-react";
 import steps from "roaster_onboarding/wholesaleSteps";
 import Business from "roaster_onboarding/connect/business";
 import Owner from "roaster_onboarding/connect/owner";
-import Opener from "roaster_onboarding/connect/opener";
 
 import { callMeDanger } from "utilities";
 
@@ -33,7 +32,7 @@ class WholesaleSignup extends React.PureComponent {
                         <Business />
                     )}
                     {wholesale_status === "business" && (
-                        <Opener />
+                        <Owner isOpener />
                     )}
                     {(wholesale_status === "opener" || wholesale_status === "owner") && (
                         <Owner />
