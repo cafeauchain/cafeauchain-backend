@@ -195,7 +195,7 @@ module StripeServices
         }
       }
 
-      if params[:submit_type] == "opener" || params[:submit_type] == "only_opener"
+      if params[:submit_type] == "opener" || params[:submit_type] == "only_owner"
         person[:relationship][:account_opener] = true
         if params[:isOwner] == "yes"
           person[:relationship][:owner] = true

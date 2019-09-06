@@ -41,7 +41,10 @@ const Business = props => {
     };
 
     const errback = response => {
-        updateErrors(response.response.data);
+        const err = response.response;
+        let array = err.message && typeof err.message === "string" ? [err.message] : err;
+        if (!array || array.length === 0) array = ["Something went wrong"];
+        updateErrors(array);
         updateLoading(false);
     };
 

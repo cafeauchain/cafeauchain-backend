@@ -140,7 +140,7 @@ module Api::V1
         elsif params[:submit_type] == "only_owner" || params[:submit_type] == "enrolled"
           stripe_account = StripeServices::CreateConnectAccount.account_create_person(@roaster_profile.id, params)
           @roaster_profile.update(wholesale_status: :enrolled, onboard_status: :shipping)
-          render json: { redirect: false, roaster: @roaster_profile, redirect_url: onboarding_shipping_path }, status: 200 and return
+          render json: { redirect: true, redirect_url: onboarding_shipping_path }, status: 200 and return
         else
           stripe_account = StripeServices::CreateConnectAccount.account_create_person(@roaster_profile.id, params)
           @roaster_profile.update(wholesale_status: params[:submit_type])

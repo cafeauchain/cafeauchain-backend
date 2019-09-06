@@ -34,37 +34,46 @@ const Owner = props => {
     let ownerName = owner.name.split(" ");
 
     const ownerDefaults = {
-        first_name: ownerName[0],
-        last_name: ownerName[1],
-        email: owner.email
+        first_name: isOpener ? ownerName[0] : "",
+        last_name: isOpener ? ownerName[1] : "",
+        email: isOpener ? owner.email : ""
     };
 
     initdetails = {
         ...initdetails,
-        ...ownerDefaults,
-        isOwner: isOpener ? "no" : undefined,
-        isOnlyOwner: isOpener ? "no" : undefined
+        ...ownerDefaults
     };
+
+    if( isOpener ){
+        initdetails = {
+            ...initdetails,
+            isOwner: isOpener ? "no" : undefined,
+            isOnlyOwner: isOpener ? "no" : undefined
+        };
+    }
 
     const [loading, updateLoading] = useState(false);
     const [errors, updateErrors] = useState([]);
     const { details, handleInputChange, updateDetails } = useHandleInput(initdetails);
 
     const errback = response => {
-        updateErrors(response.response.data);
-        updateLoading(true);
+        const err = response.response;
+        let array = err.message && typeof err.message === "string" ? [err.message] : err;
+        if( !array || array.length === 0 ) array = ["Something went wrong"];
+        updateErrors(array);
+        updateLoading(false);
     };
     const callback = response => {
         updateLoading(false);
-        const resetMe = JSON.parse(hardreset);
-        updateDetails(resetMe);
+        const resetter = JSON.parse(hardreset);
+        updateDetails(resetter);
         updateContext({ roaster: response.roaster });
     };
 
-    const validateInputs = (obj, exceptions = []) => {
+    const validateInputs = (obj, skips = []) => {
         let inner = flattenObj(obj);
-        let array = typeof exceptions === "string" ? [exceptions] : exceptions;
-        array.forEach( exception => delete inner[exception] );
+        let array = typeof skips === "string" ? [skips] : skips;
+        array.forEach(skip => delete inner[skip] );
         return noEmpties(inner);
     };
 
@@ -166,7 +175,7 @@ const Owner = props => {
                                             {...rest}
                                             label={label}
                                             name={name}
-                                            value={details.name}
+                                            value={details[name]}
                                             onChange={handleInputChange}
                                             autoComplete="nocomplete"
                                         />
@@ -185,7 +194,7 @@ const Owner = props => {
                                                     {...rest}
                                                     label=""
                                                     name={name}
-                                                    value={details.dob.name}
+                                                    value={details.dob[name]}
                                                     data-namespace="dob"
                                                     type="number"
                                                     onChange={handleInputChange}
@@ -198,7 +207,6 @@ const Owner = props => {
                         </Flex>
                         <Divider />
                         <Addresses
-                            key={details.address}
                             details={details.address}
                             onChange={(e, item) =>
                                 handleInputChange(e, { ...item, "data-namespace": "address" })
@@ -236,7 +244,7 @@ const Owner = props => {
                     </Segment>
                     <br />
                     <Divider />
-                    <ErrorHandler errors={errors} />
+                    {errors.length > 0 && <ErrorHandler errors={errors} />}
                     <Flex spacing="20" spacebetween>
                         <div />
                         <div>
