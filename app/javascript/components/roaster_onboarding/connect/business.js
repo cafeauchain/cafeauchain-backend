@@ -114,7 +114,7 @@ const Business = props => {
                     </Segment>
                     <br />
                     <Divider />
-                    <ErrorHandler errors={errors} />
+                    {errors.length > 0 && <ErrorHandler errors={errors} />}
                     <Flex spacing="20" spacebetween>
                         <div />
                         <div>
