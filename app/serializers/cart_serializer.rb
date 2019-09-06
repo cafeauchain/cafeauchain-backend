@@ -24,6 +24,12 @@ class CartSerializer < ActiveModel::Serializer
     self.object.cart_items.map do |item|
       variant = item.product_variant
       product = variant.product
+      price = variant.price_in_cents.to_i/100.0
+      discount = self.object.wholesale_profile.cust_discount
+      discounted_price = price
+      if !discount.nil? && discount > 0
+        discounted_price = price * (1 - discount/100.0)
+      end
       {
         id: item.id,
         production_options: item.production_options,
@@ -31,7 +37,8 @@ class CartSerializer < ActiveModel::Serializer
         name: product.title,
         variant_id: item.product_variant_id,
         size: variant.custom_options["size"],
-        price: '%.2f' % (variant.price_in_cents.to_i/100.0),
+        price: '%.2f' % price,
+        discounted_price: '%.2f' % discounted_price,
         image: product.product_image_urls[0]
       }
     end
@@ -42,18 +49,18 @@ class CartSerializer < ActiveModel::Serializer
   end
 
   def total_price
-    self.object.cart_items.sum { |ci| ci.product_variant.price_in_cents.to_f/100.0 * ci.quantity }
+    cart_items.sum { |ci| ci[:discounted_price].to_f * ci[:quantity] }
   end
 
   def total_line_items
-    self.object.cart_items.length
+    cart_items.length
   end
 
   def total_items
-    self.object.cart_items.sum { |ci| ci.quantity }
+    cart_items.sum { |ci| ci[:quantity] }
   end
 
   def total_weight
-    self.object.cart_items.sum { |ci| ci.product_variant.custom_options["size"].to_i * ci.quantity }
+    cart_items.sum { |ci| ci[:size].to_i * ci[:quantity] }
   end
 end

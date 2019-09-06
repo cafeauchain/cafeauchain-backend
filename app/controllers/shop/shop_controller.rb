@@ -7,11 +7,13 @@ module Shop
     def index
       @products = ActiveModelSerializers::SerializableResource.new(@roaster.products, each_serializer: ProductSerializer)
       @serialized_cart = ActiveModelSerializers::SerializableResource.new(@cart, each_serializer: CartSerializer)
+      @customer = ActiveModelSerializers::SerializableResource.new(current_user.customer_profile, serializer: CustomerSerializer, scope: @roaster)
       render "customer/base", locals: {
         roaster: @roaster,
         products: @products,
         body_class: "customer",
         title: 'Products',
+        profile: @customer,
         component: 'shop',
         cart: @serialized_cart
       }

@@ -81,7 +81,7 @@ class MiniDetails extends React.Component {
         const { item } = this.props;
         const { isEditable, quantity, saveLoading, removeLoading, errors } = this.state;
         const option = humanize(item.production_options[0]);
-        const itemTotal = item.price * item.quantity;
+        const itemTotal = item.discounted_price * item.quantity;
         return (
             <div>
                 <ErrorHandler errors={errors} />
@@ -96,7 +96,18 @@ class MiniDetails extends React.Component {
                 </Flex>
                 <div>
                     <span>Price Each: </span>
-                    <Money type="positive">{item.price}</Money>
+                    
+                    {item.discounted_price < item.price ? (
+                        <>
+                            <span className="slasher">
+                                <Money>{item.price}</Money>
+                            </span>
+                            {"  "}
+                            <Money type="positive">{item.discounted_price}</Money>
+                        </>
+                    ) : (
+                        <Money type="positive">{item.discounted_price}</Money>
+                    )}
                 </div>
                 <div>
                     <span>Bag Size: </span>

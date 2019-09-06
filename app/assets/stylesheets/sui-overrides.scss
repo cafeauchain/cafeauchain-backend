@@ -75,3 +75,18 @@
         color: gray;
     } 
 }
+
+.slasher {
+    position: relative;
+    color: $darkgray;
+    &::before {
+        content: "";
+        background: $darkgray;
+        height: 2px;
+        width: 110%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-15deg)
+    }
+}

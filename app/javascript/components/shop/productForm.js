@@ -1,14 +1,13 @@
 import React, { Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Header, Button, Card, Icon, Dimmer, Loader } from "semantic-ui-react";
+import { Button, Card, Icon, Dimmer, Loader } from "semantic-ui-react";
 
 import "./styles.scss";
 
 /* eslint-disable */
 import Flex from "shared/flex";
 import Input from "shared/input";
-import Modal from "shared/modal";
-import { Weights, Money } from "shared/textFormatters";
+import { Money } from "shared/textFormatters";
 import ErrorHandler from "shared/errorHandler";
 
 import { requester, url as API_URL } from "utilities/apiUtils";
@@ -44,6 +43,7 @@ class ProductForm extends React.Component {
         const { cart: { attributes: { total_weight: old_weight } }, inCart, updateContext } = props;
         const { cart: { attributes: { total_weight: new_weight } } } = this.props;
         if( old_weight !== new_weight && inCart ){
+            // eslint-disable-next-line no-console
             console.log( 'trigger an update for rates' );
             updateContext({ fetchRates: true });
         }
@@ -135,31 +135,17 @@ class ProductForm extends React.Component {
     };
 
     render() {
-        const { variantOptions, productOptions, inCart } = this.props;
+        const { variantOptions, productOptions, inCart, profile: { attributes: profileAtts } } = this.props;
         const { errors, details, btnLoading, added, loading } = this.state;
         const selected = variantOptions.find(variant => variant.value === details.id);
         const subtotal = Number(details.quantity) * Number(selected.price);
+        const disc_subtotal = profileAtts.discount ? ((100 - profileAtts.discount) * subtotal / 100) : undefined;
         const multipleVariants = variantOptions.length > 1;
         return (
             <F>
                 <Dimmer active={loading} inverted content={<Loader size="large" />} />
                 <Card.Content extra>
                     <ErrorHandler errors={errors} />
-                    {false && (
-                        <F>
-                            <Header as="h4" content="Pricing:" />
-                            <div style={{ marginBottom: 10 }}>
-                                {variantOptions.map(variant => (
-                                    <Flex spacebetween key={variant.key} className="flex-striped">
-                                        <span>
-                                            <Weights>{variant.value}</Weights>
-                                        </span>
-                                        <Money>{variant.price}</Money>
-                                    </Flex>
-                                ))}
-                            </div>
-                        </F>
-                    )}
                     {!inCart && (
                         <Flex spacing="10" wrap>
                             <div flex="50" className="product-select">
@@ -218,7 +204,18 @@ class ProductForm extends React.Component {
                     <Card.Header>
                         <Flex spacebetween>
                             <span>Subtotal: </span>
-                            <Money type="positive">{subtotal}</Money>
+                            <div>
+                                {disc_subtotal && (
+                                    <>
+                                        <span className="slasher">
+                                            <Money>{subtotal}</Money>
+                                        </span>
+                                        <br />
+                                        <Money type="positive">{disc_subtotal}</Money>
+                                    </>
+                                )}
+                                {!disc_subtotal && <Money type="positive">{subtotal}</Money>}
+                            </div> 
                         </Flex>
                         <br />
                         <Button
