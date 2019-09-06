@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_22_214242) do
+ActiveRecord::Schema.define(version: 2019_09_06_174334) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -480,6 +480,7 @@ ActiveRecord::Schema.define(version: 2019_08_22_214242) do
     t.integer "shipping"
     t.float "tax_rate"
     t.integer "onboard_status"
+    t.float "cust_discount"
     t.index ["customer_profile_id"], name: "index_wholesale_profiles_on_customer_profile_id"
     t.index ["roaster_profile_id"], name: "index_wholesale_profiles_on_roaster_profile_id"
   end

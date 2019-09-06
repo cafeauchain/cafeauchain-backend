@@ -3,6 +3,7 @@
 # Table name: wholesale_profiles
 #
 #  id                  :bigint(8)        not null, primary key
+#  cust_discount       :float
 #  onboard_status      :integer
 #  shipping            :integer
 #  tax_rate            :float
