@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Segment, Button, Header, Divider, Form, Dimmer, Loader } from "semantic-ui-react";
+import { Segment, Button, Header, Divider, Form } from "semantic-ui-react";
 
 /* eslint-disable */
 import Addresses from "shared/addresses";
@@ -111,10 +111,7 @@ const Owner = props => {
 
     return (
         <React.Fragment>
-            <div>
-                <Dimmer active={loading} inverted>
-                    <Loader size="large">Processing</Loader>
-                </Dimmer>
+            <Segment padded>
                 <Header as="h3">{isOpener ? "Account Opener" : "Beneficial Owner Information"}</Header>
                 <Divider />
                 {isOpener && (
@@ -256,6 +253,7 @@ const Owner = props => {
                                     primary
                                     onClick={onlyOwner ? handleOnlyOwner : handleAddOwner}
                                     disabled={!submitEnabled}
+                                    loading={loading}
                                 />
                             )}
                             {!isOpener && (
@@ -264,6 +262,7 @@ const Owner = props => {
                                         content="Add Another Owner"
                                         onClick={handleAddAnother}
                                         disabled={!submitEnabled}
+                                        loading={loading}
                                     />
                                     <Button
                                         content="Finish Wholesale Enrollment"
@@ -272,13 +271,14 @@ const Owner = props => {
                                         primary
                                         onClick={handleFinish}
                                         disabled={!submitEnabled}
+                                        loading={loading}
                                     />
                                 </>
                             )}
                         </div>
                     </Flex>
                 </Form>
-            </div>
+            </Segment>
         </React.Fragment>
     );
 };

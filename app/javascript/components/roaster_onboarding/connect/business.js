@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Segment, Button, Header, Divider, Form, Dimmer, Loader } from "semantic-ui-react";
+import { Segment, Button, Header, Divider, Form } from "semantic-ui-react";
 
 /* eslint-disable */
 import Addresses from "shared/addresses";
@@ -12,7 +12,7 @@ import fields from "defs/forms/wholesaleSignup";
 
 import defaults from "roaster_onboarding/connect/defaults";
 
-import { underscorer, jsonToFormData, callMeDanger } from "utilities";
+import { underscorer, jsonToFormData, callMeDanger, flattenObj, noEmpties } from "utilities";
 import { roasterUrl as ROASTER_URL, requester } from "utilities/apiUtils";
 import { useHandleInput, useAfterSubmit } from "utilities/hooks";
 
@@ -22,12 +22,14 @@ import withContext from "contexts/withContext";
 const Business = props => {
     let initdetails = { business: defaults.business };
     const { roaster, owner, addresses } = props;
+    const { street_1, street_2, city, state, postal_code } = addresses[0];
+    const address = { street_1, street_2, city, state, postal_code};
     const roasterDefaults = {
         name: roaster.name,
         url: roaster.url,
         support_url: roaster.url,
         email: owner.email,
-        address: addresses[0]
+        address
     };
     initdetails.business = {...initdetails.business, ...roasterDefaults };
 
@@ -63,13 +65,19 @@ const Business = props => {
         useAfterSubmit(response, callback, errback);
     };
 
+    const validateInputs = (obj, skips = []) => {
+        let inner = flattenObj(obj);
+        let array = typeof skips === "string" ? [skips] : skips;
+        array.forEach(skip => delete inner[skip]);
+        return noEmpties(inner);
+    };
+
     const { business } = details;
+    const submitEnabled = validateInputs(details, ["street_2"]);
+
     return (
         <React.Fragment>
             <Segment padded="very">
-                <Dimmer active={loading} inverted>
-                    <Loader size="large">Processing</Loader>
-                </Dimmer>
                 <Header as="h3">Business Profile</Header>
                 <Divider />
                     
@@ -116,6 +124,8 @@ const Business = props => {
                                 labelPosition="right"
                                 primary
                                 onClick={handleSubmit}
+                                disabled={!submitEnabled}
+                                loading={loading}
                             />
                         </div>
                     </Flex>

@@ -31,7 +31,10 @@ class WholesaleSignup extends React.PureComponent {
                     {!wholesale_status && (
                         <Business />
                     )}
-                    <Owner isOpener={wholesale_status === "business" ? true : undefined} />
+                    {wholesale_status && (
+                        <Owner isOpener={wholesale_status === "business" ? true : undefined} />
+                    )}
+                    
                 </Segment>
             </React.Fragment>
         );
