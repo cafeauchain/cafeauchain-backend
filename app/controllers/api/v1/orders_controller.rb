@@ -9,10 +9,16 @@ module Api::V1
       @order = Order.create(status: :draft, wholesale_profile_id: @wholesale_profile.id, notes: params[:notes] )
       @cart.cart_items.each do |ci|
         pv = ProductVariant.find(ci.product_variant_id)
+        price = pv.price_in_cents.to_i
+        discount = @wholesale_profile.cust_discount
+        discounted_price = price
+        if !discount.nil? && discount > 0
+          discounted_price = price * (1 - discount/100)
+        end
         @order.order_items.create(
           product_variant_id: pv.id,
           quantity: ci.quantity,
-          line_item_cost: (ci.quantity * pv.price_in_cents),
+          line_item_cost: (ci.quantity * discounted_price),
           product_options: ci.production_options
         )
       end
@@ -56,10 +62,17 @@ module Api::V1
       if params[:update_items].present?
         @order.order_items.destroy_all
         params[:line_items].each{|li|
+          pv = ProductVariant.find(li[:variant_id])
+          price = pv.price_in_cents.to_i
+          discount = @order.wholesale_profile.cust_discount
+          discounted_price = price
+          if !discount.nil? && discount > 0
+            discounted_price = price * (1 - discount/100)
+          end
           @order.order_items.create(
             product_variant_id: li[:variant_id],
             quantity: li[:quantity],
-            line_item_cost: (li[:quantity].to_i * li[:unit_price].to_f * 100),
+            line_item_cost: (li[:quantity].to_i * discounted_price),
             product_options: li[:production_options]
           )
         }
@@ -73,7 +86,8 @@ module Api::V1
 
         subtotal = @order.subtotal.to_f
         final_rate = rate[:retail_rate].to_f
-        tax = invoice.tax.to_f
+        taxable = subtotal + final_rate
+        tax = taxable * @order.wholesale_profile.tax_rate/100.0
         
         invoice.update(subtotal: subtotal, shipping: final_rate, tax: tax )
       elsif params[:status].present?

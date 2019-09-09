@@ -119,7 +119,19 @@ class Order < ApplicationRecord
   end
 
   def subtotal
+    '%.2f' % (order_items.sum { |oi| oi.line_item_cost.to_f/100.0 })
+  end
+
+  def full_total
     '%.2f' % (order_items.sum { |oi| oi.product_variant.price_in_cents.to_f/100.0 * oi.quantity })
+  end
+
+  def customer_discount
+    wholesale_profile.cust_discount
+  end
+
+  def customer_discount_amount
+    '%.2f' % (customer_discount.to_f / 100 * full_total.to_f)
   end
 
   def total_line_items
