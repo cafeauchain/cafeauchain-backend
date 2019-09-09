@@ -1,9 +1,12 @@
-import React, { Fragment as F } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { Item, Label, Image } from "semantic-ui-react";
 
 /* eslint-disable */
-import { Weights, Money } from "shared/textFormatters";
+import { Weights } from "shared/textFormatters";
+import Flex from "shared/flex";
+import Discounter from "shared/discounter";
+
 import defaultImg from "images/cac-logo-with-bg.png";
 
 import { humanize } from "utilities";
@@ -12,15 +15,19 @@ import { humanize } from "utilities";
 const CartItemDetails = ({ item }) => {
     const image = item.image ? item.image.url : defaultImg;
     return (
-        <F>
+        <>
             <Item.Image>
                 <Image size="small" style={{ borderRadius: 6, border: "2px solid #eaeaea" }} src={image} />
             </Item.Image>
             <Item.Content>
                 <Item.Header>{item.name}</Item.Header>
                 <Item.Extra>
-                    <F>Price Each: </F>
-                    <Money type="positive">{item.price}</Money>
+                    <Flex spacing="4">
+                        <div>Price Each: </div>
+                        <div>
+                            <Discounter original={item.price} discount={item.discounted_price} linebreak />        
+                        </div>
+                    </Flex>
                 </Item.Extra>
                 <Item.Description style={{ marginTop: 20 }}>
                     <Label>
@@ -29,7 +36,7 @@ const CartItemDetails = ({ item }) => {
                     <Label>{humanize(item.production_options[0])}</Label>
                 </Item.Description>
             </Item.Content>
-        </F>
+        </>
     );
 };
 

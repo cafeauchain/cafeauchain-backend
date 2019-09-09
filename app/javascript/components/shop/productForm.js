@@ -7,8 +7,8 @@ import "./styles.scss";
 /* eslint-disable */
 import Flex from "shared/flex";
 import Input from "shared/input";
-import { Money } from "shared/textFormatters";
 import ErrorHandler from "shared/errorHandler";
+import Discounter from "shared/discounter";
 
 import { requester, url as API_URL } from "utilities/apiUtils";
 
@@ -135,11 +135,11 @@ class ProductForm extends React.Component {
     };
 
     render() {
-        const { variantOptions, productOptions, inCart, profile: { attributes: profileAtts } } = this.props;
+        const { variantOptions, productOptions, inCart } = this.props;
         const { errors, details, btnLoading, added, loading } = this.state;
         const selected = variantOptions.find(variant => variant.value === details.id);
         const subtotal = Number(details.quantity) * Number(selected.price);
-        const disc_subtotal = profileAtts.discount ? ((100 - profileAtts.discount) * subtotal / 100) : undefined;
+        const disc_subtotal = Number(details.quantity) * Number(selected.discounted_price);
         const multipleVariants = variantOptions.length > 1;
         return (
             <F>
@@ -205,16 +205,7 @@ class ProductForm extends React.Component {
                         <Flex spacebetween>
                             <span>Subtotal: </span>
                             <div>
-                                {disc_subtotal && (
-                                    <>
-                                        <span className="slasher">
-                                            <Money>{subtotal}</Money>
-                                        </span>
-                                        <br />
-                                        <Money type="positive">{disc_subtotal}</Money>
-                                    </>
-                                )}
-                                {!disc_subtotal && <Money type="positive">{subtotal}</Money>}
+                                <Discounter original={subtotal} discount={disc_subtotal} linebreak />
                             </div> 
                         </Flex>
                         <br />

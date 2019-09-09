@@ -18,7 +18,7 @@
 #
 
 class CartSerializer < ActiveModel::Serializer
-  attributes :id, :cart_items, :total_price, :total_line_items, :total_weight, :total_items, :roaster_name, :tax_rate
+  attributes :id, :cart_items, :total_price, :full_price, :total_line_items, :total_weight, :total_items, :roaster_name, :tax_rate
 
   def cart_items
     self.object.cart_items.map do |item|
@@ -50,6 +50,10 @@ class CartSerializer < ActiveModel::Serializer
 
   def total_price
     cart_items.sum { |ci| ci[:discounted_price].to_f * ci[:quantity] }
+  end
+  
+  def full_price
+    cart_items.sum { |ci| ci[:price].to_f * ci[:quantity] }
   end
 
   def total_line_items

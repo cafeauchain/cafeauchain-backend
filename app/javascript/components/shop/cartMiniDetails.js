@@ -5,7 +5,7 @@ import { Divider, Button } from "semantic-ui-react";
 /* eslint-disable */
 import Flex from "shared/flex";
 import Input from "shared/input";
-import { Money, Weights } from "shared/textFormatters";
+import { Weights } from "shared/textFormatters";
 import ErrorHandler from "shared/errorHandler"
 
 import { humanize } from "utilities";
@@ -13,6 +13,7 @@ import { humanize } from "utilities";
 import { url as API_URL, requester } from "utilities/apiUtils";
 
 import withContext from "contexts/withContext";
+import Discounter from "../shared/discounter";
 /* eslint-enable */
 
 class MiniDetails extends React.Component {
@@ -81,7 +82,8 @@ class MiniDetails extends React.Component {
         const { item } = this.props;
         const { isEditable, quantity, saveLoading, removeLoading, errors } = this.state;
         const option = humanize(item.production_options[0]);
-        const itemTotal = item.discounted_price * item.quantity;
+        const total = item.price * item.quantity;
+        const discount = item.discounted_price * item.quantity;
         return (
             <div>
                 <ErrorHandler errors={errors} />
@@ -92,23 +94,19 @@ class MiniDetails extends React.Component {
                         {`(${option})`}
                         <br />
                     </div>
-                    <Money type="positive">{itemTotal}</Money>
-                </Flex>
-                <div>
-                    <span>Price Each: </span>
+                    <div>
+                        <Discounter original={total} discount={discount} linebreak />
+                    </div>
                     
-                    {item.discounted_price < item.price ? (
-                        <>
-                            <span className="slasher">
-                                <Money>{item.price}</Money>
-                            </span>
-                            {"  "}
-                            <Money type="positive">{item.discounted_price}</Money>
-                        </>
-                    ) : (
-                        <Money type="positive">{item.discounted_price}</Money>
-                    )}
-                </div>
+                </Flex>
+                <div style={{ marginTop: 6 }} />
+                <Flex spacing="2">
+                    <span>Price Each: </span>
+                    <div>
+                        <Discounter original={item.price} discount={item.discounted_price} linebreak />
+                    </div>
+                    
+                </Flex>
                 <div>
                     <span>Bag Size: </span>
                     <Weights>{item.size}</Weights>
@@ -126,6 +124,7 @@ class MiniDetails extends React.Component {
                     )}
                     {!isEditable && item.quantity}
                 </div>
+                <div style={{ marginTop: 6 }} />
                 <Flex spacebetween spacing="10">
                     <div>
                         <Button 
