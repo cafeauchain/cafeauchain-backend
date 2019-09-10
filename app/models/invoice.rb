@@ -43,14 +43,6 @@ class Invoice < ApplicationRecord
     self.order.wholesale_profile.tax_rate.to_f / 100.0
   end
 
-  def discount
-    self.discount.to_f
-  end
-
-  def shipping
-    self.discount.to_f
-  end
-
   def total
     taxable + self.tax.to_f
   end
