@@ -7,13 +7,13 @@ import Flex from "shared/flex";
 import Input from "shared/input";
 import { Weights } from "shared/textFormatters";
 import ErrorHandler from "shared/errorHandler"
+import Discounter from "shared/discounter";
 
 import { humanize } from "utilities";
 
 import { url as API_URL, requester } from "utilities/apiUtils";
 
 import withContext from "contexts/withContext";
-import Discounter from "../shared/discounter";
 /* eslint-enable */
 
 class MiniDetails extends React.Component {
