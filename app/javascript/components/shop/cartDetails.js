@@ -8,6 +8,7 @@ import { Money, Weights } from "shared/textFormatters";
 import ErrorHandler from "shared/errorHandler";
 import Modal from "shared/modal";
 import Input from "shared/input";
+import Discounter from "shared/discounter";
 
 import ShippingOptions from "shop/shipping/options"
 import CustomerAddresses from "shop/customer/addresses";
@@ -152,7 +153,7 @@ class CartDetails extends React.Component {
                     <Flex spacebetween spacing="10">
                         <span>Subtotal: </span>
                         <span>
-                            <Money>{attributes.total_price}</Money>
+                            <Discounter original={attributes.full_price} discount={attributes.total_price} linebreak />
                         </span>
                     </Flex>
                 </Card.Content>

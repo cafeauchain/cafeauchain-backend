@@ -83,7 +83,8 @@ class Customer extends React.PureComponent {
             terms: attributes.terms || "",
             status: attributes.wholesale_profile.onboard_status,
             logo_url: attributes.logo_url,
-            tax_rate: attributes.wholesale_profile.tax_rate || ""
+            tax_rate: attributes.wholesale_profile.tax_rate || "",
+            cust_discount: attributes.wholesale_profile.cust_discount || "",
         };
         let status = humanize(profile.status);
         if( profile.status === "onboard_completed" ) status = "Pending Approval";

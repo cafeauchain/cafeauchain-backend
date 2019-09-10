@@ -16,38 +16,24 @@ import withContext from "contexts/withContext";
 /* eslint-enable */
 
 class Products extends React.Component {
-    static propTypes = () => {
-        const { array, func } = PropTypes;
-        return {
-            products: array,
-            variants: array,
-            getCtxData: func
-        };
-    };
-
     componentDidMount() {
-        const { products, variants, getData } = this.props;
+        const { products, getData } = this.props;
         if (products === undefined) getData("products");
-        if (variants === undefined) getData("variants");
     }
-    variantBuilder = (variants, id, name) =>
-        variants.reduce((arr, { id: variant_id, attributes }) => {
-            const text = Weights({ content: attributes.bag_size }) + "  ($" + attributes.price_in_dollars + ")";
-            if (attributes.product_id === id) {
-                return [
-                    ...arr,
-                    {
-                        text,
-                        value: variant_id,
-                        key: variant_id,
-                        id: variant_id,
-                        name,
-                        price: attributes.price_in_dollars
-                    }
-                ];
-            }
-            return arr;
-        }, []);
+    variantBuilder = (variants, name, discount) =>
+        variants.map( variant => {
+            const text = Weights({ content: variant.size }) + " ($" + variant.price_in_dollars + ")";
+            const price = Number(variant.price_in_dollars);
+            const discounted_price = discount ? price * (100 - Number(discount)) / 100 : price;
+            return {
+                text,
+                value: variant.id,
+                key: variant.id,
+                name,
+                price,
+                discounted_price
+            };
+        })
 
     productOptionsBuilder = product_options => {
         if (product_options.length === 0) {
@@ -61,7 +47,7 @@ class Products extends React.Component {
     };
 
     render() {
-        const { products = [], variants = [] } = this.props;
+        const { products = [], profile: { attributes: { discount } } } = this.props;
         let sorted = sortBy({ collection: products, id: "title", namespace: "attributes" });
         sorted = sorted.filter(product => product.attributes.status === "live");
         return (
@@ -71,7 +57,7 @@ class Products extends React.Component {
                         const { product_image_urls: img_urls, title, description, product_options, lots } = attributes;
                         const img = img_urls.length ? img_urls[0].url : defaultImg;
                         const shortDesc = truncate(description, 200);
-                        const variantOptions = this.variantBuilder(variants, id, title);
+                        const variantOptions = this.variantBuilder(attributes.variants, title, discount);
                         const productOptions = this.productOptionsBuilder(product_options);
                         if (!variantOptions.length) return arr;
 
@@ -96,5 +82,11 @@ class Products extends React.Component {
         );
     }
 }
+const { array, object, func } = PropTypes;
+Products.propTypes = {
+    products: array,
+    profile: object,
+    getData: func
+};
 
 export default withContext(Products);

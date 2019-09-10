@@ -33,7 +33,12 @@ class Cart extends React.PureComponent {
                         <Item.Group divided relaxed="very">
                             {items.map(item => {
                                 const productOptions = [{ value: item.production_options[0], key: "product" }];
-                                const variantOptions = [{ value: item.variant_id, key: "quantity", price: item.price }];
+                                const variantOptions = [{
+                                    value: item.variant_id,
+                                    key: "size",
+                                    price: item.price,
+                                    discounted_price: item.discounted_price
+                                }];
                                 return (
                                     <Item key={item.id}>
                                         <CartItemDetails item={item} />

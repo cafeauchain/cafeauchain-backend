@@ -22,7 +22,8 @@
 
 class OrderSerializer < ActiveModel::Serializer
   attributes :id, :order_total, :subtotal, :shipping, :total_line_items, :total_weight, :order_shipping_method,
-  :total_items, :roaster_name, :status, :order_date, :company_name, :taxes, :roast_date, :invoice_status, :notes
+  :total_items, :roaster_name, :status, :order_date, :company_name, :taxes, :roast_date, :invoice_status, :notes,
+  :full_total, :customer_discount, :customer_discount_amount, :customer_discount_applied, :invoice_discount
 
   def order_items
     self.object.order_items.map do |item|

@@ -118,8 +118,32 @@ class Order < ApplicationRecord
     wholesale_profile.roaster_profile.name
   end
 
+  def line_item_total
+    order_items.sum { |oi| oi.line_item_cost.to_f/100.0 }
+  end
+
   def subtotal
+    '%.2f' % (line_item_total - invoice_discount.to_f) 
+  end
+
+  def full_total
     '%.2f' % (order_items.sum { |oi| oi.product_variant.price_in_cents.to_f/100.0 * oi.quantity })
+  end
+
+  def customer_discount_applied
+    line_item_total < full_total.to_f
+  end
+
+  def customer_discount
+    wholesale_profile.cust_discount
+  end
+
+  def customer_discount_amount
+    '%.2f' % (customer_discount.to_f / 100 * full_total.to_f)
+  end
+
+  def invoice_discount
+    '%.2f' % (invoice.discount.to_f)
   end
 
   def total_line_items
