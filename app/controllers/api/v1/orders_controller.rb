@@ -87,7 +87,7 @@ module Api::V1
         subtotal = @order.subtotal.to_f
         final_rate = rate[:retail_rate].to_f
         taxable = subtotal + final_rate
-        tax = taxable * @order.wholesale_profile.tax_rate.to_f/100.0
+        tax = taxable * @order.invoice.tax_rate
         
         invoice.update(subtotal: subtotal, shipping: final_rate, tax: tax )
       elsif params[:status].present?
