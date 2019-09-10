@@ -115,19 +115,24 @@ class Order < ApplicationRecord
   end
 
   def roaster_name
-    wholesale_profile.roaster_profile.name
+    self.wholesale_profile.roaster_profile.name
   end
 
   def line_item_total
-    order_items.sum { |oi| (oi.line_item_cost.to_f / 100.0).round(2) }
+    self.order_items.sum { |oi| (oi.line_item_cost.to_f / 100.0).round(2) }
   end
 
   def subtotal
-    '%.2f' % (line_item_total - invoice_discount.to_f) 
+    '%.2f' % line_item_total 
+  end
+  
+  # Invoice level discount total
+  def il_discount_total
+    '%.2f' % (line_item_total - invoice_discount.to_f)
   end
 
   def full_total
-    '%.2f' % (order_items.sum { |oi| oi.product_variant.price_in_cents.to_f/100.0 * oi.quantity })
+    '%.2f' % (self.order_items.sum { |oi| oi.product_variant.price_in_cents.to_f/100.0 * oi.quantity })
   end
 
   def customer_discount_applied
@@ -135,7 +140,7 @@ class Order < ApplicationRecord
   end
 
   def customer_discount
-    wholesale_profile.cust_discount
+    self.wholesale_profile.cust_discount
   end
 
   def customer_discount_amount
@@ -143,31 +148,31 @@ class Order < ApplicationRecord
   end
 
   def invoice_discount
-    '%.2f' % (invoice.discount.to_f)
+    '%.2f' % (self.invoice.discount.to_f)
   end
 
   def total_line_items
-    order_items.length
+    self.order_items.length
   end
 
   def order_total
-    '%.2f' % (invoice.total)
+    '%.2f' % (self.invoice.total)
   end
 
   def shipping
-    order_shipping_method.final_rate.to_f
+    self.order_shipping_method.final_rate.to_f
   end
 
   def taxes
-    '%.2f' % (invoice.tax.to_f)
+    '%.2f' % (self.invoice.tax.to_f)
   end
 
   def total_items
-    order_items.sum { |oi| oi.quantity }
+    self.order_items.sum { |oi| oi.quantity }
   end
 
   def total_weight
-    order_items.sum { |oi| oi.product_variant.custom_options["size"].to_i * oi.quantity }
+    self.order_items.sum { |oi| oi.product_variant.custom_options["size"].to_i * oi.quantity }
   end
 
   def order_date
