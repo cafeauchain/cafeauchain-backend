@@ -3,14 +3,15 @@
 # Table name: invoices
 #
 #  id                :bigint(8)        not null, primary key
-#  fee               :float            default(0.0)
+#  discount          :decimal(7, 2)
+#  fee               :decimal(8, 2)    default(0.0)
 #  memo              :string
 #  payment_status    :integer
 #  payment_type      :integer
-#  shipping          :float
+#  shipping          :decimal(8, 2)
 #  status            :integer
-#  subtotal          :float
-#  tax               :float
+#  subtotal          :decimal(8, 2)
+#  tax               :decimal(8, 2)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  order_id          :bigint(8)

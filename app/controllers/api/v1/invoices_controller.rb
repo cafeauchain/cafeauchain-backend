@@ -11,6 +11,10 @@ module Api::V1
       elsif params[:status].present? && params[:status] == "paid_in_full"
         @invoice.update(status: params[:status], memo: params[:memo], payment_status: :offline, fee: 0)
         render json: @invoice.order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
+      elsif params[:discount].present? && params[:process_discount].present?
+        tax = (@invoice.taxable + @invoice.discount - params[:discount].to_f ) * @invoice.order.wholesale_profile.tax_rate/100.0
+        @invoice.update(discount: params[:discount], tax: tax)
+        render json: @invoice.order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
       end
     end
 

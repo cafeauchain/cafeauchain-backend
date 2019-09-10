@@ -13,13 +13,14 @@ class OrderTotals extends PureComponent {
         const { 
             attributes: { 
                 subtotal, taxes, shipping, order_total, invoice_fee, order_net, full_total, customer_discount,
-                customer_discount_amount
+                customer_discount_amount, invoice_discount, customer_discount_applied
             }, 
             isCustomer 
         } = this.props;
+        const showInvoiceDiscount = invoice_discount && Number(invoice_discount) > 0;
         return (
             <React.Fragment>
-                {customer_discount && (
+                {(customer_discount_applied || showInvoiceDiscount) && (
                     <>
                     <Flex spacing="10" spacebetween wrap>
                         <div flex="50">
@@ -29,20 +30,39 @@ class OrderTotals extends PureComponent {
                             <Money>{full_total}</Money>
                         </div>
                     </Flex>
-                    <div style={{ margin: "6px 0", color: styles.darkgray, fontSize: 13 }}>
-                        <strong>
-                            {customer_discount}
-                            <span>% Customer Discount</span>
-                        </strong>
-                    </div>
-                    <Flex spacing="10" spacebetween wrap>
-                        <div flex="50">
-                            <strong>Discount: </strong>
-                        </div>
-                        <div flex="50">
-                            <PosMoney>{0 - customer_discount_amount}</PosMoney>
-                        </div>
-                    </Flex>
+                    {customer_discount_applied && (
+                        <>
+                            <div style={{ margin: "6px 0", color: styles.darkgray, fontSize: 13 }}>
+                                <strong>
+                                    {customer_discount}
+                                    <span>% Customer Discount</span>
+                                </strong>
+                            </div>
+                            <Flex spacing="10" spacebetween wrap>
+                                <div flex="50">
+                                    <strong>Discount: </strong>
+                                </div>
+                                <div flex="50">
+                                    <PosMoney>{0 - customer_discount_amount}</PosMoney>
+                                </div>
+                            </Flex>
+                        </>
+                    )}
+                    {showInvoiceDiscount && (
+                        <>
+                            <div style={{ margin: "6px 0", color: styles.darkgray, fontSize: 13 }}>
+                                <strong>Invoice Discount</strong>
+                            </div>
+                            <Flex spacing="10" spacebetween wrap>
+                                <div flex="50">
+                                    <strong>Discount: </strong>
+                                </div>
+                                <div flex="50">
+                                    <PosMoney>{0 - invoice_discount}</PosMoney>
+                                </div>
+                            </Flex>
+                        </>
+                    )} 
                     <Divider />
                     </>
                 )}

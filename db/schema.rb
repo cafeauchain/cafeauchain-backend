@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_06_174334) do
+ActiveRecord::Schema.define(version: 2019_09_09_232608) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -169,17 +169,18 @@ ActiveRecord::Schema.define(version: 2019_09_06_174334) do
 
   create_table "invoices", force: :cascade do |t|
     t.integer "status"
-    t.float "subtotal"
-    t.float "tax"
+    t.decimal "subtotal", precision: 8, scale: 2
+    t.decimal "tax", precision: 8, scale: 2
     t.integer "payment_type"
     t.string "stripe_invoice_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "order_id"
-    t.float "shipping"
+    t.decimal "shipping", precision: 8, scale: 2
     t.integer "payment_status"
     t.string "memo"
-    t.float "fee", default: 0.0
+    t.decimal "fee", precision: 8, scale: 2, default: "0.0"
+    t.decimal "discount", precision: 7, scale: 2
     t.index ["order_id"], name: "index_invoices_on_order_id"
   end
 
