@@ -64,7 +64,7 @@ class Api::V1::InventoryItemsController < ApplicationController
 
   def set_inventory_item
     begin
-      @inventory_item = @roaster.inventory_item.find(params[:id])  
+      @inventory_item = @roaster.inventory_items.find(params[:id])  
     rescue => exception
       return render json: { error: "Inventory Item not found", exception: exception }, status: 404
     end
