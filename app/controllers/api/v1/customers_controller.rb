@@ -218,7 +218,7 @@ module Api::V1
           @customer = @roaster.customer_profiles.find(params[:id]) 
         end
       rescue => exception
-        return render json: { error: "Customer not found", exception: exception }, status: 404
+        return render json: { error: "Customer not found", exception: exception, message: "Customer not found" }, status: 404
       end
       
     end
