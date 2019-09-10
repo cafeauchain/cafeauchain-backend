@@ -13,12 +13,12 @@ module Api::V1
         discount = @wholesale_profile.cust_discount
         discounted_price = price
         if !discount.nil? && discount > 0
-          discounted_price = price * (1 - discount/100)
+          discounted_price = price * (1 - discount/100.0)
         end
         @order.order_items.create(
           product_variant_id: pv.id,
           quantity: ci.quantity,
-          line_item_cost: (ci.quantity * discounted_price),
+          line_item_cost: (ci.quantity * discounted_price.round(0)),
           product_options: ci.production_options
         )
       end
@@ -67,12 +67,12 @@ module Api::V1
           discount = @order.wholesale_profile.cust_discount
           discounted_price = price
           if !discount.nil? && discount > 0
-            discounted_price = price * (1 - discount/100)
+            discounted_price = price * (1 - discount/100.0)
           end
           @order.order_items.create(
             product_variant_id: li[:variant_id],
             quantity: li[:quantity],
-            line_item_cost: (li[:quantity].to_i * discounted_price),
+            line_item_cost: (li[:quantity].to_i * discounted_price.round(0)),
             product_options: li[:production_options]
           )
         }

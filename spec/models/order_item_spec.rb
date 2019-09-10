@@ -3,7 +3,7 @@
 # Table name: order_items
 #
 #  id                 :uuid             not null, primary key
-#  line_item_cost     :float
+#  line_item_cost     :integer          not null
 #  packed             :boolean          default(FALSE)
 #  product_options    :string           default([]), is an Array
 #  quantity           :integer

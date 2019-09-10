@@ -21,7 +21,7 @@ module Api::V1
         order_shipping_method.update(carrier: params[:carrier], service: params[:service], final_rate: params[:retail_rate])
         invoice = order_shipping_method.order.invoice
         shipping = params[:retail_rate].to_f
-        tax = (invoice.taxable - invoice.shipping + shipping) * invoice.tax_rate
+        tax = (invoice.taxable - invoice[:shipping].to_f + shipping) * invoice.tax_rate
         invoice.update(shipping: shipping, tax: tax)
       end
       

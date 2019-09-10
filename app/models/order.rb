@@ -119,7 +119,7 @@ class Order < ApplicationRecord
   end
 
   def line_item_total
-    order_items.sum { |oi| oi.line_item_cost.to_f/100.0 }
+    order_items.sum { |oi| (oi.line_item_cost.to_f / 100.0).round(2) }
   end
 
   def subtotal
@@ -139,7 +139,7 @@ class Order < ApplicationRecord
   end
 
   def customer_discount_amount
-    '%.2f' % (customer_discount.to_f / 100 * full_total.to_f)
+    '%.2f' % (full_total.to_f - line_item_total)
   end
 
   def invoice_discount
