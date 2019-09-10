@@ -95,7 +95,7 @@ module Api::V1
       begin
         @lot = @roaster.lots.find(params[:id])  
       rescue => exception
-        return render json: { error: "Lot not found", exception: exception }, status: 404
+        return render json: { error: "Lot not found", exception: exception, message: "Lot not found" }, status: 404
       end  
     end
 

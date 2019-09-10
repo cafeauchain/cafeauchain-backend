@@ -54,7 +54,7 @@ class Api::V1::ProductsController < ApplicationController
     begin
       @product = @roaster.products.find(params[:id])  
     rescue => exception
-      return render json: { error: "Product not found", exception: exception }, status: 404
+      return render json: { error: "Product not found", exception: exception, message: "Product not found" }, status: 404
     end
   end
 

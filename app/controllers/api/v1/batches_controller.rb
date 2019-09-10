@@ -76,7 +76,7 @@ module Api::V1
       begin
         @lot = @roaster.lots.find(params[:lot_id])  
       rescue => exception
-        return render json: { error: "Lot not found", exception: exception }, status: 404
+        return render json: { error: "Lot not found", exception: exception, message: "Batch not found" }, status: 404
       end
     end
 
@@ -84,7 +84,7 @@ module Api::V1
       begin
         @batch = @roaster.batches.find(params[:id])
       rescue => exception
-        return render json: { error: "Batch not found", exception: exception }, status: 404
+        return render json: { error: "Batch not found", exception: exception, message: "Batch not found" }, status: 404
       end
     end
 
