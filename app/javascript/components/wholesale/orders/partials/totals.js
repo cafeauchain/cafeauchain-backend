@@ -32,7 +32,7 @@ class OrderTotals extends PureComponent {
                     </Flex>
                     {customer_discount_applied && (
                         <>
-                            <div style={{ margin: "6px 0", color: styles.darkgray, fontSize: 13 }}>
+                            <div style={{ color: styles.darkgray, fontSize: 13 }}>
                                 <strong>
                                     {customer_discount}
                                     <span>% Customer Discount</span>
@@ -50,7 +50,7 @@ class OrderTotals extends PureComponent {
                     )}
                     {showInvoiceDiscount && (
                         <>
-                            <div style={{ margin: "6px 0", color: styles.darkgray, fontSize: 13 }}>
+                            <div style={{ color: styles.darkgray, fontSize: 13 }}>
                                 <strong>Invoice Discount</strong>
                             </div>
                             <Flex spacing="10" spacebetween wrap>
