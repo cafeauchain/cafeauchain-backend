@@ -54,7 +54,7 @@ class Cart < ApplicationRecord
   end
 
   def tax_rate
-    self.wholesale_profile.tax_rate
+    self.wholesale_profile.tax_rate.to_f
   end
 
 end
