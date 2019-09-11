@@ -5,6 +5,7 @@ const urls = id => ({
     activity: `${ROASTER_URL(id)}/subscriptions`,
     batches: `${ROASTER_URL(id)}/batches`,
     queued: `${ROASTER_URL(id)}/batches?status=in_queue`,
+    completed: `${ROASTER_URL(id)}/batches?status=roast_completed`,
     log: `${ROASTER_URL(id)}/lots_by_date`,
     lots: `${ROASTER_URL(id)}/lots`,
     producers: `${API_URL}/producers`,

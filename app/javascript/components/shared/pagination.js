@@ -13,9 +13,13 @@ const pages = [10,25,50,100];
 
 class Pager extends PureComponent {
     updatePage = async ({ activePage, value }) => {
-        const { onPageChange } = this.props;
+        const { onPageChange, paginationParams } = this.props;
+        let useQuestion, internal;
         let string = window.location.search;
         let params = paramatize(string);
+        if( paginationParams ){
+            ({ useQuestion, params, internal } = paginationParams);
+        }
         if (activePage) {
             params.page = activePage;
         }
@@ -23,8 +27,8 @@ class Pager extends PureComponent {
             params.limit = value;
             params.page = 1;
         }
-        const newParamString = paramString(params);
-        window.history.pushState(null, null, newParamString);
+        const newParamString = paramString(params, useQuestion !== undefined ? useQuestion : true );
+        if( !internal ) window.history.pushState(null, null, newParamString);
         onPageChange({ paramString: newParamString });
     };
 
@@ -91,7 +95,8 @@ class Pager extends PureComponent {
 const { object, func } = PropTypes;
 Pager.propTypes = {
     pagination: object,
-    onPageChange: func
+    onPageChange: func,
+    paginationParams: object
 };
 
 export default Pager;
