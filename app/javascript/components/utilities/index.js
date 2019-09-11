@@ -6,6 +6,7 @@ import debounce from "./debounce";
 import namespacer from "./fieldNamespacer";
 import fileReader from "./fileReader";
 import fileToImage from "./fileToImage";
+import flattenObj from "./flattenObj";
 import getTextFromChildren from "./getTextFromChildren";
 import getTimePeriod from "./getTimePeriod";
 import groupBy from "./groupBy";
@@ -35,6 +36,7 @@ export {
     namespacer,
     fileReader,
     fileToImage,
+    flattenObj,
     getTextFromChildren,
     getTimePeriod,
     groupBy,

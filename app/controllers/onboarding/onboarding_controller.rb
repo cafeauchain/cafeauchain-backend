@@ -42,6 +42,7 @@ module Onboarding
     def wholesale_signup
       render "manage/primary", locals: {
         roaster: @roaster,
+        addresses: @roaster.addresses,
         owner: @roaster.owner,
         title: 'Roaster Onboarding | Wholesale Signup',
         component: 'roaster_onboarding/wholesaleSignup'
