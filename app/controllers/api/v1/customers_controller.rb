@@ -20,6 +20,10 @@ module Api::V1
         if existing_user.blank?
             user = User.create!(email: params[:email], name: params[:name], password: @roaster.slug)  
         else
+          if !existing_user.roaster_profile.nil?
+            existing_user.errors.add(:email, "is already linked to a roaster")
+            return render json: existing_user.errors.full_messages, status: 409
+          end
           user = existing_user
         end
 
