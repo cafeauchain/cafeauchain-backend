@@ -89,7 +89,7 @@ class ManualLotAdjustment extends Component {
                 </p>
 
                 <p>
-                    <Titler title="Green Amount Available" value={on_hand.toFixed(1) + " lbs"} bold />
+                    <Titler title="Green Amount Available" value={on_hand + " lbs"} bold />
                 </p>
 
                 <Input
@@ -100,7 +100,7 @@ class ManualLotAdjustment extends Component {
                     value={details.adjustment}
                 />
                 <Flex spacebetween flexend>
-                    <Button primary onClick={this.handleSubmit} content="Adjust Roasted Amount" loading={btnLoading} />
+                    <Button primary onClick={this.handleSubmit} content="Adjust Green Amount" loading={btnLoading} />
                 </Flex>
             </Form>
         );
