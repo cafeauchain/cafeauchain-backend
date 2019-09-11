@@ -136,7 +136,6 @@ module Api::V1
         if params[:submit_type].nil?
           stripe_account = StripeServices::CreateConnectAccount.account_create_business(@roaster_profile.id, params)
           @roaster_profile.update(stripe_account_id: stripe_account.id, wholesale_status: :business)
-          @roaster_profile.update(wholesale_status: :business)
         elsif params[:submit_type] == "only_owner" || params[:submit_type] == "enrolled"
           stripe_account = StripeServices::CreateConnectAccount.account_create_person(@roaster_profile.id, params)
           @roaster_profile.update(wholesale_status: :enrolled, onboard_status: :shipping)
