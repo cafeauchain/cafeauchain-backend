@@ -5,7 +5,7 @@ import commafy from "commafy";
 import "./styles.scss";
 
 const Comma = props => {
-    let { content, children, className = "", type, decimals, money, asCents, raw, ...rest } = props;
+    let { content, children, className = "", type, decimals, money, asCents, raw, anyDecimals, ...rest } = props;
     if (children) content = children;
     let value = Number(content);
     if (asCents) value = value / 100;
@@ -19,7 +19,8 @@ const Comma = props => {
 
     let result = value < 0 ? "-" : "";
     result += money ? "$" : "";
-    result += value ? commafy(Math.abs(value).toFixed(decimals)) : 0;
+    const abs = Math.abs(value);
+    result += value ? commafy(anyDecimals ? abs : abs.toFixed(decimals)) : 0;
 
     if( raw ) return result;
 
@@ -39,7 +40,8 @@ Comma.propTypes = {
     decimals: number,
     money: bool,
     asCents: bool,
-    raw: bool
+    raw: bool,
+    anyDecimals: bool
 };
 
 export default Comma;
