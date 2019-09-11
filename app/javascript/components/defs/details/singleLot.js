@@ -25,13 +25,13 @@ const fields = {
     warehouse: [
         { name: "in_warehouse", formatter: NecessaryDecimal },
         { name: "warehouse_value", formatter: PosMoney },
-        { name: "low_remaining", formatter: NecessaryDecimal, label: "Warehouse Par Level" },
+        { name: "low_remaining", formatter: AsNumber, label: "Warehouse Par Level" },
         { name: "warehouse_alert", formatter: Enabler },
     ],
     on_hand: [
         { name: "on_hand", formatter: NecessaryDecimal, label: "In House" },
         { name: "on_hand_value", formatter: PosMoney, label: "In House Value" },
-        { name: "low_on_hand", formatter: NecessaryDecimal, label: "In House Par Level" },
+        { name: "low_on_hand", formatter: AsNumber, label: "In House Par Level" },
         { name: "on_hand_alert", formatter: Enabler },
     ]
 };
