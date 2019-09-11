@@ -5,8 +5,9 @@ import { Divider, Button } from "semantic-ui-react";
 /* eslint-disable */
 import Flex from "shared/flex";
 import Input from "shared/input";
-import { Money, Weights } from "shared/textFormatters";
+import { Weights } from "shared/textFormatters";
 import ErrorHandler from "shared/errorHandler"
+import Discounter from "shared/discounter";
 
 import { humanize } from "utilities";
 
@@ -81,7 +82,8 @@ class MiniDetails extends React.Component {
         const { item } = this.props;
         const { isEditable, quantity, saveLoading, removeLoading, errors } = this.state;
         const option = humanize(item.production_options[0]);
-        const itemTotal = item.price * item.quantity;
+        const total = item.price * item.quantity;
+        const discount = item.discounted_price * item.quantity;
         return (
             <div>
                 <ErrorHandler errors={errors} />
@@ -92,12 +94,19 @@ class MiniDetails extends React.Component {
                         {`(${option})`}
                         <br />
                     </div>
-                    <Money type="positive">{itemTotal}</Money>
+                    <div>
+                        <Discounter original={total} discount={discount} linebreak />
+                    </div>
+                    
                 </Flex>
-                <div>
+                <div style={{ marginTop: 6 }} />
+                <Flex spacing="2">
                     <span>Price Each: </span>
-                    <Money type="positive">{item.price}</Money>
-                </div>
+                    <div>
+                        <Discounter original={item.price} discount={item.discounted_price} linebreak />
+                    </div>
+                    
+                </Flex>
                 <div>
                     <span>Bag Size: </span>
                     <Weights>{item.size}</Weights>
@@ -115,6 +124,7 @@ class MiniDetails extends React.Component {
                     )}
                     {!isEditable && item.quantity}
                 </div>
+                <div style={{ marginTop: 6 }} />
                 <Flex spacebetween spacing="10">
                     <div>
                         <Button 

@@ -232,7 +232,7 @@ module Api::V1
     end
 
     def wholesale_params
-      params.permit(:terms, :tax_rate, :onboard_status)
+      params.permit(:terms, :tax_rate, :onboard_status, :cust_discount)
     end
 
     def address_params

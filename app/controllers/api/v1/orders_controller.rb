@@ -7,15 +7,8 @@ module Api::V1
     def create
       @wholesale_profile = @cart.wholesale_profile
       @order = Order.create(status: :draft, wholesale_profile_id: @wholesale_profile.id, notes: params[:notes] )
-      @cart.cart_items.each do |ci|
-        pv = ProductVariant.find(ci.product_variant_id)
-        @order.order_items.create(
-          product_variant_id: pv.id,
-          quantity: ci.quantity,
-          line_item_cost: (ci.quantity * pv.price_in_cents),
-          product_options: ci.production_options
-        )
-      end
+      build_line_items(@cart.cart_items)
+
       roast_date = OrderServices::GetRoastDate.process(@order)
       if @order.update(status: :processing, roast_date: roast_date)
         @cart.cart_items.destroy_all
@@ -55,14 +48,7 @@ module Api::V1
     def update
       if params[:update_items].present?
         @order.order_items.destroy_all
-        params[:line_items].each{|li|
-          @order.order_items.create(
-            product_variant_id: li[:variant_id],
-            quantity: li[:quantity],
-            line_item_cost: (li[:quantity].to_i * li[:unit_price].to_f * 100),
-            product_options: li[:production_options]
-          )
-        }
+        build_line_items(params[:line_items])
 
         wpid = @order.wholesale_profile_id
         order_shipping_method = @order.order_shipping_method
@@ -73,7 +59,8 @@ module Api::V1
 
         subtotal = @order.subtotal.to_f
         final_rate = rate[:retail_rate].to_f
-        tax = invoice.tax.to_f
+        taxable = subtotal + final_rate - @order.invoice_discount.to_f
+        tax = taxable * @order.invoice.tax_rate
         
         invoice.update(subtotal: subtotal, shipping: final_rate, tax: tax )
       elsif params[:status].present?
@@ -92,6 +79,25 @@ module Api::V1
     end
 
     private
+
+    def build_line_items(items)
+      items.each{|item|
+          variant_id = item[:variant_id] || item[:product_variant_id]
+          pv = ProductVariant.find(variant_id)
+          price = pv.price_in_cents.to_i
+          discount = @order.wholesale_profile.cust_discount
+          discounted_price = price
+          if !discount.nil? && discount > 0
+            discounted_price = price * (100 - discount)/100.0
+          end
+          @order.order_items.create(
+            product_variant_id: variant_id,
+            quantity: item[:quantity].to_i,
+            line_item_cost: (item[:quantity].to_i * discounted_price.round(0)),
+            product_options: item[:production_options]
+          )
+      }
+    end
 
     def set_order
       @order = Order.find(params[:id])

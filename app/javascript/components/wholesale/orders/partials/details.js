@@ -51,7 +51,7 @@ class OrderDetails extends PureComponent {
                     </div>
                     <div flex="50">{humanize(status)}</div>
                     <div flex="50">
-                        <strong>Order Total:</strong>
+                        <strong>Total:</strong>
                     </div>
                     <div flex="50">
                         <Money type="positive">{order_total}</Money>

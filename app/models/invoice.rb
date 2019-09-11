@@ -3,14 +3,15 @@
 # Table name: invoices
 #
 #  id                :bigint(8)        not null, primary key
-#  fee               :float            default(0.0)
+#  discount          :decimal(7, 2)
+#  fee               :decimal(8, 2)    default(0.0)
 #  memo              :string
 #  payment_status    :integer
 #  payment_type      :integer
-#  shipping          :float
+#  shipping          :decimal(8, 2)
 #  status            :integer
-#  subtotal          :float
-#  tax               :float
+#  subtotal          :decimal(8, 2)
+#  tax               :decimal(8, 2)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  order_id          :bigint(8)
@@ -34,8 +35,16 @@ class Invoice < ApplicationRecord
   enum payment_type: [:card_on_file, :terms_with_vendor]
   enum payment_status: [:offline, :stripe]
 
+  def taxable
+    self.subtotal.to_f + self.shipping.to_f - self.discount.to_f
+  end
+
+  def tax_rate
+    self.order.wholesale_profile.tax_rate.to_f / 100.0
+  end
+
   def total
-    self.subtotal.to_f + self.tax.to_f + self.shipping.to_f
+    taxable + self.tax.to_f
   end
   def total_in_cents
     (self.total * 100).to_i

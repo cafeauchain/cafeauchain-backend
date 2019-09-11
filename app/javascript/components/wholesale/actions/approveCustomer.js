@@ -20,13 +20,14 @@ class ApproveCustomer extends React.Component {
     };
     constructor(props) {
         super(props);
-        const { profile: { tax_rate, terms } } = props;
+        const { profile: { tax_rate, terms, cust_discount } } = props;
         this.state = {
             btnLoading: false,
             errors: [],
             details: {
                 tax_rate: Number(tax_rate) || 0,
-                terms
+                terms,
+                cust_discount
             }
         };
     }
@@ -93,6 +94,13 @@ class ApproveCustomer extends React.Component {
                     inputType="textarea"
                     onChange={this.handleInputChange}
                     value={details.terms || ""}
+                />
+                <Input
+                    name="cust_discount"
+                    label="Customer Discount"
+                    type="number"
+                    onChange={this.handleInputChange}
+                    value={details.cust_discount || ""}
                 />
                 <Button 
                     primary

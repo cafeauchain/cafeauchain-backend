@@ -20,6 +20,8 @@ import ManualShipping from "wholesale/orders/partials/manualShipping";
 import Fulfillment from "wholesale/orders/partials/fulfillment";
 import Packer from "manage/production/packer";
 
+import AddDiscount from "wholesale/orders/partials/addDiscount";
+
 import tableDefs from "defs/tables/orderLineItems";
 
 import { url as API_URL, requester } from "utilities/apiUtils";
@@ -122,7 +124,8 @@ class Order extends React.Component {
             order: { attributes = {}, id },
             profile: { attributes: roasterAtts },
             customer: { attributes: customerAtts },
-            products
+            products,
+            updateContext
         } = this.props;
         const order_items = attributes ? attributes.order_items : [];
         const line_items = isEditable ? lineItems : order_items;
@@ -266,6 +269,17 @@ class Order extends React.Component {
                             </div>
                             <div flex="33" style={{ textAlign: "right", marginTop: "auto" }}>
                                 <div style={{ position: "relative" }}>
+                                    {!isEditable && canEdit && (
+                                        <>
+                                            <AddDiscount 
+                                                id={attributes.invoice.id}
+                                                updateContext={updateContext}
+                                                discount={attributes.invoice.discount}
+                                            />
+                                            <br />
+                                            <br />
+                                        </>
+                                    )}
                                     <Dimmer active={isEditable} inverted />
                                     <OrderTotals attributes={attributes} />
                                 </div>

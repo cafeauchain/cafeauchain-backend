@@ -63,7 +63,7 @@ class EditCustomer extends Component {
 
     render() {
         const { details, loading, errors } = this.state;
-        const { name, terms, tax_rate, logo_url, id, company_name, email, ...address } = details;
+        const { name, terms, tax_rate, logo_url, id, company_name, email, cust_discount, ...address } = details;
 
         const Input = this.renderInput;
         return (
@@ -90,6 +90,7 @@ class EditCustomer extends Component {
                         <Header as="h4" content="Wholesale Profile Details" />
                         <Input inputType="textarea" label="Terms" value={terms} />
                         <Input label="Tax Rate" value={tax_rate} />
+                        <Input label="Customer Discount" name="cust_discount" value={cust_discount} />
                     </Segment>
                     <Form.Button content="Update Customer Profile" primary />
                 </Form>
