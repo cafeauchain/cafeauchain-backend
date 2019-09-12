@@ -36,9 +36,8 @@ class CompletedRoasts extends Component {
                 tableDefs={tableDefs}
                 data={completed}
                 loading={loading}
-                pagination={completed_paging}
+                pagination={{...completed_paging, useQuestion: false, internal: true}}
                 onPageChange={this.handlePager}
-                paginationParams={{useQuestion: false, params: completed_paging, internal: true}}
             />
         );
     }
