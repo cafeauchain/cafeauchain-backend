@@ -25,7 +25,7 @@ const Dashboard = () => (
                 </Segment>
             </Grid.Column>
             <Grid.Column width={6} stretched>
-                <Segment>{false && <Budgeter />}</Segment>
+                <Segment>{true && <Budgeter />}</Segment>
             </Grid.Column>
         </Grid>
         <Segment>{true && <OpenContracts />}</Segment>
