@@ -92,8 +92,7 @@ class Pager extends PureComponent {
 const { object, func } = PropTypes;
 Pager.propTypes = {
     pagination: object,
-    onPageChange: func,
-    paginationParams: object
+    onPageChange: func
 };
 
 export default Pager;
