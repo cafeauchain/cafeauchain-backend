@@ -11,8 +11,8 @@ module Api::V1
       else
         @batches = @batches.filter(params.slice(:status))
       end
-      
-      render json: @batches, status: 200
+      paged = pagination(@batches)
+      render json: paged[:records], meta: paged[:meta], status: 200
     end
 
     def show

@@ -224,7 +224,6 @@ class OpenRoasts extends Component {
                         <Inner />
                     </Modal.Content>
                 </Modal>
-                <Header as="h2" content="Open Roasts" />
                 <Table tableDefs={tableDefs} data={batches} loading={loading} onClick={this.onClick} />
             </F>
         );
@@ -235,7 +234,6 @@ const { array, bool, func, oneOfType, string, number } = PropTypes;
 OpenRoasts.propTypes = {
     batches: array,
     loading: bool,
-    updateContext: func,
     userId: oneOfType([string, number]),
     inventory: array,
     getData: func

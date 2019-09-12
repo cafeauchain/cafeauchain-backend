@@ -34,7 +34,7 @@ class Order < ApplicationRecord
 
   enum status: [:draft, :processing, :packed, :shipped, :fulfilled]
 
-  scope :open_orders, -> (status) { where status: status === "open" ? [:processing, :packed, :shipped] : status }
+  scope :open_orders, -> (status) { where status: status == "open" ? [:processing, :packed, :shipped] : status }
   scope :status, -> (status) { status == "all" ? all : open_orders(status) }
   scope :customer, -> (customer) { joins(:customer_profile).where("customer_profiles.id = #{customer}") }
 

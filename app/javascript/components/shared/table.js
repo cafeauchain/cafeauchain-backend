@@ -184,7 +184,7 @@ class FormattedTable extends Component {
                             </Table.Body>
                         </Table>
                     </div>
-                    {pagination && (
+                    {pagination && pagination.totalpages && (
                         <React.Fragment>
                             <br />
                             <Pagination pagination={pagination} onPageChange={onPageChange} />
