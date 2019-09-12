@@ -27,7 +27,10 @@ class QueuedRoast extends Component {
         };
         this.state = {
             details,
-            btnLoading: false,
+            btnLoading: {
+                submitBtn: false,
+                deleteBtn: false
+            },
             errors: []
         };
     }
@@ -48,7 +51,7 @@ class QueuedRoast extends Component {
         const { target } = ev;
         ev.preventDefault();
         target.blur();
-        await this.setState({ btnLoading: true });
+        await this.setState({ btnLoading: { submitBtn: true, deleteBtn: false } });
         const { details } = this.state;
         const { userId, current: { id } } = this.props;
         const url = `${roasterUrl(userId)}/batches/${id}`;
@@ -58,22 +61,34 @@ class QueuedRoast extends Component {
         this.afterSubmit(response);
     };
 
+    handleDelete = async ev => {
+        ev.preventDefault();
+        const { target } = ev;
+        target.blur();
+        await this.setState({ btnLoading: { submitBtn: false, deleteBtn: true } });
+        const { current: { id } } = this.props;
+        const { userId } = this.props;
+        const url = `${roasterUrl(userId)}/batches/${id}`;
+        let response = await requester({ url, method: "DELETE" });
+        this.afterSubmit(response, true);
+    }
+
     // only called after successful submit
-    afterSubmit = async response => {
+    afterSubmit = async (response, isDelete) => {
         setTimeout(async() => {
             if (response instanceof Error) {
                 // eslint-disable-next-line
                 console.log("there was an error", response.response);
-                this.setState({ btnLoading: false, errors: response.response });
+                this.setState({ btnLoading: { submitBtn: false, deleteBtn: false }, errors: response.response });
             } else {
                 if (response.redirect) {
                     window.location.href = await response.redirect_url;
                 } else {
-                    this.setState({ btnLoading: false });
                     const { getData, closeModal, successClose } = this.props;
-                    const success = "Batch Started!";
-                    getData("batches");
-                    getData("queued");
+                    const success = isDelete ? "Batch Deleted!" : "Batch Started!";
+                    await getData("batches");
+                    await getData("queued");
+                    this.setState({ btnLoading: { submitBtn: false, deleteBtn: false } });
                     if (successClose) {
                         successClose(success);
                     } else if(closeModal) {
@@ -86,7 +101,7 @@ class QueuedRoast extends Component {
     };
 
     render() {
-        const { details, btnLoading, errors } = this.state;
+        const { details, btnLoading: { submitBtn, deleteBtn }, errors } = this.state;
         const { current: { attributes: { target_weight, shrinkage }} } = this.props;
         const estimate = parseFloat((Number(details.starting_amount) * (1 - Number(shrinkage)/100)).toFixed(2));
         return (
@@ -126,7 +141,8 @@ class QueuedRoast extends Component {
                     {`${estimate} lbs`}
                 </p>
                 <Flex spacebetween flexend>
-                    <Button primary onClick={this.handleSubmit} content="Start Batch" loading={btnLoading} />
+                    <Button negative content="Delete Batch" onClick={this.handleDelete} loading={deleteBtn} />
+                    <Button primary onClick={this.handleSubmit} content="Start Batch" loading={submitBtn} />
                 </Flex>
             </Form>
         );

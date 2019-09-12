@@ -30,7 +30,16 @@ class Batch < ApplicationRecord
 
   enum status: [:in_queue, :roast_in_progress, :roast_completed, :bagged_for_sale]
 
-  scope :status, -> (status) { status == "all" ? all : where( status: status ) }
+  def self.status(status)
+    case status
+    when "all"
+      all.order("roast_date desc")
+    when "in_queue"
+      where(status: status).order("roast_date")
+    else
+      where(status: status).order("roast_date desc")
+    end
+  end
 
   def batch_cost # starting weight
     starting_amount * lot.price_per_pound

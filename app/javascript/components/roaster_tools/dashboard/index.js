@@ -5,8 +5,7 @@ import { Grid, Header, Segment } from "semantic-ui-react";
 import Budgeter from "roaster_tools/budgeter";
 import RoastLog from "roaster_tools/roastLog";
 import OpenContracts from "roaster_tools/openContracts";
-import OpenRoasts from "roaster_tools/openRoasts";
-import QueuedRoasts from "roaster_tools/queuedRoasts";
+import RoastTabs from "roaster_tools/dashboard/roastTabs";
 /* eslint-enable */
 
 import QuickActions from "./quickActions";
@@ -21,8 +20,9 @@ const Dashboard = () => (
         <Grid doubling>
             <Grid.Column width={10} stretched>
                 {false && <QuickActions />}
-                <Segment>{true && <QueuedRoasts />}</Segment>
-                <Segment>{true && <OpenRoasts />}</Segment>
+                <Segment>
+                    <RoastTabs />
+                </Segment>
             </Grid.Column>
             <Grid.Column width={6} stretched>
                 <Segment>{true && <Budgeter />}</Segment>
