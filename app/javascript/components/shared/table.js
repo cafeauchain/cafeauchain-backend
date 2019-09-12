@@ -126,7 +126,7 @@ class FormattedTable extends Component {
     };
 
     render() {
-        const { tableDefs, pagination, onPageChange, paginationParams, onClick, loading } = this.props;
+        const { tableDefs, pagination, onPageChange, onClick, loading } = this.props;
         const { data, column, direction, scrollable } = this.state;
         let { props: tableProps } = tableDefs;
         tableProps = { unstackable: true, singleLine: true, striped: true, selectable: true, ...tableProps };
@@ -190,7 +190,6 @@ class FormattedTable extends Component {
                             <Pagination 
                                 pagination={pagination}
                                 onPageChange={onPageChange}
-                                paginationParams={paginationParams}
                             />
                         </React.Fragment> 
                     )}
