@@ -1,14 +1,8 @@
-import React, { Component, Fragment as F } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Header } from "semantic-ui-react";
 
 /* eslint-disable */
 import Table from "shared/table";
-import Modal from "shared/modal";
-
-import { sortBy } from "utilities";
-
-import QueuedRoast from "roaster_tools/actions/queuedRoast";
 
 import tableDefs from "defs/tables/completedRoasts";
 
@@ -38,27 +32,22 @@ class CompletedRoasts extends Component {
         const { completed = [], completed_paging } = this.props;
         const { loading } = this.state;
         return (
-            <>
-                <Header as="h2" content="Completed Roasts" />
-                <Table 
-                    tableDefs={tableDefs}
-                    data={completed}
-                    loading={loading}
-                    pagination={completed_paging}
-                    onPageChange={this.handlePager}
-                    paginationParams={{useQuestion: false, params: completed_paging, internal: true}}
-                />
-            </>
+            <Table 
+                tableDefs={tableDefs}
+                data={completed}
+                loading={loading}
+                pagination={completed_paging}
+                onPageChange={this.handlePager}
+                paginationParams={{useQuestion: false, params: completed_paging, internal: true}}
+            />
         );
     }
 }
 
-const { array, bool, func, object } = PropTypes;
+const { array, func, object } = PropTypes;
 CompletedRoasts.propTypes = {
     completed: array,
     completed_paging: object,
-    loading: bool,
-    inventory: array,
     getData: func
 };
 

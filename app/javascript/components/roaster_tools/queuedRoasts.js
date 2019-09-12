@@ -1,6 +1,5 @@
 import React, { Component, Fragment as F } from "react";
 import PropTypes from "prop-types";
-import { Header } from "semantic-ui-react";
 
 /* eslint-disable */
 import Table from "shared/table";
@@ -58,7 +57,6 @@ class QueuedRoasts extends Component {
                         component={<QueuedRoast current={current} />}
                     />
                 )}
-                <Header as="h2" content="Queued Roasts" />
                 <Table tableDefs={tableDefs} data={sorted} loading={loading} onClick={this.onClick} />
             </F>
         );
