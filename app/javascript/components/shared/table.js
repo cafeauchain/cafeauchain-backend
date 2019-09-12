@@ -187,10 +187,7 @@ class FormattedTable extends Component {
                     {pagination && pagination.totalpages && (
                         <React.Fragment>
                             <br />
-                            <Pagination 
-                                pagination={pagination}
-                                onPageChange={onPageChange}
-                            />
+                            <Pagination pagination={pagination} onPageChange={onPageChange} />
                         </React.Fragment> 
                     )}
                 </div>
@@ -206,8 +203,7 @@ FormattedTable.propTypes = {
     pagination: object,
     tableDefs: object.isRequired,
     loading: bool,
-    inputExtras: object,
-    paginationParams: object
+    inputExtras: object
 };
 
 export default FormattedTable;
