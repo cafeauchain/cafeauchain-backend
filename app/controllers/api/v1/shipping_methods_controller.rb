@@ -36,7 +36,7 @@ module Api::V1
 
     def get_rates
       if !params[:cart_id].nil?
-        @roaster = current_roaster
+        @roaster = current_user.roaster_profile
         @rates = ShippingServices::GetRates.get_rate_estimates(params[:cart_id], params[:wholesale_profile_id])
         
       else
