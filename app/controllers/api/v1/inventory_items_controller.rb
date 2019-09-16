@@ -26,9 +26,6 @@ class Api::V1::InventoryItemsController < ApplicationController
       if params[:quantity].to_f < 0
         @inventory_item.errors.add(:new_quantity, "cannot be negative")
         renderError = true
-      elsif params[:quantity].to_f > @inventory_item[:quantity]
-        @inventory_item.errors.add(:new_quantity, "cannot be more than the amount available")
-        renderError = true
       end
     end
     
