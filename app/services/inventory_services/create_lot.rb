@@ -12,6 +12,7 @@ module InventoryServices
       LedgerServices::AssetIssueTransaction.new(@params[:lot_size].to_f, @crop.id, @roaster.id).call
       LedgerServices::AssetTransferTransaction.new(@params[:lot_size].to_f, @lot.id, @roaster.id).call
       LedgerServices::AssetDeliveryTransaction.new(@params[:on_hand].to_f + @params[:roasted].to_f, @lot.id, @roaster.id).call
+      InventoryServices::CreateInventory.create(@lot.id, {})
     end
 
     def lot_creation
