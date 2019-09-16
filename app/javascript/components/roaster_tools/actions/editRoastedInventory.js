@@ -6,7 +6,6 @@ import { Button, Form } from "semantic-ui-react";
 import Input from "shared/input";
 import Flex from "shared/flex";
 import ErrorHandler from "shared/errorHandler";
-import Titler from "shared/titler";
 
 import { roasterUrl, requester } from "utilities/apiUtils";
 import { useHandleInput, useAfterSubmit } from "utilities/hooks";
@@ -15,7 +14,7 @@ import withContext from "contexts/withContext";
 /* eslint-enable */
 
 const EditRoastedInventory = props =>  {
-    const { getData, closeModal, successClose, userId, current: { id, attributes: { quantity } } } = props;
+    const { getData, closeModal, successClose, userId, current: { id } } = props;
     const { handleInputChange, details } = useHandleInput({quantity: ""});
     const [ errors, updateErrors ] = useState([]);
     const [ btnLoading, updateLoading ] = useState(false);
@@ -57,12 +56,7 @@ const EditRoastedInventory = props =>  {
             <p>
                     You can make manual adjustments to the amount of roasted inventory you have
                     available to account for donations, inventory errors, spoilage, etc. Negative
-                    amounts are not allow. And adjustments cannot be larger than the amount you have 
-                    available.
-            </p>
-
-            <p>
-                <Titler title="Roasted Amount Available" value={quantity + " lbs"} bold />
+                    amounts are not allow.
             </p>
                 
             <Input

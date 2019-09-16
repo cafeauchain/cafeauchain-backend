@@ -5,7 +5,7 @@ class Api::V1::InventoryItemsController < ApplicationController
   before_action :set_lot, only: [:create]
 
   def index
-    @items = @roaster.inventory_items
+    @items = @roaster.inventory_items.order('LOWER(inventory_items.name)')
     render json: @items, status: 200
   end
 
@@ -25,9 +25,6 @@ class Api::V1::InventoryItemsController < ApplicationController
     if params[:adjustment]
       if params[:quantity].to_f < 0
         @inventory_item.errors.add(:new_quantity, "cannot be negative")
-        renderError = true
-      elsif params[:quantity].to_f > @inventory_item[:quantity]
-        @inventory_item.errors.add(:new_quantity, "cannot be more than the amount available")
         renderError = true
       end
     end
