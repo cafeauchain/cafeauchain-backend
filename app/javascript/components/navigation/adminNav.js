@@ -55,6 +55,7 @@ class AdminNav extends PureComponent {
 
         const inventory = [
             { href: `/manage/lots`, content: "Open Lots" },
+            { href: `/manage/roast_profiles`, content: "Roast Profiles" },
             {
                 key: "startbatch",
                 content: <ModalLink text="Start a Batch" component={<StartBatch />} />
