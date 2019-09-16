@@ -5,7 +5,7 @@ class Api::V1::InventoryItemsController < ApplicationController
   before_action :set_lot, only: [:create]
 
   def index
-    @items = @roaster.inventory_items
+    @items = @roaster.inventory_items.order('LOWER(inventory_items.name)')
     render json: @items, status: 200
   end
 
