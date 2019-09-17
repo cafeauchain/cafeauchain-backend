@@ -1,4 +1,4 @@
-@media print {
+const styles = `@media print {
     #header-nav,
     .ui.segment.print-order > *:not(.printarea),
     .noprint {
@@ -10,4 +10,6 @@
         box-shadow: none !important;
         padding: 0 !important;
     }
-}
+}`;
+
+export default styles;
