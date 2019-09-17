@@ -24,8 +24,8 @@ const sortBy = ({ collection, id, sorts = [], namespace }) => {
     if (!sorts.length) {
         const isNumber = checkForNumber(id);
         return collection.sort((a, b) => {
-            const aid = getValue(a, id).toLowerCase();
-            const bid = getValue(b, id).toLowerCase();
+            const aid = getValue(a, id);
+            const bid = getValue(b, id);
             if (isNumber) {
                 return aid - bid;
             }
@@ -44,8 +44,8 @@ const sortBy = ({ collection, id, sorts = [], namespace }) => {
         let ret = 0;
         for (let i = 0; i < sortsLength; i++) {
             const item = sorts[i];
-            const aVal = getValue(a, item.name).toLowerCase();
-            const bVal = getValue(b, item.name).toLowerCase();
+            const aVal = getValue(a, item.name);
+            const bVal = getValue(b, item.name);
             const isNumber = checkForNumber(item.name);
             if (isNumber) {
                 ret = item.desc ? bVal - aVal : aVal - bVal;
@@ -59,8 +59,8 @@ const sortBy = ({ collection, id, sorts = [], namespace }) => {
                 break;
             } else {
                 if (sorts[sortsLength - 1].name !== id) {
-                    const aid = getValue(a, id).toLowerCase();
-                    const bid = getValue(b, id).toLowerCase();
+                    const aid = getValue(a, id);
+                    const bid = getValue(b, id);
                     if (aid < bid) {
                         ret = 1;
                         break;
