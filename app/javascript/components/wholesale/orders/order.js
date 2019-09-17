@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { Segment, Header, Label, Button, Icon, Dimmer } from "semantic-ui-react";
 
 /* eslint-disable */
+import "./styles.scss"
+
 import Flex from "shared/flex";
 import Table from "shared/table";
 import Modal from "shared/modal";
@@ -140,7 +142,7 @@ class Order extends React.Component {
 
         return (
             <div>
-                <Segment>
+                <Segment className="print-order">
                     {showModal && (
                         <Modal
                             isOpen={showModal}
@@ -155,10 +157,15 @@ class Order extends React.Component {
                         <a href="/manage/orders">Back to All Orders</a>
                     </p>
                     <OrderFulfillment />
-                    <Segment style={{ maxWidth: 900, margin: "40px auto" }}>
+                    <Segment style={{ maxWidth: 900, margin: "40px auto" }} className="printarea">
                         <div>
                             {!isEditable && canEdit && (
-                                <Button onClick={this.toggleEditable} content="Edit Order" primary />
+                                <Button 
+                                    onClick={this.toggleEditable}
+                                    content="Edit Order"
+                                    primary
+                                    className="noprint"
+                                />
                             )}
                             {isEditable && (
                                 <Flex spacebetween spacing="20">
@@ -182,6 +189,7 @@ class Order extends React.Component {
                             ribbon="right"
                             content={closed ? "Closed" : "Open"}
                             color={closed ? "black" : "green"}
+                            className="noprint"
                         />
                         <Flex spacing="30" spacebetween>
                             <div flex="66">
@@ -225,7 +233,7 @@ class Order extends React.Component {
                                     bold
                                 />
                                 {!isEditable && canEdit && (
-                                    <Flex wrap spacing="10">
+                                    <Flex wrap spacing="10" className="noprint">
                                         <div flex="auto">
                                             <Modal
                                                 text="Update Shipping Method"
@@ -270,7 +278,7 @@ class Order extends React.Component {
                             <div flex="33" style={{ textAlign: "right", marginTop: "auto" }}>
                                 <div style={{ position: "relative" }}>
                                     {!isEditable && canEdit && (
-                                        <>
+                                        <div className="noprint">
                                             <AddDiscount 
                                                 id={attributes.invoice.id}
                                                 updateContext={updateContext}
@@ -278,7 +286,7 @@ class Order extends React.Component {
                                             />
                                             <br />
                                             <br />
-                                        </>
+                                        </div>
                                     )}
                                     <Dimmer active={isEditable} inverted />
                                     <OrderTotals attributes={attributes} />
