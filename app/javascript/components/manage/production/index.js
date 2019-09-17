@@ -3,8 +3,10 @@ import PropTypes from "prop-types";
 import { Segment, Header, Divider } from "semantic-ui-react";
 
 /* eslint-disable */
+import "./styles.scss";
 import Table from "shared/table";
 import { Weights } from "shared/textFormatters";
+import Titler from "shared/titler";
 import Packer from "manage/production/packer";
 
 import { sortBy, humanize } from "utilities";
@@ -18,42 +20,34 @@ const Link = ({ content }) => <a href={"/manage/orders/" + content}>{content}</a
 
 const fields = {
     fields: [
-        { name: 'product', style: {minWidth: 200} },
+        { name: 'product', style: { width: 200 } },
         { name: 'quantity', textAlign: "right", style: { width: 60 } },
+        { name: 'size', textAlign: "right", style: { width: 60 } },
         { name: 'options', formatter: Humanize },
-        { name: 'customer' },
+        { name: 'customer', style: { width: 200 }},
         { name: 'order', formatter: Link, textAlign: "right", label: "Order #", style: { width: 60 } },
     ],
     props: {
         celled: true,
         sortable: true,
+        compact: "very"
     }
 };
 
 class Production extends React.PureComponent {
 
     filterOrders = orders => {
-        const sizes = Object.keys(orders);
-        return sizes.reduce((obj, item) => {
-
-            let inner = orders[item].reduce((obj, order) => {
-                obj.total = obj.total + parseInt(order.quantity);
-                obj.items = [...obj.items, order];
-                return obj;
-            }, { total: 0, items: [] });
-
-            const sorted = sortBy({
-                collection: inner.items,
-                sorts: [
-                    { name: "product" }, 
-                    { name: "options" }, 
-                    { name: "quantity" }, 
-                    { name: "customer" }
-                ]
+        return Object.entries(orders).map( ([key, val]) => {
+            const sizes = Object.entries(val).map(([size, items]) => {
+                let count = 0;
+                const orders = items.map(order => {
+                    count += Number(order.quantity);
+                    return order;
+                });
+                return { size, orders, count };    
             });
-
-            return [...obj, { size: Number(item), total: inner.total, items: sorted }];
-        }, []);
+            return { name: key, sizes };
+        });
     }
 
     modifiedTableDefs = defs => {
@@ -68,7 +62,8 @@ class Production extends React.PureComponent {
             textAlign: "center"
         };
         let { fields, ...rest } = defs;
-        rest.fields = [packer, ...fields];
+        // rest.fields = [packer, ...fields];
+        rest.fields = [...fields];
         return rest;
     };
 
@@ -76,28 +71,45 @@ class Production extends React.PureComponent {
         const { orders } = this.props;
         const filtered = this.filterOrders(orders);
 
+        const sorted = sortBy({
+            collection: filtered,
+            sorts: [
+                { name: "name" }
+            ]
+        });
+
         return (
             <Segment>
                 <Header as="h2" content="Production Bags Needed" />
                 <Divider />
-                {filtered.map(size => {
-                    return (
-                        <React.Fragment key={size.size}>
-                            <Segment>
-                                <Header as="h3">
-                                    <Weights>{size.size}</Weights>
-                                    <span> Bags</span>
-                                </Header>
-                                <p>
-                                    <strong>Total bags: </strong>
-                                    {size.total}
-                                </p>
-                                <Table tableDefs={this.modifiedTableDefs(fields)} data={size.items} />
-                            </Segment>
-                            <br />
-                        </React.Fragment>      
-                    );
-                })}
+                {sorted.map(product => (
+                    <div key={product.name}>
+                        <Header as="h3">
+                            {product.name}
+                        </Header>
+                        {product.sizes.map(size => {
+                            const title = (
+                                <>
+                                    <Weights>
+                                        {size.size}
+                                    </Weights>
+                                    <span> Bags; </span>
+                                    <Titler title="Bag Count" value={size.count.toFixed(0)} linebreak />
+                                </>
+                            );
+                            return (
+                                <div key={size.size}>
+                                    <Table
+                                        tableDefs={{ ...this.modifiedTableDefs(fields), title }}
+                                        data={size.orders}
+                                    />
+                                    <Divider />
+                                </div>
+                            );
+                        })}
+                    </div>
+                ))}
+                <Divider />
             </Segment>
         );
     }

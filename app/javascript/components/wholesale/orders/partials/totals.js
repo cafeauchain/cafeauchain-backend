@@ -107,7 +107,7 @@ class OrderTotals extends PureComponent {
                     </div>
                 </Flex>
                 {!isCustomer && (
-                    <Flex spacing="10" spacebetween wrap>
+                    <Flex spacing="10" spacebetween wrap className="noprint">
                         <div flex="50">
                             <strong>Fee:</strong>
                         </div>
