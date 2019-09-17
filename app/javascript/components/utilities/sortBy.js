@@ -29,8 +29,8 @@ const sortBy = ({ collection, id, sorts = [], namespace }) => {
             if (isNumber) {
                 return aid - bid;
             }
-            aid = aid.toLowerCase();
-            bid = aid.toLowerCase();
+            aid = typeof aid === "string" ? aid.toLowerCase() : aid;
+            bid = typeof bid === "string" ? bid.toLowerCase() : bid;
             if (aid < bid) {
                 return -1;
             } else if (aid > bid) {
@@ -53,8 +53,8 @@ const sortBy = ({ collection, id, sorts = [], namespace }) => {
                 ret = item.desc ? bVal - aVal : aVal - bVal;
                 break;
             }
-            aVal = aVal.toLowerCase();
-            bVal = bVal.toLowerCase();
+            aVal = typeof aVal === "string" ? aVal.toLowerCase() : aVal;
+            bVal = typeof bVal === "string" ? bVal.toLowerCase() : bVal;
             if (aVal < bVal) {
                 ret = item.desc ? 1 : -1;
                 break;
