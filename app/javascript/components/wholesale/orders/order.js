@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Segment, Header, Label, Button, Icon, Dimmer } from "semantic-ui-react";
 
 /* eslint-disable */
-import "./styles.scss"
+import styles from "./inline-print-styles"
 
 import Flex from "shared/flex";
 import Table from "shared/table";
@@ -142,6 +142,9 @@ class Order extends React.Component {
 
         return (
             <div>
+                <style type="text/css">
+                    {styles}
+                </style>
                 <Segment className="print-order">
                     {showModal && (
                         <Modal
