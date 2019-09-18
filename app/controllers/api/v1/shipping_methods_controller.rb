@@ -36,14 +36,13 @@ module Api::V1
 
     def get_rates
       if !params[:cart_id].nil?
-        @roaster = current_user.roaster_profile
         @rates = ShippingServices::GetRates.get_rate_estimates(params[:cart_id], params[:wholesale_profile_id])
         
       else
         @order = Order.find(params[:order_id])
-        @roaster = @order.roaster_profile
         @rates = ShippingServices::GetRates.get_rate_estimates(params[:order_id], params[:wholesale_profile_id], true)
       end
+      @roaster = !current_user.roaster_profile.nil? ? current_user.roaster_profile : current_roaster
       @local_rates = ShippingServices::GetLocalRates.get_rates(@roaster)
       @rates = @rates.concat(@local_rates)
       render json: @rates, status: 200

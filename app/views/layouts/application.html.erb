@@ -32,7 +32,7 @@
         <div class="width-wrapper"><%= yield %></div>
     <% end %>
     <%= react_component "footer", props = {user: current_user, loggedIn: user_signed_in?}, {:class => "site-footer"} %>
-    <% if Rails.env.production? %>
+    <% if Rails.env.production? && !ValidSubdomain.matches?(request)  %>
     <!-- Start of HubSpot Embed Code -->
       <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/5365116.js"></script>
     <!-- End of HubSpot Embed Code -->
