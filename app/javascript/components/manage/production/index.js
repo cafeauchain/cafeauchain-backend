@@ -1,6 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Segment, Header, Divider } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Segment, Header, Divider, Menu } from "semantic-ui-react";
 
 /* eslint-disable */
 import ProductionGrid from "manage/production/grid";
@@ -9,26 +8,34 @@ import ProductionTable from "manage/production/table";
 import styles from  "./inline-print-styles";
 /* eslint-enable */
 
-class Production extends React.PureComponent {
-    state = {}
-    render() {
-        return (
-            <Segment className="print-production-queue">
-                <style type="text/css">
-                    {styles}
-                </style>
-                <Header as="h2" content="Production Bags Needed" />
-                <ProductionGrid />
-                <Divider />
-                <ProductionTable />
-                <Divider />
-            </Segment>
-        );
-    }
-}
-const { array } = PropTypes;
-Production.propTypes = {
-    variations: array
+const Production = () => {
+    const [showTable, updateShowTable] = useState(false);
+
+    const handleItemClick = () => updateShowTable(prev => !prev);
+
+    return (
+        <Segment className="print-production-queue">
+            <style type="text/css">
+                {styles}
+            </style>
+            <Header as="h2" content="Production Bags Needed" />
+            <Divider />
+            <Menu text>
+                <Menu.Item
+                    content="Show Grid"
+                    active={showTable}
+                    onClick={handleItemClick}
+                />
+                <Menu.Item
+                    content="Show Table"
+                    active={!showTable}
+                    onClick={handleItemClick}
+                />
+            </Menu>
+            {!showTable && <ProductionGrid />}
+            {showTable && <ProductionTable />}
+        </Segment>
+    );
 };
 
 export default Production;
