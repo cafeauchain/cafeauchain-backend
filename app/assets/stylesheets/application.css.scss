@@ -125,7 +125,7 @@ body {
     }
 }
 @media print {
-    #hubspot-messages-iframe-container {
+    body #hubspot-messages-iframe-container {
         display: none !important;
     }
 }
