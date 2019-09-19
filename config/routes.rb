@@ -390,6 +390,8 @@ Rails.application.routes.draw do
   constraints(ValidSubdomain) do
     # Customer 'View' Routes
     get 'cart', to: 'carts#index'
+    get 'shop', to: 'shop/shop#index'
+    get 'products', to: 'shop/shop#index'
     namespace :shop do
       get "handletoken", to: "token#handletoken"
       resources :profile, only: [:index]
