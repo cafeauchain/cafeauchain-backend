@@ -32,63 +32,58 @@ const fields = {
     }
 };
 
-class ProductionTable extends React.PureComponent {
-
-    filterOrders = orders => {
-        return Object.entries(orders).map(([key, val]) => {
-            const sizes = Object.entries(val).map(([size, items]) => {
-                let count = 0;
-                const orders = items.map(order => {
-                    count += Number(order.quantity);
-                    return order;
-                });
-                return { size, orders, count };
+const filterOrders = orders => {
+    return Object.entries(orders).map(([key, val]) => {
+        const sizes = Object.entries(val).map(([size, items]) => {
+            let count = 0;
+            const orders = items.map(order => {
+                count += Number(order.quantity);
+                return order;
             });
-            return { name: key, sizes };
+            return { size, orders, count };
         });
-    }
+        return { name: key, sizes };
+    });
+};
 
-    render() {
-        const { orders } = this.props;
-        const filtered = this.filterOrders(orders);
+const ProductionTable = ({orders}) => {
+    const filtered = filterOrders(orders);
 
-        const sorted = sortBy({
-            collection: filtered,
-            sorts: [
-                { name: "name" }
-            ]
-        });
+    const sorted = sortBy({
+        collection: filtered,
+        sorts: [{ name: "name" }]
+    });
 
-        return (
-            sorted.map(product => {
-                return (
-                    <div key={product.name}>
-                        <Header as="h3">
-                            {product.name}
-                        </Header>
-                        {product.sizes.map(size => {
-                            const title = (
-                                <>
-                                    <Weights>
-                                        {size.size}
-                                    </Weights>
-                                    <span> Bags; </span>
-                                    <Titler title="Bag Count" value={size.count.toFixed(0)} linebreak />
-                                </>
-                            );
-                            return (
-                                <div key={size.size}>
-                                    <Table tableDefs={{ ...fields, title }} data={size.orders} />
-                                    <Divider />
-                                </div>
-                            );
-                        })}
-                    </div>
-                );
-            })
-        );
-    }
-}
+    return (
+        sorted.map(product => {
+            return (
+                <div key={product.name}>
+                    <Header as="h3">
+                        {product.name}
+                    </Header>
+                    {product.sizes.map(size => {
+                        const title = (
+                            <>
+                                <Weights>
+                                    {size.size}
+                                </Weights>
+                                <span> Bags; </span>
+                                <Titler title="Bag Count" value={size.count.toFixed(0)} linebreak />
+                            </>
+                        );
+                        return (
+                            <div key={size.size}>
+                                <Table tableDefs={{ ...fields, title }} data={size.orders} />
+                                <Divider />
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        })
+    );
+};
+
 const { object } = PropTypes;
 ProductionTable.propTypes = {
     orders: object
