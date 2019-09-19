@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Segment, Item, Header } from "semantic-ui-react";
+import { Segment, Item, Header, Button } from "semantic-ui-react";
 
 import "./styles.scss";
 
@@ -30,6 +30,7 @@ class Cart extends React.PureComponent {
                 <div flex="fill">
                     <Segment>
                         <Header as="h2" content={"Cart: " + roaster_name} dividing />
+                        <Button content="Keep Shopping" as="a" href="/products" basic color="green" />
                         <Item.Group divided relaxed="very">
                             {items.map(item => {
                                 const productOptions = [{ value: item.production_options[0], key: "product" }];
@@ -55,6 +56,7 @@ class Cart extends React.PureComponent {
                                 );
                             })}
                         </Item.Group>
+                        <Button content="Keep Shopping" as="a" href="/products" basic color="green" />
                     </Segment>
                 </div>
                 <div className="cart-sidebar" flex="25">
