@@ -22,12 +22,12 @@ const Production = () => {
             <Divider />
             <Menu text>
                 <Menu.Item
-                    content="Show Grid"
+                    content="Grid"
                     active={showTable}
                     onClick={handleItemClick}
                 />
                 <Menu.Item
-                    content="Show Table"
+                    content="By Product"
                     active={!showTable}
                     onClick={handleItemClick}
                 />
