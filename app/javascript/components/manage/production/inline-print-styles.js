@@ -15,10 +15,7 @@ const inner = `
     .print-production-queue .ui.menu {
         display: none;
     }
-    .print-production-queue .order-stripe tr {
-        
-    }
-    .print-production-queue .product-count-dropdown {
+    .print-production-queue .noprint {
         display: none !important;
     }
     body {
