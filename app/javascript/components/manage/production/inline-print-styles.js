@@ -1,5 +1,3 @@
-
-
 const inner = `
     #header-nav,
     .ui.divider {
