@@ -14,6 +14,7 @@ const links = ({ cart }) => {
     return {
         right: {
             mobile: [
+                { href: "/products", content: "Products", key: "products" },
                 ...dropdowns,
                 {
                     as: "a",
@@ -39,6 +40,7 @@ const links = ({ cart }) => {
                 }
             ],
             desktop: [
+                { as: "a", content: "Products", key: "products", href: "/products" },
                 {
                     content: (
                         <Dropdown text="My Account" item fluid className="no-border" style={{ height: "100%" }}>
