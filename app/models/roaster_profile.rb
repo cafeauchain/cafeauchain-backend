@@ -90,6 +90,25 @@ class RoasterProfile < ApplicationRecord
     items.flatten
   end
 
+  def open_order_items_grid
+    items = self.open_order_items
+    products = Hash[ items.map{|i| i[:product]}.uniq.collect{|v| [v, "-"]}]
+    items.uniq{|i| {customer: i[:customer], size: i[:size], options: i[:options]} }.map{|row|
+        customer_row = Hash.new
+        clone = products.clone
+        customer_row = { customer: row[:customer], size: row[:size], options: row[:options], id: row[:id], products: clone }
+        items.each{|item| 
+          isCustomer = item[:customer] == row[:customer]
+          isSize = item[:size] == row[:size]
+          isOption = item[:options] == row[:options]
+          if isCustomer && isOption && isSize
+            customer_row[:products][item[:product]] = item[:quantity]
+          end
+        }
+        customer_row
+      }
+  end
+
   def primary_address
     self.addresses.find_by(primary_location: true)
   end

@@ -1,10 +1,32 @@
-const styles = `@media print {
+const inner = `
     #header-nav,
-    .ui.header,
-    .ui.divider,
-    th {
+    .ui.divider {
         display: none
     }
+    .print-production-queue thead > tr:nth-child(2) {
+        display: none !important;
+    }
+    .print-production-queue {
+        box-shadow: none !important;
+        border: none !important;
+    }
+    .print-production-queue .ui.menu {
+        display: none;
+    }
+    .print-production-queue .noprint {
+        display: none !important;
+    }
+    body {
+        font-size: 4px;
+        -webkit-print-color-adjust: exact !important;
+    }
+`;
+
+const styles = `@media screen {
+    
+}
+@media print {
+    ${ inner }
 }`;
 
 export default styles;
