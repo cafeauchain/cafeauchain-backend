@@ -20,5 +20,25 @@
         "spec": true
       }
     ]
-  ]
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        [
+          "@babel/preset-env"
+        ],
+        "@babel/preset-react"
+      ],
+      "plugins": [
+        "@babel/syntax-dynamic-import",
+        "@babel/plugin-proposal-object-rest-spread",
+        [
+          "transform-class-properties",
+          {
+            "spec": true
+          }
+        ]
+      ]
+    }
+  }
 }

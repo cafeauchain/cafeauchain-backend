@@ -100,3 +100,5 @@ yarn-debug.log*
 /config/master.key
 storage/
 app/javascript/**/.tern-port
+
+app/coverage/
