@@ -7,14 +7,12 @@ describe("CallMeDanger tests", () => {
         const el = 'h1';
         const element = callMeDanger(template, el);
         const { container } = render(element);
-        expect(element.props.dangerouslySetInnerHTML.__html).toBe(template);
         expect(container.innerHTML).toBe(`<${el}>${template}</${el}>`);
     });
     test('returns raw HTML wrapped in a default span', () => {
         const template = "hello,<strong>world</strong>";
         const element = callMeDanger(template);
         const { container } = render(element);
-        expect(element.props.dangerouslySetInnerHTML.__html).toBe(template);
         expect(container.innerHTML).toBe(`<span>${template}</span>`);
     });
 });
