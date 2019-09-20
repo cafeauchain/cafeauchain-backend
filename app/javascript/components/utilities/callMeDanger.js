@@ -1,7 +1,7 @@
 import React from "react";
 
 // eslint-disable-next-line
-const callMeDanger = (template, el = "span") =>
+const CallMeDanger = (template, el = "span") =>
     React.createElement(el, { dangerouslySetInnerHTML: { __html: template } });
 
-export default callMeDanger;
+export default CallMeDanger;
