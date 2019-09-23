@@ -27,9 +27,9 @@ class Order < ApplicationRecord
   belongs_to :wholesale_profile
   has_one :customer_profile, through: :wholesale_profile
   has_one :roaster_profile, through: :wholesale_profile
-  has_many :order_items
-  has_one :invoice
-  has_one :order_shipping_method
+  has_many :order_items, dependent: :delete_all
+  has_one :invoice, dependent: :destroy
+  has_one :order_shipping_method, dependent: :destroy
   has_one :shipping_method, through: :order_shipping_method
 
   enum status: [:draft, :processing, :packed, :shipped, :fulfilled]
