@@ -21,6 +21,7 @@ import EditShipping from "wholesale/orders/partials/editShipping";
 import ManualShipping from "wholesale/orders/partials/manualShipping";
 import Fulfillment from "wholesale/orders/partials/fulfillment";
 import Packer from "manage/production/packer";
+import DeleteOrder from "wholesale/actions/deleteOrder";
 
 import AddDiscount from "wholesale/orders/partials/addDiscount";
 
@@ -163,12 +164,19 @@ class Order extends React.Component {
                     <Segment style={{ maxWidth: 900, margin: "40px auto" }} className="printarea">
                         <div>
                             {!isEditable && canEdit && (
-                                <Button 
-                                    onClick={this.toggleEditable}
-                                    content="Edit Order"
-                                    primary
-                                    className="noprint"
-                                />
+                                <Flex spacing="20" spacebetween>
+                                    <div>
+                                        <Button
+                                            onClick={this.toggleEditable}
+                                            content="Edit Order"
+                                            primary
+                                            className="noprint"
+                                        />
+                                    </div>
+                                    <div>
+                                        <DeleteOrder id={id} />
+                                    </div>
+                                </Flex>
                             )}
                             {isEditable && (
                                 <Flex spacebetween spacing="20">

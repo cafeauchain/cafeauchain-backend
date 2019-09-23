@@ -2,7 +2,7 @@ module Api::V1
   class OrdersController < ApplicationController
     before_action :set_cart
     before_action :authenticate_user!
-    before_action :set_order, only: [:show, :update]
+    before_action :set_order, only: [:show, :update, :destroy]
 
     def create
       @wholesale_profile = @cart.wholesale_profile
@@ -72,6 +72,14 @@ module Api::V1
       render json: @order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
     end
 
+    def destroy
+      if @order.destroy!
+        render json: { redirect_url: manage_orders_path, redirect: true }, status: 200
+      else
+        render json: { data: @order.errors.full_messages, messages: @order.errors.full_messages }, status: 422
+      end
+    end
+
     def update_order_items
       @order_item = OrderItem.find(params[:order_item_id])
       @order_item.update(packed: params[:packed])
@@ -100,7 +108,11 @@ module Api::V1
     end
 
     def set_order
-      @order = Order.find(params[:id])
+      if Order.exists?(id: params[:id])
+        @order = Order.find(params[:id])
+      else
+        return redirect_to manage_orders_path
+      end
       wp = @order.wholesale_profile
       user_is_customer = current_user.customer_profile
       user_is_roaster = current_user.roaster_profile
