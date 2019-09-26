@@ -68,7 +68,11 @@ module Manage
     end
 
     def set_order
-      @order = Order.find(params[:id])
+      if Order.exists?(id: params[:id])
+        @order = Order.find(params[:id])
+      else
+        return redirect_to manage_orders_path
+      end
       wp = @order.wholesale_profile
       same_roaster = wp.roaster_profile_id == current_user.roaster_profile_id
       if !same_roaster
