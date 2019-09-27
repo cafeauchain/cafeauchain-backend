@@ -3,10 +3,13 @@ import '@testing-library/jest-dom/extend-expect';
 // import { render } from '@testing-library/react';
 /* eslint-enable */
 
-const mockFetchPromise = ({ok = true, response}) => Promise.resolve({
-    ok,
-    json: () => Promise.resolve(response),
-});
+const mockFetchPromise = ({err, fakeResponse}) => {
+    let res = {
+        json: () => Promise.resolve(fakeResponse)
+    };
+    res.ok = !err;
+    return Promise.resolve(res);
+};
 
 // const customRender = (ui, options) =>
 //     render(ui, { ...options });
