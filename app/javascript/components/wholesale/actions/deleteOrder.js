@@ -37,13 +37,19 @@ const DeleteOrder = ({ id }) => {
             {errors.length > 0 && <ErrorHandler errors={errors} />}
             <Button content="Delete Order" onClick={showConfirm} negative />
             <Confirm
+                data-testid="test_show-confirm"
                 header={"Delete Order #" + id + "?"}
                 open={open}
                 onCancel={closeConfirm}
                 onConfirm={deleteOrder}
                 size='mini'
                 content="This action cannot be undone. Please confirm that you do want to delete this order."
-                confirmButton={{ content: "Delete Order", negative: true, primary: false }}
+                confirmButton={{ 
+                    content: "Delete Order", 
+                    negative: true, 
+                    primary: false, 
+                    "data-testid": "test_actually-delete"
+                }}
             />
         </>
     );
