@@ -2,7 +2,7 @@ module Api::V1
   class InvoicesController < ApplicationController
     before_action :set_cart
     before_action :authenticate_user!
-    before_action :set_invoice
+    before_action :set_invoice, only: [:update]
 
     def update
       if params[:payment_source].present?
@@ -16,6 +16,17 @@ module Api::V1
         @invoice.update(discount: params[:discount], tax: tax)
         render json: @invoice.order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
       end
+    end
+
+    def index
+      @roaster = current_user.roaster_profile
+      # beginning_of_month = Time.current.beginning_of_month
+      # end_of_month = beginning_of_month.end_of_month
+      # end_date = params[:end_date] || Date.today.strftime("%F")
+      # range = params[:start_date] ? (params[:start_date]..end_date) : (beginning_of_month..end_of_month)
+
+      @invoices = @roaster.invoices.filter(params.slice(:range, :status, :order_by))
+      render json: @invoices, status: 200, each_serializer: InvoiceSerializer
     end
 
     private

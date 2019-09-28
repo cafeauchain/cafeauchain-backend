@@ -336,7 +336,7 @@ Rails.application.routes.draw do
         put :process_payment
       end
       post :password_reset, to: "password#password_reset"
-      resources :invoices, only: [:update]
+      resources :invoices, only: [:update, :index]
     end
   end
 
