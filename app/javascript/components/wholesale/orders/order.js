@@ -195,119 +195,130 @@ class Order extends React.Component {
                             )}
                             <br />
                         </div>
-                        <Label
-                            size="large"
-                            ribbon="right"
-                            content={closed ? "Closed" : "Open"}
-                            color={closed ? "black" : "green"}
-                            className="noprint"
-                        />
-                        <Flex spacing="30" spacebetween>
-                            <div flex="66">
-                                <OrderAddresses roaster={roasterAtts} customer={customerAtts} />
-                            </div>
-                            <div flex="33" style={{ textAlign: "right" }}>
-                                <div style={{ position: "relative"}}>
-                                    <Dimmer active={isEditable} inverted />
-                                    <OrderDetails attributes={attributes} id={id} />
-                                </div>
-                            </div>
-                        </Flex>
+                        {!isEditable && (
+                            <>
+                                <Label
+                                    size="large"
+                                    ribbon="right"
+                                    content={closed ? "Closed" : "Open"}
+                                    color={closed ? "black" : "green"}
+                                    className="noprint"
+                                />
+                                <Flex spacing="30" spacebetween>
+                                    <div flex="66" style={{ position: "relative" }}>
+                                        <OrderAddresses roaster={roasterAtts} customer={customerAtts} />
+                                    </div>
+                                    <div flex="33" style={{ textAlign: "right" }}>
+                                        <OrderDetails attributes={attributes} id={id} />
+                                    </div>
+                                </Flex>
+                            </>
+                        )}
+                        
                         <br />
+                        {isEditable && (
+                            <>
+                                <Modal
+                                    text="Add Line Item"
+                                    btnProps={{
+                                        icon: <Icon name="plus circle" inverted />,
+                                        size: "large"
+                                    }}
+                                    title="Add New Line Item"
+                                    component={(
+                                        <LineItem
+                                            updateLineItems={this.updateLineItems}
+                                            products={products}
+                                        />
+                                    )}
+                                />
+                                <br />
+                                <br />
+                            </>
+                        )}
                         <Table 
                             tableDefs={isEditable ? tableDefs : this.modifiedTableDefs(tableDefs)}
                             data={sorted}
                             onClick={isEditable ? this.handleTableClick : null}
                         />
                         <br />
-                        {isEditable && (
-                            <Modal
-                                text="Add Line Item"
-                                btnProps={{
-                                    icon: <Icon name="plus circle" inverted />,
-                                    size: "large"
-                                }}
-                                title="Add New Line Item"
-                                component={(
-                                    <LineItem 
-                                        updateLineItems={this.updateLineItems}
-                                        products={products}
-                                    />
-                                )}
-                            />
+                        {!isEditable && (
+                            <>
+                                <Flex spacing="30" spacebetween>
+                                    <div flex="66">
+                                        <Titler
+                                            title="Selected Shipping Method"
+                                            value={shipping_method}
+                                            bold
+                                        />
+                                        {!isEditable && canEdit && (
+                                            <Flex wrap spacing="10" className="noprint">
+                                                <div flex="auto">
+                                                    <Modal
+                                                        text="Update Shipping Method"
+                                                        title="Update Shipping Method"
+                                                        component={(
+                                                            <EditShipping
+                                                                order_id={id}
+                                                                wholesale_profile_id={customerAtts.wholesale_profile.id}
+                                                                shipping_method={order_shipping_method}
+                                                            />
+                                                        )}
+                                                    />
+                                                </div>
+                                                <div flex="auto">
+                                                    <Modal
+                                                        text="Manually Adjust Shipping"
+                                                        title="Manually Adjust Shipping"
+                                                        btnProps={{
+                                                            primary: false
+                                                        }}
+                                                        component={(
+                                                            <ManualShipping
+                                                                order_id={id}
+                                                                shipping_method={order_shipping_method}
+                                                            />
+                                                        )}
+                                                    />
+                                                </div>
+                                            </Flex>
+                                        )}
+                                        {attributes.notes && (
+                                            <React.Fragment>
+                                                <br />
+                                                <br />
+                                                <p>
+                                                    <strong>Order Notes:</strong>
+                                                </p>
+                                                <Segment secondary>{attributes.notes}</Segment>
+                                            </React.Fragment>
+                                        )}
+                                    </div>
+                                    <div flex="33" style={{ textAlign: "right", marginTop: "auto" }}>
+                                        <div>
+                                            {!isEditable && canEdit && (
+                                                <div className="noprint">
+                                                    <AddDiscount
+                                                        id={attributes.invoice.id}
+                                                        updateContext={updateContext}
+                                                        discount={attributes.invoice.discount}
+                                                    />
+                                                    <br />
+                                                    <br />
+                                                </div>
+                                            )}
+                                            <OrderTotals attributes={attributes} />
+                                        </div>
+                                    </div>
+                                </Flex>
+                            </>
                         )}
-                        <Flex spacing="30" spacebetween>
-                            <div flex="66">
-                                <Titler
-                                    title="Selected Shipping Method"
-                                    value={shipping_method}
-                                    bold
-                                />
-                                {!isEditable && canEdit && (
-                                    <Flex wrap spacing="10" className="noprint">
-                                        <div flex="auto">
-                                            <Modal
-                                                text="Update Shipping Method"
-                                                title="Update Shipping Method"
-                                                component={(
-                                                    <EditShipping
-                                                        order_id={id}
-                                                        wholesale_profile_id={customerAtts.wholesale_profile.id}
-                                                        shipping_method={order_shipping_method}
-                                                    />
-                                                )}
-                                            />
-                                        </div>
-                                        <div flex="auto">
-                                            <Modal
-                                                text="Manually Adjust Shipping"
-                                                title="Manually Adjust Shipping"
-                                                btnProps={{
-                                                    primary: false
-                                                }}
-                                                component={(
-                                                    <ManualShipping
-                                                        order_id={id}
-                                                        shipping_method={order_shipping_method}
-                                                    />
-                                                )}
-                                            />
-                                        </div>
-                                    </Flex>
-                                )}
-                                {attributes.notes && (
-                                    <React.Fragment>
-                                        <br />
-                                        <br />
-                                        <p>
-                                            <strong>Order Notes:</strong>
-                                        </p>
-                                        <Segment secondary>{attributes.notes}</Segment>
-                                    </React.Fragment>
-                                )} 
-                            </div>
-                            <div flex="33" style={{ textAlign: "right", marginTop: "auto" }}>
-                                <div style={{ position: "relative" }}>
-                                    {!isEditable && canEdit && (
-                                        <div className="noprint">
-                                            <AddDiscount 
-                                                id={attributes.invoice.id}
-                                                updateContext={updateContext}
-                                                discount={attributes.invoice.discount}
-                                            />
-                                            <br />
-                                            <br />
-                                        </div>
-                                    )}
-                                    <Dimmer active={isEditable} inverted />
-                                    <OrderTotals attributes={attributes} />
-                                </div>
-                            </div>
-                        </Flex>
                     </Segment>
-                    <Segment>
-                        <Fulfillment />
-                    </Segment>
+                    {!isEditable && (
+                        <Segment>
+                            <Fulfillment />
+                        </Segment>
+                    )}
                 </Segment>
             </div>
         );
