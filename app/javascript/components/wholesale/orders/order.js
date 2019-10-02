@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Segment, Header, Label, Button, Icon, Dimmer } from "semantic-ui-react";
+import { Segment, Header, Label, Button, Icon } from "semantic-ui-react";
 
 /* eslint-disable */
 import styles from "./inline-print-styles"
