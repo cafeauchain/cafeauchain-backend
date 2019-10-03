@@ -56,6 +56,20 @@ module Manage
       }
     end
 
+    def reporting
+      @wholesale_profiles = @roaster.wholesale_profiles
+      customers = @roaster.customer_profiles
+      invoices = ActiveModelSerializers::SerializableResource.new(@roaster.invoices, each_serializer: InvoiceSerializer)
+      render "manage/primary", locals: {
+        roaster: @roaster,
+        invoices: invoices,
+        wholesalers: @wholesale_profiles,
+        customers: customers,
+        title: 'Wholesale Dashboard',
+        component: 'wholesale/reporting'
+      }
+    end
+
     private
 
     def set_roaster

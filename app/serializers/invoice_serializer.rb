@@ -1,5 +1,5 @@
 class InvoiceSerializer < ActiveModel::Serializer
-  attributes :id, :order_date, :paid_date, :status, :payment_status, 
+  attributes :id, :order_date, :paid_date, :status, :payment_status, :customer,
   :subtotal, :shipping, :discount, :taxable, :tax, :total, :fee, :net
 
   # TODO Should probably move all of these to the model
@@ -9,6 +9,9 @@ class InvoiceSerializer < ActiveModel::Serializer
   end
   def paid_date
     self.object.updated_at.to_date
+  end
+  def customer
+    self.object.order.customer_profile.company_name
   end
   def subtotal
     self.object.subtotal.to_f.round(2)

@@ -356,6 +356,7 @@ Rails.application.routes.draw do
     resources :customers, only: [:show, :index]
     get "wholesale", to: "primary#wholesale"
     get "subscription", to: "primary#subscription"
+    get "reporting", to: "primary#reporting"
     resources :inventory_items, path: "roast_profiles", only: [:index]
     resources :lots, only: [:show, :index]
     resources :products, only: [:index]
