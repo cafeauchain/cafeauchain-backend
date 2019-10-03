@@ -25,7 +25,7 @@ module Api::V1
       # end_date = params[:end_date] || Date.today.strftime("%F")
       # range = params[:start_date] ? (params[:start_date]..end_date) : (beginning_of_month..end_of_month)
 
-      @invoices = @roaster.invoices.filter(params.slice(:range, :status, :order_by))
+      @invoices = @roaster.invoices.filter(params.slice(:order_range, :paid_range, :status, :order_by))
       render json: @invoices, status: 200, each_serializer: InvoiceSerializer
     end
 

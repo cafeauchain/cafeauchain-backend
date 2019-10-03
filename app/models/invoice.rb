@@ -39,31 +39,38 @@ class Invoice < ApplicationRecord
 
   scope :status, -> (status) { status == "all" ? all : (where status: status) }
 
-  def self.range(range)
+  def self.order_range(range)
+    range(range, "created_at")
+  end
+
+  def self.paid_range(range)
+    range(range, "paid_date")
+  end
+
+  def self.range(range, field)
     case range
     when "last_month"
-      where(created_at: 1.month.ago.all_month)
+      where("#{field}": 1.month.ago.all_month)
     when "this_month"
-      where(created_at: Date.today.all_month)
+      where("#{field}": Date.today.all_month)
     when "last_week"
-      where(created_at: 1.week.ago.all_week)
+      where("#{field}": 1.week.ago.all_week)
     when "this_week"
-      where(created_at: Date.today.all_week)
+      where("#{field}": Date.today.all_week)
     when "yesterday"
-      where(created_at: Date.yesterday.all_day)
+      where("#{field}": Date.yesterday.all_day)
     when "today"
-      where(created_at: Date.today.all_day)
+      where("#{field}": Date.today.all_day)
     else
       begin
         range = range.split("::")
         start = range[0].to_date.beginning_of_day
         endval = range[1].present? ? range[1].to_date : Date.today 
         dates = start..endval.end_of_day
-        where(created_at: dates)    
+        where("#{field}": dates)    
       rescue
         all
       end
-      
     end
   end
 

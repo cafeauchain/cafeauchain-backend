@@ -13,7 +13,8 @@ const invoice_statuses = ["Processing", "Awaiting Payment", "Payment Authorized"
 
 const selects = [
     { name: "Status", options: invoice_statuses, value: "status", flex: "auto", style: { minWidth: 180 } },
-    { name: "Dates", options: dates, value: "range", flex: "auto", style: { minWidth: 180 } }
+    { name: "Order Date Range", options: dates, value: "order_range", flex: "auto", style: { minWidth: 180 } },
+    { name: "Paid Date Range", options: dates, value: "paid_range", flex: "auto", style: { minWidth: 180 } }
 ];
 
 const Dashboard = () => (
