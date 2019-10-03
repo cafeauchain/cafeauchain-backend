@@ -1,59 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 
 /* eslint-disable */
-import Table from "shared/table";
+import tableDefinition from "defs/tables/invoiceExport";
 
+import Table from "shared/table";
+import { params as paramatize, paramString } from "utilities";
 import withContext from "contexts/withContext";
 /* eslint-enable */
 
 
-import moment from "moment";
+const ReportingTable = ({ invoices = [], getData }) => {
 
-/* eslint-disable */
-import { Money } from "shared/textFormatters";
+    let string = window.location.search;
+    let params = paramatize(string);
 
-import { humanize } from "utilities";
-/* eslint-enable */
-
-const DateFormatter = props => {
-    return moment(props.content).format("MMM D");
-};
-
-const Humanize = props => {
-    return humanize(props.content);
-};
-
-const tableDefinition = {
-    fields: [
-        { name: "id", label: "Invoice Id", textAlign: "center" },
-        { name: "customer", namespace: "attributes" },
-        { name: "order_date", namespace: "attributes", formatter: DateFormatter },
-        { name: "status", namespace: "attributes", formatter: Humanize },
-        { name: "paid_date", namespace: "attributes", formatter: DateFormatter },
-        { name: "subtotal", namespace: "attributes", formatter: Money, textAlign: "right" },
-        { name: "shipping", namespace: "attributes", formatter: Money, textAlign: "right" },
-        { name: "discount", namespace: "attributes", formatter: Money, textAlign: "right" },
-        { name: "taxable", namespace: "attributes", formatter: Money, textAlign: "right" },
-        { name: "tax", namespace: "attributes", formatter: Money, textAlign: "right" },
-        { name: "total", namespace: "attributes", formatter: Money, textAlign: "right" },
-        { name: "fee", namespace: "attributes", formatter: Money, textAlign: "right" },
-        { name: "net", namespace: "attributes", formatter: Money, textAlign: "right" }
-    ],
-    props: {
-        sortable: true
-    }
-};
-
-const ReportingTable = ({ invoices = [] }) => {
+    useEffect(() => {
+        getData("invoices", paramString(params));
+    }, []);
     return (
         <Table tableDefs={tableDefinition} data={invoices} />
     );
 };
 
-const { array } = PropTypes;
+const { array, func } = PropTypes;
 ReportingTable.propTypes = {
-    invoices: array
+    invoices: array,
+    getData: func
 };
 
 export default withContext(ReportingTable);

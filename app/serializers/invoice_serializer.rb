@@ -1,5 +1,5 @@
 class InvoiceSerializer < ActiveModel::Serializer
-  attributes :id, :order_date, :paid_date, :status, :payment_status, :customer,
+  attributes :id, :order_date, :paid_date, :status, :customer,
   :subtotal, :shipping, :discount, :taxable, :tax, :total, :fee, :net
 
   # TODO Should probably move all of these to the model

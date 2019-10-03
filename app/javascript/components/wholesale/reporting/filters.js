@@ -13,7 +13,7 @@ import withContext from "contexts/withContext";
 
 const buildOptions = arr => arr.map(item => ({ key: underscorer(item), value: underscorer(item), text: item }));
 
-const Filters = ({ getData, shouldPage = false, type, selects }) => {
+const Filters = ({ getData, shouldPage = false, type, selects, action = null }) => {
 
     let string = window.location.search;
     let params = paramatize(string);
@@ -89,17 +89,19 @@ const Filters = ({ getData, shouldPage = false, type, selects }) => {
                 <div flex="auto" style={{ marginTop: "auto" }}>
                     <Button content="Reset Filters" onClick={clearFilters} size="small" />
                 </div>
+                {action}
             </Flex>
             <div style={{ marginBottom: 10 }} />
         </Segment>
     );
 };
-const { func, bool, string, array } = PropTypes;
+const { func, bool, string, array, node } = PropTypes;
 Filters.propTypes = {
     getData: func,
     shouldPage: bool,
     type: string,
-    selects: array
+    selects: array,
+    action: node
 };
 
 export default withContext(Filters);

@@ -4,6 +4,7 @@ import { Header, Segment } from "semantic-ui-react";
 /* eslint-disable */
 import Filters from "wholesale/reporting/filters";
 import Table from "wholesale/reporting/table";
+import Download from "wholesale/reporting/download";
 /* eslint-enable */
 
 const dates = ["Today", "Yesterday", "This Week", "Last Week", "This Month", "Last Month"];
@@ -21,7 +22,7 @@ const Dashboard = () => (
             <Header as="h1" content="Order Export" />
         </Segment>
         <Segment>
-            <Filters type="invoices" selects={selects} />
+            <Filters type="invoices" selects={selects} action={<Download />} />
             <Table />
         </Segment>
     </div>
