@@ -15,6 +15,9 @@ module Api::V1
         tax = (@invoice.taxable + @invoice[:discount].to_f - params[:discount].to_f) * @invoice.tax_rate
         @invoice.update(discount: params[:discount], tax: tax)
         render json: @invoice.order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
+      elsif params[:paid_date].present? && params[:update_paid_date_only].present?
+        @invoice.update(paid_date: params[:paid_date])
+        render json: @invoice.order, status: 200, serializer: OrderSerializer::SingleOrderSerializer
       end
     end
 
