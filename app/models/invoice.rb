@@ -6,6 +6,7 @@
 #  discount          :decimal(7, 2)
 #  fee               :decimal(8, 2)    default(0.0)
 #  memo              :string
+#  paid_date         :date
 #  payment_status    :integer
 #  payment_type      :integer
 #  shipping          :decimal(8, 2)
