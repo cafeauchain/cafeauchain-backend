@@ -44,6 +44,7 @@ class RoasterProfile < ApplicationRecord
   has_many :products
   has_many :wholesale_profiles
   has_many :orders, through: :wholesale_profiles
+  has_many :invoices, through: :orders
   has_many :customer_profiles, through: :wholesale_profiles
   has_many :shipping_methods
 

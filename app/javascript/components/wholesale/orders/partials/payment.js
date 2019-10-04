@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button, Header } from "semantic-ui-react";
+import moment from "moment";
 
 /* eslint-disable */
 import ErrorHandler from "shared/errorHandler";
@@ -8,6 +9,7 @@ import Titler from "shared/titler";
 import Modal from "shared/modal";
 
 import MarkPaid from "wholesale/orders/partials/markPaid";
+import EditPaidDate from "wholesale/orders/partials/editPaidDate";
 
 import { humanize, callMeDanger } from "utilities";
 
@@ -69,7 +71,7 @@ class PaymentDetails extends React.Component {
     render() {
         const { errors, cardBtnLoading, emailBtnLoading } = this.state;
         const { order: { attributes }, customer: { attributes: custAtts} } = this.props;
-        const { invoice: { status, memo, payment_status, id } } = attributes;
+        const { invoice: { status, memo, payment_status, id, paid_date } } = attributes;
         const default_card = custAtts.cards.find( card => card.default );
         return (
             <React.Fragment>
@@ -77,6 +79,23 @@ class PaymentDetails extends React.Component {
                 <p>
                     <Titler bold title="Invoice Status" value={humanize(status)} />
                 </p>
+                <p>
+                    <span>
+                        <strong>Invoice Payment Date</strong>
+                        <span>: </span>
+                    </span>
+                    <Modal
+                        text={moment(paid_date).format("MMM D, YYYY")}
+                        title="Edit Paid Date"
+                        unstyled
+                        className="link"
+                        size="mini"
+                        component={(
+                            <EditPaidDate id={id} paid_date={paid_date} />
+                        )}
+                    />
+                </p>
+                
                 
                 {status === "awaiting_payment" && (
                     <p>
