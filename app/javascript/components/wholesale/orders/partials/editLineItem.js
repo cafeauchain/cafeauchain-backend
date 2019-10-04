@@ -36,6 +36,7 @@ class LineItem extends Component {
         details[name] = val || "";
         if( name === "variant_id" ){
             const item = this.buildProducts().find( itm => itm.id === value );
+            details.id = item.id;
             details.name = item.title;
             details.size = item.size;
             details.unit_price = item.unit_price;
@@ -86,7 +87,7 @@ class LineItem extends Component {
         details.shouldDelete = true;
         updateLineItems(details);
         if (successClose) {
-            successClose(`${details.name} (${humanize(details.production_options.toString())}) was updated!`);
+            successClose(`${details.name} (${humanize(details.production_options.toString())}) was deleted!`);
         }
     }
 
