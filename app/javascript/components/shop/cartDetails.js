@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Header, Card, Button, Statistic, Loader, Dimmer, Form } from "semantic-ui-react";
+import moment from "moment";
 
 /* eslint-disable */
 import Flex from "shared/flex";
@@ -19,7 +20,7 @@ import Shipping from "shop/shipping/cartView";
 import CartChangePayment from "shop/cart/changePayment";
 import MiniCard from "payments/miniCard";
 
-import { humanize, pluralize } from "utilities";
+import { humanize, pluralize, callMeDanger } from "utilities";
 import { url as API_URL, requester } from "utilities/apiUtils";
 import withContext from "contexts/withContext";
 /* eslint-enable */
@@ -94,8 +95,13 @@ class CartDetails extends React.Component {
             cards,
             stripeApiKey,
             cartLoading,
-            shipping = {retail_rate: 0}
+            shipping = {retail_rate: 0},
+            next_roast_date,
+            next_cutoff
         } = this.props;
+
+        const formatted_cutoff = moment(next_cutoff).format("MMM D [at] h:mm A");
+        const formatted_roast_date = moment(next_roast_date).format("MMM D");
         
         const { primary_address: { street_1, street_2, city, state, postal_code } } = profileAttrs; 
         const { errors, payment_type, payment_source, btnLoading, details: { notes } } = this.state;
@@ -216,6 +222,11 @@ class CartDetails extends React.Component {
                             value={notes || ""}
                         />
                     </Form>
+                </Card.Content>
+                <Card.Content>
+                    {callMeDanger(`Any order placed before <strong>${formatted_cutoff}</strong> will be roasted on 
+                    <strong>${formatted_roast_date}</strong>. Generally, orders are shipped the same day they are roasted. 
+                    If you need your order before then, please contact your wholesale representative.`)}
                 </Card.Content>
                 <Card.Content>
                     <Flex spacebetween centercross spacing="10">

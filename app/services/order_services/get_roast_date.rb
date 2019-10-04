@@ -1,10 +1,9 @@
 module OrderServices
   class GetRoastDate
-    def self.process(order)
-      roaster = order.roaster_profile
+    def self.process(roaster, date)
 
       cutoff = roaster.cutoff.attributes.select{|(key, value)| key.start_with?("day_")}.map{|(k,v)| v.is_a?(Time) ? v.to_s(:time) : nil }
-      order_time = Time.at(order.created_at)
+      order_time = Time.at(date)
       order_day = Date.parse(order_time.to_s).strftime("%w")
 
       day_of_week = order_day.to_i
@@ -21,7 +20,7 @@ module OrderServices
       cutoff_time = formatRoastDate(order_time, days_to_add, cutoff[day_of_week].to_s)
       roast_date = Date.parse(cutoff_time.to_s)
 
-      return roast_date
+      return {roast_date: roast_date, cutoff_time: cutoff_time}
     end
 
     private

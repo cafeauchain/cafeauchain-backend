@@ -9,7 +9,7 @@ module Api::V1
       @order = Order.create(status: :draft, wholesale_profile_id: @wholesale_profile.id, notes: params[:notes] )
       build_line_items(@cart.cart_items)
 
-      roast_date = OrderServices::GetRoastDate.process(@order)
+      roast_date = OrderServices::GetRoastDate.process(@order.roaster_profile, @order.create_at)[:roast_date]
       if @order.update(status: :processing, roast_date: roast_date)
         @cart.cart_items.destroy_all
         OrderServices::ProcessOrder.process(@order.id, params)
