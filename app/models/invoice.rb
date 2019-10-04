@@ -6,6 +6,7 @@
 #  discount          :decimal(7, 2)
 #  fee               :decimal(8, 2)    default(0.0)
 #  memo              :string
+#  paid_date         :date
 #  payment_status    :integer
 #  payment_type      :integer
 #  shipping          :decimal(8, 2)
@@ -27,6 +28,7 @@
 #
 
 class Invoice < ApplicationRecord
+  include Filterable
   belongs_to :order
 
   before_update :check_total
@@ -34,6 +36,57 @@ class Invoice < ApplicationRecord
   enum status: [:draft, :processing, :payment_authorized, :awaiting_payment, :partial_payment, :paid_in_full]
   enum payment_type: [:card_on_file, :terms_with_vendor]
   enum payment_status: [:offline, :stripe]
+
+  default_scope {order(created_at: :desc)}
+
+  scope :status, -> (status) { status == "all" ? all : (where status: status) }
+
+  def self.order_range(range)
+    range(range, "created_at")
+  end
+
+  def self.paid_range(range)
+    range(range, "paid_date")
+  end
+
+  def self.range(range, field)
+    case range
+    when "last_month"
+      where("#{field}": 1.month.ago.all_month)
+    when "this_month"
+      where("#{field}": Date.today.all_month)
+    when "last_week"
+      where("#{field}": 1.week.ago.all_week)
+    when "this_week"
+      where("#{field}": Date.today.all_week)
+    when "yesterday"
+      where("#{field}": Date.yesterday.all_day)
+    when "today"
+      where("#{field}": Date.today.all_day)
+    else
+      begin
+        range = range.split("::")
+        start = range[0].to_date.beginning_of_day
+        endval = range[1].present? ? range[1].to_date : Date.today 
+        dates = start..endval.end_of_day
+        where("#{field}": dates)    
+      rescue
+        all
+      end
+    end
+  end
+
+  def self.order_by(order_by)
+    parts = order_by.split
+    case parts[0]
+    when "order_date"
+      order("invoices.created_at #{parts[1]}")
+    when "paid_date"
+      order("invoices.paid_date #{parts[1]}")
+    else
+      order(order_by)
+    end
+  end
 
   def taxable
     self.subtotal.to_f + self.shipping.to_f - self.discount.to_f

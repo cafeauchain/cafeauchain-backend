@@ -336,7 +336,7 @@ Rails.application.routes.draw do
         put :process_payment
       end
       post :password_reset, to: "password#password_reset"
-      resources :invoices, only: [:update]
+      resources :invoices, only: [:update, :index]
     end
   end
 
@@ -356,6 +356,7 @@ Rails.application.routes.draw do
     resources :customers, only: [:show, :index]
     get "wholesale", to: "primary#wholesale"
     get "subscription", to: "primary#subscription"
+    get "reporting", to: "primary#reporting"
     resources :inventory_items, path: "roast_profiles", only: [:index]
     resources :lots, only: [:show, :index]
     resources :products, only: [:index]
