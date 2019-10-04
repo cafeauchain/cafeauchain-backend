@@ -17,7 +17,7 @@ class StripeServices::CaptureCharge
         memo += " with " + card[:brand].to_s.capitalize + " " + card[:last4].to_s
       end
 
-      order.invoice.update(status: :paid_in_full, payment_status: :stripe, memo: memo, fee: fee )
+      order.invoice.update(status: :paid_in_full, payment_status: :stripe, memo: memo, fee: fee, paid_date: DateTime.now.to_date)
     rescue => e
       return { message: e.message, status: e.http_status }
     end
