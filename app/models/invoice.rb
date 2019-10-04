@@ -37,6 +37,8 @@ class Invoice < ApplicationRecord
   enum payment_type: [:card_on_file, :terms_with_vendor]
   enum payment_status: [:offline, :stripe]
 
+  default_scope {order(created_at: :desc)}
+
   scope :status, -> (status) { status == "all" ? all : (where status: status) }
 
   def self.order_range(range)
@@ -79,6 +81,8 @@ class Invoice < ApplicationRecord
     case parts[0]
     when "order_date"
       order("invoices.created_at #{parts[1]}")
+    when "paid_date"
+      order("invoices.paid_date #{parts[1]}")
     else
       order(order_by)
     end
