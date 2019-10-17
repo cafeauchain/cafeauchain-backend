@@ -62,17 +62,17 @@ group :development do
 end
 
 group :development, :test do
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'capybara', '~> 2.13'
-  gem 'selenium-webdriver'
-  gem 'factory_bot_rails'
-  gem 'faker'
-  gem 'pry-rails'
-  gem 'pry-rescue'
-  gem 'rspec-rails'
+  # gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  # gem 'capybara', '~> 2.13'
+  # gem 'selenium-webdriver'
+  # gem 'factory_bot_rails'
+  # gem 'faker'
+  # gem 'pry-rails'
+  # gem 'pry-rescue'
+  # gem 'rspec-rails'
 end
 
 group :test do
-  gem 'database_cleaner'
-  gem 'launchy'
+  # gem 'database_cleaner'
+  # gem 'launchy'
 end
