@@ -20,6 +20,7 @@ const defaultDetails = {
     name: "",
     description: "",
     status: "draft",
+    product_type: "roasted",
     categories: [],
     product_images: [],
     composition: [compositionDefault()],

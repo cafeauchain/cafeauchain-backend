@@ -14,12 +14,16 @@ const Variants = ({ variants, fields, handleChange, btn, handleReorder }) => {
     return (
         <div style={{ marginBottom: 10 }}>
             <Header as="h3" content="Product Sizes" style={{ marginBottom: 10 }} />
-            <Flex spacing="10">
-                {fields.map(({ label, flex, width }) => (
-                    <div key={label} flex={flex} style={{ width: width, whiteSpace: "nowrap" }}>
-                        <strong>{label}</strong>
-                    </div>
-                ))}
+            <Flex spacing="10" spacebetween>
+                {fields.map(({ label, flex, width }, idx) => {
+                    const size = idx === 0;
+                    const styles = { width: width, whiteSpace: "nowrap", marginLeft: size ? 44 : null };
+                    return (
+                        <div key={label} flex={flex} style={styles}>
+                            <strong>{label}</strong>
+                        </div>
+                    );
+                })}
             </Flex>
             <DraggableList
                 updateOrder={handleVariantReorder}
@@ -31,7 +35,7 @@ const Variants = ({ variants, fields, handleChange, btn, handleReorder }) => {
     );
 };
 
-const { array, func } = PropTypes;
+const { array, func, string } = PropTypes;
 Variants.propTypes = {
     variants: array,
     fields: array,

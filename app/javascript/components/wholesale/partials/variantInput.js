@@ -10,7 +10,7 @@ import { Weights } from "shared/textFormatters";
 const VariantInput = ({ fields, handleChange, btn: RemoveButton, item, index, length }) => (
     <React.Fragment>
         <Flex spacing="10" centercross>
-            {fields.map(({ name, label, inputType, flex, width, ...rest }, fieldIdx) => {
+            {fields.map(({ name, label, inputType, flex, width, type = "number", ...rest }, fieldIdx) => {
                 const value = name ? item[name] : Weights({ content: item["size"] });
                 const showRemoveBtn = fields.length === fieldIdx + 1;
                 return (
@@ -20,7 +20,7 @@ const VariantInput = ({ fields, handleChange, btn: RemoveButton, item, index, le
                             name={name}
                             label=""
                             placeholder={label}
-                            type={name ? "number" : "text"}
+                            type={type}
                             data-object="variants"
                             data-itemid={item.id}
                             onChange={handleChange}

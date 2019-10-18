@@ -9,7 +9,7 @@ import FileUpload from "shared/fileUpload";
 import Flex from "shared/flex";
 
 import withProductForm from "wholesale/actions/productHOC";
-
+import ProductType from "wholesale/actions/productType";
 import Variants from "wholesale/partials/variantsTable";
 import Options from "wholesale/partials/optionsTable";
 import CompositionTable from "wholesale/partials/compositionTable";
@@ -106,9 +106,11 @@ class CreateProduct extends Component {
             handleReorder
         } = funcs;
         const { composition, variants, product_options: options } = details;
-        const btnActive = validateInputs(details);
+        const hard_goods = details.product_type === 'hard_goods';
+        const btnActive = hard_goods ? true : validateInputs(details); 
         return (
             <Form>
+                <ProductType updateType={handleInputChange} type={details.product_type} />
                 <ErrorHandler errors={errors} />
                 <Flex spacing="10" wrap>
                     <div flex="75">
@@ -178,38 +180,41 @@ class CreateProduct extends Component {
                         files={details["product_images"] || []}
                     />
                 )}
+                {!hard_goods && (
+                    <Segment>
+                        <CompositionTable
+                            composition={composition}
+                            fields={fields.composition}
+                            inventory={inventory}
+                            handleChange={handleInputChange}
+                            btn={removeButton}
+                        />
+                        <Button type="button" color="blue" content="Add Roast Profile" onClick={addInventoryItem} />
+                    </Segment>
+                )}
                 
-
-                <Segment>
-                    <CompositionTable
-                        composition={composition}
-                        fields={fields.composition}
-                        inventory={inventory}
-                        handleChange={handleInputChange}
-                        btn={removeButton}
-                    />
-                    <Button type="button" color="blue" content="Add Roast Profile" onClick={addInventoryItem} />
-                </Segment>
                 <Segment style={{ background: "#efefef" }}>
                     <Flex spacing="10">
                         <div flex="auto">
                             <Variants
                                 variants={variants}
-                                fields={fields.variants}
+                                fields={hard_goods ? fields.hard_goods_variants : fields.variants}
                                 handleChange={handleInputChange}
                                 btn={removeButton}
                                 handleReorder={handleReorder}
                             />
                             <Button type="button" color="blue" content="Add Variant" onClick={addVariant} />
                         </div>
-                        <div flex="fill">
-                            <Options
-                                options={options}
-                                handleChange={handleInputChange}
-                                btn={removeButton}
-                                setOptions={setOptions}
-                            />
-                        </div>
+                        {!hard_goods && (
+                            <div flex="fill">
+                                <Options
+                                    options={options}
+                                    handleChange={handleInputChange}
+                                    btn={removeButton}
+                                    setOptions={setOptions}
+                                />
+                            </div>
+                        )} 
                     </Flex>
                 </Segment>
                 <Button

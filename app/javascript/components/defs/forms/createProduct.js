@@ -21,7 +21,11 @@ const fields = {
     ],
     variants: [
         { name: "size", label: "Size (in ounces)", placeholder: "oz", step: 0.1, flex: "auto", width: 90 },
-        { name: "", label: "", readOnly: true, transparent: true, flex: "auto", width: 60, tabIndex: -1 },
+        { name: "", label: "", readOnly: true, transparent: true, flex: "auto", width: 60, tabIndex: -1, type: "text" },
+        { name: "price_in_dollars", label: "Price", step: 0.01, flex: "auto", width: 185 }
+    ],
+    hard_goods_variants: [
+        { name: "size", label: "Size", flex: "auto", width: 90, type: "text" },
         { name: "price_in_dollars", label: "Price", step: 0.01, flex: "auto", width: 185 }
     ]
 };

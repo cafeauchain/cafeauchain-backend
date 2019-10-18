@@ -5,6 +5,7 @@
 #  id                 :uuid             not null, primary key
 #  description        :text
 #  product_options    :jsonb
+#  product_type       :integer
 #  slug               :string
 #  status             :integer
 #  title              :string
@@ -38,6 +39,9 @@ class Product < ApplicationRecord
   belongs_to :roaster_profile
 
   enum status: [:draft, :out_of_season, :live, :coming_soon]
+  enum product_type: [:roasted, :hard_goods]
+
+  scope :product_type, -> (product_type) { where product_type: :product_type }
 
   def lots
     self.product_inventory_items.where(inactive: false).map{|pii|
