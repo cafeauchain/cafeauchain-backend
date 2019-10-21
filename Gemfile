@@ -27,6 +27,7 @@ gem 'mini_magick'
 gem 'mini_racer'
 gem 'multichain', github: 'cafeauchain/multichain-client'
 gem 'pager_api'
+gem 'pagy'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.7'
 gem 'rails', '~> 5.2.3'
@@ -75,6 +76,6 @@ group :development, :test do
 end
 
 group :test do
-  gem 'database_cleaner'
-  gem 'launchy'
+  # gem 'database_cleaner'
+  # gem 'launchy'
 end
