@@ -28,8 +28,8 @@ class CartDetails extends React.Component {
     constructor(props) {
         super(props);
         const { cards, profile: { attributes: { terms } } } = props;
-        const card = cards.find( card => card.default );
-        const payment_source = card.stripe_card_id; 
+        const card = cards.length ? cards.find(card => card.default) : undefined;
+        const payment_source = card ? card.stripe_card_id : undefined;
         this.state = {
             errors: [],
             payment_type: terms ? "terms_with_vendor" : "card_on_file",
