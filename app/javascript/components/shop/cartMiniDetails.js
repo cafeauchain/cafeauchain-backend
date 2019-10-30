@@ -19,7 +19,8 @@ import withContext from "contexts/withContext";
 class MiniDetails extends React.Component {
     constructor(props){
         super(props);
-        const { item } = props;
+        const { item, customer, profile } = props;
+        this.customer = customer || profile;
         this.state = {
             isEditable: false,
             quantity: item.quantity,
@@ -36,12 +37,13 @@ class MiniDetails extends React.Component {
         const { target } = e;
         const { quantity } = this.state;
         const { item: propItem, updateContext } = this.props;
+        const customer_profile_id = this.customer.id;
         e.preventDefault();
         target.blur;
         await this.setState({ saveLoading: true });
-        await updateContext({ cartLoading: true});
-        let url = API_URL + "/carts/" + propItem.variant_id;
-        const body = { quantity };
+        await updateContext({ cartLoading: true });
+        let url = API_URL + "/carts/" + propItem.id;
+        const body = { quantity, customer_profile_id };
         if( quantity === propItem.quantity ){
             return setTimeout(() => this.setState({ saveLoading: false }), 600);
         }
@@ -60,7 +62,7 @@ class MiniDetails extends React.Component {
         this.afterSubmit(response);
     }
     afterSubmit = async response => {
-        const { getData, customer, updateContext } = this.props;
+        const { getData, updateContext } = this.props;
         setTimeout( async() => {
             if (response instanceof Error) {
                 await updateContext({ cartLoading: false });
@@ -69,7 +71,7 @@ class MiniDetails extends React.Component {
                 if (response.redirect) {
                     window.location.href = await response.redirect_url;
                 } else {
-                    await getData("cart", "?customer_profile_id=" + customer.id);
+                    await getData("cart", "?customer_profile_id=" + this.customer.id);
                     await updateContext({ cartLoading: false });
                     this.setState({ isEditable: false, saveLoading: false, removeLoading: false });
                 }
@@ -157,6 +159,7 @@ const { object, func } = PropTypes;
 MiniDetails.propTypes = {
     item: object,
     customer: object,
+    profile: object,
     getData: func,
     updateContext: func
 };
