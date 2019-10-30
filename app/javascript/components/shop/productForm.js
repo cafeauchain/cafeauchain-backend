@@ -21,7 +21,7 @@ class ProductForm extends React.Component {
         return {
             variantOptions: array,
             productOptions: array,
-            cartId: oneOfType([string, number])
+            cartItemId: oneOfType([string, number])
         };
     };
     constructor(props) {
@@ -89,10 +89,10 @@ class ProductForm extends React.Component {
         e.preventDefault();
         await this.setState({ btnLoading: true });
         let { details } = this.state;
-        const { getData, isAssumedCustomer, customer, updateContext } = this.props;
+        const { getData, isAssumedCustomer, customer, updateContext, cartItemId } = this.props;
         await updateContext({ cartLoading: true });
         let url = `${API_URL}/carts`;
-        if (method === "PUT") url += "/" + details.id;
+        if (method === "PUT") url += "/" + cartItemId;
         if( isAssumedCustomer ){
             details.customer_profile_id = customer.id;
         }
@@ -119,9 +119,9 @@ class ProductForm extends React.Component {
         target.blur();
         e.preventDefault();
         await this.setState({ loading: true });
-        const { cartId } = this.props;
+        const { cartItemId } = this.props;
         const { getData } = this.props;
-        const url = `${API_URL}/carts/${cartId}`;
+        const url = `${API_URL}/carts/${cartItemId}`;
         const response = await requester({ url, method: "DELETE" });
         if (response instanceof Error) {
             setTimeout(() => this.setState({ errors: response.response.data, loading: false }), 600);
