@@ -17,7 +17,6 @@ class Api::V1::ProductsController < ApplicationController
     else
       @product = InventoryServices::CreateProduct.new(@roaster.id, params).call
     end
-    @product = InventoryServices::CreateProduct.new(@roaster.id, params).call
     if @product.errors.full_messages.empty?
       render json: @product, status: 200
     else
