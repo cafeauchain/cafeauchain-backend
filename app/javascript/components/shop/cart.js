@@ -49,7 +49,7 @@ class Cart extends React.PureComponent {
                                                 variantOptions={variantOptions}
                                                 quantity={item.quantity}
                                                 inCart
-                                                cartId={item.id}
+                                                cartItemId={item.id}
                                             />
                                         </Item.Content>
                                     </Item>
