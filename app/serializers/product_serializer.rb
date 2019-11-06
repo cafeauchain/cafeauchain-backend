@@ -34,7 +34,8 @@ class ProductSerializer < ActiveModel::Serializer
         size: pv.custom_options["size"],
         price_in_dollars: '%.2f' % (pv.price_in_cents.to_i/100.0),
         id: pv.id,
-        sortorder: pv[:sortorder]
+        sortorder: pv[:sortorder],
+        type: self.object.product_type
       }
     end
   end

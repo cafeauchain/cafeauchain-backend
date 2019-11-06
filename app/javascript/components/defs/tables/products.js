@@ -22,11 +22,13 @@ const ArrayHandler = ({ content = [] }) => {
 const VariantHandler = props => {
     const { content } = props;
     const strings = content.map(item => {
+        const hard_good = item.type === "hard_goods";
         return (
             <div key={item.id}>
                 <Flex spacing="10" spacebetween>
                     <span>
-                        <Weights>{item.size}</Weights>
+                        {!hard_good && <Weights>{item.size}</Weights>}
+                        {hard_good && item.size}
                     </span>
                     <Money type="positive">{item.price_in_dollars}</Money>
                 </Flex>
