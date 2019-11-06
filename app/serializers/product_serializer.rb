@@ -25,7 +25,7 @@
 
 class ProductSerializer < ActiveModel::Serializer
   attributes :id, :title, :description, :slug, :composition, :product_image_urls, :product_options, :status, :variants,
-  :lots
+  :lots, :product_type
    #, :variant_options
 
   def variants

@@ -110,7 +110,7 @@ class CreateProduct extends Component {
         const btnActive = hard_goods ? true : validateInputs(details); 
         return (
             <Form>
-                <ProductType updateType={handleInputChange} type={details.product_type} />
+                <ProductType updateType={handleInputChange} type={details.product_type} isUpdate={!!current} />
                 <ErrorHandler errors={errors} />
                 <Flex spacing="10" wrap>
                     <div flex="75">
