@@ -4,7 +4,7 @@ module Manage
     before_action :set_roaster_profile, only: [:show, :index]
 
     def index
-      @products = ActiveModelSerializers::SerializableResource.new(@roaster.products, each_serializer: ProductSerializer)
+      @products = ActiveModelSerializers::SerializableResource.new(@roaster.products.sort_by(&:title), each_serializer: ProductSerializer)
       render "manage/primary", locals: {
         roaster: @roaster,
         products: @products,

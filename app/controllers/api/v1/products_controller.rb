@@ -3,7 +3,7 @@ class Api::V1::ProductsController < ApplicationController
   before_action :set_product, only: [:update, :add_images, :show]
 
   def index
-    @products = @roaster.products
+    @products = @roaster.products.sort_by(&:title)
     render json: @products, status: 200
   end
 
