@@ -3,16 +3,17 @@
 # Table name: product_variants
 #
 #  id                 :uuid             not null, primary key
-#  custom_options     :jsonb
-#  inactive           :boolean          default(FALSE)
-#  price_in_cents     :integer
-#  production_options :string           default([]), is an Array
 #  quantity           :integer
-#  sortorder          :integer
 #  variant_title      :string
+#  custom_options     :jsonb
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  price_in_cents     :integer
 #  product_id         :uuid
+#  production_options :string           default("{}"), is an Array
+#  inactive           :boolean          default("false")
+#  sortorder          :integer
+#  shipping_weight    :integer
 #
 # Indexes
 #
