@@ -14,6 +14,7 @@ import { humanize } from "utilities";
 
 const CartItemDetails = ({ item }) => {
     const image = item.image ? item.image.url : defaultImg;
+    const roasted = item.product_type === "roasted";
     return (
         <>
             <Item.Image>
@@ -30,10 +31,17 @@ const CartItemDetails = ({ item }) => {
                     </Flex>
                 </Item.Extra>
                 <Item.Description style={{ marginTop: 20 }}>
-                    <Label>
-                        <Weights>{item.size}</Weights>
-                    </Label>
-                    <Label>{humanize(item.production_options[0])}</Label>
+                    {roasted && (
+                        <>
+                            <Label>
+                                <Weights>{item.size}</Weights>
+                            </Label>
+                            <Label>{humanize(item.production_options[0])}</Label>
+                        </>
+                    )}
+                    {!roasted && (
+                        <Label>{item.size}</Label>
+                    )}
                 </Item.Description>
             </Item.Content>
         </>

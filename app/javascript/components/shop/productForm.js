@@ -30,7 +30,7 @@ class ProductForm extends React.Component {
             details: {
                 quantity: props.quantity || 1,
                 id: props.variantOptions[0].value,
-                option: props.productOptions[0].value
+                option: props.product_type === "roasted" ? props.productOptions[0].value : []
             },
             errors: [],
             btnLoading: false,
@@ -135,7 +135,7 @@ class ProductForm extends React.Component {
     };
 
     render() {
-        const { variantOptions, productOptions, inCart } = this.props;
+        const { variantOptions, productOptions, inCart, product_type } = this.props;
         const { errors, details, btnLoading, added, loading } = this.state;
         const selected = variantOptions.find(variant => variant.value === details.id);
         const subtotal = Number(details.quantity) * Number(selected.price);
@@ -159,15 +159,17 @@ class ProductForm extends React.Component {
                                     readOnly={multipleVariants ? undefined : true}
                                 />
                             </div>
-                            <div flex="50" className="product-select">
-                                <Input
-                                    label="Option"
-                                    inputType="select"
-                                    options={productOptions}
-                                    value={details.option}
-                                    onChange={this.handleInputChange}
-                                />
-                            </div>
+                            {product_type === "roasted" && (
+                                <div flex="50" className="product-select">
+                                    <Input
+                                        label="Option"
+                                        inputType="select"
+                                        options={productOptions}
+                                        value={details.option}
+                                        onChange={this.handleInputChange}
+                                    />
+                                </div>
+                            )} 
                         </Flex>
                     )}
 

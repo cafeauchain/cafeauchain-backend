@@ -21,8 +21,9 @@ class Products extends React.Component {
         if (products === undefined) getData("products");
     }
     variantBuilder = (variants, name, discount) =>
-        variants.map( variant => {
-            const text = Weights({ content: variant.size }) + " ($" + variant.price_in_dollars + ")";
+        variants.map(variant => {
+            const size = variant.type === "roasted" ? Weights({ content: variant.size }) : variant.size;
+            const text = `${size} ($${variant.price_in_dollars})`;
             const price = Number(variant.price_in_dollars);
             const discounted_price = discount ? price * (100 - Number(discount)) / 100 : price;
             return {
@@ -37,7 +38,7 @@ class Products extends React.Component {
 
     productOptionsBuilder = product_options => {
         if (product_options.length === 0) {
-            product_options = ["whole_bean"];
+            product_options = [];
         }
         return product_options.map(item => ({
             text: humanize(item),
@@ -54,7 +55,10 @@ class Products extends React.Component {
             <F>
                 <Flex centermain wrap spacing="20">
                     {sorted.reduce((arr, { attributes, id }) => {
-                        const { product_image_urls: img_urls, title, description, product_options, lots } = attributes;
+                        
+                        const {
+                            product_image_urls: img_urls, title, description, product_options, lots, product_type
+                        } = attributes;
                         const img = img_urls.length ? img_urls[0].url : defaultImg;
                         const shortDesc = truncate(description, 200);
                         const variantOptions = this.variantBuilder(attributes.variants, title, discount);
@@ -73,6 +77,7 @@ class Products extends React.Component {
                                     variantOptions={variantOptions}
                                     productOptions={productOptions}
                                     lots={lots}
+                                    product_type={product_type}
                                 />
                             </div>
                         ];

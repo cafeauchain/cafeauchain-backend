@@ -7,8 +7,7 @@ module Api::V1
     end
 
     def create
-      options = params[:option].split(",")
-      @item = OrderServices::CreateCartItem.create(@cart.id, params[:id], params[:quantity], options)
+      @item = OrderServices::CreateCartItem.create(@cart.id, params[:id], params[:quantity], params[:option])
       render json: {item: @item, items: @cart.cart_items, cart: @cart }
     end
 

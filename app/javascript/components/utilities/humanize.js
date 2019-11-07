@@ -1,4 +1,5 @@
 const humanize = (str, caps) => {
+    if (str === undefined) return "";
     if( caps ){
         return str.split(/(?=[A-Z])/).join(" ");
     }

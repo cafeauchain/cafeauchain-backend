@@ -86,6 +86,7 @@ class MiniDetails extends React.Component {
         const option = humanize(item.production_options[0]);
         const total = item.price * item.quantity;
         const discount = item.discounted_price * item.quantity;
+        const roasted = item.product_type === "roasted";
         return (
             <div>
                 <ErrorHandler errors={errors} />
@@ -93,8 +94,12 @@ class MiniDetails extends React.Component {
                     <div>
                         {item.name}
                         <br />
-                        {`(${option})`}
-                        <br />
+                        {option !== "" && (
+                            <>
+                                {`(${option})`}
+                                <br />
+                            </>
+                        )}
                     </div>
                     <div>
                         <Discounter original={total} discount={discount} linebreak />
@@ -110,11 +115,12 @@ class MiniDetails extends React.Component {
                     
                 </Flex>
                 <div>
-                    <span>Bag Size: </span>
-                    <Weights>{item.size}</Weights>
+                    <span>Size: </span>
+                    {roasted && <Weights>{item.size}</Weights>}
+                    {!roasted && item.size}
                 </div>
                 <div>
-                    <span>Number of Bags: </span>
+                    <span>Quantity: </span>
                     {isEditable && (
                         <Input 
                             onChange={this.handleInputChange}
