@@ -9,7 +9,7 @@ module InventoryServices
             shipping_weight: product[:product_type] == "hard_goods" ? variant[:shipping_weight].to_i : variant[:size],
             size: variant[:size]
         )
-        @pv.custom_options = variant.except(:price_in_dollars, :id, :price_in_cents, :sortorder, :shipping_weight)
+        # @pv.custom_options = variant.except(:price_in_dollars, :id, :price_in_cents, :sortorder, :shipping_weight)
         @pv.save
     end
 

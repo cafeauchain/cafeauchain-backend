@@ -50,7 +50,7 @@ class Cart < ApplicationRecord
   end
 
   def total_weight
-    cart_items.sum { |ci| ci.product_variant[:shipping_weight].to_i * ci.quantity }
+    cart_items.sum { |ci| ci.product_variant[:shipping_weight].to_i * ci.quantity }.to_i
   end
 
   def tax_rate

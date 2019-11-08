@@ -106,6 +106,12 @@ class MiniDetails extends React.Component {
                     </div>
                     
                 </Flex>
+                {!roasted && item.shipping_weight == 0 && (
+                    <ErrorHandler
+                        errors={["This item is only available for local pickup or local delivery."]}
+                        size="mini"
+                    />
+                )}
                 <div style={{ marginTop: 6 }} />
                 <Flex spacing="2">
                     <span>Price Each: </span>

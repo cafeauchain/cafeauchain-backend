@@ -40,7 +40,8 @@ class CartSerializer < ActiveModel::Serializer
         price: '%.2f' % price,
         discounted_price: '%.2f' % discounted_price,
         image: product.product_image_urls[0],
-        product_type: product.product_type
+        product_type: product.product_type,
+        shipping_weight: variant.shipping_weight
       }
     end
   end
@@ -65,7 +66,4 @@ class CartSerializer < ActiveModel::Serializer
     cart_items.sum { |ci| ci[:quantity] }
   end
 
-  def total_weight
-    cart_items.sum { |ci| ci[:size].to_i * ci[:quantity] }
-  end
 end
