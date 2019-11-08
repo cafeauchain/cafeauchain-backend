@@ -6,8 +6,15 @@ module NotificationServices
     def self.send(recipient, customer, order)
     
       order_items = order.order_items.map {
-        |item| {
-          text: "#{item.product_variant.product.title} - #{item.product_variant[:size].to_i > 16 ? (item.product_variant[:size].to_i / 16).to_s + ' lbs' : item.product_variant[:size] + ' oz'} #{item.product_options.first.humanize}", 
+        |item| 
+        title = item.product_variant.product.title
+        size = item.product_variant[:size]
+        weight = size.to_i > 16 ? (size.to_i / 16).to_s + ' lbs' : size.to_s + ' oz'
+        descriptor = item.product_variant.product.product_type == "roasted" ? weight : size
+        option = item.product_options.length > 0 ? item.product_options.first.humanize : ""
+        
+        {
+          text: "#{title} - #{descriptor} #{option}", 
           image: item.product_variant.product.product_image_urls.first, 
           price: "$#{'%.2f' % (item.line_item_cost.to_f/100)}", 
           quantity: item.quantity
