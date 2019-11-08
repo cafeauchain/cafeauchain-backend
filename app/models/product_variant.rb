@@ -14,6 +14,7 @@
 #  inactive           :boolean          default("false")
 #  sortorder          :integer
 #  shipping_weight    :integer
+#  size               :string
 #
 # Indexes
 #

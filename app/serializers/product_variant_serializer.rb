@@ -28,8 +28,8 @@ class ProductVariantSerializer < ActiveModel::Serializer
   end
 
   def bag_size
-    if self.object.custom_options["size"].present?
-      return self.object.custom_options["size"]
+    if self.object[:size].present?
+      return self.object[:size]
     end
   end
 end

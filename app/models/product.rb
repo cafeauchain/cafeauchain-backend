@@ -85,7 +85,7 @@ class Product < ApplicationRecord
     variant_array.each do |variant|
       pv = ProductVariant.find_by(id: variant[:id])
       if !pv.nil?
-        if (pv.price_in_cents.to_i != variant[:price_in_dollars].to_f * 100 || pv.custom_options["size"].to_s != variant[:size].to_s)
+        if (pv.price_in_cents.to_i != variant[:price_in_dollars].to_f * 100 || pv[:size].to_s != variant[:size].to_s)
           changed_variants << variant[:id]
         elsif (pv[:sortorder] != variant[:sortorder] || pv[:shipping_weight] != variant[:shipping_weight])
           updated_variants << variant[:id]

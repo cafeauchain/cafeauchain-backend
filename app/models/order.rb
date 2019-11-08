@@ -172,7 +172,7 @@ class Order < ApplicationRecord
   end
 
   def total_weight
-    self.order_items.sum { |oi| oi.product_variant.custom_options["size"].to_i * oi.quantity }
+    self.order_items.sum { |oi| oi.product_variant[:shipping_weight].to_i * oi.quantity }
   end
 
   def order_date

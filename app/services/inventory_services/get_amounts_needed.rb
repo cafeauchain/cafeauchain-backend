@@ -5,7 +5,7 @@ module InventoryServices
       quantities = orders.each do |o|
         order_items = o.order_items.each do |oi|
           product = oi.product_variant.product.product_inventory_items.select{ |pii| !pii.inactive }.each do |pii|
-            order_item_weight_in_oz = oi.product_variant.custom_options["size"].to_i * oi.quantity.to_i * pii.percentage_of_product.to_i / 100
+            order_item_weight_in_oz = oi.product_variant[:size].to_i * oi.quantity.to_i * pii.percentage_of_product.to_i / 100
             amount_needed_for_order = order_item_weight_in_oz.to_f / 16
             iq = {
               "ii_id" => pii.inventory_item_id,

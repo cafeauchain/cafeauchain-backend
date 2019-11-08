@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_07_212658) do
+ActiveRecord::Schema.define(version: 2019_11_08_160120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -298,6 +298,7 @@ ActiveRecord::Schema.define(version: 2019_11_07_212658) do
     t.boolean "inactive", default: false
     t.integer "sortorder"
     t.integer "shipping_weight"
+    t.string "size"
     t.index ["created_at"], name: "index_product_variants_on_created_at"
     t.index ["product_id"], name: "index_product_variants_on_product_id"
   end

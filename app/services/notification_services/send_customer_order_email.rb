@@ -7,7 +7,7 @@ module NotificationServices
     
       order_items = order.order_items.map {
         |item| {
-          text: "#{item.product_variant.product.title} - #{item.product_variant.custom_options["size"].to_i > 16 ? (item.product_variant.custom_options["size"].to_i / 16).to_s + ' lbs' : item.product_variant.custom_options["size"] + ' oz'} #{item.product_options.first.humanize}", 
+          text: "#{item.product_variant.product.title} - #{item.product_variant[:size].to_i > 16 ? (item.product_variant[:size].to_i / 16).to_s + ' lbs' : item.product_variant[:size] + ' oz'} #{item.product_options.first.humanize}", 
           image: item.product_variant.product.product_image_urls.first, 
           price: "$#{'%.2f' % (item.line_item_cost.to_f/100)}", 
           quantity: item.quantity

@@ -77,7 +77,7 @@ class RoasterProfile < ApplicationRecord
     items = self.orders.where(status: [:processing, :packed]).collect do |o|
       o.order_items.map do |oi|
         {
-          size: oi.product_variant.custom_options["size"],
+          size: oi.product_variant[:size],
           customer: oi.order.customer_profile.company_name,
           quantity: oi.quantity,
           product: oi.product_variant.product.title,
