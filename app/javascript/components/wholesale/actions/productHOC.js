@@ -14,7 +14,8 @@ const variantsDefault = (variant = "", index = 0) => ({
     size: variant, 
     price_in_dollars: "", 
     id: shortid.generate(), 
-    sortorder: index + 1
+    sortorder: index + 1,
+    shipping_weight: 0
 });
 const defaultDetails = {
     name: "",

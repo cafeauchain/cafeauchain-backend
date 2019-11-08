@@ -38,9 +38,7 @@ module InventoryServices
           ProductInventoryItem.create(inventory_item_id: component[:inventory_item_id], product: @product, percentage_of_product: component[:pct])
         end
         @variants.each do |variant|
-          @variant = ProductVariant.new(product: @product, price_in_cents: (variant[:price_in_dollars].to_f * 100).to_i )
-          @variant.custom_options = variant.except(:price_in_dollars, :id, :price_in_cents)
-          @variant.save
+          InventoryServices::CreateVariant.call(@product, variant)
         end
       end
       return @product

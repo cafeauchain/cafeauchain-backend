@@ -35,7 +35,8 @@ class ProductSerializer < ActiveModel::Serializer
         price_in_dollars: '%.2f' % (pv.price_in_cents.to_i/100.0),
         id: pv.id,
         sortorder: pv[:sortorder],
-        type: self.object.product_type
+        type: self.object.product_type,
+        shipping_weight: pv[:shipping_weight].to_i
       }
     end
   end

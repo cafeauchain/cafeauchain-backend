@@ -25,8 +25,16 @@ const fields = {
         { name: "price_in_dollars", label: "Price", step: 0.01, flex: "auto", width: 185 }
     ],
     hard_goods_variants: [
-        { name: "size", label: "Size", flex: "auto", width: 90, type: "text" },
-        { name: "price_in_dollars", label: "Price", step: 0.01, flex: "auto", width: 185 }
+        { name: "size", label: "Size", flex: "auto", width: 120, type: "text" },
+        { name: "price_in_dollars", label: "Price", step: 0.01, width: 120 },
+        {
+            name: "shipping_weight",
+            label: "Shipping Weight (in oz)",
+            placeholder: "Weight",
+            step: 1,
+            flex: "auto",
+            width: 185
+        }
     ]
 };
 

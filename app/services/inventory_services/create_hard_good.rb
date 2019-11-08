@@ -29,9 +29,7 @@ module InventoryServices
       @product.category_list = @categories_array
       if @product.save
         @variants.each do |variant|
-          @variant = ProductVariant.new(product: @product, price_in_cents: (variant[:price_in_dollars].to_f * 100).to_i )
-          @variant.custom_options = variant.except(:price_in_dollars, :id, :price_in_cents)
-          @variant.save
+          InventoryServices::CreateVariant.call(@product, variant)
         end
       end
       return @product

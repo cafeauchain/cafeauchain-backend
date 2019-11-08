@@ -76,7 +76,7 @@ class Product < ApplicationRecord
     removed_variants = []
     # changed_variants will need to be invalidated
     changed_variants = []
-    # updated_variants will only have their sortorder updated
+    # updated_variants will only have their sortorder or shipping_weight updated
     updated_variants = []
     new_ids = variant_array.pluck(:id)
     existing_ids = existing_array.pluck(:id)
@@ -87,7 +87,7 @@ class Product < ApplicationRecord
       if !pv.nil?
         if (pv.price_in_cents.to_i != variant[:price_in_dollars].to_f * 100 || pv.custom_options["size"].to_s != variant[:size].to_s)
           changed_variants << variant[:id]
-        elsif pv[:sortorder] != variant[:sortorder]
+        elsif (pv[:sortorder] != variant[:sortorder] || pv[:shipping_weight] != variant[:shipping_weight])
           updated_variants << variant[:id]
         end
       end
