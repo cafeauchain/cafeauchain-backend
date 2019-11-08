@@ -2,9 +2,9 @@ module InventoryServices
   class GetAmountsNeeded
     def self.process(orders, byDate = false)
       item_quantities = []
-      quantities = orders.each do |o|
-        order_items = o.order_items.each do |oi|
-          product = oi.product_variant.product.product_inventory_items.select{ |pii| !pii.inactive }.each do |pii|
+      orders.each do |o|
+        o.order_items.select{|oi| oi.product_variant.product.product_type == "roasted"}.each do |oi|
+          oi.product_variant.product.product_inventory_items.select{ |pii| !pii.inactive }.each do |pii|
             order_item_weight_in_oz = oi.product_variant[:size].to_i * oi.quantity.to_i * pii.percentage_of_product.to_i / 100
             amount_needed_for_order = order_item_weight_in_oz.to_f / 16
             iq = {
