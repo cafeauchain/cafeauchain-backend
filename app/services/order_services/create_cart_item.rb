@@ -4,11 +4,16 @@ module OrderServices
     def self.create(cart_id, product_variant_id, quantity, options)
       cart = Cart.find(cart_id)
       isRoasted = options.length > 1
-      current_item = cart.cart_items.find_by(product_variant_id: product_variant_id, production_options: isRoasted ? [options] : nil)
+      current_item = cart.cart_items.find_by(product_variant_id: product_variant_id, production_options: isRoasted ? [options] : [])
       if current_item
         how_to_update( true, current_item, quantity )
       else
-        cart_item = CartItem.new(cart: cart, product_variant_id: product_variant_id, quantity: quantity, production_options: options )
+        cart_item = CartItem.new(
+          cart: cart,
+          product_variant_id: product_variant_id, 
+          quantity: quantity, 
+          production_options: isRoasted ? [options] : []
+        )
         cart_item.save
         return cart_item
       end
