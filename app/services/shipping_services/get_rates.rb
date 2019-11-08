@@ -59,6 +59,9 @@ module ShippingServices
       else
         cart = Cart.find(cart_id)
       end
+      if cart.total_weight.to_f == 0.0 
+        return []
+      end
       # cart = Cart.find(cart_id)
       wholesale_profile = WholesaleProfile.find(wholesale_profile_id) 
       roaster = wholesale_profile.roaster_profile
