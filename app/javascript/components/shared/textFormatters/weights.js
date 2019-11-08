@@ -4,6 +4,7 @@ import "./styles.scss";
 const Weights = props => {
     let { content, children } = props;
     if (children) content = children;
+    if (!content) content = "0";
     let value = Number(content);
     const result = value >= 16 ? value / 16 + " lb" : value + " oz";
     return result;
