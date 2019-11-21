@@ -126,10 +126,12 @@ class FormattedTable extends Component {
     };
 
     render() {
-        const { tableDefs, pagination, onPageChange, onClick, loading } = this.props;
+        const { title, tableDefs, pagination, onPageChange, onClick, loading } = this.props;
         const { data, column, direction, scrollable } = this.state;
         let { props: tableProps } = tableDefs;
         tableProps = { unstackable: true, singleLine: true, striped: true, selectable: true, ...tableProps };
+
+        const header = title || tableDefs.title;
 
         const tableDirection = direction === "asc" ? "ascending" : direction === "desc" ? "descending" : null;
 
@@ -142,10 +144,10 @@ class FormattedTable extends Component {
                     <div style={{ overflowX: scrollable ? "scroll" : "hidden" }}>
                         <Table {...tableProps}>
                             <Table.Header>
-                                {tableDefs.title && (
+                                {header && (
                                     <Table.Row>
                                         <Table.HeaderCell colSpan={tableDefs.fields.length}>
-                                            {tableDefs.title}
+                                            {header}
                                         </Table.HeaderCell>
                                     </Table.Row>
                                 )}
@@ -195,7 +197,7 @@ class FormattedTable extends Component {
         );
     }
 }
-const { array, func, object, bool } = PropTypes;
+const { array, func, object, bool, string } = PropTypes;
 FormattedTable.propTypes = {
     data: array.isRequired,
     onPageChange: func,
@@ -203,7 +205,8 @@ FormattedTable.propTypes = {
     pagination: object,
     tableDefs: object.isRequired,
     loading: bool,
-    inputExtras: object
+    inputExtras: object,
+    title: string
 };
 
 export default FormattedTable;

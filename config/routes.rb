@@ -317,6 +317,7 @@ Rails.application.routes.draw do
         put :set_as_default
         resources :shipping_methods, only: [:index, :create, :update]
         resources :cutoffs, only: [:index, :update]
+        resources :payouts
       end
       get :get_rates, to: "shipping_methods#get_rates"
       resources :order_shipping_methods, only: [:update]
@@ -357,6 +358,7 @@ Rails.application.routes.draw do
     get "wholesale", to: "primary#wholesale"
     get "subscription", to: "primary#subscription"
     get "reporting", to: "primary#reporting"
+    get "payouts", to: "primary#payouts"
     resources :inventory_items, path: "roast_profiles", only: [:index]
     resources :lots, only: [:show, :index]
     resources :products, only: [:index]

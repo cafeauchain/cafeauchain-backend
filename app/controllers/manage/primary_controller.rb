@@ -71,6 +71,21 @@ module Manage
       }
     end
 
+    def payouts
+      @wholesale_profiles = @roaster.wholesale_profiles
+      customers = @roaster.customer_profiles
+      @invoices = @roaster.invoices.filter(params.slice(:order_range, :paid_range, :status, :order_by))
+      invoices = ActiveModelSerializers::SerializableResource.new(@invoices, each_serializer: InvoiceSerializer)
+      render "manage/primary", locals: {
+        roaster: @roaster,
+        invoices: invoices,
+        wholesalers: @wholesale_profiles,
+        customers: customers,
+        title: 'Payouts',
+        component: 'wholesale/payouts'
+      }
+    end
+
     private
 
     def set_roaster
