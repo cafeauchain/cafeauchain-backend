@@ -19,7 +19,11 @@ class StripeServices::CaptureCharge
 
       order.invoice.update(status: :paid_in_full, payment_status: :stripe, memo: memo, fee: fee, paid_date: DateTime.now.to_date)
     rescue => e
-      return { message: e.message, status: e.http_status }
+      if e.code == 'charge_expired_for_capture'
+        source = Stripe::Charge.retrieve(@charge_id).source
+        return StripeServices::CreateInvoiceCharge.charge(order.invoice, source, true)
+      end
+      raise e
     end
   end
 
