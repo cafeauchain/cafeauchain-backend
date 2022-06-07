@@ -946,7 +946,7 @@ GEM
     interception (0.5)
     jbuilder (2.9.1)
       activesupport (>= 4.2.0)
-    jmespath (1.4.0)
+    jmespath (1.6.1)
     jsonapi-renderer (0.2.2)
     jwt (2.2.1)
     kaminari (1.1.1)
